@@ -1,19 +1,62 @@
 ---
-import ChartClient from '~/utils/chart-client.jsx';
-
-const { 
-  title = "", 
-  description = "", 
-  type = "bar", 
-  labels = [], 
-  datasets = [] 
+const {
+  type = "line",
+  labels = [],
+  datasets = [],
+  title = "",
 } = Astro.props;
+
+const chartId = `chart-${Math.random().toString(36).slice(2)}`;
 ---
 
-<div class="bg-white p-6 rounded-lg shadow space-y-4">
-  {title && <h2 class="text-xl font-bold">{title}</h2>}
-  {description && <p class="text-gray-600">{description}</p>}
+<section class="w-full">
+  {title && <h3 class="mb-2 font-semibold">{title}</h3>}
+  <canvas id={chartId}></canvas>
 
-  <!-- Client:load sorgt dafür, dass ChartClient nur im Browser geladen wird -->
-  <ChartClient client:load type={type} labels={labels} datasets={datasets} />
-</div>
+  <script type="module" client:load>
+    import {
+      Chart,
+      LineController,
+      LineElement,
+      PointElement,
+      LinearScale,
+      CategoryScale,
+      BarController,
+      BarElement,
+      Tooltip,
+      Legend
+    } from "chart.js";
+
+    Chart.register(
+      LineController,
+      LineElement,
+      PointElement,
+      LinearScale,
+      CategoryScale,
+      BarController,
+      BarElement,
+      Tooltip,
+      Legend
+    );
+
+    const ctx = document.getElementById("{chartId}");
+
+    new Chart(ctx, {
+      type: "{type}",
+      data: {
+        labels: {JSON.stringify(labels)},
+        datasets: {JSON.stringify(datasets)},
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    });
+  </script>
+
+  <style>
+    canvas {
+      max-height: 320px;
+    }
+  </style>
+</section>
