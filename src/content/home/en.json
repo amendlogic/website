@@ -1,0 +1,37 @@
+{
+  "hero": {
+    "headline": "Automated Bitcoin Trading",
+    "subheadline": "AI-driven trading based on data, not emotion.",
+    "description": "A fully automated Bitcoin trading system — no manual analysis, no complex setups, no programming skills required.",
+    "ctaPrimary": "Explore the system",
+    "ctaSecondary": "View performance"
+  },
+
+  "features": {
+    "items": [
+      {
+        "title": "Data-driven decisions",
+        "text": "Trades are executed purely based on market data, logic, and algorithms."
+      },
+      {
+        "title": "Fully automated",
+        "text": "The system operates continuously without manual intervention."
+      },
+      {
+        "title": "Professional infrastructure",
+        "text": "Built on TradingView, Bitget, and scalable cloud technology."
+      }
+    ]
+  },
+
+  "trust": {
+    "headline": "Transparency over promises",
+    "text": "Strategies are tested using historical data and evaluated with clear performance metrics. The focus is on realism, traceability, and controlled risk."
+  },
+
+  "cta": {
+    "headline": "Ready for data-driven trading?",
+    "text": "Get insights into system logic, performance, and operation.",
+    "button": "Get started"
+  }
+}
