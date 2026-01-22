@@ -1,90 +1,68 @@
----
-const {
-  title = "Chart",
-  description = "",
-  type = "bar",
-  labels = [],
-  datasets = [],
-  height = "h-80",
-} = Astro.props;
-
-// Nur serialisierbare Daten hier vorbereiten
-const chartData = { labels, datasets };
-
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { position: 'top' },
-    title: { display: !!title, text: title, font: { size: 18 }, padding: { top: 10, bottom: 20 } },
-    subtitle: { display: !!description, text: description, font: { size: 14, style: 'italic' }, padding: { bottom: 10 } },
-  },
-  scales: {
-    y: { beginAtZero: true, title: { display: true, text: 'Tsd €' } },
-  },
-};
----
-
-<div class:list={["w-full", height, "mx-auto"]}>
-  <!-- Kein fester ID mehr nötig – wir generieren im Script -->
-  <canvas></canvas>
-</div>
-
 <script client:load>
-  // Alles client-seitig → crypto.randomUUID() funktioniert hier
-  const canvas = document.currentScript.previousElementSibling.querySelector('canvas');
-  if (!canvas) {
-    console.error('Canvas nicht gefunden in ChartComponent');
-    return;
-  }
+  // Warte auf DOM vollständig (sicherer)
+  document.addEventListener('DOMContentLoaded', () => {
+    initializeChart();
+  });
 
-  const chartId = crypto.randomUUID();
-  canvas.id = chartId;  // ID dynamisch setzen
+  // Oder sofort versuchen + Fallback
+  initializeChart();
 
-  console.log('ChartComponent initialisiert – ID:', chartId);
-
-  function initChart() {
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      console.error('2D-Context fehlt');
+  function initializeChart() {
+    const container = document.currentScript?.previousElementSibling;
+    if (!container) {
+      console.error('Container-Div nicht gefunden');
       return;
     }
 
-    if (!window.Chart) {
-      console.error('Chart.js nicht geladen – window.Chart fehlt');
+    const canvas = container.querySelector('canvas');
+    if (!canvas) {
+      console.error('Canvas nicht gefunden');
       return;
     }
 
-    console.log('Erstelle Chart...');
-    try {
-      new window.Chart(ctx, {
-        type: '{type}',               // String aus Prop (wird ersetzt)
-        data: {chartData},            // Objekt aus define:vars (wird ersetzt)
-        options: {chartOptions},      // Objekt aus define:vars
-      });
-      console.log('Chart erstellt!');
-    } catch (err) {
-      console.error('Chart-Fehler:', err);
+    const chartId = 'chart-' + Math.random().toString(36).slice(2, 10); // einfach & unique
+    canvas.id = chartId;
+
+    console.log('ChartComponent startet – Canvas-ID:', chartId);
+
+    function createChart() {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        console.error('Kein 2D-Context');
+        return;
+      }
+
+      if (typeof window.Chart === 'undefined') {
+        console.warn('Chart.js noch nicht da – warte...');
+        return; // onload ruft es neu
+      }
+
+      console.log('Chart.js verfügbar → erstelle Chart');
+      try {
+        new window.Chart(ctx, {
+          type: '{type}',
+          data: {chartData},
+          options: {chartOptions},
+        });
+        console.log('Chart erfolgreich gerendert!');
+      } catch (err) {
+        console.error('Chart-Erstellungsfehler:', err.message);
+      }
+    }
+
+    if (window.Chart) {
+      createChart();
+    } else {
+      console.log('Lade Chart.js...');
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js';
+      script.async = true;
+      script.onload = () => {
+        console.log('Chart.js CDN geladen');
+        createChart();
+      };
+      script.onerror = () => console.error('Chart.js CDN Laden fehlgeschlagen – Netzwerk/Adblocker?');
+      document.head.appendChild(script);
     }
   }
-
-  if (window.Chart) {
-    initChart();
-  } else {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js';
-    script.async = true;
-    script.onload = () => {
-      console.log('Chart.js geladen');
-      initChart();
-    };
-    script.onerror = () => console.error('Chart.js CDN-Fehler');
-    document.head.appendChild(script);
-  }
-</script>
-
-<!-- define:vars NUR für die Daten, die wir brauchen (kein chartId mehr) -->
-<script define:vars={{ chartData: JSON.stringify(chartData), chartOptions: JSON.stringify(chartOptions), chartType: type }} client:load>
-  // Dieser Block wird nur für die Variablen-Injection genutzt – leer lassen oder entfernen, wenn nicht benötigt
-  // Die eigentliche Logik ist oben im Haupt-Script
 </script>
