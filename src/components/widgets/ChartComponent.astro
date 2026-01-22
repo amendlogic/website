@@ -1,19 +1,27 @@
 ---
-import ChartClient from '~/utils/chart-client.jsx';
+import { Chart } from 'chart.js/auto'; // This imports types if needed, but we'll load the full lib via CDN.
 
-const { 
-  title = "", 
-  description = "", 
-  type = "bar", 
-  labels = [], 
-  datasets = [] 
-} = Astro.props;
+const { chartId = 'myChart', type = 'bar', data, options = {} } = Astro.props;
+
+// 'data' prop example: { labels: ['Jan', 'Feb'], datasets: [{ label: 'Sales', data: [12, 19] }] }
+// 'options' prop: Chart.js options object, e.g., { scales: { y: { beginAtZero: true } } }
 ---
 
-<div class="bg-white p-6 rounded-lg shadow space-y-4">
-  {title && <h2 class="text-xl font-bold">{title}</h2>}
-  {description && <p class="text-gray-600">{description}</p>}
-
-  <!-- Client:load sorgt dafür, dass ChartClient nur im Browser geladen wird -->
-  <ChartClient client:load type={type} labels={labels} datasets={datasets} />
+<div class="w-full h-64">
+  <canvas id={chartId}></canvas>
 </div>
+
+<script>
+  // Load Chart.js via CDN (no install needed)
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+  script.onload = () => {
+    const ctx = document.getElementById('{chartId}').getContext('2d');
+    new Chart(ctx, {
+      type: '{type}',
+      data: {JSON.stringify(data)},
+      options: {JSON.stringify(options)},
+    });
+  };
+  document.head.appendChild(script);
+</script>
