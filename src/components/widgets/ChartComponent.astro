@@ -1,52 +1,55 @@
----
-const {
-  title = "Chart",
-  description = "",
-  type = "bar",
-  labels = [],
-  datasets = [],
-  chartId = crypto.randomUUID(),
-  height = "h-80",
-} = Astro.props;
-
-const chartData = { labels, datasets };
-
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { position: 'top' },
-    title: { display: !!title, text: title, font: { size: 18 }, padding: { top: 10, bottom: 20 } },
-    subtitle: { display: !!description, text: description, font: { size: 14, style: 'italic' }, padding: { bottom: 10 } },
-  },
-  scales: {
-    y: { beginAtZero: true, title: { display: true, text: 'Tsd €' } },
-  },
-};
----
-
-<div class:list={["w-full", height, "mx-auto"]}>
-  <canvas id={chartId}></canvas>
-</div>
-
 <script define:vars={{ chartId, chartData: JSON.stringify(chartData), chartOptions: JSON.stringify(chartOptions), chartType: type }}>
-  // Chart.js laden – UMD-Version (empfohlen für CDN ohne Bundler)
-  if (!window.Chart) {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js';
-    // ↑ aktuelle stabile Version (4.4.4 oder 4.5.x), UMD-Build
-    script.onload = initChart;
-    document.head.appendChild(script);
-  } else {
-    initChart();
-  }
+  // Debug-Helper: Loggt alles Wichtige in die Console
+  console.log('ChartComponent script geladen für ID:', chartId);
+  console.log('Chart-Typ:', chartType);
+  console.log('Daten:', chartData);
 
   function initChart() {
-    const ctx = document.getElementById(chartId).getContext('2d');
-    new window.Chart(ctx, {
-      type: chartType,
-      data: chartData,
-      options: chartOptions,
-    });
+    const canvas = document.getElementById(chartId);
+    if (!canvas) {
+      console.error('Canvas-Element nicht gefunden! ID:', chartId);
+      return;
+    }
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.error('2D-Context konnte nicht erstellt werden');
+      return;
+    }
+
+    if (!window.Chart) {
+      console.error('window.Chart ist undefined – Chart.js hat nicht geladen!');
+      return;
+    }
+
+    console.log('Chart.js ist verfügbar, erstelle Chart...');
+    try {
+      new window.Chart(ctx, {
+        type: chartType,
+        data: chartData,
+        options: chartOptions,
+      });
+      console.log('Chart erfolgreich erstellt!');
+    } catch (err) {
+      console.error('Fehler beim Erstellen des Charts:', err);
+    }
+  }
+
+  // Chart.js laden
+  if (window.Chart) {
+    console.log('Chart.js war schon geladen (global)');
+    initChart();
+  } else {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js';
+    script.async = true;
+    script.onload = () => {
+      console.log('Chart.js UMD erfolgreich geladen via CDN');
+      initChart();
+    };
+    script.onerror = () => {
+      console.error('Fehler beim Laden von Chart.js CDN! Überprüfe Netzwerk/Console.');
+    };
+    document.head.appendChild(script);
   }
 </script>
