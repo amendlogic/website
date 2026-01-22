@@ -1,13 +1,4 @@
 ---
-/*
-Props:
-- title: String → Titel über dem Chart
-- type: "bar" | "line" | "pie"
-- labels: Array von Strings
-- datasets: Array von Chart.js Dataset-Objekten
-- description: optional String
-*/
-
 const { 
   title = "", 
   description = "", 
@@ -26,16 +17,21 @@ const chartId = `chart-${Math.random().toString(36).substring(2,9)}`;
   <canvas id={chartId} class="w-full h-64"></canvas>
 </div>
 
-<!-- Chart.js ESM + Client-Only -->
 <script type="module" client:load>
   import { Chart, registerables } from 'https://cdn.jsdelivr.net/npm/chart.js/dist/chart.esm.js';
   Chart.register(...registerables);
 
-  const ctx = document.getElementById("{chartId}").getContext("2d");
-  
+  // Die Props müssen in echte JS-Objekte konvertiert werden
+  const chartLabels = {labels};
+  const chartDatasets = {datasets};
+
+  const ctx = document.getElementById(chartId).getContext("2d");
   new Chart(ctx, {
-    type: "{type}",
-    data: { labels: {labels}, datasets: {datasets} },
+    type: type,
+    data: {
+      labels: chartLabels,
+      datasets: chartDatasets
+    },
     options: { 
       responsive: true, 
       plugins: { legend: { position: "top" } } 
