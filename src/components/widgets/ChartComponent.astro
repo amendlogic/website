@@ -7,7 +7,7 @@ const {
   datasets = [] 
 } = Astro.props;
 
-// eindeutige ID für mehrere Charts
+// eindeutige Canvas-ID
 const chartId = `chart-${Math.random().toString(36).substring(2,9)}`;
 ---
 
@@ -17,24 +17,26 @@ const chartId = `chart-${Math.random().toString(36).substring(2,9)}`;
   <canvas id={chartId} class="w-full h-64"></canvas>
 </div>
 
+<!-- WICHTIG: client:load sorgt dafür, dass Script erst im Browser läuft -->
 <script type="module" client:load>
-  import { Chart, registerables } from 'https://cdn.jsdelivr.net/npm/chart.js/dist/chart.esm.js';
-  Chart.register(...registerables);
+import { Chart, registerables } from 'https://cdn.jsdelivr.net/npm/chart.js/dist/chart.esm.js';
+Chart.register(...registerables);
 
-  // Die Props müssen in echte JS-Objekte konvertiert werden
-  const chartLabels = {labels};
-  const chartDatasets = {datasets};
+// Canvas nach DOM finden
+const canvas = document.getElementById(`${chartId}`);
+if (!canvas) {
+  console.error("Canvas nicht gefunden:", chartId);
+} else {
+  const ctx = canvas.getContext("2d");
 
-  const ctx = document.getElementById(chartId).getContext("2d");
+  // Props müssen echte JS-Objekte sein
+  const chartLabels = JSON.parse('{JSON.stringify(labels)}');
+  const chartDatasets = JSON.parse('{JSON.stringify(datasets)}');
+
   new Chart(ctx, {
-    type: type,
-    data: {
-      labels: chartLabels,
-      datasets: chartDatasets
-    },
-    options: { 
-      responsive: true, 
-      plugins: { legend: { position: "top" } } 
-    }
+    type: '{type}',
+    data: { labels: chartLabels, datasets: chartDatasets },
+    options: { responsive: true, plugins: { legend: { position: 'top' } } }
   });
+}
 </script>
