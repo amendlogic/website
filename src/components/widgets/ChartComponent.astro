@@ -2,34 +2,38 @@
   <h3>Umsatzentwicklung</h3>
   <p>Monatliche Umsätze in Tsd €</p>
 
-  <!-- WICHTIG: feste Höhe -->
   <div style="height:300px; width:100%;">
     <canvas id="umsatzChart"></canvas>
   </div>
 
-  <script type="module" client:load>
-    import Chart from "chart.js/auto";
+  <script type="module" is:inline>
+    if (typeof window !== "undefined") {
+      import("chart.js/auto").then(({ default: Chart }) => {
+        const ctx = document.getElementById("umsatzChart");
 
-    const canvas = document.getElementById("umsatzChart");
-
-    if (!canvas) {
-      console.error("Canvas nicht gefunden");
-    } else {
-      new Chart(canvas, {
-        type: "line",
-        data: {
-          labels: ["Jan", "Feb", "Mrz", "Apr", "Mai", "Jun"],
-          datasets: [{
-            label: "Umsatz (Tsd €)",
-            data: [12, 19, 15, 22, 28, 31],
-            borderWidth: 2,
-            tension: 0.4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false
+        if (!ctx) {
+          console.error("Canvas nicht gefunden");
+          return;
         }
+
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: ["Jan", "Feb", "Mrz", "Apr", "Mai", "Jun"],
+            datasets: [
+              {
+                label: "Umsatz (Tsd €)",
+                data: [12, 19, 15, 22, 28, 31],
+                borderWidth: 2,
+                tension: 0.4
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        });
       });
     }
   </script>
