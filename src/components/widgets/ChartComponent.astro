@@ -1,39 +1,24 @@
 ---
-const {
-  id = "chart",
-  type = "line",
-  labels = [],
-  datasets = [],
-  options = {}
-} = Astro.props;
+const { id = "chart", type = "line", labels = [], datasets = [], options = {} } = Astro.props;
 ---
 
-<!-- Chart Container -->
 <div style="height: 300px;">
   <canvas id={id}></canvas>
 </div>
 
-<!-- Chart.js über CDN laden -->
-<script
-  src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
-  is:inline
-></script>
+<!-- Nur client-side rendern -->
+<script type="module" client:load>
+  import { Chart } from "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.esm.min.js";
 
-<!-- Chart initialisieren -->
-<script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
-    const ctx = document.getElementById("{id}");
-    if (ctx && window.Chart) {
-      new Chart(ctx, {
-        type: "{type}",
-        data: {
-          labels: {JSON.stringify(labels)},
-          datasets: {JSON.stringify(datasets)}
-        },
-        options: {JSON.stringify(options)}
-      });
-    } else {
-      console.error("Chart.js konnte nicht geladen werden oder Canvas fehlt");
-    }
-  });
+  const ctx = document.getElementById("{id}");
+  if (ctx) {
+    new Chart(ctx, {
+      type: "{type}",
+      data: {
+        labels: JSON.parse('{JSON.stringify(labels)}'),
+        datasets: JSON.parse('{JSON.stringify(datasets)}'),
+      },
+      options: JSON.parse('{JSON.stringify(options)}'),
+    });
+  }
 </script>
