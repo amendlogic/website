@@ -52,7 +52,26 @@ const metadata = {
   <Note title="Philosophy:" description="Simplicity, Best Practices and High Performance" />
 
 
-<ChartComponent />
+<ChartComponent 
+id="umsatz"
+  type="bar"
+  labels={["Jan", "Feb", "Mär", "Apr", "Mai", "Jun"]}
+  datasets={[
+    {
+      label: "Umsatz",
+      data: [12, 19, 8, 15, 22, 18],
+      backgroundColor: "#6366f1"
+    }
+  ]}
+  options={{
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: { enabled: true }
+    }
+  }}
+/>
 
 
   <!-- Features3 Widget ************** -->
