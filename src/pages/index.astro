@@ -8,6 +8,7 @@ import Features3 from '~/components/widgets/Features3.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import Content from '~/components/widgets/Content.astro';
+import ChartComponent from '~/components/widgets/ChartComponent.astro';
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Stats from '~/components/widgets/Stats.astro';
@@ -49,6 +50,22 @@ const metadata = {
   <!-- Note Widget ******************* -->
 
   <Note title="Philosophy:" description="Simplicity, Best Practices and High Performance" />
+
+
+<ChartComponent
+        title="Umsatzentwicklung"
+        description="Monatliche Umsätze in Tsd €"
+        type="bar"
+        labels={["Jan", "Feb", "Mär", "Apr", "Mai"]}
+        datasets={[
+          {
+            label: "Umsatz",
+            data: [12, 19, 3, 5, 2],
+            backgroundColor: "rgba(34,197,94,0.6)"
+          }
+        ]}
+      />
+
 
   <!-- Features3 Widget ************** -->
 
