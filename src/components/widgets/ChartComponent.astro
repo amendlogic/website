@@ -1,62 +1,36 @@
----
-const {
-  type = "line",
-  labels = [],
-  datasets = [],
-  title = "",
-} = Astro.props;
+<section>
+  <h3>Umsatzentwicklung</h3>
+  <p>Monatliche Umsätze in Tsd €</p>
 
-const chartId = `chart-${Math.random().toString(36).slice(2)}`;
----
-
-<section class="w-full">
-  {title && <h3 class="mb-2 font-semibold">{title}</h3>}
-  <canvas id={chartId}></canvas>
+  <!-- WICHTIG: feste Höhe -->
+  <div style="height:300px; width:100%;">
+    <canvas id="umsatzChart"></canvas>
+  </div>
 
   <script type="module" client:load>
-    import {
-      Chart,
-      LineController,
-      LineElement,
-      PointElement,
-      LinearScale,
-      CategoryScale,
-      BarController,
-      BarElement,
-      Tooltip,
-      Legend
-    } from "chart.js";
+    import Chart from "chart.js/auto";
 
-    Chart.register(
-      LineController,
-      LineElement,
-      PointElement,
-      LinearScale,
-      CategoryScale,
-      BarController,
-      BarElement,
-      Tooltip,
-      Legend
-    );
+    const canvas = document.getElementById("umsatzChart");
 
-    const ctx = document.getElementById("{chartId}");
-
-    new Chart(ctx, {
-      type: "{type}",
-      data: {
-        labels: {JSON.stringify(labels)},
-        datasets: {JSON.stringify(datasets)},
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
-    });
-  </script>
-
-  <style>
-    canvas {
-      max-height: 320px;
+    if (!canvas) {
+      console.error("Canvas nicht gefunden");
+    } else {
+      new Chart(canvas, {
+        type: "line",
+        data: {
+          labels: ["Jan", "Feb", "Mrz", "Apr", "Mai", "Jun"],
+          datasets: [{
+            label: "Umsatz (Tsd €)",
+            data: [12, 19, 15, 22, 28, 31],
+            borderWidth: 2,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
     }
-  </style>
+  </script>
 </section>
