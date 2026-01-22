@@ -1,27 +1,73 @@
 ---
-import { Chart } from 'chart.js/auto'; // This imports types if needed, but we'll load the full lib via CDN.
+const {
+  title = "Chart",
+  description = "",
+  type = "bar",
+  labels = [],
+  datasets = [],
+  chartId = crypto.randomUUID(), // eindeutige ID pro Instanz
+  height = "h-80",               // Tailwind-Klasse für Höhe, anpassbar
+} = Astro.props;
 
-const { chartId = 'myChart', type = 'bar', data, options = {} } = Astro.props;
+// Chart.js erwartet ein data-Objekt → wir bauen es hier zusammen
+const chartData = {
+  labels,
+  datasets,
+};
 
-// 'data' prop example: { labels: ['Jan', 'Feb'], datasets: [{ label: 'Sales', data: [12, 19] }] }
-// 'options' prop: Chart.js options object, e.g., { scales: { y: { beginAtZero: true } } }
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: !!title,
+      text: title,
+      font: { size: 18 },
+      padding: { top: 10, bottom: 20 },
+    },
+    subtitle: {
+      display: !!description,
+      text: description,
+      font: { size: 14, style: 'italic' },
+      padding: { bottom: 10 },
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      title: {
+        display: true,
+        text: 'Tsd €',
+      },
+    },
+  },
+};
 ---
 
-<div class="w-full h-64">
+<div class:list={["w-full", height, "mx-auto"]}>
   <canvas id={chartId}></canvas>
 </div>
 
-<script>
-  // Load Chart.js via CDN (no install needed)
-  const script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-  script.onload = () => {
-    const ctx = document.getElementById('{chartId}').getContext('2d');
-    new Chart(ctx, {
-      type: '{type}',
-      data: {JSON.stringify(data)},
-      options: {JSON.stringify(options)},
+<script define:vars={{ chartId, chartData: JSON.stringify(chartData), chartOptions: JSON.stringify(chartOptions), chartType: type }}>
+  // Chart.js nur einmal laden (wenn nicht schon vorhanden)
+  if (!window.Chart) {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js';
+    script.onload = initChart;
+    document.head.appendChild(script);
+  } else {
+    initChart();
+  }
+
+  function initChart() {
+    const ctx = document.getElementById(chartId).getContext('2d');
+    new window.Chart(ctx, {
+      type: chartType,
+      data: chartData,
+      options: chartOptions,
     });
-  };
-  document.head.appendChild(script);
+  }
 </script>
