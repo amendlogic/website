@@ -1,26 +1,30 @@
-import { useEffect, useRef } from "react";
-import { Chart, registerables } from "https://cdn.jsdelivr.net/npm/chart.js/dist/chart.esm.js";
+import { useEffect, useRef } from "preact/hooks";
+import Chart from "chart.js/auto";
 
-Chart.register(...registerables);
-
-export default function ChartClient({ type = "bar", labels = [], datasets = [] }) {
+export default function ChartClient({ type, labels, datasets }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     if (!canvasRef.current) return;
-    const ctx = canvasRef.current.getContext("2d");
 
-    const chart = new Chart(ctx, {
+    const chart = new Chart(canvasRef.current, {
       type,
-      data: { labels, datasets },
+      data: {
+        labels,
+        datasets,
+      },
       options: {
         responsive: true,
-        plugins: { legend: { position: "top" } },
+        maintainAspectRatio: false,
       },
     });
 
-    return () => chart.destroy(); // Cleanup beim Unmount
-  }, [type, labels, datasets]);
+    return () => chart.destroy();
+  }, []);
 
-  return <canvas ref={canvasRef} className="w-full h-64" />;
+  return (
+    <div style="height:300px">
+      <canvas ref={canvasRef}></canvas>
+    </div>
+  );
 }
