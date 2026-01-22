@@ -1,42 +1,31 @@
 ---
-const { 
-  title = "", 
-  description = "", 
-  type = "bar", 
-  labels = [], 
-  datasets = [] 
-} = Astro.props;
-
-// eindeutige Canvas-ID
+const { title = "", description = "", type = "bar", labels = [], datasets = [] } = Astro.props;
 const chartId = `chart-${Math.random().toString(36).substring(2,9)}`;
 ---
 
-<div class="bg-white p-6 rounded-lg shadow space-y-4">
+<div class="bg-white p-6 rounded shadow space-y-4">
   {title && <h2 class="text-xl font-bold">{title}</h2>}
   {description && <p class="text-gray-600">{description}</p>}
   <canvas id={chartId} class="w-full h-64"></canvas>
 </div>
 
-<!-- WICHTIG: client:load sorgt dafür, dass Script erst im Browser läuft -->
-<script type="module" client:load>
+<script type="module" is:inline client:load>
 import { Chart, registerables } from 'https://cdn.jsdelivr.net/npm/chart.js/dist/chart.esm.js';
 Chart.register(...registerables);
 
-// Canvas nach DOM finden
-const canvas = document.getElementById(`${chartId}`);
-if (!canvas) {
-  console.error("Canvas nicht gefunden:", chartId);
-} else {
+// Props sauber als JS-Objekte übergeben
+const labels = JSON.parse(`{JSON.stringify(labels)}`);
+const datasets = JSON.parse(`{JSON.stringify(datasets)}`);
+
+const canvas = document.getElementById("{chartId}");
+if (canvas) {
   const ctx = canvas.getContext("2d");
-
-  // Props müssen echte JS-Objekte sein
-  const chartLabels = JSON.parse('{JSON.stringify(labels)}');
-  const chartDatasets = JSON.parse('{JSON.stringify(datasets)}');
-
   new Chart(ctx, {
-    type: '{type}',
-    data: { labels: chartLabels, datasets: chartDatasets },
-    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+    type: "{type}",
+    data: { labels, datasets },
+    options: { responsive: true, plugins: { legend: { position: "top" } } }
   });
+} else {
+  console.error("Canvas nicht gefunden:", "{chartId}");
 }
 </script>
