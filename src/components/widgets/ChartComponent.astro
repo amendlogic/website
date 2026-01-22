@@ -1,21 +1,39 @@
-<section>
-  <h3>Umsatzentwicklung</h3>
-  <p>Monatliche Umsätze in Tsd €</p>
+---
+const {
+  id = "chart",
+  type = "line",
+  labels = [],
+  datasets = [],
+  options = {}
+} = Astro.props;
+---
 
-  <div style="height:300px; background:#eee;">
-    <canvas id="testCanvas"></canvas>
-  </div>
+<!-- Chart Container -->
+<div style="height: 300px;">
+  <canvas id={id}></canvas>
+</div>
 
-  <script is:inline>
-    console.log("SCRIPT GELADEN");
+<!-- Chart.js über CDN laden -->
+<script
+  src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+  is:inline
+></script>
 
-    const canvas = document.getElementById("testCanvas");
-    console.log("Canvas:", canvas);
-
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      ctx.fillStyle = "red";
-      ctx.fillRect(10, 10, 200, 100);
+<!-- Chart initialisieren -->
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const ctx = document.getElementById("{id}");
+    if (ctx && window.Chart) {
+      new Chart(ctx, {
+        type: "{type}",
+        data: {
+          labels: {JSON.stringify(labels)},
+          datasets: {JSON.stringify(datasets)}
+        },
+        options: {JSON.stringify(options)}
+      });
+    } else {
+      console.error("Chart.js konnte nicht geladen werden oder Canvas fehlt");
     }
-  </script>
-</section>
+  });
+</script>
