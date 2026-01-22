@@ -1,0 +1,32 @@
+---
+/*
+Props:
+- title: String → Titel über dem Chart
+- type: "bar" | "line" | "pie"
+- labels: Array von Strings
+- datasets: Array von Chart.js Dataset-Objekten
+- description: optional String
+*/
+const { title = "", description = "", type = "bar", labels = [], datasets = [] } = Astro.props;
+const chartId = `chart-${Math.random().toString(36).substring(2,9)}`; // eindeutige ID für mehrere Charts
+---
+
+<div class="bg-white p-6 rounded-lg shadow space-y-4">
+  {title && <h2 class="text-xl font-bold">{title}</h2>}
+  {description && <p class="text-gray-600">{description}</p>}
+  <canvas id={chartId} class="w-full h-64"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  new Chart(document.getElementById("{chartId}").getContext("2d"), {
+    type: "{type}",
+    data: {JSON.stringify({ labels, datasets })},
+    options: {
+      responsive: true,
+      plugins: { legend: { position: "top" } }
+    }
+  });
+});
+</script>
