@@ -1,73 +1,23 @@
 ---
+import ChartClient from "~/utils/chart-client.jsx";
+
 const {
-  title = "Chart",
-  description = "",
+  title,
+  subtitle,
   type = "bar",
   labels = [],
-  datasets = [],
-  chartId = crypto.randomUUID(), // eindeutige ID pro Instanz
-  height = "h-80",               // Tailwind-Klasse für Höhe, anpassbar
+  datasets = []
 } = Astro.props;
-
-// Chart.js erwartet ein data-Objekt → wir bauen es hier zusammen
-const chartData = {
-  labels,
-  datasets,
-};
-
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: !!title,
-      text: title,
-      font: { size: 18 },
-      padding: { top: 10, bottom: 20 },
-    },
-    subtitle: {
-      display: !!description,
-      text: description,
-      font: { size: 14, style: 'italic' },
-      padding: { bottom: 10 },
-    },
-  },
-  scales: {
-    y: {
-      beginAtZero: true,
-      title: {
-        display: true,
-        text: 'Tsd €',
-      },
-    },
-  },
-};
 ---
 
-<div class:list={["w-full", height, "mx-auto"]}>
-  <canvas id={chartId}></canvas>
-</div>
+<section class="bg-white p-6 rounded-xl shadow space-y-3">
+  <h3 class="text-xl font-semibold">{title}</h3>
+  <p class="text-gray-500">{subtitle}</p>
 
-<script define:vars={{ chartId, chartData: JSON.stringify(chartData), chartOptions: JSON.stringify(chartOptions), chartType: type }}>
-  // Chart.js nur einmal laden (wenn nicht schon vorhanden)
-  if (!window.Chart) {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js';
-    script.onload = initChart;
-    document.head.appendChild(script);
-  } else {
-    initChart();
-  }
-
-  function initChart() {
-    const ctx = document.getElementById(chartId).getContext('2d');
-    new window.Chart(ctx, {
-      type: chartType,
-      data: chartData,
-      options: chartOptions,
-    });
-  }
-</script>
+  <ChartClient
+    client:only="preact"
+    type={type}
+    labels={labels}
+    datasets={datasets}
+  />
+</section>
