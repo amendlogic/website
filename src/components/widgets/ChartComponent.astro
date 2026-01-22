@@ -1,23 +1,19 @@
 ---
-import ChartClient from "~/utils/chart-client.jsx";
+import ChartClient from '~/utils/chart-client.jsx';
 
-const {
-  title,
-  subtitle,
-  type = "bar",
-  labels = [],
-  datasets = []
+const { 
+  title = "", 
+  description = "", 
+  type = "bar", 
+  labels = [], 
+  datasets = [] 
 } = Astro.props;
 ---
 
-<section class="bg-white p-6 rounded-xl shadow space-y-3">
-  <h3 class="text-xl font-semibold">{title}</h3>
-  <p class="text-gray-500">{subtitle}</p>
+<div class="bg-white p-6 rounded-lg shadow space-y-4">
+  {title && <h2 class="text-xl font-bold">{title}</h2>}
+  {description && <p class="text-gray-600">{description}</p>}
 
-  <ChartClient
-    client:only="preact"
-    type={type}
-    labels={labels}
-    datasets={datasets}
-  />
-</section>
+  <!-- Client:load sorgt dafür, dass ChartClient nur im Browser geladen wird -->
+  <ChartClient client:load type={type} labels={labels} datasets={datasets} />
+</div>
