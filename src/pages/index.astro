@@ -54,26 +54,58 @@ const metadata = {
 
 <!-- Chart Widget ******************* -->
 <ChartComponent
-  height="300px"
+  height="400px"
   options={{
-    tooltip: { trigger: "axis" },
+    tooltip: {
+      trigger: "axis",
+      valueFormatter: v => `${v}%`
+    },
+    legend: {
+      data: ["Trading", "HODL", "Drawdown"]
+    },
     xAxis: {
-      type: "time"
+      type: "category",
+      data: ["2019", "2020", "2021", "2022", "2023", "2024"]
     },
-    yAxis: {
-      type: "value",
-      scale: true
-    },
+    yAxis: [
+      {
+        type: "value",
+        name: "Equity %",
+        position: "left",
+        axisLabel: { formatter: "{value}%" }
+      },
+      {
+        type: "value",
+        name: "Drawdown %",
+        position: "right",
+        axisLabel: { formatter: "{value}%" }
+      }
+    ],
     series: [
       {
+        name: "Trading",
         type: "line",
-        showSymbol: false,
-        data: [
-          ["2025-01-01", 42000],
-          ["2025-01-02", 43500],
-          ["2025-01-03", 41800],
-          ["2025-01-04", 45000]
-        ]
+        smooth: true,
+        data: [0, 35, 120, 90, 160, 210],
+        lineStyle: { width: 3 }
+      },
+      {
+        name: "HODL",
+        type: "line",
+        smooth: true,
+        data: [0, 20, 95, 40, 110, 180],
+        lineStyle: {
+          type: "dashed"
+        }
+      },
+      {
+        name: "Drawdown",
+        type: "bar",
+        yAxisIndex: 1,
+        data: [0, -12, -35, -55, -18, -10],
+        itemStyle: {
+          color: "rgba(239,68,68,0.5)"
+        }
       }
     ]
   }}
