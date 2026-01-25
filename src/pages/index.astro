@@ -8,7 +8,7 @@ import Features3 from '~/components/widgets/Features3.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import Content from '~/components/widgets/Content.astro';
-
+import ChartComponent from '~/components/widgets/ChartComponent.astro'; 
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Stats from '~/components/widgets/Stats.astro';
@@ -53,38 +53,12 @@ const metadata = {
 
 
 <!-- Chart Widget ******************* -->
-<div class="w-full h-[320px]">
-  <canvas id="myChart" class="w-full h-full"></canvas>
-</div>
-
-<script type="module" is:inline>
-  import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js";
-
-  const canvas = document.getElementById("myChart");
-  if (!canvas) {
-    console.error("Canvas nicht gefunden");
-  }
-
-  const ctx = canvas.getContext("2d");
-
-  new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: ["Jan", "Feb", "Mar", "Apr"],
-      datasets: [{
-        label: "Umsatz",
-        data: [12, 19, 3, 25],
-        borderWidth: 2,
-        borderColor: "#3b82f6",
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false
-    }
-  });
-</script>
+<ChartComponent
+  height="300px"
+  options={{
+    // Your custom chart options
+  }}
+/>
 
 
   <!-- Features3 Widget ************** -->
