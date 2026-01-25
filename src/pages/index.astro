@@ -52,19 +52,25 @@ const metadata = {
   <Note title="Philosophy:" description="Simplicity, Best Practices and High Performance" />
 
 
-<ChartComponent
-  title="Umsatzentwicklung"
-  description="Monatliche Umsätze in Tsd €"
-  type="bar"
-  labels={["Jan", "Feb", "Mär", "Apr", "Mai"]}
-  datasets={[
-    {
-      label: "Umsatz",
-      data: [12, 19, 3, 5, 2],
-      backgroundColor: "rgba(34,197,94,0.6)"
+<canvas id="myChart"></canvas>
+
+<script type="module">
+  import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js";
+
+  const ctx = document.getElementById("myChart");
+
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: ["Jan", "Feb", "Mar"],
+      datasets: [{
+        label: "Umsatz",
+        data: [12, 19, 3],
+        borderWidth: 2
+      }]
     }
-  ]}
-/>
+  });
+</script>
 
 
   <!-- Features3 Widget ************** -->
