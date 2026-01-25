@@ -56,7 +56,26 @@ const metadata = {
 <ChartComponent
   height="300px"
   options={{
-    // Your custom chart options
+    tooltip: { trigger: "axis" },
+    xAxis: {
+      type: "time"
+    },
+    yAxis: {
+      type: "value",
+      scale: true
+    },
+    series: [
+      {
+        type: "line",
+        showSymbol: false,
+        data: [
+          ["2025-01-01", 42000],
+          ["2025-01-02", 43500],
+          ["2025-01-03", 41800],
+          ["2025-01-04", 45000]
+        ]
+      }
+    ]
   }}
 />
 
