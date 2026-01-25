@@ -5,33 +5,54 @@ interface Props {
   options?: Record<string, any>;
 }
 
-const { width = "100%", height = "400px", options } = Astro.props;
+const { width = "100%", height = "400px", options = {} } = Astro.props;
 
-const chartId = `echart-${Math.random().toString(36).slice(2)}`;
+// Generate a unique ID for this chart instance
+const chartId = `echart-${Math.random().toString(36).substring(2, 11)}`;
 
-const chartOptions = options ?? {
-  title: { text: "ECharts Example" },
+// Default chart options if none provided
+const defaultOptions = {
+  title: {
+    text: "ECharts Example"
+  },
   tooltip: {},
-  xAxis: { data: ["A", "B", "C", "D", "E"] },
+  xAxis: {
+    data: ["A", "B", "C", "D", "E"]
+  },
   yAxis: {},
   series: [
-    { type: "bar", data: [5, 20, 36, 10, 10] }
+    {
+      name: "Sales",
+      type: "bar",
+      data: [5, 20, 36, 10, 10]
+    }
   ]
 };
+
+// Merge provided options with defaults
+const chartOptions = Object.keys(options).length > 0 ? options : defaultOptions;
+const serializedOptions = JSON.stringify(chartOptions);
 ---
 
-<div id={chartId} style={`width:${width};height:${height};`}></div>
+<div id={chartId} style={`width: ${width}; height: ${height};`}></div>
 
-<script type="module" is:inline>
-  import * as echarts from "https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js";
+<script define:vars={{ chartOptions: serializedOptions, chartId }}>
+  // Load ECharts from CDN
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Load ECharts core
+    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
 
-  const el = document.getElementById("{chartId}");
-  if (!el) {
-    console.error("ECharts container not found");
-  }
+    // Initialize chart
+    const chartContainer = document.getElementById(chartId);
+    const chart = echarts.init(chartContainer);
 
-  const chart = echarts.init(el);
-  chart.setOption({chartOptions});
+    // Set chart options
+    const options = JSON.parse(chartOptions);
+    chart.setOption(options);
 
-  window.addEventListener("resize", () => chart.resize());
+    // Handle resize
+    window.addEventListener("resize", () => {
+      chart.resize();
+    });
+  });
 </script>
