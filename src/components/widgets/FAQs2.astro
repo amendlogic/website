@@ -1,6 +1,5 @@
 ---
 import Headline from '~/components/ui/Headline.astro';
-import ItemGrid from '~/components/ui/ItemGrid.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import type { Faqs as Props } from '~/types';
 
@@ -21,20 +20,50 @@ const {
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
 
   <div class={`grid ${columns === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-y-8 md:gap-y-12`}>
+
     {items.map((item, index) => (
       <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
         <button
           type="button"
-          class="w-full text-left flex justify-between items-center font-medium text-lg"
-          onClick={`document.getElementById('faq-desc-${index}').classList.toggle('hidden')`}
+          class="w-full text-left flex justify-between items-center font-medium text-lg focus:outline-none"
+          onClick={`
+            const currentlyOpen = document.querySelector('[data-open="true"]');
+            const targetDesc = document.getElementById('faq-desc-${index}');
+            const targetIcon = document.getElementById('faq-icon-${index}');
+
+            // Wenn ein anderes Item offen ist, schließen
+            if (currentlyOpen && currentlyOpen !== targetDesc) {
+              currentlyOpen.classList.add('hidden');
+              currentlyOpen.removeAttribute('data-open');
+              document.querySelector('[data-icon-open="true"]').classList.remove('rotate-45');
+              document.querySelector('[data-icon-open="true"]').removeAttribute('data-icon-open');
+            }
+
+            // Toggle das geklickte Item
+            const isHidden = targetDesc.classList.toggle('hidden');
+            if (!isHidden) {
+              targetDesc.setAttribute('data-open', 'true');
+              targetIcon.setAttribute('data-icon-open', 'true');
+              targetIcon.classList.add('rotate-45');
+            } else {
+              targetDesc.removeAttribute('data-open');
+              targetIcon.removeAttribute('data-icon-open');
+              targetIcon.classList.remove('rotate-45');
+            }
+          `}
         >
           {item.title}
-          <span class="ml-2 transition-transform duration-300" id={`faq-icon-${index}`}>+</span>
+          <span
+            id={`faq-icon-${index}`}
+            class="ml-2 transition-transform duration-300 transform"
+          >+</span>
         </button>
+
         <p id={`faq-desc-${index}`} class="mt-2 hidden text-gray-600 dark:text-gray-300">
           {item.description}
         </p>
       </div>
     ))}
+
   </div>
 </WidgetWrapper>
