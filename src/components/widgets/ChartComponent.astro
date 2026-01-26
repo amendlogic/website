@@ -53,6 +53,7 @@ const serializedOptions = JSON.stringify(chartOptions);
 
 <script define:vars={{ chartOptions: serializedOptions, chartId }}>
   let chart;
+  let resizeObserver;
 
   async function initChart() {
     const echarts = await import(
@@ -62,39 +63,42 @@ const serializedOptions = JSON.stringify(chartOptions);
     const el = document.getElementById(chartId);
     if (!el) return;
 
-    // Falls bereits vorhanden → neu initialisieren
+    // Falls Chart schon existiert → sauber neu aufsetzen
     if (chart) {
       chart.dispose();
     }
 
     chart = echarts.init(el);
     chart.setOption(JSON.parse(chartOptions));
-    chart.resize();
+
+    // 🔥 ResizeObserver auf Container
+    resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+
+        // Nur resize wenn echte Größe vorhanden
+        if (width > 0 && height > 0 && chart) {
+          chart.resize();
+        }
+      }
+    });
+
+    resizeObserver.observe(el);
   }
 
   document.addEventListener('DOMContentLoaded', initChart);
 
-  // 🔹 Re-render bei Tab-Wechsel / Minimierung
+  // 🔹 Re-render bei Tab-Fokus (Fallback)
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && chart) {
       requestAnimationFrame(() => chart.resize());
     }
   });
 
-  // 🔹 Re-render bei Fokus (z. B. Alt+Tab)
-  window.addEventListener('focus', () => {
-    if (chart) {
-      requestAnimationFrame(() => chart.resize());
-    }
-  });
-
-  // 🔹 Window resize (debounced light)
-  let resizeTimeout;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      if (chart) chart.resize();
-    }, 100);
+  // 🔹 Cleanup (z. B. bei Astro View Transitions)
+  window.addEventListener('beforeunload', () => {
+    resizeObserver?.disconnect();
+    chart?.dispose();
   });
 </script>
 
