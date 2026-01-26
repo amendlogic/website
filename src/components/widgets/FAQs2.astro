@@ -2,6 +2,7 @@
 import Headline from '~/components/ui/Headline.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import type { Faqs as Props } from '~/types';
+import Icon from '~/components/ui/Icon.astro'; // falls du eine Icon-Komponente hast
 
 const {
   title = '',
@@ -19,7 +20,7 @@ const {
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
 
-  <div class={`grid ${columns === 1 ? 'grid-cols-1 max-w-4xl mx-auto' : 'grid-cols-2'} gap-y-8 md:gap-y-12`}>
+  <div class={`grid grid-cols-1 md:grid-cols-2 gap-y-8 md:gap-y-12 ${columns === 1 ? 'max-w-4xl mx-auto' : ''}`}>
     {items.map((item, index) => (
       <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
         <button
@@ -56,7 +57,7 @@ const {
             id={`faq-icon-${index}`}
             class="flex-shrink-0 mt-1 w-6 h-6 text-primary transition-transform duration-300 transform"
           >
-            <i class="icon tabler tabler-chevron-right"></i>
+            <Icon name="tabler:chevron-right" /> 
           </span>
           <span class="font-medium text-lg">{item.title}</span>
         </button>
