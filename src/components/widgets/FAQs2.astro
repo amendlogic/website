@@ -19,48 +19,77 @@ const {
 
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
+  
+  <ItemGrid
+    items={items.map((item, index) => ({
+      ...item,
+      dataIndex: index, // für JS
+      descriptionClass: 'max-h-0 overflow-hidden transition-all duration-300 mt-2 text-gray-600 dark:text-gray-300', // initial hidden
+      iconClass: 'flex-shrink-0 mt-1 w-6 h-6 text-primary transition-transform duration-300 transform'
+    }))}
+    columns={columns}
+    defaultIcon="tabler:chevron-right"
+    classes={{
+      container: `${columns === 1 ? 'max-w-4xl' : ''} gap-y-8 md:gap-y-12`,
+      panel: 'max-w-none',
+      icon: 'flex-shrink-0 mt-1 w-6 h-6 text-primary transition-transform duration-300 transform',
+    }}
+  />
 
-  <div class={`grid ${columns === 1 ? 'grid-cols-1 max-w-4xl mx-auto' : 'grid-cols-2'} gap-y-8 md:gap-y-12`}>
-    {items.map((item, index) => (
-      <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
-        <button
-          type="button"
-          class="w-full flex items-start gap-3 text-left focus:outline-none"
-          onClick={`
-            const currentlyOpen = document.querySelector('[data-open="true"]');
-            const target = document.getElementById('faq-${index}-desc');
-            const icon = document.getElementById('faq-${index}-icon');
+  <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+  <Headline title={title} subtitle={subtitle} tagline={tagline} />
+  
+  <ItemGrid
+    items={items.map((item, index) => ({
+      ...item,
+      dataIndex: index, // für JS
+      descriptionClass: 'max-h-0 overflow-hidden transition-all duration-300 mt-2 text-gray-600 dark:text-gray-300', // initial hidden
+      iconClass: 'flex-shrink-0 mt-1 w-6 h-6 text-primary transition-transform duration-300 transform'
+    }))}
+    columns={columns}
+    defaultIcon="tabler:chevron-right"
+    classes={{
+      container: `${columns === 1 ? 'max-w-4xl' : ''} gap-y-8 md:gap-y-12`,
+      panel: 'max-w-none',
+      icon: 'flex-shrink-0 mt-1 w-6 h-6 text-primary transition-transform duration-300 transform',
+    }}
+  />
 
-            if (currentlyOpen && currentlyOpen !== target) {
-              currentlyOpen.style.maxHeight = null;
-              currentlyOpen.removeAttribute('data-open');
-              document.querySelector('[data-icon-open="true"]').classList.remove('rotate-90');
-              document.querySelector('[data-icon-open="true"]').removeAttribute('data-icon-open');
+  <script is:inline>
+    // Minimal JS Accordion
+    document.addEventListener('DOMContentLoaded', () => {
+      const panels = document.querySelectorAll('[data-index]');
+      panels.forEach(panel => {
+        panel.addEventListener('click', () => {
+          const index = panel.getAttribute('data-index');
+          const desc = panel.querySelector('.description');
+          const icon = panel.querySelector('.icon');
+
+          // Schließe alle anderen
+          document.querySelectorAll('.description').forEach(d => {
+            if (d !== desc) {
+              d.style.maxHeight = null;
+              d.removeAttribute('data-open');
             }
-
-            if (target.getAttribute('data-open') === 'true') {
-              target.style.maxHeight = null;
-              target.removeAttribute('data-open');
-              icon.classList.remove('rotate-90');
-              icon.removeAttribute('data-icon-open');
-            } else {
-              target.style.maxHeight = target.scrollHeight + 'px';
-              target.setAttribute('data-open', 'true');
-              icon.classList.add('rotate-90');
-              icon.setAttribute('data-icon-open', 'true');
+          });
+          document.querySelectorAll('.icon').forEach(i => {
+            if (i !== icon) {
+              i.classList.remove('rotate-90');
             }
-          `}
-        >
-          <span id={`faq-${index}-icon`} class="flex-shrink-0 mt-1 w-6 h-6 text-primary transition-transform duration-300 transform">
-            <i class="icon tabler tabler-chevron-right"></i>
-          </span>
-          <span class="font-medium text-lg">{item.title}</span>
-        </button>
+          });
 
-        <div id={`faq-${index}-desc`} class="overflow-hidden max-h-0 transition-all duration-300 mt-2 text-gray-600 dark:text-gray-300">
-          {item.description}
-        </div>
-      </div>
-    ))}
-  </div>
+          // Toggle das geklickte Item
+          if (desc.getAttribute('data-open') === 'true') {
+            desc.style.maxHeight = null;
+            desc.removeAttribute('data-open');
+            icon.classList.remove('rotate-90');
+          } else {
+            desc.style.maxHeight = desc.scrollHeight + 'px';
+            desc.setAttribute('data-open', 'true');
+            icon.classList.add('rotate-90');
+          }
+        });
+      });
+    });
+  </script>
 </WidgetWrapper>
