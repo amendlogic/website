@@ -1,8 +1,8 @@
 ---
 import Headline from '~/components/ui/Headline.astro';
-import ItemGrid from '~/components/ui/ItemGrid.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import type { Faqs as Props } from '~/types';
+import Icon from '~/components/ui/Icon.astro'; // Tabler Icons
 
 const {
   title = '',
@@ -19,60 +19,51 @@ const {
 
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
-  
-  <ItemGrid
-    items={items.map((item, index) => ({
-      ...item,
-      dataIndex: index, // für JS
-      descriptionClass: 'max-h-0 overflow-hidden transition-all duration-300 mt-2 text-gray-600 dark:text-gray-300', // initial hidden
-      iconClass: 'flex-shrink-0 mt-1 w-6 h-6 text-primary transition-transform duration-300 transform'
-    }))}
-    columns={columns}
-    defaultIcon="tabler:chevron-right"
-    classes={{
-      container: `${columns === 1 ? 'max-w-4xl' : ''} gap-y-8 md:gap-y-12`,
-      panel: 'max-w-none',
-      icon: 'flex-shrink-0 mt-1 w-6 h-6 text-primary transition-transform duration-300 transform',
-    }}
-  />
 
-  <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
-  <Headline title={title} subtitle={subtitle} tagline={tagline} />
-  
-  <ItemGrid
-    items={items.map((item, index) => ({
-      ...item,
-      dataIndex: index, // für JS
-      descriptionClass: 'max-h-0 overflow-hidden transition-all duration-300 mt-2 text-gray-600 dark:text-gray-300', // initial hidden
-      iconClass: 'flex-shrink-0 mt-1 w-6 h-6 text-primary transition-transform duration-300 transform'
-    }))}
-    columns={columns}
-    defaultIcon="tabler:chevron-right"
-    classes={{
-      container: `${columns === 1 ? 'max-w-4xl' : ''} gap-y-8 md:gap-y-12`,
-      panel: 'max-w-none',
-      icon: 'flex-shrink-0 mt-1 w-6 h-6 text-primary transition-transform duration-300 transform',
-    }}
-  />
+  <div class={`grid ${columns === 1 ? 'grid-cols-1 max-w-4xl mx-auto' : 'grid-cols-2'} gap-y-8 md:gap-y-12`}>
+    {items.map((item, index) => (
+      <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+        <button
+          type="button"
+          class="w-full flex items-start gap-3 text-left focus:outline-none"
+          data-index={index}
+        >
+          <span
+            id={`faq-${index}-icon`}
+            class="flex-shrink-0 mt-1 w-6 h-6 text-primary transition-transform duration-300 transform"
+          >
+            <Icon name="tabler:chevron-right" />
+          </span>
+          <span class="font-medium text-lg">{item.title}</span>
+        </button>
+
+        <div
+          id={`faq-${index}-desc`}
+          class="overflow-hidden max-h-0 transition-all duration-300 mt-2 text-gray-600 dark:text-gray-300"
+        >
+          {item.description}
+        </div>
+      </div>
+    ))}
+  </div>
 
   <script is:inline>
-    // Minimal JS Accordion
     document.addEventListener('DOMContentLoaded', () => {
-      const panels = document.querySelectorAll('[data-index]');
-      panels.forEach(panel => {
-        panel.addEventListener('click', () => {
-          const index = panel.getAttribute('data-index');
-          const desc = panel.querySelector('.description');
-          const icon = panel.querySelector('.icon');
-
+      const buttons = document.querySelectorAll('[data-index]');
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          const index = button.getAttribute('data-index');
+          const desc = document.getElementById(`faq-${index}-desc`);
+          const icon = document.getElementById(`faq-${index}-icon`);
+          
           // Schließe alle anderen
-          document.querySelectorAll('.description').forEach(d => {
+          document.querySelectorAll('[id$="-desc"]').forEach(d => {
             if (d !== desc) {
               d.style.maxHeight = null;
               d.removeAttribute('data-open');
             }
           });
-          document.querySelectorAll('.icon').forEach(i => {
+          document.querySelectorAll('[id$="-icon"]').forEach(i => {
             if (i !== icon) {
               i.classList.remove('rotate-90');
             }
