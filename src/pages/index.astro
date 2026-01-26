@@ -214,9 +214,9 @@ const metadata = {
   <!-- Stats Widget ****************** -->
 
   <Stats
-    title="Transparent Performance Tracking"
-    subtitle="Strategies are developed and evaluated using extensive historical market data across multiple market phases. Clear, measurable performance metrics provide full transparency into how the system behaves under different conditions.<br /> <br />The focus is on realistic assumptions, verifiable data, and reproducible results — not theoretical models or over-optimized scenarios."
-    stats={[
+    tagline="Performance"
+    title="Built on Data"
+    subtitle="The strategy is tested using historical market data to understand how it behaves in trending, ranging, and volatile environments. The focus lies on realistic assumptions, controlled risk, and consistent behavior rather than short-term optimization."
       { title: 'Downloads', amount: '132K' },
       { title: 'Stars', amount: '24.8K' },
       { title: 'Forks', amount: '10.3K' },
@@ -228,7 +228,7 @@ const metadata = {
     title="Transparent Performance Tracking"
     subtitle="Strategies are developed and evaluated using extensive historical market data across multiple market phases. Clear, measurable performance metrics provide full transparency into how the system behaves under different conditions.<br /> <br />The focus is on realistic assumptions, verifiable data, and reproducible results — not theoretical models or over-optimized scenarios."
    
-  height="400px"
+  height="300px"
   options={{
     tooltip: {
       trigger: "axis",
@@ -294,6 +294,7 @@ const metadata = {
  <!-- Testimonials Widget *********** -->
 
   <Testimonials
+    tagline="Testimonials"
     title="Words from real customers"
     testimonials={[
       {
@@ -345,40 +346,60 @@ const metadata = {
   <!-- FAQs Widget ******************* -->
 
   <FAQs
-    title="Frequently Asked Questions"
-    subtitle="Dive into the following questions to gain insights into the powerful features that AstroWind offers and how it can elevate your web development journey."
+    title="Good to Know"
+    subtitle="Answers to the most common questions."
     tagline="FAQs"
     classes={{ container: 'max-w-6xl' }}
     items={[
       {
-        title: 'Why AstroWind?',
+        title: 'Which markets and timeframes are supported?',
         description:
-          "Michael Knight a young loner on a crusade to champion the cause of the innocent. The helpless. The powerless in a world of criminals who operate above the law. Here he comes Here comes Speed Racer. He's a demon on wheels.",
+          "Our strategy is optimized for Bitcoin but can be applied to other volatile assets and timeframes above 4 hours.",
       },
       {
-        title: 'What do I need to start?',
+        title: 'How does the system handle market volatility?',
         description:
-          'Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds. Many say exploration is part of our destiny, but it’s actually our duty to future generations.',
+          'The strategy adapts dynamically to changing market conditions, maintaining stability even during turbulent periods.',
       },
       {
-        title: 'How to install the Astro + Tailwind CSS template?',
+        title: 'Are all trades profitable?',
         description:
-          "Well, the way they make shows is, they make one show. That show's called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they're going to make more shows.",
+          "No. Not every trade will be profitable. The system uses intelligent risk management to minimize losses and protect your capital.",
       },
       {
-        title: "What's something that you don't understand?",
+        title: "Is the system suitable for beginners?",
         description:
-          "A flower in my garden, a mystery in my panties. Heart attack never stopped old Big Bear. I didn't even know we were calling him Big Bear.",
+          "Yes. Fully automated operation and intuitive design make it easy to start — no prior experience required.",
       },
       {
-        title: 'What is something that you would like to try again?',
+        title: 'How do I access the strategy?',
         description:
-          "A business big enough that it could be listed on the NASDAQ goes belly up. Disappears! It ceases to exist without me. No, you clearly don't know who you're talking to, so let me clue you in.",
+          "After subscribing, you can run and manage the strategy directly through your account — quick and straightforward.",
       },
       {
-        title: 'If you could only ask one question to each person you meet, what would that question be?',
+        title: 'Can I customize the strategy?',
         description:
-          "This is not about revenge. This is about justice. A lot of things can change in twelve years, Admiral. Well, that's certainly good to know. About four years. I got tired of hearing how young I looked.",
+          "Yes. Key parameters such as risk profile and trading behavior can be adjusted to match your preferences.",
+      },
+      {
+        title: 'Is my capital safe?',
+        description:
+          "Yes. The system does not access your wallet or funds. You retain full control over your investments at all times.",
+      },
+      {
+        title: 'How much does the system cost?',
+        description:
+          "We offer subscription plans tailored to different needs — transparent, fair, and performance-oriented.",
+      },
+      {
+        title: 'Is there a trial version?',
+        description:
+          "Yes. You can test the strategy free for 7 days to evaluate its performance. After the trial, you can choose a subscription that fits your trading style.",
+      },
+      {
+        title: 'What kind of support is provided?',
+        description:
+          "Our support team is available 24/7 via chat and email to assist you whenever needed.",
       },
     ]}
   />
