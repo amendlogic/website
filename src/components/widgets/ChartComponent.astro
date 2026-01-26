@@ -1,76 +1,58 @@
 ---
-// Reusable ECharts Astro Component
-// Usage:
-// <EChart options={options} height="400px" />
-
-const {
-  options,
-  width = '100%',
-  height = '400px',
-  theme = null, // 'dark' | null
-  renderer = 'canvas', // 'canvas' | 'svg'
-  className = '',
-  ariaHidden = true,
-} = Astro.props;
-
-if (!options) {
-  throw new Error('<EChart /> requires an `options` prop');
+interface Props {
+  width?: string;
+  height?: string;
+  options?: Record<string, any>;
 }
 
-const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
-const serializedOptions = JSON.stringify(options);
+const { width = "100%", height = "400px", options = {} } = Astro.props;
+
+// Generate a unique ID for this chart instance
+const chartId = `echart-${Math.random().toString(36).substring(2, 11)}`;
+
+// Default chart options if none provided
+const defaultOptions = {
+  title: {
+    text: "ECharts Example"
+  },
+  tooltip: {},
+  xAxis: {
+    data: ["A", "B", "C", "D", "E"]
+  },
+  yAxis: {},
+  series: [
+    {
+      name: "Sales",
+      type: "bar",
+      data: [5, 20, 36, 10, 10]
+    }
+  ]
+};
+
+// Merge provided options with defaults
+const chartOptions = Object.keys(options).length > 0 ? options : defaultOptions;
+const serializedOptions = JSON.stringify(chartOptions);
 ---
 
-<div
-  id={chartId}
-  class={className}
-  style={`width:${width};height:${height};min-height:${height};`}
-  aria-hidden={ariaHidden}
-></div>
+<div id={chartId} style={`width: ${width}; height: ${height};`}></div>
 
-<script define:vars={{ chartOptions: serializedOptions, chartId, theme, renderer }}>
-  let chart;
-  let resizeObserver;
+<script define:vars={{ chartOptions: serializedOptions, chartId }}>
+  // Load ECharts from CDN
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Load ECharts core
+    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
 
-  async function initChart() {
-    const echarts = await import(
-      'https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js'
-    );
+    // Initialize chart
+    const chartContainer = document.getElementById(chartId);
+    const chart = echarts.init(chartContainer);
 
-    const el = document.getElementById(chartId);
-    if (!el) return;
+    // Set chart options
+    const options = JSON.parse(chartOptions);
+    chart.setOption(options);
 
-    // Dispose existing instance (HMR / transitions safe)
-    if (chart) chart.dispose();
-
-    chart = echarts.init(el, theme, { renderer });
-    chart.setOption(JSON.parse(chartOptions));
-
-    // ResizeObserver handles hidden/minimized/layout changes
-    resizeObserver = new ResizeObserver(entries => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
-        if (width > 0 && height > 0 && chart) {
-          chart.resize();
-        }
-      }
+    // Handle resize
+    window.addEventListener("resize", () => {
+      chart.resize();
     });
-
-    resizeObserver.observe(el);
-  }
-
-  document.addEventListener('DOMContentLoaded', initChart);
-
-  // Fallback: tab visibility
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && chart) {
-      requestAnimationFrame(() => chart.resize());
-    }
-  });
-
-  // Cleanup
-  window.addEventListener('beforeunload', () => {
-    resizeObserver?.disconnect();
-    chart?.dispose();
   });
 </script>
