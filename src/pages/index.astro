@@ -50,7 +50,7 @@ const metadata = {
 
   <!-- Note Widget ******************* -->
 
-  <Note title="Philosophy:" description="ensure disciplined trading and consistent execution, regardless of market conditions." />
+  <Note title="Our philosophy:" description="ensure disciplined trading and consistent execution, regardless of market conditions." />
 
   <!-- Brands Widget ****************** -->
 
@@ -176,26 +176,27 @@ const metadata = {
   <!-- Steps Widget ****************** -->
 
   <Steps
-    title="Get your dream website up and running in no time with AstroWind."
-    subtitle="Strategies are developed."
+    tagline="How It Works"
+    title="Simple by Design"
+    subtitle="The strategy runs directly on TradingView. It continuously analyzes price data, generates trade signals based on predefined rules, and executes positions automatically. Once set up, it operates independently — without manual intervention or constant monitoring."
     isReversed={true}
     items={[
       {
-        title: 'Step 1: <span class="font-medium">Download</span>',
+        title: '1. Data <span class="font-medium">— Indicator Signal</span>',
         description:
-          "Kickstart with GitHub! Either fork the AstroWind template or simply click 'Use this template'. Your canvas awaits, ready for your digital masterpiece. In just a few clicks, you've already set the foundation.",
+          "Market conditions are analyzed by our proprietary indicator. When predefined conditions are met, a trading signal is generated.",
         icon: 'tabler:package',
       },
       {
-        title: 'Step 2: <span class="font-medium">Add content</span>',
+        title: '2. Logic <span class="font-medium">— Signal to Trade</span>',
         description:
-          "Pour your vision into it. Add images, text, and all that jazz to breathe life into your digital space. Remember, it's the content that tells your story, so make it captivating.",
+          "Signals are transmitted via webhook and converted into structured trade instructions. Parameters such as direction, size, and risk settings are automatically validated.",
         icon: 'tabler:letter-case',
       },
       {
-        title: 'Step 3: <span class="font-medium">Customize styles</span>',
+        title: '3. Execution <span class="font-medium">— Order Placement</span>',
         description:
-          'Give it your personal touch. Tailor colors, fonts, and layouts until it feels just right. Your unique flair, amplified by AstroWind! Precision in design ensures a seamless user experience.',
+          'Validated trade instructions are executed automatically. Orders are placed instantly, following defined risk and execution parameters.',
         icon: 'tabler:paint',
       },
       {
