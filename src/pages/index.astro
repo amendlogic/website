@@ -52,69 +52,7 @@ const metadata = {
 
   <Note title="Philosophy:" description="Systematic, transparent, and disciplined by design." />
 
-
-<!-- Chart Widget ******************* -->
-<ChartComponent
-    title="Transparent Performance Tracking"
-    subtitle="Strategies are developed and evaluated using extensive historical market data across multiple market phases. Clear, measurable performance metrics provide full transparency into how the system behaves under different conditions.<br /> <br />The focus is on realistic assumptions, verifiable data, and reproducible results — not theoretical models or over-optimized scenarios."
-  height="400px"
-  options={{
-    tooltip: {
-      trigger: "axis",
-      valueFormatter: v => `${v}%`
-    },
-    legend: {
-      data: ["Trading", "HODL", "Drawdown"]
-    },
-    xAxis: {
-      type: "category",
-      data: ["2019", "2020", "2021", "2022", "2023", "2024"]
-    },
-    yAxis: [
-      {
-        type: "value",
-        name: "Equity %",
-        position: "left",
-        axisLabel: { formatter: "{value}%" }
-      },
-      {
-        type: "value",
-        name: "Drawdown %",
-        position: "right",
-        axisLabel: { formatter: "{value}%" }
-      }
-    ],
-    series: [
-      {
-        name: "Trading",
-        type: "line",
-        smooth: true,
-        data: [0, 35, 120, 90, 160, 210],
-        lineStyle: { width: 3 }
-      },
-      {
-        name: "HODL",
-        type: "line",
-        smooth: true,
-        data: [0, 20, 95, 40, 110, 180],
-        lineStyle: {
-          type: "dashed"
-        }
-      },
-      {
-        name: "Drawdown",
-        type: "bar",
-        yAxisIndex: 1,
-        data: [0, -12, -35, -55, -18, -10],
-        itemStyle: {
-          color: "rgba(239,68,68,0.5)"
-        }
-      }
-    ]
-  }}
-/>
-
-<!-- Stats Widget ****************** -->
+  <!-- Stats Widget ****************** -->
 
   <Stats
     title="Transparent Performance Tracking"
@@ -237,69 +175,71 @@ const metadata = {
     }}
   />
 
-  <!-- Features2 Widget ************** -->
+  <!-- Chart Widget ******************* -->
 
-  <Features2
-    title="Most used widgets"
-    subtitle="Provides frequently used components for building websites using Tailwind CSS"
-    tagline="Components"
-    items={[
+<ChartComponent
+    title="Transparent Performance Tracking"
+    subtitle="Strategies are developed and evaluated using extensive historical market data across multiple market phases. Clear, measurable performance metrics provide full transparency into how the system behaves under different conditions.<br /> <br />The focus is on realistic assumptions, verifiable data, and reproducible results — not theoretical models or over-optimized scenarios."
+  height="400px"
+  options={{
+    tooltip: {
+      trigger: "axis",
+      valueFormatter: v => `${v}%`
+    },
+    legend: {
+      data: ["Trading", "HODL", "Drawdown"]
+    },
+    xAxis: {
+      type: "category",
+      data: ["2019", "2020", "2021", "2022", "2023", "2024"]
+    },
+    yAxis: [
       {
-        title: 'Headers',
-        description: "Ever tried driving without GPS? Boom! That's why websites need headers for direction.",
-        icon: 'flat-color-icons:template',
+        type: "value",
+        name: "Equity %",
+        position: "left",
+        axisLabel: { formatter: "{value}%" }
       },
       {
-        title: 'Heros',
-        description:
-          "Picture a superhero landing – epic, right? That's the job of a Hero section, making grand entrances!",
-        icon: 'flat-color-icons:gallery',
+        type: "value",
+        name: "Drawdown %",
+        position: "right",
+        axisLabel: { formatter: "{value}%" }
+      }
+    ],
+    series: [
+      {
+        name: "Trading",
+        type: "line",
+        smooth: true,
+        data: [0, 35, 120, 90, 160, 210],
+        lineStyle: { width: 3 }
       },
       {
-        title: 'Features',
-        description:
-          'Where websites strut their stuff and show off superpowers. No holding back on the bragging rights here!',
-        icon: 'flat-color-icons:approval',
+        name: "HODL",
+        type: "line",
+        smooth: true,
+        data: [0, 20, 95, 40, 110, 180],
+        lineStyle: {
+          type: "dashed"
+        }
       },
       {
-        title: 'Content',
-        description:
-          "Dive into the meat and potatoes of a site; without it, you'd just be window shopping. Content is king.",
-        icon: 'flat-color-icons:document',
-      },
-      {
-        title: 'Call-to-Action',
-        description:
-          'That enthusiastic friend who\'s always urging, "Do it! Do it!"? Yeah, that\'s this button nudging you towards adventure.',
-        icon: 'flat-color-icons:advertising',
-      },
-      {
-        title: 'Pricing',
-        description: 'Behold the dessert menu of the website world. Tempting choices await, can you resist?',
-        icon: 'flat-color-icons:currency-exchange',
-      },
-      {
-        title: 'Testimonial',
-        description: 'Step into the gossip corner! Here, other visitors spill the beans and share the juicy details.',
-        icon: 'flat-color-icons:voice-presentation',
-      },
-      {
-        title: 'Contact',
-        description:
-          'Like a digital mailbox, but faster! Drop a line, ask a question, or send a virtual high-five. Ding! Message in.',
-        icon: 'flat-color-icons:business-contact',
-      },
-      {
-        title: 'Footers',
-        description: "The footer's like the credits of a movie but sprinkled with easter eggs. Time to hunt!",
-        icon: 'flat-color-icons:database',
-      },
-    ]}
-  >
+        name: "Drawdown",
+        type: "bar",
+        yAxisIndex: 1,
+        data: [0, -12, -35, -55, -18, -10],
+        itemStyle: {
+          color: "rgba(239,68,68,0.5)"
+        }
+      }
+    ]
+  }}
+>
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
-  </Features2>
+  </ChartComponent>
 
  <!-- Testimonials Widget *********** -->
 
