@@ -240,7 +240,7 @@ const metadata = {
       valueFormatter: v => `${v}%`
     },
     legend: {
-      data: ["AmendLogic", "Buy and Hold", "Drawdown"]
+      data: ["AmendLogic", "Buy &amp; Hold", "Drawdown"]
     },
     xAxis: {
       type: "category",
@@ -264,14 +264,14 @@ const metadata = {
     ],
     series: [
       {
-        name: "Trading",
+        name: "AmendLogic",
         type: "line",
         smooth: true,
         data: [0, 35, 120, 90, 160, 210, 210, 210, 210, 210, 210],
         lineStyle: { width: 3 }
       },
       {
-        name: "HODL",
+        name: "Buy &amp; Hold",
         type: "line",
         smooth: true,
         data: [0, 20, 95, 40, 110, 180, 180, 180, 180, 180, 180],
