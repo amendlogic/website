@@ -1,47 +1,36 @@
 ---
-import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Headline from '~/components/ui/Headline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 
 interface Props {
   title?: string;
   subtitle?: string;
   tagline?: string;
-
-  options: Record<string, any>;
   height?: string;
-
+  options: Record<string, any>;
   id?: string;
   isDark?: boolean;
-  classes?: {
-    container?: string;
-  };
+  classes?: { container?: string };
+  bg?: string;
 }
 
 const {
-  title = await Astro.slots.render('title'),
-  subtitle = await Astro.slots.render('subtitle'),
+  title,
+  subtitle,
   tagline,
-  content = await Astro.slots.render('content'),
-  isAfterContent = false,
-
-  options,
   height = '400px',
-
+  options,
   id,
-  isDark = false,
   classes = {},
-  bg = await Astro.slots.render('bg'),
+  bg
 } = Astro.props;
 
-// Unique chart id
-const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
+const chartId = `chartjs-${Math.random().toString(36).slice(2, 11)}`;
 const serializedOptions = JSON.stringify(options);
 ---
-
 <WidgetWrapper
   id={id}
-  isDark={isDark}
-  containerClass={`max-w-6xl mx-auto ${isAfterContent ? 'pt-0 md:pt-0 lg:pt-0' : ''} ${classes?.container ?? ''}`}
+  containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`}
   bg={bg}
 >
   <Headline
@@ -54,48 +43,27 @@ const serializedOptions = JSON.stringify(options);
       subtitle: 'max-w-3xl mx-auto sm:text-center text-xl text-muted dark:text-slate-400',
     }}
   />
-
-
-        {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
-
-
-    <div
-      id={chartId}
-      style={`width:100%; height:${height};`}
-      class="pt-8 pl-8 pr-8 rounded-md bg-white dark:bg-slate-900 shadow-xl dark:shadow-none dark:border dark:border-slate-700"
-    ></div>
-
+  
+  <div style={`width:100%; height:${height};`} id={chartId}></div>
 </WidgetWrapper>
 
 <script define:vars={{ chartId, serializedOptions }}>
   (async () => {
-    const echarts = await import(
-      'https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js'
-    );
-
+    const Chart = (await import('https://cdn.jsdelivr.net/npm/chart.js')).default;
     const container = document.getElementById(chartId);
     if (!container) return;
 
+    const config = JSON.parse(serializedOptions);
     let chart = null;
-    const options = JSON.parse(serializedOptions);
-
-    /* ===============================
-       CORE
-    =============================== */
-    function hasSize() {
-      return container.offsetWidth > 0 && container.offsetHeight > 0;
-    }
 
     function init() {
-      if (chart || !hasSize()) return;
-
-      chart = echarts.init(container);
-      chart.setOption(options, true);
+      if (chart) return;
+      chart = new Chart(container, config);
     }
 
     function destroy() {
       if (!chart) return;
-      chart.dispose();
+      chart.destroy();
       chart = null;
     }
 
@@ -104,44 +72,25 @@ const serializedOptions = JSON.stringify(options);
       init();
     }
 
-    /* ===============================
-       SAFE INIT LOOP (KEY!)
-    =============================== */
-    function waitForLayout() {
-      if (hasSize()) {
-        init();
-      } else {
-        requestAnimationFrame(waitForLayout);
-      }
-    }
+    // Initial load
+    requestAnimationFrame(init);
 
-    waitForLayout();
-
-    /* ===============================
-       WINDOW RESIZE
-    =============================== */
+    // Resize
     window.addEventListener('resize', () => {
-      if (chart) {
-        chart.resize();
-      }
+      if (chart) chart.resize();
     });
 
-    /* ===============================
-       TAB / BACK BUTTON (BFCache 🔥)
-    =============================== */
+    // BFCache / Back button
     window.addEventListener('pageshow', () => {
       requestAnimationFrame(reinit);
     });
 
+    // Tab visibility
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
-        requestAnimationFrame(reinit);
-      }
+      if (!document.hidden) requestAnimationFrame(reinit);
     });
 
-    /* ===============================
-       ASTRO NAVIGATION
-    =============================== */
+    // Astro client navigation
     document.addEventListener('astro:after-swap', () => {
       requestAnimationFrame(reinit);
     });
