@@ -40,12 +40,19 @@ const serializedOptions = JSON.stringify(options);
 <WidgetWrapper
   id={id}
   isDark={isDark}
+  containerClass={`max-w-7xl mx-auto ${isAfterContent ? 'pt-0 md:pt-0 lg:pt-0' : ''} ${classes?.container ?? ''}`}
   bg={bg}
-  containerClass={`max-w-6xl mx-auto ${classes.container ?? ''}`}
 >
-  {(title || subtitle || tagline) && (
-    <Headline title={title} subtitle={subtitle} tagline={tagline} />
-  )}
+  <Headline
+    title={title}
+    subtitle={subtitle}
+    tagline={tagline}
+    classes={{
+      container: 'max-w-xl sm:mx-auto lg:max-w-2xl',
+      title: 'text-4xl md:text-5xl font-bold tracking-tighter mb-4 font-heading',
+      subtitle: 'max-w-3xl mx-auto sm:text-center text-xl text-muted dark:text-slate-400',
+    }}
+  />
 
   <div class="md:basis-1/2 self-center">
         {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}</div>
