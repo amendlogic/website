@@ -211,22 +211,11 @@ const metadata = {
   />
 
   <!-- Chart Widget ******************* -->
-  <!-- Stats Widget ****************** -->
 
-  <Stats
-    tagline="Performance"
+<EChart 
+tagline="Performance"
     title="Built on Data"
     subtitle="The strategy is tested using historical market data to understand how it behaves in trending, ranging, and volatile environments. The focus lies on realistic assumptions, controlled risk, and consistent behavior rather than short-term optimization."
-    stats={[
-      { title: 'Downloads', amount: '132K' },
-      { title: 'Stars', amount: '24.8K' },
-      { title: 'Forks', amount: '10.3K' },
-      { title: 'Users', amount: '48.4K' },
-    ]}
-  >
-<EChart 
-    title="Transparent Performance Tracking"
-    subtitle="Strategies are developed and evaluated using extensive historical market data across multiple market phases. Clear, measurable performance metrics provide full transparency into how the system behaves under different conditions.<br /> <br />The focus is on realistic assumptions, verifiable data, and reproducible results — not theoretical models or over-optimized scenarios."
    
   height="300px"
   options={{
@@ -285,12 +274,12 @@ const metadata = {
       }
     ]
   }}
-/>
+>
 
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
-  </Stats>
+  </EChart>
 
  <!-- Testimonials Widget *********** -->
 
