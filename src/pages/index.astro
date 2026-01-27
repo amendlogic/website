@@ -224,11 +224,6 @@ const metadata = {
       { title: 'Users', amount: '48.4K' },
     ]}
   >
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Stats>
-
 <EChart 
     title="Transparent Performance Tracking"
     subtitle="Strategies are developed and evaluated using extensive historical market data across multiple market phases. Clear, measurable performance metrics provide full transparency into how the system behaves under different conditions.<br /> <br />The focus is on realistic assumptions, verifiable data, and reproducible results — not theoretical models or over-optimized scenarios."
@@ -240,7 +235,7 @@ const metadata = {
       valueFormatter: v => `${v}%`
     },
     legend: {
-      data: ["AmendLogic", "Buy &amp; Hold", "Drawdown"]
+      data: ["AmendLogic", "Buy & Hold", "Drawdown"]
     },
     xAxis: {
       type: "category",
@@ -271,7 +266,75 @@ const metadata = {
         lineStyle: { width: 3 }
       },
       {
-        name: "Buy &amp; Hold",
+        name: "Buy & Hold",
+        type: "line",
+        smooth: true,
+        data: [0, 20, 95, 40, 110, 180, 180, 180, 180, 180, 180],
+        lineStyle: {
+          type: "dashed"
+        }
+      },
+      {
+        name: "Drawdown",
+        type: "bar",
+        yAxisIndex: 1,
+        data: [0, -12, -35, -55, -18, -10, -10, -10, -10, -10, -10],
+        itemStyle: {
+          color: "rgba(239,68,68,0.5)"
+        }
+      }
+    ]
+  }}
+/>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Stats>
+
+<EChart 
+    title="Transparent Performance Tracking"
+    subtitle="Strategies are developed and evaluated using extensive historical market data across multiple market phases. Clear, measurable performance metrics provide full transparency into how the system behaves under different conditions.<br /> <br />The focus is on realistic assumptions, verifiable data, and reproducible results — not theoretical models or over-optimized scenarios."
+   
+  height="300px"
+  options={{
+    tooltip: {
+      trigger: "axis",
+      valueFormatter: v => `${v}%`
+    },
+    legend: {
+      data: ["AmendLogic", "Buy & Hold", "Drawdown"]
+    },
+    xAxis: {
+      type: "category",
+      data: ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"]
+    },
+    yAxis: [
+      {
+        type: "value",
+        name: "Equity %",
+        position: "left",
+        axisLabel: { formatter: "{value}%" }
+      },
+      {
+        type: "value",
+        name: "Drawdown %",
+        position: "right",
+        min: -100,
+        max: 0,
+        axisLabel: { formatter: "{value}%" }
+      }
+    ],
+    series: [
+      {
+        name: "AmendLogic",
+        type: "line",
+        smooth: true,
+        data: [0, 35, 120, 90, 160, 210, 210, 210, 210, 210, 210],
+        lineStyle: { width: 3 }
+      },
+      {
+        name: "Buy & Hold",
         type: "line",
         smooth: true,
         data: [0, 20, 95, 40, 110, 180, 180, 180, 180, 180, 180],
