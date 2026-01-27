@@ -21,6 +21,7 @@ const {
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
   tagline,
+  content = await Astro.slots.render('content'),
 
   options,
   height = '400px',
@@ -45,6 +46,9 @@ const serializedOptions = JSON.stringify(options);
   {(title || subtitle || tagline) && (
     <Headline title={title} subtitle={subtitle} tagline={tagline} />
   )}
+
+  <div class="md:basis-1/2 self-center">
+        {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}</div>
 
   <div class="mt-8">
     <div
