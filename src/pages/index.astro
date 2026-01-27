@@ -211,153 +211,32 @@ const metadata = {
 
   <!-- Chart Widget ******************* -->
 
-  <EChart 
-    tagline="Performance"
-    title="Built on Data"
-    subtitle="The strategy is tested using historical market data to understand how it behaves in trending, ranging, and volatile environments. The focus lies on realistic assumptions, controlled risk, and consistent behavior rather than short-term optimization."
-
-    height="350px"
-    options={{
-      tooltip: {
-        trigger: "axis",
-        valueFormatter: v => `${v}%`
-      },
-    legend: {
-      data: ["AmendLogic", "Buy & Hold", "Drawdown"]
+  <EChart
+  title="Performance"
+  subtitle="Backtested on historical data"
+  height="350px"
+  options={{
+    type: 'bar', // 'line', 'bar', etc.
+    data: {
+      labels: ['A', 'B', 'C', 'D'],
+      datasets: [{
+        label: 'Sales',
+        data: [12, 19, 3, 5],
+        backgroundColor: '#6366F1'
+      }]
     },
-    xAxis: {
-      type: "category",
-      data: ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"]
-    },
-    yAxis: [
-      {
-        type: "value",
-        name: "Equity %",
-        position: "left",
-        axisLabel: { formatter: "{value}%" }
-      },
-      {
-        type: "value",
-        name: "Drawdown %",
-        position: "right",
-        min: -100,
-        max: 0,
-        axisLabel: { formatter: "{value}%" }
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true },
+        tooltip: { enabled: true }
       }
-    ],
-    series: [
-      {
-        name: "AmendLogic",
-        type: "line",
-        smooth: true,
-        data: [0, 35, 120, 90, 160, 210, 210, 210, 210, 210, 210],
-        lineStyle: { width: 3 }
-      },
-      {
-        name: "Buy & Hold",
-        type: "line",
-        smooth: true,
-        data: [0, 20, 95, 40, 110, 180, 180, 180, 180, 180, 180],
-        lineStyle: {
-          type: "dashed"
-        }
-      },
-      {
-        name: "Drawdown",
-        type: "bar",
-        yAxisIndex: 1,
-        data: [0, -12, -35, -55, -18, -10, -10, -10, -10, -10, -10],
-        itemStyle: {
-          color: "rgba(239,68,68,0.5)"
-        }
-      }
-    ]
+    }
   }}
->
-    <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-        Startup success stories: <br /><span class="text-2xl">Launching with AstroWind</span>
-      </h3>
-    </Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </EChart>
-
+/>
   <!-- Chart Widget ******************* -->
 
-  <EChart 
-    isAfterContent
-
-    height="350px"
-    options={{
-      tooltip: {
-        trigger: "axis",
-        valueFormatter: v => `${v}%`
-      },
-    legend: {
-      data: ["AmendLogic", "Buy & Hold", "Drawdown"]
-    },
-    xAxis: {
-      type: "category",
-      data: ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"]
-    },
-    yAxis: [
-      {
-        type: "value",
-        name: "Equity %",
-        position: "left",
-        axisLabel: { formatter: "{value}%" }
-      },
-      {
-        type: "value",
-        name: "Drawdown %",
-        position: "right",
-        min: -100,
-        max: 0,
-        axisLabel: { formatter: "{value}%" }
-      }
-    ],
-    series: [
-      {
-        name: "AmendLogic",
-        type: "line",
-        smooth: true,
-        data: [0, 35, 120, 90, 160, 210, 210, 210, 210, 210, 210],
-        lineStyle: { width: 3 }
-      },
-      {
-        name: "Buy & Hold",
-        type: "line",
-        smooth: true,
-        data: [0, 20, 95, 40, 110, 180, 180, 180, 180, 180, 180],
-        lineStyle: {
-          type: "dashed"
-        }
-      },
-      {
-        name: "Drawdown",
-        type: "bar",
-        yAxisIndex: 1,
-        data: [0, -12, -35, -55, -18, -10, -10, -10, -10, -10, -10],
-        itemStyle: {
-          color: "rgba(239,68,68,0.5)"
-        }
-      }
-    ]
-  }}
->
-    <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-        Startup success stories: <br /><span class="text-2xl">Launching with AstroWind</span>
-      </h3>
-    </Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </EChart>
 
  <!-- Testimonials Widget *********** -->
 
