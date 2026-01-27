@@ -223,7 +223,11 @@ const metadata = {
       { title: 'Forks', amount: '10.3K' },
       { title: 'Users', amount: '48.4K' },
     ]}
-  />
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Stats>
 
 <EChart 
     title="Transparent Performance Tracking"
@@ -236,11 +240,11 @@ const metadata = {
       valueFormatter: v => `${v}%`
     },
     legend: {
-      data: ["Trading", "HODL", "Drawdown"]
+      data: ["AmendLogic", "Buy & Hold", "Drawdown"]
     },
     xAxis: {
       type: "category",
-      data: ["2019", "2020", "2021", "2022", "2023", "2024"]
+      data: ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"]
     },
     yAxis: [
       {
@@ -263,14 +267,14 @@ const metadata = {
         name: "Trading",
         type: "line",
         smooth: true,
-        data: [0, 35, 120, 90, 160, 210],
+        data: [0, 35, 120, 90, 160, 210, 210, 210, 210, 210, 210],
         lineStyle: { width: 3 }
       },
       {
         name: "HODL",
         type: "line",
         smooth: true,
-        data: [0, 20, 95, 40, 110, 180],
+        data: [0, 20, 95, 40, 110, 180, 180, 180, 180, 180, 180],
         lineStyle: {
           type: "dashed"
         }
@@ -279,7 +283,7 @@ const metadata = {
         name: "Drawdown",
         type: "bar",
         yAxisIndex: 1,
-        data: [0, -12, -35, -55, -18, -10],
+        data: [0, -12, -35, -55, -18, -10, -10, -10, -10, -10, -10],
         itemStyle: {
           color: "rgba(239,68,68,0.5)"
         }
