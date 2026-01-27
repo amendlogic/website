@@ -68,22 +68,39 @@ const serializedOptions = JSON.stringify(options);
 </WidgetWrapper>
 
 <script define:vars={{ chartOptions: serializedOptions, chartId }}>
-  // Load ECharts from CDN
-  document.addEventListener("DOMContentLoaded", async () => {
-    // Load ECharts core
-    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
+  (async () => {
+    const echarts = await import(
+      'https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js'
+    );
 
-    // Initialize chart
-    const chartContainer = document.getElementById(chartId);
-    const chart = echarts.init(chartContainer);
+    const container = document.getElementById(chartId);
+    if (!container) return;
 
-    // Set chart options
+    window.__echarts_instances = window.__echarts_instances || [];
+
+    let chart = echarts.init(container);
+    window.__echarts_instances.push(chart);
+
     const options = JSON.parse(chartOptions);
     chart.setOption(options);
 
-    // Handle resize
-    window.addEventListener("resize", () => {
-      chart.resize();
+    const safeResize = () => {
+      if (!container.offsetHeight) return;
+      try {
+        chart.resize();
+      } catch (e) {}
+    };
+
+    window.addEventListener('resize', safeResize);
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        requestAnimationFrame(safeResize);
+      }
     });
-  });
+
+    document.addEventListener('astro:after-swap', () => {
+      requestAnimationFrame(safeResize);
+    });
+  })();
 </script>
