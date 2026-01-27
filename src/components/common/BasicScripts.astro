@@ -279,10 +279,14 @@ import { UI } from 'astrowind:config';
       .querySelectorAll('[no-intersect]')
       .forEach((el) => {
         el.removeAttribute('no-intersect');
+        el.removeAttribute('data-animated');
+
         el.style.opacity = '';
         el.style.transform = '';
-      });
-  }
+        el.style.transitionDelay = '';
+        el.style.animationDelay = '';
+    });
+} 
 
   function handlePageRestore() {
     forceRevealIntersected();
