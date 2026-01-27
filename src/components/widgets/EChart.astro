@@ -34,7 +34,7 @@ const chartOptions = Object.keys(options).length > 0 ? options : defaultOptions;
 const serializedOptions = JSON.stringify(chartOptions);
 ---
 
-<div id={chartId} style={`width: ${width}; height: ${height};`}></div>
+<div id={chartId} style={`width: ${width}; height: ${height};`} class="max-w-3xl mx-auto text-center p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600"></div>
 
 <script define:vars={{ chartOptions: serializedOptions, chartId }}>
   // Load ECharts from CDN
