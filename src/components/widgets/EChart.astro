@@ -67,7 +67,7 @@ const serializedOptions = JSON.stringify(options);
 
 </WidgetWrapper>
 
-<script define:vars={{ chartOptions: serializedOptions, chartId }}>
+<script define:vars={{ chartId, serializedOptions }}>
   (async () => {
     const echarts = await import(
       'https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js'
@@ -77,10 +77,10 @@ const serializedOptions = JSON.stringify(options);
     if (!container) return;
 
     let chart = null;
-    const options = JSON.parse(chartOptions);
+    const options = JSON.parse(serializedOptions);
 
     /* ===============================
-       INIT / DESTROY
+       CORE LIFECYCLE
     =============================== */
     function init() {
       if (chart) return;
@@ -96,39 +96,54 @@ const serializedOptions = JSON.stringify(options);
       chart = null;
     }
 
+    function ensureChart() {
+      if (!chart && container.offsetWidth && container.offsetHeight) {
+        init();
+      }
+    }
+
     /* ===============================
-       VISIBILITY OBSERVER (KEY!)
+       VISIBILITY (SCROLL)
     =============================== */
-    const visibilityObserver = new IntersectionObserver(
+    const intersectionObserver = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          requestAnimationFrame(init);
-        } else {
-          destroy();
-        }
+        entry.isIntersecting ? init() : destroy();
       },
       { threshold: 0.1 }
     );
 
-    visibilityObserver.observe(container);
+    intersectionObserver.observe(container);
 
     /* ===============================
-       SIZE OBSERVER
+       RESIZE
     =============================== */
     const resizeObserver = new ResizeObserver(() => {
-      if (chart) {
-        chart.resize();
-      }
+      if (chart) chart.resize();
     });
 
     resizeObserver.observe(container);
 
     /* ===============================
-       CLEANUP (Astro)
+       PAGE / TAB RESTORE (BFCache 🔥)
+    =============================== */
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        requestAnimationFrame(ensureChart);
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        requestAnimationFrame(ensureChart);
+      }
+    });
+
+    /* ===============================
+       ASTRO NAVIGATION CLEANUP
     =============================== */
     document.addEventListener('astro:before-swap', () => {
       destroy();
-      visibilityObserver.disconnect();
+      intersectionObserver.disconnect();
       resizeObserver.disconnect();
     });
   })();
