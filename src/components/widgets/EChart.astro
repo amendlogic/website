@@ -22,6 +22,7 @@ const {
   subtitle = await Astro.slots.render('subtitle'),
   tagline,
   content = await Astro.slots.render('content'),
+  isAfterContent = false,
 
   options,
   height = '400px',
