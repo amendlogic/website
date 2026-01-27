@@ -37,22 +37,32 @@ const serializedOptions = JSON.stringify(chartOptions);
 <div id={chartId} style={`width: ${width}; height: ${height};`} class="max-w-3xl mt-8 md:mt-12 mx-auto text-center p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900"></div>
 
 <script define:vars={{ chartOptions: serializedOptions, chartId }}>
-  // Load ECharts from CDN
   document.addEventListener("DOMContentLoaded", async () => {
-    // Load ECharts core
     const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
+    const container = document.getElementById(chartId);
+    let chart;
 
-    // Initialize chart
-    const chartContainer = document.getElementById(chartId);
-    const chart = echarts.init(chartContainer);
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        if (!chart) {
+          chart = echarts.init(container);
+          chart.setOption(JSON.parse(chartOptions));
+        } else {
+          chart.resize();
+        }
+      }
+    });
 
-    // Set chart options
-    const options = JSON.parse(chartOptions);
-    chart.setOption(options);
+    observer.observe(container);
 
-    // Handle resize
     window.addEventListener("resize", () => {
-      chart.resize();
+      chart?.resize();
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        chart?.resize();
+      }
     });
   });
 </script>
