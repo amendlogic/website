@@ -288,6 +288,12 @@ const metadata = {
 
   <EChart 
     isAfterContent
+    stats={[
+      { title: 'Offices', amount: '4' },
+      { title: 'Employees', amount: '248' },
+      { title: 'Templates', amount: '12' },
+      { title: 'Awards', amount: '24' },
+    ]}
 
     height="350px"
     options={{
@@ -347,11 +353,6 @@ const metadata = {
     ]
   }}
 >
-    <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Market Structure & Trend Detection</h3>
-      Focused on identifying meaningful opportunities — not constant activity.
-    </Fragment>
-
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
