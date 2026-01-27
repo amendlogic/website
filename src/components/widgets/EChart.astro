@@ -76,31 +76,60 @@ const serializedOptions = JSON.stringify(options);
     const container = document.getElementById(chartId);
     if (!container) return;
 
-    window.__echarts_instances = window.__echarts_instances || [];
-
-    let chart = echarts.init(container);
-    window.__echarts_instances.push(chart);
-
+    let chart = null;
     const options = JSON.parse(chartOptions);
-    chart.setOption(options);
 
-    const safeResize = () => {
-      if (!container.offsetHeight) return;
-      try {
+    /* ===============================
+       INIT / DESTROY
+    =============================== */
+    function init() {
+      if (chart) return;
+      if (!container.offsetWidth || !container.offsetHeight) return;
+
+      chart = echarts.init(container);
+      chart.setOption(options, true);
+    }
+
+    function destroy() {
+      if (!chart) return;
+      chart.dispose();
+      chart = null;
+    }
+
+    /* ===============================
+       VISIBILITY OBSERVER (KEY!)
+    =============================== */
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          requestAnimationFrame(init);
+        } else {
+          destroy();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    visibilityObserver.observe(container);
+
+    /* ===============================
+       SIZE OBSERVER
+    =============================== */
+    const resizeObserver = new ResizeObserver(() => {
+      if (chart) {
         chart.resize();
-      } catch (e) {}
-    };
-
-    window.addEventListener('resize', safeResize);
-
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
-        requestAnimationFrame(safeResize);
       }
     });
 
-    document.addEventListener('astro:after-swap', () => {
-      requestAnimationFrame(safeResize);
+    resizeObserver.observe(container);
+
+    /* ===============================
+       CLEANUP (Astro)
+    =============================== */
+    document.addEventListener('astro:before-swap', () => {
+      destroy();
+      visibilityObserver.disconnect();
+      resizeObserver.disconnect();
     });
   })();
 </script>
