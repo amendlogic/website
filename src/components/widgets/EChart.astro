@@ -80,11 +80,14 @@ const serializedOptions = JSON.stringify(options);
     const options = JSON.parse(serializedOptions);
 
     /* ===============================
-       CORE LIFECYCLE
+       CORE
     =============================== */
+    function hasSize() {
+      return container.offsetWidth > 0 && container.offsetHeight > 0;
+    }
+
     function init() {
-      if (chart) return;
-      if (!container.offsetWidth || !container.offsetHeight) return;
+      if (chart || !hasSize()) return;
 
       chart = echarts.init(container);
       chart.setOption(options, true);
@@ -96,55 +99,55 @@ const serializedOptions = JSON.stringify(options);
       chart = null;
     }
 
-    function ensureChart() {
-      if (!chart && container.offsetWidth && container.offsetHeight) {
-        init();
-      }
+    function reinit() {
+      destroy();
+      init();
     }
 
     /* ===============================
-       VISIBILITY (SCROLL)
+       SAFE INIT LOOP (KEY!)
     =============================== */
-    const intersectionObserver = new IntersectionObserver(
-      ([entry]) => {
-        entry.isIntersecting ? init() : destroy();
-      },
-      { threshold: 0.1 }
-    );
+    function waitForLayout() {
+      if (hasSize()) {
+        init();
+      } else {
+        requestAnimationFrame(waitForLayout);
+      }
+    }
 
-    intersectionObserver.observe(container);
+    waitForLayout();
 
     /* ===============================
-       RESIZE
+       WINDOW RESIZE
     =============================== */
-    const resizeObserver = new ResizeObserver(() => {
-      if (chart) chart.resize();
+    window.addEventListener('resize', () => {
+      if (chart) {
+        chart.resize();
+      }
     });
 
-    resizeObserver.observe(container);
-
     /* ===============================
-       PAGE / TAB RESTORE (BFCache 🔥)
+       TAB / BACK BUTTON (BFCache 🔥)
     =============================== */
-    window.addEventListener('pageshow', (event) => {
-      if (event.persisted) {
-        requestAnimationFrame(ensureChart);
-      }
+    window.addEventListener('pageshow', () => {
+      requestAnimationFrame(reinit);
     });
 
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
-        requestAnimationFrame(ensureChart);
+        requestAnimationFrame(reinit);
       }
     });
 
     /* ===============================
-       ASTRO NAVIGATION CLEANUP
+       ASTRO NAVIGATION
     =============================== */
+    document.addEventListener('astro:after-swap', () => {
+      requestAnimationFrame(reinit);
+    });
+
     document.addEventListener('astro:before-swap', () => {
       destroy();
-      intersectionObserver.disconnect();
-      resizeObserver.disconnect();
     });
   })();
 </script>
