@@ -1,58 +1,60 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { UI } from 'astrowind:config';
-import { useState, useEffect } from 'astro/jsx-runtime';
 ---
 
-<button
-  type="button"
-  class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
-  aria-label="Toggle theme"
-  client:load
+<button 
+  type="button" 
+  class={className} 
+  aria-label={label} 
+  id="theme-toggler"
 >
-  <Icon name="tabler:device-desktop" class="w-6 h-6" client:load />
+  <Icon name="tabler:sun" class={`${iconClass} sun-icon`} />
+  <Icon name="tabler:moon" class={`${iconClass} moon-icon`} />
+  <Icon name="tabler:device-desktop" class={`${iconClass} system-icon`} />
 </button>
 
-<script is:inline>
-  const THEME_ORDER = ['system', 'light', 'dark'];
-  const ICON_MAP = {
-    system: 'tabler:device-desktop',
-    light: 'tabler:sun',
-    dark: 'tabler:moon',
+<style>
+  /* Grundzustand: Alle Icons verstecken */
+  .sun-icon, .moon-icon, .system-icon { display: none; }
+
+  /* Zeige Sun-Icon wenn Theme explizit Light */
+  :global(html[data-theme="light"]) .sun-icon { display: block; }
+  
+  /* Zeige Moon-Icon wenn Theme explizit Dark */
+  :global(html[data-theme="dark"]) .moon-icon { display: block; }
+  
+  /* Zeige Monitor-Icon wenn System-Modus aktiv */
+  :global(html[data-theme="system"]) .system-icon { display: block; }
+</style>
+
+<script>
+  const setupToggle = () => {
+    const btn = document.getElementById('theme-toggler');
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+      const current = localStorage.theme || 'system';
+      let next;
+
+      if (current === 'system') next = 'light';
+      else if (current === 'light') next = 'dark';
+      else next = 'system';
+
+      if (next === 'system') {
+        localStorage.removeItem('theme');
+      } else {
+        localStorage.theme = next;
+      }
+
+      // Die globale Funktion aufrufen - kein Reload nötig!
+      if (window.applyTheme) {
+        window.applyTheme(next);
+      }
+    });
   };
 
-  const btn = document.querySelector('[data-aw-toggle-color-scheme], button');
-  const icon = btn.querySelector('svg');
-
-  function getTheme() {
-    try { return localStorage.getItem('theme') ?? 'system'; } 
-    catch { return 'system'; }
-  }
-
-  function applyTheme(theme) {
-    const root = document.documentElement;
-    root.classList.remove('dark');
-    if (theme === 'dark') root.classList.add('dark');
-    if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      root.classList.add('dark');
-    }
-    if (icon) icon.setAttribute('name', ICON_MAP[theme]);
-  }
-
-  function nextTheme() {
-    const current = getTheme();
-    const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
-    localStorage.setItem('theme', next);
-    applyTheme(next);
-  }
-
-  // Initial setzen
-  applyTheme(getTheme());
-
-  btn.addEventListener('click', nextTheme);
-
-  // System changes
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (getTheme() === 'system') applyTheme('system');
-  });
+  // Initialisierung (auch für Astro View Transitions)
+  setupToggle();
+  document.addEventListener('astro:after-swap', setupToggle);
 </script>
