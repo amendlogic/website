@@ -1,65 +1,53 @@
 ---
 import { UI } from 'astrowind:config';
-
-// TODO: This code is temporary
 ---
 
-<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+<script is:inline>
   const THEME_ORDER = ['system', 'light', 'dark'];
 
   function applyTheme(theme) {
     const root = document.documentElement;
-
-    // Entferne vorherige dark-Klasse
     root.classList.remove('dark');
 
-    if (theme === 'dark') {
+    if (theme === 'dark') root.classList.add('dark');
+    else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       root.classList.add('dark');
-    } else if (theme === 'system') {
-      // System-Modus: OS Dark prüfen
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        root.classList.add('dark');
-      }
     }
 
-    // Icons aktualisieren
-    document.querySelectorAll('[data-aw-theme-icon]').forEach(icon => {
-      icon.classList.toggle('hidden', icon.dataset.awThemeIcon !== theme);
+    // Update all ToggleTheme buttons
+    document.querySelectorAll('[data-aw-toggle-color-scheme]').forEach((btn) => {
+      if (!btn) return;
+      let icon = 'tabler:sun';
+      if (theme === 'light') icon = 'tabler:sun';
+      else if (theme === 'dark') icon = 'tabler:moon';
+      else if (theme === 'system') icon = 'tabler:device-desktop';
+
+      btn.dataset.iconName = icon;
     });
   }
 
-  function getTheme() {
-    return localStorage.getItem('theme') || 'system';
-  }
+  // initial theme
+  const storedTheme = localStorage.getItem('theme');
+  const defaultTheme = UI.theme || 'system';
 
-  function setTheme(theme) {
-    localStorage.setItem('theme', theme);
-    applyTheme(theme);
-  }
+  applyTheme(storedTheme ?? defaultTheme);
 
-  function cycleTheme() {
-    const current = getTheme();
-    const idx = THEME_ORDER.indexOf(current);
-    const next = THEME_ORDER[(idx + 1) % THEME_ORDER.length];
-    setTheme(next);
-  }
-
-  // Initial load
-  if (UI.theme?.endsWith(':only')) {
-    setTheme(UI.theme.replace(':only',''));
-  } else {
-    setTheme(getTheme());
-  }
-
-  // Button click
-  document.addEventListener('click', e => {
+  // click handler
+  document.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-aw-toggle-color-scheme]');
     if (!btn) return;
-    cycleTheme();
+
+    const current = localStorage.getItem('theme') ?? defaultTheme;
+    const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
+
+    localStorage.setItem('theme', next);
+    applyTheme(next);
   });
 
-  // OS-Änderung nur bei System-Modus
+  // OS theme changes
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (getTheme() === 'system') applyTheme('system');
+    if ((localStorage.getItem('theme') ?? defaultTheme) === 'system') {
+      applyTheme('system');
+    }
   });
 </script>
