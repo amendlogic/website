@@ -1,54 +1,84 @@
 ---
+import { Icon } from 'astro-icon/components';
 import { UI } from 'astrowind:config';
+
+export interface Props {
+  label?: string;
+  class?: string;
+  iconClass?: string;
+}
+
+const {
+  label = 'Toggle color mode',
+  class: className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center',
+  iconClass = 'w-6 h-6',
+} = Astro.props;
 ---
 
-<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  const THEME_ORDER = ['light', 'dark', 'system'];
-  let currentTheme = localStorage.getItem('theme') || defaultTheme.replace(':only','');
+{
+  !(UI.theme && UI.theme.endsWith(':only')) && (
+    <button
+      type="button"
+      class={className}
+      aria-label={label}
+      data-color-mode-toggle
+    >
+      <Icon name="tabler:device-desktop" class={iconClass} />
+    </button>
+  )
+}
 
-  // reactive icon name
-  let iconName = 'tabler:device-desktop';
+<script is:inline>
+  if (typeof window !== 'undefined') {
+    const THEME_ORDER = ['light', 'dark', 'system'];
 
-  function applyTheme(theme) {
-    const root = document.documentElement;
-    root.classList.remove('dark');
+    const btn = document.querySelector('[data-color-mode-toggle]');
+    const icon = btn.querySelector('svg') || btn.querySelector('i') || btn.querySelector('Icon');
 
-    if (theme === 'dark') root.classList.add('dark');
-    else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      root.classList.add('dark');
+    const getTheme = () => {
+      try { return localStorage.getItem('theme') || 'system'; }
+      catch(e) { return 'system'; }
+    };
+
+    const applyTheme = (theme) => {
+      const root = document.documentElement;
+      root.classList.remove('dark');
+
+      if (theme === 'dark') root.classList.add('dark');
+      if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        root.classList.add('dark');
+      }
+
+      // Icon update
+      if (icon) {
+        const iconName = theme === 'light' ? 'tabler:sun'
+                        : theme === 'dark' ? 'tabler:moon'
+                        : 'tabler:device-desktop';
+        if ('name' in icon) {
+          icon.name = iconName;
+        }
+      }
+    };
+
+    // initial theme
+    let currentTheme = getTheme();
+
+    if (UI.theme && UI.theme.endsWith(':only')) {
+      currentTheme = UI.theme.replace(':only', '');
     }
 
-    // Icon setzen
-    if (theme === 'light') iconName = 'tabler:sun';
-    else if (theme === 'dark') iconName = 'tabler:moon';
-    else iconName = 'tabler:device-desktop';
-
-    // AstroWind checkbox sync (harmlos)
-    document.querySelectorAll('[data-aw-toggle-color-scheme] > input').forEach(el => {
-      el.checked = theme !== 'dark';
-    });
-  }
-
-  // initial
-  applyTheme(currentTheme);
-
-  // OS theme change
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (currentTheme === 'system') applyTheme('system');
-  });
-
-  // click handler
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('[data-aw-toggle-color-scheme]');
-    if (!btn) return;
-
-    const next = THEME_ORDER[(THEME_ORDER.indexOf(currentTheme) + 1) % THEME_ORDER.length];
-    currentTheme = next;
-    localStorage.setItem('theme', currentTheme);
     applyTheme(currentTheme);
 
-    // Button Icon updaten
-    const icon = btn.querySelector('astro-icon');
-    if (icon) icon.name = iconName;  // reactive binding
-  });
+    // click handler
+    btn.addEventListener('click', () => {
+      currentTheme = THEME_ORDER[(THEME_ORDER.indexOf(currentTheme) + 1) % THEME_ORDER.length];
+      try { localStorage.setItem('theme', currentTheme); } catch(e){}
+      applyTheme(currentTheme);
+    });
+
+    // react to system changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (getTheme() === 'system') applyTheme('system');
+    });
+  }
 </script>
