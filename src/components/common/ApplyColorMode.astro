@@ -3,14 +3,20 @@
 
   function applyTheme(theme) {
     const root = document.documentElement;
+
+    // Entferne vorherige dark-Klasse
     root.classList.remove('dark');
 
-    if (theme === 'dark') root.classList.add('dark');
-    else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (theme === 'dark') {
       root.classList.add('dark');
+    } else if (theme === 'system') {
+      // System-Modus: OS Dark prüfen
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        root.classList.add('dark');
+      }
     }
 
-    // Icons updaten
+    // Icons aktualisieren
     document.querySelectorAll('[data-aw-theme-icon]').forEach(icon => {
       icon.classList.toggle('hidden', icon.dataset.awThemeIcon !== theme);
     });
@@ -32,12 +38,11 @@
     setTheme(next);
   }
 
-  // Initial Load
-  const storedTheme = getTheme();
+  // Initial load
   if (UI.theme?.endsWith(':only')) {
-    setTheme(UI.theme.replace(':only', ''));
+    setTheme(UI.theme.replace(':only',''));
   } else {
-    setTheme(storedTheme);
+    setTheme(getTheme());
   }
 
   // Button click
@@ -47,7 +52,7 @@
     cycleTheme();
   });
 
-  // OS change only affects System
+  // OS-Änderung nur bei System-Modus
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if (getTheme() === 'system') applyTheme('system');
   });
