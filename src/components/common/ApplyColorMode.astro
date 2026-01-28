@@ -1,33 +1,46 @@
 ---
 import { UI } from 'astrowind:config';
-
-// TODO: This code is temporary
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
   function applyTheme(theme) {
+    const root = document.documentElement;
+    root.classList.remove('dark');
+
     if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+      root.classList.add('dark');
     }
-    const matches = document.querySelectorAll('[data-aw-toggle-color-scheme] > input');
 
-    if (matches && matches.length) {
-      matches.forEach((elem) => {
-        elem.checked = theme !== 'dark';
-      });
+    if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      root.classList.add('dark');
     }
+
+    // sync existing AstroWind checkbox logic (harmless if none exist)
+    const inputs = document.querySelectorAll('[data-aw-toggle-color-scheme] > input');
+    inputs.forEach((el) => {
+      el.checked = theme !== 'dark';
+    });
   }
 
-  if ((defaultTheme && defaultTheme.endsWith(':only')) || (!localStorage.theme && defaultTheme !== 'system')) {
+  const storedTheme = localStorage.getItem('theme');
+
+  // handle :only modes
+  if (defaultTheme.endsWith(':only')) {
     applyTheme(defaultTheme.replace(':only', ''));
-  } else if (
-    localStorage.theme === 'dark' ||
-    (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-  ) {
-    applyTheme('dark');
-  } else {
-    applyTheme('light');
   }
+  // stored theme wins
+  else if (storedTheme) {
+    applyTheme(storedTheme);
+  }
+  // fallback to config default
+  else {
+    applyTheme(defaultTheme === 'system' ? 'system' : defaultTheme);
+  }
+
+  // react to OS theme changes in system mode
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if ((localStorage.getItem('theme') ?? 'system') === 'system') {
+      applyTheme('system');
+    }
+  });
 </script>
