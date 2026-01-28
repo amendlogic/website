@@ -6,7 +6,7 @@ export interface Props {
   label?: string;
   class?: string;
   iconClass?: string;
-  iconName?: string; // default initial icon (light)
+  iconName?: string; // initial icon
 }
 
 const {
@@ -21,7 +21,7 @@ const {
 {
   !(UI.theme && UI.theme.endsWith(':only')) && (
     <button type="button" class={className} aria-label={label} data-aw-toggle-color-scheme>
-      <Icon name={iconName} class={`${iconClass} data-aw-theme-icon`} data-aw-theme-icon="light" />
+      <Icon name="tabler:sun" class={`${iconClass} data-aw-theme-icon`} data-aw-theme-icon="light" />
       <Icon name="tabler:moon" class={`${iconClass} hidden data-aw-theme-icon`} data-aw-theme-icon="dark" />
       <Icon name="tabler:device-desktop" class={`${iconClass} hidden data-aw-theme-icon`} data-aw-theme-icon="system" />
     </button>
