@@ -7,24 +7,18 @@ import { UI } from 'astrowind:config';
     const root = document.documentElement;
     root.classList.remove('dark');
 
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (theme === 'dark') root.classList.add('dark');
+    else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       root.classList.add('dark');
     }
 
-    // Update all toggle buttons
     const buttons = document.querySelectorAll('[data-aw-toggle-color-scheme]');
     buttons.forEach((btn) => {
+      const iconName = theme === 'light' ? 'tabler:sun' : theme === 'dark' ? 'tabler:moon' : 'tabler:device-desktop';
+      btn.dataset.iconName = iconName;
+
       const icon = btn.querySelector('svg');
-      if (!icon) return;
-
-      if (theme === 'light') btn.dataset.iconName = 'tabler:sun';
-      else if (theme === 'dark') btn.dataset.iconName = 'tabler:moon';
-      else btn.dataset.iconName = 'tabler:device-desktop';
-
-      // Re-render the icon
-      if (window.Iconify) {
+      if (icon && window.Iconify) {
         window.Iconify.scan(btn);
       }
     });
@@ -40,10 +34,12 @@ import { UI } from 'astrowind:config';
     applyTheme(defaultTheme);
   }
 
-  // React to system theme changes
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if ((localStorage.getItem('theme') ?? 'system') === 'system') {
       applyTheme('system');
     }
   });
+
+  // Make it globally available
+  window.applyTheme = applyTheme;
 </script>
