@@ -2,20 +2,8 @@
 import { Icon } from 'astro-icon/components';
 import { UI } from 'astrowind:config';
 
-const THEME_ORDER = ['system', 'light', 'dark'];
-
-function getStoredTheme() {
-  return localStorage.getItem('theme') || 'system';
-}
-
-function setStoredTheme(theme: string) {
-  localStorage.setItem('theme', theme);
-}
-
-function getNextTheme(current: string) {
-  const idx = THEME_ORDER.indexOf(current);
-  return THEME_ORDER[(idx + 1) % THEME_ORDER.length];
-}
+// Default Theme prüfen, Fallback auf "system" wenn UI nicht definiert
+const DEFAULT_THEME = typeof UI !== 'undefined' && UI?.theme ? UI.theme : 'system';
 ---
 
 <button
@@ -31,6 +19,7 @@ function getNextTheme(current: string) {
   const button = document.getElementById('theme-toggle-button');
   const icon = document.getElementById('theme-toggle-icon');
 
+  const THEME_ORDER = ['system', 'light', 'dark'];
   const ICON_MAP = {
     system: 'tabler:device-desktop',
     light: 'tabler:sun',
@@ -41,39 +30,51 @@ function getNextTheme(current: string) {
     const root = document.documentElement;
     root.classList.remove('dark');
 
-    if (theme === 'dark') root.classList.add('dark');
-    else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (theme === 'dark') {
       root.classList.add('dark');
+    } else if (theme === 'system') {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        root.classList.add('dark');
+      }
     }
 
+    // Icon updaten
     icon.name = ICON_MAP[theme];
   }
 
-  function cycleTheme() {
-    const current = localStorage.getItem('theme') || 'system';
-    const next = getNextTheme(current);
-    localStorage.setItem('theme', next);
-    applyTheme(next);
+  function getStoredTheme() {
+    return localStorage.getItem('theme') || '{{DEFAULT_THEME}}';
+  }
+
+  function setStoredTheme(theme) {
+    localStorage.setItem('theme', theme);
+    applyTheme(theme);
   }
 
   function getNextTheme(current) {
-    const order = ['system', 'light', 'dark'];
-    const idx = order.indexOf(current);
-    return order[(idx + 1) % order.length];
+    const idx = THEME_ORDER.indexOf(current);
+    return THEME_ORDER[(idx + 1) % THEME_ORDER.length];
   }
 
-  // Initial load
-  let initialTheme = localStorage.getItem('theme') || '{{UI.theme || "system"}}';
-  if (initialTheme.endsWith(':only')) initialTheme = initialTheme.replace(':only','');
-  localStorage.setItem('theme', initialTheme);
-  applyTheme(initialTheme);
+  function cycleTheme() {
+    const current = getStoredTheme();
+    const next = getNextTheme(current);
+    setStoredTheme(next);
+  }
 
-  // Button click
+  // Initial Theme setzen
+  let initialTheme = getStoredTheme();
+  if (initialTheme.endsWith(':only')) {
+    initialTheme = initialTheme.replace(':only', '');
+  }
+  setStoredTheme(initialTheme);
+
+  // Button klick
   button.addEventListener('click', cycleTheme);
 
-  // System dark mode changes
+  // OS Dark Mode reagieren, nur im System-Modus
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if ((localStorage.getItem('theme') || 'system') === 'system') {
+    if (getStoredTheme() === 'system') {
       applyTheme('system');
     }
   });
