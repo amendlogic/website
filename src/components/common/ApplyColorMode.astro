@@ -6,11 +6,8 @@ import { UI } from 'astrowind:config';
   const THEME_ORDER = ['system', 'light', 'dark'];
 
   function getTheme() {
-    try {
-      return localStorage.getItem('theme') ?? 'system';
-    } catch {
-      return 'system';
-    }
+    try { return localStorage.getItem('theme') ?? 'system'; }
+    catch { return 'system'; }
   }
 
   function applyTheme(theme) {
@@ -23,7 +20,7 @@ import { UI } from 'astrowind:config';
     }
 
     // Icon wechseln
-    const icon = document.getElementById('theme-icon');
+    const icon = document.querySelector('[data-aw-toggle-color-scheme] svg');
     if (!icon) return;
 
     switch (theme) {
@@ -47,25 +44,24 @@ import { UI } from 'astrowind:config';
   } else if (storedTheme) {
     applyTheme(storedTheme);
   } else {
-    applyTheme(defaultTheme === 'system' ? 'system' : defaultTheme);
+    applyTheme(defaultTheme);
   }
-
-  // Button Click Handler
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('#theme-toggle');
-    if (!btn) return;
-
-    const current = getTheme();
-    const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
-
-    localStorage.setItem('theme', next);
-    applyTheme(next);
-  });
 
   // System Theme Änderungen beobachten
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if ((getTheme() ?? 'system') === 'system') {
       applyTheme('system');
     }
+  });
+
+  // Click Handler registrieren
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-aw-toggle-color-scheme]');
+    if (!btn) return;
+
+    const current = getTheme();
+    const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
+    localStorage.setItem('theme', next);
+    applyTheme(next);
   });
 </script>
