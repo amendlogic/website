@@ -3,6 +3,8 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+  const THEME_ORDER = ['system', 'light', 'dark'];
+
   function applyTheme(theme) {
     const root = document.documentElement;
     root.classList.remove('dark');
@@ -15,10 +17,9 @@ import { UI } from 'astrowind:config';
       root.classList.add('dark');
     }
 
-    // sync existing AstroWind checkbox logic (harmless if none exist)
-    const inputs = document.querySelectorAll('[data-aw-toggle-color-scheme] > input');
-    inputs.forEach((el) => {
-      el.checked = theme !== 'dark';
+    // Update icons
+    document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
+      icon.classList.toggle('hidden', icon.dataset.awThemeIcon !== theme);
     });
   }
 
@@ -36,6 +37,18 @@ import { UI } from 'astrowind:config';
   else {
     applyTheme(defaultTheme === 'system' ? 'system' : defaultTheme);
   }
+
+  // Click handler for your button
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-aw-toggle-color-scheme]');
+    if (!btn) return;
+
+    const current = localStorage.getItem('theme') ?? 'system';
+    const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
+
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  });
 
   // react to OS theme changes in system mode
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
