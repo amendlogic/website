@@ -15,47 +15,69 @@ const {
 } = Astro.props;
 ---
 
-<button type="button" class={className} aria-label={label} id="color-mode-btn">
-  <Icon id="color-mode-icon" name="tabler:device-desktop" class={iconClass} />
+<button
+  type="button"
+  class={className}
+  aria-label={label}
+  data-color-mode-toggle
+>
+  <Icon name="tabler:device-desktop" class={iconClass} />
 </button>
 
 <script is:inline>
-  // 3-State
+  // --- 3-State Logic ---
   const THEME_ORDER = ['light', 'dark', 'system'];
-  const btn = document.getElementById('color-mode-btn');
-  const icon = document.getElementById('color-mode-icon');
 
-  // safe localStorage fallback
-  const getTheme = () => {
-    try { return localStorage.getItem('theme') || 'system'; }
-    catch(e) { return 'system'; }
-  };
+  // Nur im Browser
+  if (typeof window !== 'undefined') {
+    const btn = document.querySelector('[data-color-mode-toggle]');
+    const icon = btn.querySelector('svg') || btn.querySelector('i') || btn.querySelector('Icon');
 
-  const setTheme = (theme) => {
-    try { localStorage.setItem('theme', theme); } catch(e){}
-    document.documentElement.classList.remove('dark');
-    if(theme === 'dark') document.documentElement.classList.add('dark');
-    if(theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
-      document.documentElement.classList.add('dark');
+    const getTheme = () => {
+      try { return localStorage.getItem('theme') || 'system'; }
+      catch(e) { return 'system'; }
+    };
 
-    // update icon
-    icon.name = theme === 'light' ? 'tabler:sun' :
-                theme === 'dark' ? 'tabler:moon' :
-                'tabler:device-desktop';
-  };
+    const applyTheme = (theme) => {
+      document.documentElement.classList.remove('dark');
 
-  // initial
-  let currentTheme = getTheme();
-  setTheme(currentTheme);
+      if (theme === 'dark') document.documentElement.classList.add('dark');
+      if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+      }
 
-  // handle click
-  btn.addEventListener('click', () => {
-    currentTheme = THEME_ORDER[(THEME_ORDER.indexOf(currentTheme) + 1) % THEME_ORDER.length];
-    setTheme(currentTheme);
-  });
+      // Icon update
+      if (icon) {
+        const iconName = theme === 'light' ? 'tabler:sun'
+                        : theme === 'dark' ? 'tabler:moon'
+                        : 'tabler:device-desktop';
+        // Astro Icon unterstützt dynamisches Setzen via `name` Attribut
+        if ('name' in icon) {
+          icon.name = iconName;
+        } else {
+          // fallback falls Astro Icon intern <svg> nutzt
+          icon.innerHTML = '';
+          const i = document.createElement('i');
+          i.className = iconName;
+          icon.appendChild(i);
+        }
+      }
+    };
 
-  // react to OS theme changes if system
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if(getTheme() === 'system') setTheme('system');
-  });
+    // initial
+    let currentTheme = getTheme();
+    applyTheme(currentTheme);
+
+    // click handler
+    btn.addEventListener('click', () => {
+      currentTheme = THEME_ORDER[(THEME_ORDER.indexOf(currentTheme) + 1) % THEME_ORDER.length];
+      try { localStorage.setItem('theme', currentTheme); } catch(e){}
+      applyTheme(currentTheme);
+    });
+
+    // listen to system changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (getTheme() === 'system') applyTheme('system');
+    });
+  }
 </script>
