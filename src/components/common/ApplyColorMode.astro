@@ -4,45 +4,41 @@ import { UI } from 'astrowind:config';
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
   const THEME_ORDER = ['light', 'dark', 'system'];
+  let currentTheme = localStorage.getItem('theme') || defaultTheme.replace(':only','');
+
+  // reactive icon name
+  let iconName = 'tabler:device-desktop';
 
   function applyTheme(theme) {
     const root = document.documentElement;
     root.classList.remove('dark');
 
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (theme === 'dark') root.classList.add('dark');
+    else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       root.classList.add('dark');
     }
 
-    // update toggle icons (for AstroWind checkbox sync)
-    const toggles = document.querySelectorAll('[data-aw-toggle-color-scheme] > input');
-    toggles.forEach((el) => {
+    // Icon setzen
+    if (theme === 'light') iconName = 'tabler:sun';
+    else if (theme === 'dark') iconName = 'tabler:moon';
+    else iconName = 'tabler:device-desktop';
+
+    // AstroWind checkbox sync (harmlos)
+    document.querySelectorAll('[data-aw-toggle-color-scheme] > input').forEach(el => {
       el.checked = theme !== 'dark';
     });
-
-    // update button icon name attribute
-    const btn = document.querySelector('[data-aw-toggle-color-scheme] astro-icon');
-    if (btn) {
-      if (theme === 'light') btn.setAttribute('name', 'tabler:sun');
-      else if (theme === 'dark') btn.setAttribute('name', 'tabler:moon');
-      else btn.setAttribute('name', 'tabler:device-desktop');
-    }
   }
 
-  // initial theme
-  const stored = localStorage.getItem('theme');
-  let currentTheme = stored || (defaultTheme.endsWith(':only') ? defaultTheme.replace(':only','') : defaultTheme);
-
+  // initial
   applyTheme(currentTheme);
 
-  // listen for OS theme changes in system mode
+  // OS theme change
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if (currentTheme === 'system') applyTheme('system');
   });
 
-  // handle click cycle
-  document.addEventListener('click', (e) => {
+  // click handler
+  document.addEventListener('click', e => {
     const btn = e.target.closest('[data-aw-toggle-color-scheme]');
     if (!btn) return;
 
@@ -50,5 +46,9 @@ import { UI } from 'astrowind:config';
     currentTheme = next;
     localStorage.setItem('theme', currentTheme);
     applyTheme(currentTheme);
+
+    // Button Icon updaten
+    const icon = btn.querySelector('astro-icon');
+    if (icon) icon.name = iconName;  // reactive binding
   });
 </script>
