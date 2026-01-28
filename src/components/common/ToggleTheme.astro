@@ -1,28 +1,52 @@
 ---
-import { Icon } from 'astro-icon/components';
 import { UI } from 'astrowind:config';
-
-export interface Props {
-  label?: string;
-  class?: string;
-  iconClass?: string;
-}
-
-const {
-  label = 'Toggle Light / Dark / System Mode',
-  class:
-    className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center',
-  iconClass = 'w-6 h-6',
-} = Astro.props;
 ---
 
-{!(UI.theme && UI.theme.endsWith(':only')) && (
-  <button
-    type="button"
-    class={className}
-    aria-label={label}
-    data-aw-toggle-color-scheme
-  >
-    <Icon name="tabler:device-desktop" class={iconClass} />
-  </button>
-)}
+<button
+  type="button"
+  id="theme-toggle"
+  class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+  aria-label="Toggle theme"
+>
+  <svg id="theme-icon" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <!-- default icon device-desktop -->
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6h6v6H9zm0 0h6M4 6h16v12H4V6z"/>
+  </svg>
+</button>
+
+<script is:inline>
+  const THEME_ORDER = ['light', 'dark', 'system'];
+  const ICONS = {
+    light: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-12.34l-.71.71M4.05 19.95l-.71.71M21 12h1M2 12H1m16.66 4.34l-.71-.71M4.05 4.05l-.71-.71"/>', // sun
+    dark: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/>', // moon
+    system: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6h6v6H9zm0 0h6M4 6h16v12H4V6z"/>' // device-desktop
+  };
+
+  function applyTheme(theme) {
+    document.documentElement.classList.remove('dark');
+    if (theme === 'dark') document.documentElement.classList.add('dark');
+    else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      document.documentElement.classList.add('dark');
+
+    // set icon
+    document.getElementById('theme-icon').innerHTML = ICONS[theme];
+  }
+
+  // initial
+  const stored = localStorage.getItem('theme');
+  let current = stored || 'system';
+  applyTheme(current);
+
+  // OS theme listener
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (current === 'system') applyTheme('system');
+  });
+
+  // click cycle
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
+    current = next;
+    localStorage.setItem('theme', current);
+    applyTheme(current);
+  });
+</script>
