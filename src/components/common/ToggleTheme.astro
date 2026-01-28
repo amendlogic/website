@@ -15,16 +15,17 @@ const {
 } = Astro.props;
 ---
 
-{!(UI.theme && UI.theme.endsWith(':only')) && (
-  <div id="colorModeToggleWrapper" class={className}></div>
-)}
+<button id="colorModeToggle" class={className} aria-label={label}>
+  <Icon id="colorModeIcon" name="tabler:device-desktop" class={iconClass} />
+</button>
 
 <script is:inline>
 if (typeof window !== 'undefined') {
+  const toggleButton = document.getElementById('colorModeToggle');
+  const iconEl = document.getElementById('colorModeIcon');
   const THEME_ORDER = ['light', 'dark', 'system'];
-  let currentTheme = localStorage.getItem('theme') || (UI.theme?.replace(':only', '') || 'system');
 
-  const wrapper = document.getElementById('colorModeToggleWrapper');
+  let currentTheme = localStorage.getItem('theme') || (UI.theme?.replace(':only', '') || 'system');
 
   const getIconName = (theme) => {
     return theme === 'light' ? 'tabler:sun'
@@ -35,33 +36,30 @@ if (typeof window !== 'undefined') {
   const applyTheme = (theme) => {
     const root = document.documentElement;
     root.classList.remove('dark');
-
     if (theme === 'dark') root.classList.add('dark');
     if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       root.classList.add('dark');
     }
 
-    // Render Icon clientseitig
-    wrapper.innerHTML = '';
-    const iconEl = document.createElement('astro-island');
-    iconEl.setAttribute('client:load', '');
-    iconEl.innerHTML = `<Icon name="${getIconName(theme)}" class="${iconClass}" />`;
-    wrapper.appendChild(iconEl);
+    // Icon updaten
+    iconEl.setAttribute('name', getIconName(theme));
   };
 
-  // Initial render
+  // Initial anwenden
   applyTheme(currentTheme);
 
-  // Click handler
-  wrapper.addEventListener('click', () => {
+  // Klick Handler
+  toggleButton.addEventListener('click', () => {
     currentTheme = THEME_ORDER[(THEME_ORDER.indexOf(currentTheme) + 1) % THEME_ORDER.length];
-    try { localStorage.setItem('theme', currentTheme); } catch(e){}
+    localStorage.setItem('theme', currentTheme);
     applyTheme(currentTheme);
   });
 
-  // System mode listener
+  // OS System Mode Listener
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if ((localStorage.getItem('theme') || 'system') === 'system') applyTheme('system');
+    if ((localStorage.getItem('theme') || 'system') === 'system') {
+      applyTheme('system');
+    }
   });
 }
 </script>
