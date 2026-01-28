@@ -15,25 +15,22 @@ const {
 } = Astro.props;
 ---
 
-{
-  !(UI.theme && UI.theme.endsWith(':only')) && (
-    <button
-      type="button"
-      class={className}
-      aria-label={label}
-      data-color-mode-toggle
-    >
-      <Icon name="tabler:device-desktop" class={iconClass} />
-    </button>
-  )
-}
+{!(UI.theme && UI.theme.endsWith(':only')) && (
+  <button
+    type="button"
+    class={className}
+    aria-label={label}
+    id="colorModeToggleBtn"
+  >
+    <Icon id="colorModeToggleIcon" name="tabler:device-desktop" class={iconClass} />
+  </button>
+)}
 
 <script is:inline>
   if (typeof window !== 'undefined') {
     const THEME_ORDER = ['light', 'dark', 'system'];
-
-    const btn = document.querySelector('[data-color-mode-toggle]');
-    const icon = btn.querySelector('svg') || btn.querySelector('i') || btn.querySelector('Icon');
+    const btn = document.getElementById('colorModeToggleBtn');
+    const icon = document.getElementById('colorModeToggleIcon');
 
     const getTheme = () => {
       try { return localStorage.getItem('theme') || 'system'; }
@@ -49,34 +46,26 @@ const {
         root.classList.add('dark');
       }
 
-      // Icon update
+      // Icon wechseln
       if (icon) {
-        const iconName = theme === 'light' ? 'tabler:sun'
-                        : theme === 'dark' ? 'tabler:moon'
-                        : 'tabler:device-desktop';
-        if ('name' in icon) {
-          icon.name = iconName;
-        }
+        icon.name = theme === 'light' ? 'tabler:sun'
+                   : theme === 'dark' ? 'tabler:moon'
+                   : 'tabler:device-desktop';
       }
     };
 
     // initial theme
-    let currentTheme = getTheme();
-
-    if (UI.theme && UI.theme.endsWith(':only')) {
-      currentTheme = UI.theme.replace(':only', '');
-    }
-
+    let currentTheme = UI.theme?.endsWith(':only') ? UI.theme.replace(':only', '') : getTheme();
     applyTheme(currentTheme);
 
-    // click handler
+    // Klick Handler
     btn.addEventListener('click', () => {
       currentTheme = THEME_ORDER[(THEME_ORDER.indexOf(currentTheme) + 1) % THEME_ORDER.length];
       try { localStorage.setItem('theme', currentTheme); } catch(e){}
       applyTheme(currentTheme);
     });
 
-    // react to system changes
+    // System-Mode Reaktion
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
       if (getTheme() === 'system') applyTheme('system');
     });
