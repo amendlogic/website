@@ -1,19 +1,20 @@
 import { Icon } from 'astro-icon/components';
 ---
 
-<button
-  class="text-muted hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5"
+<div
+  role="button"
+  tabindex="0"
   aria-label="Toggle theme"
   data-theme-toggle
+  class="cursor-pointer text-muted hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5 inline-flex items-center"
 >
   <Icon name="tabler:device-desktop" class="w-6 h-6" data-icon="system" />
   <Icon name="tabler:sun" class="w-6 h-6 hidden" data-icon="light" />
   <Icon name="tabler:moon" class="w-6 h-6 hidden" data-icon="dark" />
-</button>
+</div>
 
-<script>
+<script is:inline>
   const themes = ['system', 'light', 'dark'];
-
   const getTheme = () => localStorage.getItem('theme') ?? 'system';
 
   const applyTheme = (theme) => {
@@ -21,7 +22,7 @@ import { Icon } from 'astro-icon/components';
     root.classList.remove('dark');
 
     if (theme === 'dark') root.classList.add('dark');
-    if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches) {
       root.classList.add('dark');
     }
 
@@ -35,17 +36,13 @@ import { Icon } from 'astro-icon/components';
     });
   };
 
-  document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+  document.querySelectorAll('[data-theme-toggle]').forEach((el) => {
     let theme = getTheme();
     applyTheme(theme);
 
-    btn.addEventListener('click', () => {
+    el.addEventListener('click', () => {
       theme = themes[(themes.indexOf(theme) + 1) % themes.length];
       applyTheme(theme);
     });
-  });
-
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (getTheme() === 'system') applyTheme('system');
   });
 </script>
