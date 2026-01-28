@@ -11,49 +11,44 @@ import { UI } from 'astrowind:config';
 
     if (theme === 'dark') {
       root.classList.add('dark');
-    } else if (theme === 'system') {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        root.classList.add('dark');
-      }
+    } else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      root.classList.add('dark');
     }
 
-    // Sync buttons with data attribute
-    const btns = document.querySelectorAll('[data-aw-toggle-color-scheme]');
-    btns.forEach((btn) => {
-      const icon = btn.querySelector('svg');
-      if (!icon) return;
-
-      if (theme === 'light') btn.dataset.icon = 'tabler:sun';
-      else if (theme === 'dark') btn.dataset.icon = 'tabler:moon';
-      else btn.dataset.icon = 'tabler:device-desktop';
+    // update toggle icons (for AstroWind checkbox sync)
+    const toggles = document.querySelectorAll('[data-aw-toggle-color-scheme] > input');
+    toggles.forEach((el) => {
+      el.checked = theme !== 'dark';
     });
+
+    // update button icon name attribute
+    const btn = document.querySelector('[data-aw-toggle-color-scheme] astro-icon');
+    if (btn) {
+      if (theme === 'light') btn.setAttribute('name', 'tabler:sun');
+      else if (theme === 'dark') btn.setAttribute('name', 'tabler:moon');
+      else btn.setAttribute('name', 'tabler:device-desktop');
+    }
   }
 
-  // Initial theme
-  const storedTheme = localStorage.getItem('theme');
-  if (defaultTheme.endsWith(':only')) {
-    applyTheme(defaultTheme.replace(':only', ''));
-  } else if (storedTheme) {
-    applyTheme(storedTheme);
-  } else {
-    applyTheme(defaultTheme === 'system' ? 'system' : defaultTheme);
-  }
+  // initial theme
+  const stored = localStorage.getItem('theme');
+  let currentTheme = stored || (defaultTheme.endsWith(':only') ? defaultTheme.replace(':only','') : defaultTheme);
 
-  // Listen for OS theme changes
+  applyTheme(currentTheme);
+
+  // listen for OS theme changes in system mode
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    const current = localStorage.getItem('theme') ?? 'system';
-    if (current === 'system') applyTheme('system');
+    if (currentTheme === 'system') applyTheme('system');
   });
 
-  // Button click
+  // handle click cycle
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-aw-toggle-color-scheme]');
     if (!btn) return;
 
-    const current = localStorage.getItem('theme') ?? 'system';
-    const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
-
-    localStorage.setItem('theme', next);
-    applyTheme(next);
+    const next = THEME_ORDER[(THEME_ORDER.indexOf(currentTheme) + 1) % THEME_ORDER.length];
+    currentTheme = next;
+    localStorage.setItem('theme', currentTheme);
+    applyTheme(currentTheme);
   });
 </script>
