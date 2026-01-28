@@ -1,67 +1,46 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { UI } from 'astrowind:config';
+
+export interface Props {
+  label?: string;
+  class?: string;
+  iconClass?: string;
+}
+
+const {
+  label = 'Toggle Theme',
+  class:
+    className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center',
+  iconClass = 'w-6 h-6',
+} = Astro.props;
+
+const THEME_ORDER = ['system', 'light', 'dark'];
+
+function getTheme() {
+  return localStorage.getItem('theme') ?? 'system';
+}
 ---
 
-<button
-  type="button"
-  id="theme-toggle-button"
-  class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
-  aria-label="Toggle Theme"
->
-  <Icon id="theme-toggle-icon" class="w-6 h-6" />
-</button>
-
-<script is:inline>
-  const button = document.getElementById('theme-toggle-button');
-  const icon = document.getElementById('theme-toggle-icon');
-
-  const THEME_ORDER = ['system', 'light', 'dark'];
-  const ICON_MAP = {
-    system: 'tabler:device-desktop',
-    light: 'tabler:sun',
-    dark: 'tabler:moon',
-  };
-
-  const defaultTheme = (typeof UI !== 'undefined' && UI?.theme) ? UI.theme : 'system';
-
-  function applyTheme(theme) {
-    const root = document.documentElement;
-    root.classList.remove('dark');
-
-    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      root.classList.add('dark');
-    }
-
-    // Icon aktualisieren
-    icon.name = ICON_MAP[theme];
-  }
-
-  function getTheme() {
-    return localStorage.getItem('theme') || defaultTheme.replace(':only', '');
-  }
-
-  function setTheme(theme) {
-    localStorage.setItem('theme', theme);
-    applyTheme(theme);
-  }
-
-  function nextTheme(current) {
-    const idx = THEME_ORDER.indexOf(current);
-    return THEME_ORDER[(idx + 1) % THEME_ORDER.length];
-  }
-
-  // Initial Theme setzen
-  setTheme(getTheme());
-
-  // Button click → Zyklus
-  button.addEventListener('click', () => {
-    const next = nextTheme(getTheme());
-    setTheme(next);
-  });
-
-  // OS Dark Mode reagieren, nur bei System
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (getTheme() === 'system') applyTheme('system');
-  });
-</script>
+{
+  !(UI.theme && UI.theme.endsWith(':only')) && (
+    <button
+      type="button"
+      class={className}
+      aria-label={label}
+      data-aw-toggle-color-scheme
+      data-icon-name={getTheme() === 'light' ? 'tabler:sun' : getTheme() === 'dark' ? 'tabler:moon' : 'tabler:device-desktop'}
+      on:click={() => {
+        const current = getTheme();
+        const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
+        localStorage.setItem('theme', next);
+        const event = new CustomEvent('theme-change', { detail: next });
+        window.dispatchEvent(event);
+        // Update theme immediately
+        if (typeof applyTheme === 'function') applyTheme(next);
+      }}
+    >
+      <Icon name={getTheme() === 'light' ? 'tabler:sun' : getTheme() === 'dark' ? 'tabler:moon' : 'tabler:device-desktop'} class={iconClass} inline />
+    </button>
+  )
+}
