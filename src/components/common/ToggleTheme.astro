@@ -2,27 +2,14 @@
 import { Icon } from 'astro-icon/components';
 import { UI } from 'astrowind:config';
 
-const THEME_ORDER = ['system', 'light', 'dark'];
-
-function getStoredTheme() {
-  return localStorage.getItem('theme') || 'system';
-}
-
-function setStoredTheme(theme: string) {
-  localStorage.setItem('theme', theme);
-}
-
-function getNextTheme(current: string) {
-  const idx = THEME_ORDER.indexOf(current);
-  return THEME_ORDER[(idx + 1) % THEME_ORDER.length];
-}
+const DEFAULT_THEME = typeof UI !== 'undefined' && UI?.theme ? UI.theme : 'system';
 ---
 
 <button
   type="button"
+  id="theme-toggle-button"
   class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
   aria-label="Toggle Theme"
-  id="theme-toggle-button"
 >
   <Icon id="theme-toggle-icon" name="tabler:device-desktop" class="w-6 h-6" />
 </button>
@@ -31,6 +18,7 @@ function getNextTheme(current: string) {
   const button = document.getElementById('theme-toggle-button');
   const icon = document.getElementById('theme-toggle-icon');
 
+  const THEME_ORDER = ['system', 'light', 'dark'];
   const ICON_MAP = {
     system: 'tabler:device-desktop',
     light: 'tabler:sun',
@@ -41,40 +29,41 @@ function getNextTheme(current: string) {
     const root = document.documentElement;
     root.classList.remove('dark');
 
-    if (theme === 'dark') root.classList.add('dark');
-    else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       root.classList.add('dark');
     }
 
+    // Icon aktualisieren
     icon.name = ICON_MAP[theme];
   }
 
-  function cycleTheme() {
-    const current = localStorage.getItem('theme') || 'system';
-    const next = getNextTheme(current);
-    localStorage.setItem('theme', next);
-    applyTheme(next);
+  function getTheme() {
+    return localStorage.getItem('theme') || '{{DEFAULT_THEME}}';
   }
 
-  function getNextTheme(current) {
-    const order = ['system', 'light', 'dark'];
-    const idx = order.indexOf(current);
-    return order[(idx + 1) % order.length];
+  function setTheme(theme) {
+    localStorage.setItem('theme', theme);
+    applyTheme(theme);
   }
 
-  // Initial load
-  let initialTheme = localStorage.getItem('theme') || '{{UI.theme || "system"}}';
-  if (initialTheme.endsWith(':only')) initialTheme = initialTheme.replace(':only','');
-  localStorage.setItem('theme', initialTheme);
-  applyTheme(initialTheme);
+  function nextTheme(current) {
+    const idx = THEME_ORDER.indexOf(current);
+    return THEME_ORDER[(idx + 1) % THEME_ORDER.length];
+  }
 
-  // Button click
-  button.addEventListener('click', cycleTheme);
+  // Initial Theme setzen
+  let initialTheme = getTheme();
+  if (initialTheme.endsWith(':only')) initialTheme = initialTheme.replace(':only', '');
+  setTheme(initialTheme);
 
-  // System dark mode changes
+  // Button click → Zyklus
+  button.addEventListener('click', () => {
+    const next = nextTheme(getTheme());
+    setTheme(next);
+  });
+
+  // OS Dark Mode reagieren, nur bei System
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if ((localStorage.getItem('theme') || 'system') === 'system') {
-      applyTheme('system');
-    }
+    if (getTheme() === 'system') applyTheme('system');
   });
 </script>
