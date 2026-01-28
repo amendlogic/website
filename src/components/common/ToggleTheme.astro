@@ -1,28 +1,65 @@
----
 import { Icon } from 'astro-icon/components';
 
-import { UI } from 'astrowind:config';
-
-export interface Props {
-  label?: string;
-  class?: string;
-  iconClass?: string;
-  iconName?: string;
-}
-
-const {
-  label = 'Toggle between Dark and Light mode',
-  class:
-    className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center',
-  iconClass = 'w-6 h-6',
-  iconName = 'tabler:sun',
-} = Astro.props;
+const icons = {
+  system: 'tabler:device-desktop',
+  light: 'tabler:sun',
+  dark: 'tabler:moon',
+};
 ---
 
-{
-  !(UI.theme && UI.theme.endsWith(':only')) && (
-    <button type="button" class={className} aria-label={label} data-aw-toggle-color-scheme>
-      <Icon name={iconName} class={iconClass} />
-    </button>
-  )
-}
+<button
+  class="text-muted hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5"
+  aria-label="Toggle theme"
+  data-theme-toggle
+>
+  <Icon name="tabler:device-desktop" class="w-6 h-6" />
+</button>
+
+<script>
+  const themes = ['system', 'light', 'dark'];
+
+  const getTheme = () =>
+    localStorage.getItem('theme') ?? 'system';
+
+  const applyTheme = (theme) => {
+    const root = document.documentElement;
+
+    root.classList.remove('dark');
+
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else if (theme === 'system') {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        root.classList.add('dark');
+      }
+    }
+
+    localStorage.setItem('theme', theme);
+  };
+
+  const updateIcon = (btn, theme) => {
+    const icon = btn.querySelector('svg');
+    if (!icon) return;
+
+    icon.outerHTML = icon.outerHTML.replace(
+      /tabler:[^"]+/,
+      {
+        system: 'tabler:device-desktop',
+        light: 'tabler:sun',
+        dark: 'tabler:moon',
+      }[theme]
+    );
+  };
+
+  document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+    let theme = getTheme();
+    applyTheme(theme);
+    updateIcon(btn, theme);
+
+    btn.addEventListener('click', () => {
+      theme = themes[(themes.indexOf(theme) + 1) % themes.length];
+      applyTheme(theme);
+      updateIcon(btn, theme);
+    });
+  });
+</script>
