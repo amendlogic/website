@@ -1,53 +1,48 @@
 ---
-import { Icon } from 'astro-icon/components';
 import { UI } from 'astrowind:config';
 ---
 
-<script is:inline>
-  const THEME_ORDER = ['system', 'light', 'dark'];
-
+<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
   function applyTheme(theme) {
     const root = document.documentElement;
     root.classList.remove('dark');
 
-    if (theme === 'dark') root.classList.add('dark');
-    else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       root.classList.add('dark');
     }
 
-    // Update all ToggleTheme buttons
-    document.querySelectorAll('[data-aw-toggle-color-scheme]').forEach((btn) => {
-      if (!btn) return;
-      let icon = 'tabler:sun';
-      if (theme === 'light') icon = 'tabler:sun';
-      else if (theme === 'dark') icon = 'tabler:moon';
-      else if (theme === 'system') icon = 'tabler:device-desktop';
+    // Update all toggle buttons
+    const buttons = document.querySelectorAll('[data-aw-toggle-color-scheme]');
+    buttons.forEach((btn) => {
+      const icon = btn.querySelector('svg');
+      if (!icon) return;
 
-      btn.dataset.iconName = icon;
+      if (theme === 'light') btn.dataset.iconName = 'tabler:sun';
+      else if (theme === 'dark') btn.dataset.iconName = 'tabler:moon';
+      else btn.dataset.iconName = 'tabler:device-desktop';
+
+      // Re-render the icon
+      if (window.Iconify) {
+        window.Iconify.scan(btn);
+      }
     });
   }
 
-  // initial theme
   const storedTheme = localStorage.getItem('theme');
-  const defaultTheme = UI.theme || 'system';
 
-  applyTheme(storedTheme ?? defaultTheme);
+  if (defaultTheme.endsWith(':only')) {
+    applyTheme(defaultTheme.replace(':only', ''));
+  } else if (storedTheme) {
+    applyTheme(storedTheme);
+  } else {
+    applyTheme(defaultTheme);
+  }
 
-  // click handler
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-aw-toggle-color-scheme]');
-    if (!btn) return;
-
-    const current = localStorage.getItem('theme') ?? defaultTheme;
-    const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
-
-    localStorage.setItem('theme', next);
-    applyTheme(next);
-  });
-
-  // OS theme changes
+  // React to system theme changes
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if ((localStorage.getItem('theme') ?? defaultTheme) === 'system') {
+    if ((localStorage.getItem('theme') ?? 'system') === 'system') {
       applyTheme('system');
     }
   });
