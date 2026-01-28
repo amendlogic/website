@@ -14,33 +14,31 @@ const {
     className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center',
   iconClass = 'w-6 h-6',
 } = Astro.props;
-
-const THEME_ORDER = ['system', 'light', 'dark'];
-
-function getTheme() {
-  return localStorage.getItem('theme') ?? 'system';
-}
 ---
 
-{
-  !(UI.theme && UI.theme.endsWith(':only')) && (
-    <button
-      type="button"
-      class={className}
-      aria-label={label}
-      data-aw-toggle-color-scheme
-      data-icon-name={getTheme() === 'light' ? 'tabler:sun' : getTheme() === 'dark' ? 'tabler:moon' : 'tabler:device-desktop'}
-      on:click={() => {
-        const current = getTheme();
-        const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
-        localStorage.setItem('theme', next);
-        const event = new CustomEvent('theme-change', { detail: next });
-        window.dispatchEvent(event);
-        // Update theme immediately
-        if (typeof applyTheme === 'function') applyTheme(next);
-      }}
-    >
-      <Icon name={getTheme() === 'light' ? 'tabler:sun' : getTheme() === 'dark' ? 'tabler:moon' : 'tabler:device-desktop'} class={iconClass} inline />
-    </button>
-  )
-}
+{!(UI.theme && UI.theme.endsWith(':only')) && (
+  <button
+    type="button"
+    class={className}
+    aria-label={label}
+    data-aw-toggle-color-scheme
+  >
+    <Icon name="tabler:device-desktop" class={iconClass} inline />
+  </button>
+)}
+
+<script is:inline>
+  const THEME_ORDER = ['system', 'light', 'dark'];
+
+  const btn = document.querySelector('[data-aw-toggle-color-scheme]');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const current = localStorage.getItem('theme') ?? 'system';
+      const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
+      localStorage.setItem('theme', next);
+      if (typeof window.applyTheme === 'function') {
+        window.applyTheme(next);
+      }
+    });
+  }
+</script>
