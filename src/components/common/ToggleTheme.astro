@@ -2,25 +2,60 @@
 import { Icon } from 'astro-icon/components';
 import { UI } from 'astrowind:config';
 
-let theme = localStorage.getItem('theme') || UI.theme?.replace(':only','') || 'system';
-
-function nextTheme() {
-  const order = ['light','dark','system'];
-  theme = order[(order.indexOf(theme)+1)%3];
-  localStorage.setItem('theme', theme);
-  applyTheme(theme);
+export interface Props {
+  label?: string;
+  class?: string;
+  iconClass?: string;
 }
 
-function applyTheme(t) {
-  document.documentElement.classList.remove('dark');
-  if(t==='dark') document.documentElement.classList.add('dark');
-  else if(t==='system' && window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.classList.add('dark');
-}
-
-// reactive icon
-$: iconName = theme==='light'?'tabler:sun':theme==='dark'?'tabler:moon':'tabler:device-desktop';
+const {
+  label = 'Toggle color mode',
+  class: className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center',
+  iconClass = 'w-6 h-6',
+} = Astro.props;
 ---
 
-<button on:click={nextTheme} aria-label="Toggle Color Mode" class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center">
-  <Icon name={iconName} class="w-6 h-6"/>
+<button type="button" class={className} aria-label={label} id="color-mode-btn">
+  <Icon id="color-mode-icon" name="tabler:device-desktop" class={iconClass} />
 </button>
+
+<script is:inline>
+  // 3-State
+  const THEME_ORDER = ['light', 'dark', 'system'];
+  const btn = document.getElementById('color-mode-btn');
+  const icon = document.getElementById('color-mode-icon');
+
+  // safe localStorage fallback
+  const getTheme = () => {
+    try { return localStorage.getItem('theme') || 'system'; }
+    catch(e) { return 'system'; }
+  };
+
+  const setTheme = (theme) => {
+    try { localStorage.setItem('theme', theme); } catch(e){}
+    document.documentElement.classList.remove('dark');
+    if(theme === 'dark') document.documentElement.classList.add('dark');
+    if(theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      document.documentElement.classList.add('dark');
+
+    // update icon
+    icon.name = theme === 'light' ? 'tabler:sun' :
+                theme === 'dark' ? 'tabler:moon' :
+                'tabler:device-desktop';
+  };
+
+  // initial
+  let currentTheme = getTheme();
+  setTheme(currentTheme);
+
+  // handle click
+  btn.addEventListener('click', () => {
+    currentTheme = THEME_ORDER[(THEME_ORDER.indexOf(currentTheme) + 1) % THEME_ORDER.length];
+    setTheme(currentTheme);
+  });
+
+  // react to OS theme changes if system
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if(getTheme() === 'system') setTheme('system');
+  });
+</script>
