@@ -325,9 +325,19 @@ const metadata = {
  <!-- Pricing Widget ******************* -->
 
   <Pricing
-    tagline="Pricing"
-    title="Fair & Transparent"
+    title="Flexible pricing plans"
     prices={[
+      {
+        title: 'free',
+        subtitle: 'Access to core features and a wide range of templates',
+        price: '0',
+        period: '/ month',
+        callToAction: {
+          target: '_blank',
+          text: 'Get Started for Free',
+          href: '#',
+        },
+      },
       {
         title: 'pro',
         subtitle: 'Premium templates and advanced customization',
@@ -338,6 +348,8 @@ const metadata = {
           text: 'Upgrade to Pro',
           href: '#',
         },
+        hasRibbon: true,
+        ribbonTitle: 'popular',
       },
       {
         title: 'Enterprise',
@@ -349,8 +361,6 @@ const metadata = {
           text: 'Unlock Enterprise Features',
           href: '#',
         },
-        hasRibbon: true,
-        ribbonTitle: 'popular',
       },
     ]}
   />
