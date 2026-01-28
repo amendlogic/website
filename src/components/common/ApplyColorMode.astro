@@ -5,26 +5,28 @@ import { UI } from 'astrowind:config';
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
   const THEME_ORDER = ['system', 'light', 'dark'];
 
-  function updateIcons(theme) {
+  function applyTheme(theme) {
+    const root = document.documentElement;
+    root.classList.remove('dark');
+
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else if (theme === 'system') {
+      // Prüfen, ob OS dark ist
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        root.classList.add('dark');
+      }
+    }
+
+    // Icons updaten
     document.querySelectorAll('[data-aw-theme-icon]').forEach(icon => {
       icon.classList.toggle('hidden', icon.dataset.awThemeIcon !== theme);
     });
   }
 
-  function applyTheme(theme) {
-    const root = document.documentElement;
-    root.classList.remove('dark');
-
-    if (theme === 'dark') root.classList.add('dark');
-    if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      root.classList.add('dark');
-    }
-
-    updateIcons(theme);
-  }
-
-  function getCurrentTheme() {
-    return localStorage.getItem('theme') ?? 'system';
+  function getTheme() {
+    // Immer echten Wert zurückgeben, nie null
+    return localStorage.getItem('theme') || 'system';
   }
 
   function setTheme(theme) {
@@ -33,29 +35,29 @@ import { UI } from 'astrowind:config';
   }
 
   function cycleTheme() {
-    const current = getCurrentTheme();
-    const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
+    const current = getTheme();
+    const idx = THEME_ORDER.indexOf(current);
+    const next = THEME_ORDER[(idx + 1) % THEME_ORDER.length];
     setTheme(next);
   }
 
-  // Initial load
-  if (defaultTheme.endsWith(':only')) {
-    applyTheme(defaultTheme.replace(':only', ''));
+  // Init: stored theme oder default
+  const storedTheme = getTheme();
+  if (UI.theme?.endsWith(':only')) {
+    setTheme(UI.theme.replace(':only',''));
   } else {
-    setTheme(getCurrentTheme());
+    setTheme(storedTheme);
   }
 
-  // Button click
-  document.addEventListener('click', (e) => {
+  // Klick auf Button
+  document.addEventListener('click', e => {
     const btn = e.target.closest('[data-aw-toggle-color-scheme]');
     if (!btn) return;
     cycleTheme();
   });
 
-  // System mode OS changes
+  // OS Theme Listener nur im System-Modus
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if ((localStorage.getItem('theme') ?? 'system') === 'system') {
-      applyTheme('system');
-    }
+    if (getTheme() === 'system') applyTheme('system');
   });
 </script>
