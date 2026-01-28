@@ -1,10 +1,4 @@
 import { Icon } from 'astro-icon/components';
-
-const icons = {
-  system: 'tabler:device-desktop',
-  light: 'tabler:sun',
-  dark: 'tabler:moon',
-};
 ---
 
 <button
@@ -12,54 +6,46 @@ const icons = {
   aria-label="Toggle theme"
   data-theme-toggle
 >
-  <Icon name="tabler:device-desktop" class="w-6 h-6" />
+  <Icon name="tabler:device-desktop" class="w-6 h-6" data-icon="system" />
+  <Icon name="tabler:sun" class="w-6 h-6 hidden" data-icon="light" />
+  <Icon name="tabler:moon" class="w-6 h-6 hidden" data-icon="dark" />
 </button>
 
 <script>
   const themes = ['system', 'light', 'dark'];
 
-  const getTheme = () =>
-    localStorage.getItem('theme') ?? 'system';
+  const getTheme = () => localStorage.getItem('theme') ?? 'system';
 
   const applyTheme = (theme) => {
     const root = document.documentElement;
-
     root.classList.remove('dark');
 
-    if (theme === 'dark') {
+    if (theme === 'dark') root.classList.add('dark');
+    if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       root.classList.add('dark');
-    } else if (theme === 'system') {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        root.classList.add('dark');
-      }
     }
 
     localStorage.setItem('theme', theme);
+    updateIcons(theme);
   };
 
-  const updateIcon = (btn, theme) => {
-    const icon = btn.querySelector('svg');
-    if (!icon) return;
-
-    icon.outerHTML = icon.outerHTML.replace(
-      /tabler:[^"]+/,
-      {
-        system: 'tabler:device-desktop',
-        light: 'tabler:sun',
-        dark: 'tabler:moon',
-      }[theme]
-    );
+  const updateIcons = (theme) => {
+    document.querySelectorAll('[data-icon]').forEach((icon) => {
+      icon.classList.toggle('hidden', icon.dataset.icon !== theme);
+    });
   };
 
   document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
     let theme = getTheme();
     applyTheme(theme);
-    updateIcon(btn, theme);
 
     btn.addEventListener('click', () => {
       theme = themes[(themes.indexOf(theme) + 1) % themes.length];
       applyTheme(theme);
-      updateIcon(btn, theme);
     });
+  });
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (getTheme() === 'system') applyTheme('system');
   });
 </script>
