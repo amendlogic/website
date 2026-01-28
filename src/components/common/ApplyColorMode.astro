@@ -5,6 +5,12 @@ import { UI } from 'astrowind:config';
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
   const THEME_ORDER = ['system', 'light', 'dark'];
 
+  function updateIcons(theme) {
+    document.querySelectorAll('[data-aw-theme-icon]').forEach(icon => {
+      icon.classList.toggle('hidden', icon.dataset.awThemeIcon !== theme);
+    });
+  }
+
   function applyTheme(theme) {
     const root = document.documentElement;
     root.classList.remove('dark');
@@ -15,12 +21,6 @@ import { UI } from 'astrowind:config';
     }
 
     updateIcons(theme);
-  }
-
-  function updateIcons(theme) {
-    document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
-      icon.classList.toggle('hidden', icon.dataset.awThemeIcon !== theme);
-    });
   }
 
   function getCurrentTheme() {
@@ -38,22 +38,21 @@ import { UI } from 'astrowind:config';
     setTheme(next);
   }
 
-  // initial load
-  const storedTheme = getCurrentTheme();
+  // Initial load
   if (defaultTheme.endsWith(':only')) {
     applyTheme(defaultTheme.replace(':only', ''));
   } else {
-    applyTheme(storedTheme);
+    setTheme(getCurrentTheme());
   }
 
-  // button click
+  // Button click
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-aw-toggle-color-scheme]');
     if (!btn) return;
     cycleTheme();
   });
 
-  // OS system change
+  // System mode OS changes
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if ((localStorage.getItem('theme') ?? 'system') === 'system') {
       applyTheme('system');
