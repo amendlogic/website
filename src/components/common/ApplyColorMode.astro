@@ -19,7 +19,7 @@ if (typeof window !== 'undefined') {
   // Theme beim Laden anwenden
   applyTheme(storedTheme || defaultTheme);
 
-  // Systemänderungen
+  // Systemänderungen reagieren
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if ((localStorage.getItem('theme') || defaultTheme) === 'system') {
       applyTheme('system');
