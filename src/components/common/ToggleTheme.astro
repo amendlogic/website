@@ -9,7 +9,7 @@ export interface Props {
 }
 
 const {
-  label = 'Toggle Theme',
+  label = 'Toggle Light / Dark / System Mode',
   class:
     className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center',
   iconClass = 'w-6 h-6',
@@ -21,62 +21,8 @@ const {
     type="button"
     class={className}
     aria-label={label}
-    id="theme-toggle-button"
+    data-aw-toggle-color-scheme
   >
-    <Icon name="tabler:device-desktop" class={iconClass} inline />
+    <Icon name="tabler:device-desktop" class={iconClass} />
   </button>
 )}
-
-<script is:inline>
-  (function () {
-    const btn = document.getElementById('theme-toggle-button');
-    if (!btn) return;
-
-    const THEME_ORDER = ['system', 'light', 'dark'];
-
-    function getStoredTheme() {
-      return localStorage.getItem('theme') || 'system';
-    }
-
-    function applyTheme(theme) {
-      const root = document.documentElement;
-      root.classList.remove('dark');
-
-      if (theme === 'dark') root.classList.add('dark');
-      else if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        root.classList.add('dark');
-      }
-
-      // update icon
-      const icon = btn.querySelector('svg');
-      if (icon) {
-        const iconName =
-          theme === 'light'
-            ? 'tabler:sun'
-            : theme === 'dark'
-            ? 'tabler:moon'
-            : 'tabler:device-desktop';
-
-        // Replace the icon dynamically
-        icon.outerHTML = `<i class="iconify" data-icon="${iconName}" data-inline="true"></i>`;
-        if (window.Iconify) window.Iconify.scan(btn);
-      }
-    }
-
-    // apply theme on load
-    applyTheme(getStoredTheme());
-
-    // react to system changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      if (getStoredTheme() === 'system') applyTheme('system');
-    });
-
-    // toggle on click
-    btn.addEventListener('click', () => {
-      const current = getStoredTheme();
-      const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
-      localStorage.setItem('theme', next);
-      applyTheme(next);
-    });
-  })();
-</script>
