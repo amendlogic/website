@@ -9,48 +9,51 @@ import { UI } from 'astrowind:config';
     const root = document.documentElement;
     root.classList.remove('dark');
 
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    }
-
+    if (theme === 'dark') root.classList.add('dark');
     if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       root.classList.add('dark');
     }
 
-    // Update icons
+    updateIcons(theme);
+  }
+
+  function updateIcons(theme) {
     document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
       icon.classList.toggle('hidden', icon.dataset.awThemeIcon !== theme);
     });
   }
 
-  const storedTheme = localStorage.getItem('theme');
+  function getCurrentTheme() {
+    return localStorage.getItem('theme') ?? 'system';
+  }
 
-  // handle :only modes
+  function setTheme(theme) {
+    localStorage.setItem('theme', theme);
+    applyTheme(theme);
+  }
+
+  function cycleTheme() {
+    const current = getCurrentTheme();
+    const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
+    setTheme(next);
+  }
+
+  // initial load
+  const storedTheme = getCurrentTheme();
   if (defaultTheme.endsWith(':only')) {
     applyTheme(defaultTheme.replace(':only', ''));
-  }
-  // stored theme wins
-  else if (storedTheme) {
+  } else {
     applyTheme(storedTheme);
   }
-  // fallback to config default
-  else {
-    applyTheme(defaultTheme === 'system' ? 'system' : defaultTheme);
-  }
 
-  // Click handler for your button
+  // button click
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-aw-toggle-color-scheme]');
     if (!btn) return;
-
-    const current = localStorage.getItem('theme') ?? 'system';
-    const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
-
-    localStorage.setItem('theme', next);
-    applyTheme(next);
+    cycleTheme();
   });
 
-  // react to OS theme changes in system mode
+  // OS system change
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if ((localStorage.getItem('theme') ?? 'system') === 'system') {
       applyTheme('system');
