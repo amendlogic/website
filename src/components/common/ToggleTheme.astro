@@ -16,21 +16,24 @@ const {
 ---
 
 <button id="colorModeToggle" class={className} aria-label={label}>
-  <Icon id="colorModeIcon" name="tabler:device-desktop" class={iconClass} />
+  <span id="colorModeIconContainer">
+    <Icon name="tabler:device-desktop" class={iconClass} />
+  </span>
 </button>
 
 <script is:inline>
 if (typeof window !== 'undefined') {
   const toggleButton = document.getElementById('colorModeToggle');
-  const iconEl = document.getElementById('colorModeIcon');
-  const THEME_ORDER = ['light', 'dark', 'system'];
+  const iconContainer = document.getElementById('colorModeIconContainer');
 
+  const THEME_ORDER = ['light', 'dark', 'system'];
   let currentTheme = localStorage.getItem('theme') || (UI.theme?.replace(':only', '') || 'system');
 
-  const getIconName = (theme) => {
-    return theme === 'light' ? 'tabler:sun'
-         : theme === 'dark' ? 'tabler:moon'
-         : 'tabler:device-desktop';
+  const getIconHTML = (theme) => {
+    const name = theme === 'light' ? 'tabler:sun'
+               : theme === 'dark' ? 'tabler:moon'
+               : 'tabler:device-desktop';
+    return `<astro-island><Icon name="${name}" class="${iconClass}" /></astro-island>`;
   };
 
   const applyTheme = (theme) => {
@@ -41,21 +44,18 @@ if (typeof window !== 'undefined') {
       root.classList.add('dark');
     }
 
-    // Icon updaten
-    iconEl.setAttribute('name', getIconName(theme));
+    // Icon ersetzen
+    iconContainer.innerHTML = getIconHTML(theme);
   };
 
-  // Initial anwenden
   applyTheme(currentTheme);
 
-  // Klick Handler
   toggleButton.addEventListener('click', () => {
     currentTheme = THEME_ORDER[(THEME_ORDER.indexOf(currentTheme) + 1) % THEME_ORDER.length];
     localStorage.setItem('theme', currentTheme);
     applyTheme(currentTheme);
   });
 
-  // OS System Mode Listener
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if ((localStorage.getItem('theme') || 'system') === 'system') {
       applyTheme('system');
