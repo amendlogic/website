@@ -4,15 +4,13 @@ import Layout from '~/layouts/PageLayout.astro';
 import Hero from '~/components/widgets/Hero.astro';
 import Note from '~/components/widgets/Note.astro';
 import Brands from '~/components/widgets/Brands.astro';
-import Features3 from '~/components/widgets/Features3.astro'; 
-import Features2 from '~/components/widgets/Features2.astro';
-import Steps from '~/components/widgets/Steps.astro';
 import Content from '~/components/widgets/Content.astro';
+import Steps from '~/components/widgets/Steps.astro';
 import EChart from '~/components/widgets/EChart.astro'; 
 import Testimonials from '~/components/widgets/Testimonials.astro';
-import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+import Pricing from '~/components/widgets/Pricing.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import Stats from '~/components/widgets/Stats.astro';
+import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
 const metadata = {
@@ -201,12 +199,11 @@ const metadata = {
           'Validated trade instructions are executed automatically. Orders are placed instantly, following defined risk and execution parameters.',
         icon: 'tabler:paint',
       },
-      {
-        title: 'Ready!',
-        icon: 'tabler:check',
-      },
     ]}
-
+    image={{
+      src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+      alt: 'Steps image',
+    }}
   />
 
   <!-- Chart Widget ******************* -->
@@ -223,11 +220,11 @@ const metadata = {
       valueFormatter: v => `${v}%`
     },
     legend: {
-      data: ["Trading", "HODL", "Drawdown"]
+      data: ["AmendLogic", "Buy & Hold", "Drawdown"]
     },
     xAxis: {
       type: "category",
-      data: ["2019", "2020", "2021", "2022", "2023", "2024"]
+      data: ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"]
     },
     yAxis: [
       {
@@ -247,14 +244,14 @@ const metadata = {
     ],
     series: [
       {
-        name: "Trading",
+        name: "AmendLogic",
         type: "line",
         smooth: true,
-        data: [0, 35, 120, 90, 160, 210],
+        data: [0, 35, 120, 90, 160, 210, 210, 210, 210, 210, 210],
         lineStyle: { width: 3 }
       },
       {
-        name: "HODL",
+        name: "Buy & Hold",
         type: "line",
         smooth: true,
         data: [0, 20, 95, 40, 110, 180],
@@ -266,7 +263,7 @@ const metadata = {
         name: "Drawdown",
         type: "bar",
         yAxisIndex: 1,
-        data: [0, -12, -35, -55, -18, -10],
+        data: [0, -12, -35, -55, -18, -10, -10, -10, -10, -10, -10],
         itemStyle: {
           color: "rgba(239,68,68,0.5)"
         }
@@ -320,14 +317,47 @@ const metadata = {
     }}
   />
 
-  <!-- HighlightedPosts Widget ******* -->
+ <!-- Pricing Widget ******************* -->
 
-  <BlogLatestPosts
-    title="Find out more content in our Blog"
-    information={`The blog is used to display AstroWind documentation.
-                        Each new article will be an important step that you will need to know to be an expert in creating a website using Astro + Tailwind CSS.
-                        Astro is a very interesting technology. Thanks.
-                `}
+  <Pricing
+    title="Flexible pricing plans"
+    prices={[
+      {
+        title: 'free',
+        subtitle: 'Access to core features and a wide range of templates',
+        price: '0',
+        period: '/ month',
+        callToAction: {
+          target: '_blank',
+          text: 'Get Started for Free',
+          href: '#',
+        },
+      },
+      {
+        title: 'pro',
+        subtitle: 'Premium templates and advanced customization',
+        price: 15,
+        period: '/ Month',
+        callToAction: {
+          target: '_blank',
+          text: 'Upgrade to Pro',
+          href: '#',
+        },
+        hasRibbon: true,
+        ribbonTitle: 'popular',
+      },
+      {
+        title: 'Enterprise',
+        subtitle: 'Tailored solutions for large-scale projects',
+        price: 45,
+        period: '/ Month',
+        callToAction: {
+          target: '_blank',
+          text: 'Unlock Enterprise Features',
+          href: '#',
+        },
+      },
+    ]}
   />
 
   <!-- FAQs Widget ******************* -->
@@ -389,6 +419,16 @@ const metadata = {
           "Our support team is available 24/7 via chat and email to assist you whenever needed.",
       },
     ]}
+  />
+
+  <!-- HighlightedPosts Widget ******* -->
+
+  <BlogLatestPosts
+    title="Find out more content in our Blog"
+    information={`The blog is used to display AstroWind documentation.
+                        Each new article will be an important step that you will need to know to be an expert in creating a website using Astro + Tailwind CSS.
+                        Astro is a very interesting technology. Thanks.
+                `}
   />
 
   <!-- CallToAction Widget *********** -->
