@@ -1,27 +1,75 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { UI } from 'astrowind:config';
-
-export interface Props {
-  label?: string;
-  class?: string;
-  iconClass?: string;
-}
-
-const {
-  label = 'Toggle theme between Light / Dark / System',
-  class: className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center',
-  iconClass = 'w-6 h-6',
-} = Astro.props;
 ---
 
-{!(UI.theme && UI.theme.endsWith(':only')) && (
+<div client:load>
   <button
-    type="button"
-    class={className}
-    aria-label={label}
     id="theme-toggle"
+    class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+    aria-label="Toggle theme"
   >
-    <Icon id="theme-icon" name="tabler:device-desktop" class={iconClass} />
+    <Icon id="theme-icon" name="tabler:device-desktop" class="w-6 h-6" />
   </button>
-)}
+
+  <script is:inline>
+    const THEME_ORDER = ['system', 'light', 'dark'];
+
+    function getTheme() {
+      try { return localStorage.getItem('theme') ?? 'system'; }
+      catch { return 'system'; }
+    }
+
+    function applyTheme(theme) {
+      const root = document.documentElement;
+
+      root.classList.remove('dark');
+      if (theme === 'dark') root.classList.add('dark');
+      if (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        root.classList.add('dark');
+      }
+
+      // Icon wechseln
+      const icon = document.getElementById('theme-icon');
+      if (!icon) return;
+
+      switch (theme) {
+        case 'light':
+          icon.setAttribute('name', 'tabler:sun');
+          break;
+        case 'dark':
+          icon.setAttribute('name', 'tabler:moon');
+          break;
+        default:
+          icon.setAttribute('name', 'tabler:device-desktop');
+      }
+    }
+
+    // Initial Theme setzen
+    const defaultTheme = UI.theme || 'system';
+    const storedTheme = getTheme();
+
+    if (defaultTheme.endsWith(':only')) {
+      applyTheme(defaultTheme.replace(':only', ''));
+    } else if (storedTheme) {
+      applyTheme(storedTheme);
+    } else {
+      applyTheme(defaultTheme);
+    }
+
+    // Button Click Handler
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const current = getTheme();
+      const next = THEME_ORDER[(THEME_ORDER.indexOf(current) + 1) % THEME_ORDER.length];
+      localStorage.setItem('theme', next);
+      applyTheme(next);
+    });
+
+    // System Theme Änderungen beobachten
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if ((getTheme() ?? 'system') === 'system') {
+        applyTheme('system');
+      }
+    });
+  </script>
+</div>
