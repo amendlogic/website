@@ -75,6 +75,11 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
         ))
       }
     </div>
+
+      <div class="text-sm mr-4 dark:text-muted">
+        <Fragment set:html={disclaimer} />
+      </div>
+
     <div class="md:flex md:items-center md:justify-between py-6 md:py-8">
       {
         socialLinks?.length ? (
@@ -98,13 +103,10 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
       }
 
       <div class="text-sm mr-4 dark:text-muted">
-        <Fragment set:html={disclaimer} />
+        <Fragment set:html={footNote} />
       </div>
 
 
     </div>
-      <div class="text-sm mr-4 dark:text-muted">
-        <Fragment set:html={footNote} />
-      </div>
   </div>
 </footer>
