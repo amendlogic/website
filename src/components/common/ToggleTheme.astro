@@ -10,34 +10,36 @@ export interface Props {
 
 const {
   label = 'Toggle theme',
-  class:
-    className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5 inline-flex items-center',
+  class: className =
+    'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5 inline-flex items-center',
   iconClass = 'w-6 h-6',
 } = Astro.props;
 ---
 
-{
-  !(UI.theme && UI.theme.endsWith(':only')) && (
-    <button
-      type="button"
-      class={className}
-      aria-label={label}
-      data-aw-theme-toggle
-      data-theme="system"
-    >
-      <Icon name="tabler:device-desktop" class={iconClass} data-icon="system" />
-      <Icon name="tabler:sun" class={iconClass} data-icon="light" />
-      <Icon name="tabler:moon" class={iconClass} data-icon="dark" />
-    </button>
-  )
-}
+{!(UI.theme && UI.theme.endsWith(':only')) && (
+  <button
+    type="button"
+    class={className}
+    aria-label={label}
+    data-aw-theme-toggle
+    data-theme="system"
+  >
+    <Icon name="tabler:device-desktop" class={iconClass} data-icon="system" />
+    <Icon name="tabler:sun" class={iconClass} data-icon="light" />
+    <Icon name="tabler:moon" class={iconClass} data-icon="dark" />
+  </button>
+)}
 
 <script is:inline>
   const order = ['system', 'light', 'dark'];
 
   function updateIcons(btn, theme) {
     btn.querySelectorAll('[data-icon]').forEach((icon) => {
-      icon.style.display = icon.dataset.icon === theme ? 'inline-flex' : 'none';
+      if (icon.dataset.icon === theme) {
+        icon.classList.add('active');
+      } else {
+        icon.classList.remove('active');
+      }
     });
   }
 
@@ -47,8 +49,7 @@ const {
     updateIcons(btn, current);
 
     btn.addEventListener('click', () => {
-      const next =
-        order[(order.indexOf(btn.dataset.theme) + 1) % order.length];
+      const next = order[(order.indexOf(btn.dataset.theme) + 1) % order.length];
 
       btn.dataset.theme = next;
       localStorage.theme = next;
