@@ -9,13 +9,16 @@ import { UI } from 'astrowind:config';
   window.basic_script = true;
 
   // --- Theme Logik ---
-  function updateIcons(theme) {
-    document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
-      icon.classList.add('hidden');
-      if (icon.getAttribute('data-aw-theme-icon') === theme) {
-        icon.classList.remove('hidden');
-      }
-    });
+    function updateIcons(theme) {
+    const icons = document.querySelectorAll('[data-aw-theme-icon]');
+    if (icons.length > 0) {
+      icons.forEach((icon) => {
+        icon.classList.add('hidden');
+        if (icon.getAttribute('data-aw-theme-icon') === theme) {
+          icon.classList.remove('hidden');
+        }
+      });
+    }
   }
 
   function applyTheme(theme) {
