@@ -3,7 +3,7 @@ import { getPermalink, getBlogPermalink, getAsset } from './utils/permalinks';
 export const headerData = {
   links: [
     {
-      text: 'Home',
+      text: 'Product',
       href: getPermalink('/'),
       links: [
         {
@@ -52,10 +52,6 @@ export const headerData = {
     {
       text: 'Plans',
       href: getPermalink('/terms'),
-    },
-    {
-      text: 'Widgets',
-      href: '#',
     },
   ],
   actions: [{ text: 'Download', href: 'https://github.com/arthelokyo/astrowind', target: '_blank' }],
