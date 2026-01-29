@@ -3,17 +3,6 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  function getInitialTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme && savedTheme !== 'system') {
-      return savedTheme;
-    }
-    if (defaultTheme && defaultTheme.endsWith(':only')) {
-      return defaultTheme.replace(':only', '');
-    }
-    return 'system';
-  }
-
   function applyTheme(theme) {
     const resolvedTheme = (theme === 'system') 
       ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
@@ -24,8 +13,18 @@ import { UI } from 'astrowind:config';
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+    // Icons sofort setzen, damit der Button nicht leer oder falsch aussieht
+    const icons = document.querySelectorAll('[data-aw-theme-icon]');
+    icons.forEach(icon => {
+      if (icon.getAttribute('data-aw-theme-icon') === theme) {
+        icon.classList.remove('hidden');
+      } else {
+        icon.classList.add('hidden');
+      }
+    });
   }
 
-  const theme = getInitialTheme();
-  applyTheme(theme);
+  const savedTheme = localStorage.getItem('theme') || 'system';
+  applyTheme(savedTheme);
 </script>
