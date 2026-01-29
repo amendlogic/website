@@ -116,9 +116,12 @@ export const footerData = {
     { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
   ],
   disclaimer: [
-    { text: 'Test.' },
-    { text: 'Past performance does not guarantee future results.' },
-    { text: 'Trading involves risk and may result in capital loss.' },
+    { text: '1. Finanzmärkte sind von Natur aus risikobehaftet, und es besteht ein erhebliches Risiko, Kapital zu verlieren, wenn man mit irgendeiner Anlageklasse handelt. Die auf dieser Website bereitgestellten Inhalte dienen ausschließlich Informationszwecken und sollten nicht als Finanzberatung betrachtet werden. Investitionsentscheidungen in Bezug auf Wertpapiere, Rohstoffe oder andere Märkte sind mit inhärenten Risiken verbunden und sollten am besten in Absprache mit einem qualifizierten Finanzexperten getroffen werden. Vergangene Ergebnisse sind nicht zwangsläufig ein Indikator für zukünftige Resultate.' },
+    { text: '2. Simulierte Leistungsergebnisse weisen inhärente Einschränkungen auf. Im Gegensatz zum tatsächlichen Handel repräsentieren simulierte Ergebnisse keine realen Handelsaktivitäten. Zudem werden simulierte Trades nicht ausgeführt, und die Ergebnisse spiegeln möglicherweise nicht genau die Auswirkungen bestimmter Marktfaktoren wider, wie etwa Liquiditätsbeschränkungen. Simulierte Handelsprogramme profitieren im Allgemeinen von der Rückschau und basieren auf historischen Informationen. Es gibt keine Garantie dafür, dass ein Konto ähnliche Gewinne oder Verluste wie die in Simulationen gezeigten erzielt.' },
+    { text: '3. Erfahrungsberichte, die auf dieser Website erscheinen, sind nicht unbedingt repräsentativ für die Erfahrungen aller Kunden oder Klienten und garantieren keinen zukünftigen Erfolg oder Leistung.' },
+    { text: '3. Erfahrungsberichte, die auf dieser Website erscheinen, sind nicht unbedingt repräsentativ für die Erfahrungen aller Kunden oder Klienten und garantieren keinen zukünftigen Erfolg oder Leistung.' },
+    { text: '3. Erfahrungsberichte, die auf dieser Website erscheinen, sind nicht unbedingt repräsentativ für die Erfahrungen aller Kunden oder Klienten und garantieren keinen zukünftigen Erfolg oder Leistung.' },
+    { text: '3. Erfahrungsberichte, die auf dieser Website erscheinen, sind nicht unbedingt repräsentativ für die Erfahrungen aller Kunden oder Klienten und garantieren keinen zukünftigen Erfolg oder Leistung.' },
   ],
   footNote: `
     Made by <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo"> Arthelokyo</a> · All rights reserved.
