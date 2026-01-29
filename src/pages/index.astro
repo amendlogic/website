@@ -7,9 +7,7 @@ import Content from '~/components/widgets/Content.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import EChart from '~/components/widgets/EChart.astro'; 
 import Testimonials from '~/components/widgets/Testimonials.astro';
-import Pricing from '~/components/widgets/Pricing.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
 const metadata = {
@@ -171,7 +169,8 @@ const metadata = {
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
-</Steps>
+
+  </Steps>
 
 
   <!-- Chart Widget ******************* -->
@@ -238,10 +237,7 @@ const metadata = {
       }
     ]
   }}
->
-
-  </EChart>
-
+  />
 
  <!-- Testimonials Widget *********** -->
 
@@ -283,50 +279,6 @@ const metadata = {
       href: 'https://github.com/arthelokyo/astrowind',
       icon: 'tabler:chevron-right',
     }}
-  />
-
- <!-- Pricing Widget ******************* -->
-
-  <Pricing
-    tagline="Pricing"
-    title="Fair & Transparent"
-    prices={[
-      {
-        title: 'free',
-        subtitle: 'Access to core features and a wide range of templates',
-        price: '0',
-        period: '/ month',
-        callToAction: {
-          target: '_blank',
-          text: 'Get Started for Free',
-          href: '#',
-        },
-      },
-      {
-        title: 'pro',
-        subtitle: 'Premium templates and advanced customization',
-        price: 15,
-        period: '/ Month',
-        callToAction: {
-          target: '_blank',
-          text: 'Upgrade to Pro',
-          href: '#',
-        },
-        hasRibbon: true,
-        ribbonTitle: 'popular',
-      },
-      {
-        title: 'Enterprise',
-        subtitle: 'Tailored solutions for large-scale projects',
-        price: 45,
-        period: '/ Month',
-        callToAction: {
-          target: '_blank',
-          text: 'Unlock Enterprise Features',
-          href: '#',
-        },
-      },
-    ]}
   />
 
   <!-- FAQs Widget ******************* -->
@@ -393,16 +345,6 @@ const metadata = {
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
 </FAQs>
-
-  <!-- HighlightedPosts Widget ******* -->
-
-  <BlogLatestPosts
-    title="Find out more content in our Blog"
-    information={`The blog is used to display AstroWind documentation.
-                        Each new article will be an important step that you will need to know to be an expert in creating a website using Astro + Tailwind CSS.
-                        Astro is a very interesting technology. Thanks.
-                `}
-  />
 
   <!-- CallToAction Widget *********** -->
 
