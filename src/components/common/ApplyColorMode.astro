@@ -1,15 +1,57 @@
----
-import { UI } from 'astrowind:config';
----
-<script is:inline>
-  const theme =
-    localStorage.getItem('theme') ||
-    '{UI.theme || 'system'}'.replace(':only', '');
+<script>
+(() => {
+  const STORAGE_KEY = 'theme'; // system | light | dark
+  const ORDER = ['system', 'light', 'dark'];
 
-  const isDark =
-    theme === 'dark' ||
-    (theme === 'system' &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
 
-  document.documentElement.classList.toggle('dark', isDark);
+  function getTheme() {
+    return localStorage.getItem(STORAGE_KEY) || 'system';
+  }
+
+  function isDark(theme) {
+    return theme === 'dark' || (theme === 'system' && media.matches);
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.classList.toggle('dark', isDark(theme));
+    updateIcon(theme);
+  }
+
+  function updateIcon(theme) {
+    const btn = document.querySelector('[data-theme-toggle]');
+    if (!btn) return;
+    btn.dataset.theme = theme;
+  }
+
+  function cycleTheme() {
+    const current = getTheme();
+    const next = ORDER[(ORDER.indexOf(current) + 1) % ORDER.length];
+    localStorage.setItem(STORAGE_KEY, next);
+    applyTheme(next);
+  }
+
+  function init() {
+    applyTheme(getTheme());
+
+    const btn = document.querySelector('[data-theme-toggle]');
+    if (btn && !btn.dataset.bound) {
+      btn.dataset.bound = 'true';
+      btn.addEventListener('click', cycleTheme);
+    }
+  }
+
+  // Initial
+  init();
+
+  // Astro page swap
+  document.addEventListener('astro:after-swap', init);
+
+  // System theme change
+  media.addEventListener('change', () => {
+    if (getTheme() === 'system') {
+      applyTheme('system');
+    }
+  });
+})();
 </script>
