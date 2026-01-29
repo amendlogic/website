@@ -4,34 +4,37 @@ import { UI } from 'astrowind:config';
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
   const root = document.documentElement;
 
+  function resolveTheme(theme) {
+    if (theme === 'dark') return 'dark';
+    if (theme === 'light') return 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  }
+
   function applyTheme(theme) {
-    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    if (theme === 'dark' || (theme === 'system' && systemDark)) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-
-    // Icon-State aktualisieren
-    document.querySelectorAll('[data-aw-theme-toggle]').forEach((btn) => {
-      btn.dataset.theme = theme;
-    });
+    const resolved = resolveTheme(theme);
+    root.classList.toggle('dark', resolved === 'dark');
   }
 
   function getInitialTheme() {
     if (localStorage.theme) return localStorage.theme;
-    if (defaultTheme.endsWith(':only')) return defaultTheme.replace(':only', '');
+    if (defaultTheme.endsWith(':only')) {
+      return defaultTheme.replace(':only', '');
+    }
     return defaultTheme;
   }
 
   const theme = getInitialTheme();
+  localStorage.theme = theme;
   applyTheme(theme);
 
-  // System-Theme-Änderungen live übernehmen
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (localStorage.theme === 'system') {
-      applyTheme('system');
-    }
-  });
+  // System-Theme live übernehmen
+  window
+    .matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', () => {
+      if (localStorage.theme === 'system') {
+        applyTheme('system');
+      }
+    });
 </script>
