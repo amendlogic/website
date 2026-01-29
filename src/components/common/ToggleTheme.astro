@@ -1,6 +1,5 @@
 ---
-import { Icon } from 'astro-icon/components';
-import { UI } from 'astrowind:config';
+import { Icon } from "astro-icon/components";
 ---
 
 <button
@@ -10,7 +9,9 @@ import { UI } from 'astrowind:config';
          rounded-lg text-sm p-2.5 inline-flex items-center"
   aria-label="Toggle color mode"
 >
-  <Icon name="tabler:sun" class="w-6 h-6" data-icon />
+  <span id="theme-icon">
+    <Icon name="tabler:sun" class="w-6 h-6" />
+  </span>
 </button>
 
 <script is:inline>
@@ -35,12 +36,32 @@ import { UI } from 'astrowind:config';
   }
 
   function updateIcon(theme) {
-    const icon = document.querySelector("#theme-toggle [data-icon]");
-    if (!icon) return;
+    const iconContainer = document.getElementById("theme-icon");
 
-    if (theme === "system") icon.setAttribute("name", "tabler:device-desktop");
-    if (theme === "light") icon.setAttribute("name", "tabler:sun");
-    if (theme === "dark") icon.setAttribute("name", "tabler:moon");
+    if (theme === "system") {
+      iconContainer.innerHTML = `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" 
+        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+        d="M9 12h6m-3-3v6m9-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>`;
+    }
+
+    if (theme === "light") {
+      iconContainer.innerHTML = `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" 
+        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <circle cx="12" cy="12" r="5" stroke-width="2"/>
+        <path stroke-linecap="round" stroke-width="2" 
+        d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95 6.95l-1.414-1.414M6.464 6.464L5.05 5.05m12.9 0l-1.414 1.414M6.464 17.536L5.05 18.95"/>
+      </svg>`;
+    }
+
+    if (theme === "dark") {
+      iconContainer.innerHTML = `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" 
+        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+        d="M21 12.79A9 9 0 1111.21 3a7 7 0 0010.58 9.79z" />
+      </svg>`;
+    }
   }
 
   function toggleTheme() {
@@ -56,5 +77,5 @@ import { UI } from 'astrowind:config';
   applyTheme(initial);
   updateIcon(initial);
 
-  document.querySelector("#theme-toggle").addEventListener("click", toggleTheme);
+  document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
 </script>
