@@ -1,17 +1,13 @@
 ---
 import { UI } from 'astrowind:config';
-
-// Temporary implementation
 ---
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  if (window.__awColorModeInit) {
-    return;
-  }
-  window.__awColorModeInit = true;
+  if (window.__awThemeInit) return;
+  window.__awThemeInit = true;
 
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-  function getSystemTheme() {
+  function systemTheme() {
     return mediaQuery.matches ? 'dark' : 'light';
   }
 
@@ -19,25 +15,29 @@ import { UI } from 'astrowind:config';
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }
 
-  // Initial apply
-  if (sessionStorage.getItem('themeOverride')) {
-    applyTheme(sessionStorage.getItem('themeOverride'));
-  } else {
-    applyTheme(getSystemTheme());
+  function currentTheme() {
+    return document.documentElement.classList.contains('dark')
+      ? 'dark'
+      : 'light';
   }
 
-  // Listen for system theme changes → reset override
+  // INITIAL
+  const override = sessionStorage.getItem('themeOverride');
+  applyTheme(override || systemTheme());
+
+  // SYSTEM CHANGE → RESET OVERRIDE
   mediaQuery.addEventListener('change', (e) => {
     sessionStorage.removeItem('themeOverride');
     applyTheme(e.matches ? 'dark' : 'light');
   });
 
-  // Expose toggle globally
-  window.toggleTheme = () => {
-    const isDark = document.documentElement.classList.contains('dark');
-    const nextTheme = isDark ? 'light' : 'dark';
+  // TOGGLE HANDLER (event delegation)
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-aw-toggle-color-scheme]');
+    if (!btn) return;
 
-    sessionStorage.setItem('themeOverride', nextTheme);
-    applyTheme(nextTheme);
-  };
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    sessionStorage.setItem('themeOverride', next);
+    applyTheme(next);
+  });
 </script>
