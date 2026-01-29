@@ -76,17 +76,13 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
       }
     </div>
 
-      <div class="text-sm mr-4 dark:text-muted">
-
 {disclaimer?.length ? (
-  <div class="text-xs text-muted dark:text-gray-500 space-y-1 leading-relaxed max-w-3xl">
+  <div class="text-xs text-muted dark:text-gray-500 space-y-2 leading-relaxed">
     {disclaimer.map(({ text }) => (
       <p set:html={text} />
     ))}
   </div>
 ) : null}
-
-      </div>
 
     <div class="md:flex md:items-center md:justify-between py-6 md:py-8">
       {
