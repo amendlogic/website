@@ -1,6 +1,18 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 
+import { footerData } from '~/navigation.ts';
+
+const homeFooterData = {
+  ...footerData,
+  disclaimer: [
+    { text: 'Trading financial markets involves significant risk.' },
+    { text: 'Past performance is not indicative of future results.' },
+    { text: 'This content is for informational purposes only.' },
+  ],
+};
+---
+
 import Hero from '~/components/widgets/Hero.astro';
 import Note from '~/components/widgets/Note.astro';
 import Content from '~/components/widgets/Content.astro';
