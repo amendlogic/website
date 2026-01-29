@@ -1,81 +1,66 @@
 ---
-import { Icon } from "astro-icon/components";
+import { Icon } from 'astro-icon/components';
+import { UI } from 'astrowind:config';
+
+export interface Props {
+  label?: string;
+  class?: string;
+  iconClass?: string;
+}
+
+const {
+  label = 'Toggle theme',
+  class:
+    className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5 inline-flex items-center',
+  iconClass = 'w-6 h-6',
+} = Astro.props;
 ---
 
-<button
-  id="theme-toggle"
-  class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 
-         focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 
-         rounded-lg text-sm p-2.5 inline-flex items-center"
-  aria-label="Toggle color mode"
->
-  <span id="theme-icon">
-    <Icon name="tabler:sun" class="w-6 h-6" />
-  </span>
-</button>
+{
+  !(UI.theme && UI.theme.endsWith(':only')) && (
+    <button
+      type="button"
+      class={className}
+      aria-label={label}
+      data-aw-theme-toggle
+      data-theme="system"
+    >
+      <Icon name="tabler:device-desktop" class={iconClass} data-icon="system" />
+      <Icon name="tabler:sun" class={iconClass + ' hidden'} data-icon="light" />
+      <Icon name="tabler:moon" class={iconClass + ' hidden'} data-icon="dark" />
+    </button>
+  )
+}
 
 <script is:inline>
-  const states = ["system", "light", "dark"];
+  const order = ['system', 'light', 'dark'];
 
-  function getNext(state) {
-    const i = states.indexOf(state);
-    return states[(i + 1) % states.length];
+  function updateIcons(btn, theme) {
+    btn.querySelectorAll('[data-icon]').forEach((icon) => {
+      icon.classList.toggle('hidden', icon.dataset.icon !== theme);
+    });
   }
 
-  function applyTheme(theme) {
-    if (theme === "system") {
-      document.documentElement.classList.remove("dark");
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        document.documentElement.classList.add("dark");
-      }
-    } else if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }
+  document.querySelectorAll('[data-aw-theme-toggle]').forEach((btn) => {
+    const current = localStorage.theme || 'system';
+    btn.dataset.theme = current;
+    updateIcons(btn, current);
 
-  function updateIcon(theme) {
-    const iconContainer = document.getElementById("theme-icon");
+    btn.addEventListener('click', () => {
+      const next =
+        order[(order.indexOf(btn.dataset.theme) + 1) % order.length];
 
-    if (theme === "system") {
-      iconContainer.innerHTML = `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" 
-        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-        d="M9 12h6m-3-3v6m9-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>`;
-    }
+      btn.dataset.theme = next;
+      localStorage.theme = next;
 
-    if (theme === "light") {
-      iconContainer.innerHTML = `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" 
-        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <circle cx="12" cy="12" r="5" stroke-width="2"/>
-        <path stroke-linecap="round" stroke-width="2" 
-        d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95 6.95l-1.414-1.414M6.464 6.464L5.05 5.05m12.9 0l-1.414 1.414M6.464 17.536L5.05 18.95"/>
-      </svg>`;
-    }
+      document.documentElement.classList.toggle(
+        'dark',
+        next === 'dark' ||
+          (next === 'system' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+      );
 
-    if (theme === "dark") {
-      iconContainer.innerHTML = `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" 
-        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-        d="M21 12.79A9 9 0 1111.21 3a7 7 0 0010.58 9.79z" />
-      </svg>`;
-    }
-  }
-
-  function toggleTheme() {
-    const current = localStorage.getItem("theme") || "system";
-    const next = getNext(current);
-
-    localStorage.setItem("theme", next);
-    applyTheme(next);
-    updateIcon(next);
-  }
-
-  const initial = localStorage.getItem("theme") || "system";
-  applyTheme(initial);
-  updateIcon(initial);
-
-  document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+      updateIcons(btn, next);
+    });
+  });
 </script>
