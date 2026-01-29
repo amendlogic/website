@@ -3,165 +3,158 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  if (window.basic_script) return;
-  window.basic_script = true;
-
   // =======================
-  // THEME SWITCHER SETUP
+  // Alles nur im Browser
   // =======================
-  const THEMES = ['system', 'light', 'dark'];
+  if (typeof window !== 'undefined' && !window.basic_script) {
+    window.basic_script = true;
 
-  function getStoredTheme() {
-    return localStorage.theme || 'system';
-  }
+    // =======================
+    // THEME SWITCHER SETUP
+    // =======================
+    const THEMES = ['system', 'light', 'dark'];
 
-  function applyTheme(theme) {
-    if (theme === 'dark') document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-
-    updateButtonState(theme);
-  }
-
-  function updateButtonState(theme) {
-    const btns = document.querySelectorAll('[data-aw-toggle-color-scheme]');
-    btns.forEach((btn) => {
-      const icon = btn.querySelector('svg');
-      if (!icon) return;
-
-      if (theme === 'system') icon.dataset.theme = 'system';
-      else if (theme === 'light') icon.dataset.theme = 'light';
-      else icon.dataset.theme = 'dark';
-    });
-  }
-
-  function initTheme() {
-    let theme = getStoredTheme();
-
-    if (theme === 'system') {
-      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    function getStoredTheme() {
+      return localStorage.theme || 'system';
     }
 
-    applyTheme(theme);
-  }
+    function applyTheme(theme) {
+      if (theme === 'dark') document.documentElement.classList.add('dark');
+      else document.documentElement.classList.remove('dark');
 
-  function cycleTheme() {
-    const current = getStoredTheme();
-    const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
-    localStorage.theme = next;
-    initTheme();
-  }
+      updateButtonState(theme);
+    }
 
-  function attachThemeButtons() {
-    const btns = document.querySelectorAll('[data-aw-toggle-color-scheme]');
-    btns.forEach((btn) => btn.addEventListener('click', cycleTheme));
-  }
+    function updateButtonState(theme) {
+      const btns = document.querySelectorAll('[data-aw-toggle-color-scheme]');
+      btns.forEach((btn) => {
+        const icon = btn.querySelector('svg');
+        if (!icon) return;
 
-  // =======================
-  // UTILITY: EVENT ATTACH
-  // =======================
-  function attachEvent(selector, event, fn) {
-    const matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
-    if (matches && matches.length) matches.forEach((elem) => elem.addEventListener(event, (e) => fn(e, elem)));
-  }
+        if (theme === 'system') icon.dataset.theme = 'system';
+        else if (theme === 'light') icon.dataset.theme = 'light';
+        else icon.dataset.theme = 'dark';
+      });
+    }
 
-  // =======================
-  // PAGE LOAD LOGIC
-  // =======================
-  const onLoad = function () {
-    let lastKnownScrollPosition = window.scrollY;
-    let ticking = true;
+    function initTheme() {
+      let theme = getStoredTheme();
+      if (theme === 'system') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      applyTheme(theme);
+    }
 
-    // HEADER MENU HANDLING
-    attachEvent('#header nav', 'click', function () {
+    function cycleTheme() {
+      const current = getStoredTheme();
+      const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
+      localStorage.theme = next;
+      initTheme();
+    }
+
+    function attachThemeButtons() {
+      const btns = document.querySelectorAll('[data-aw-toggle-color-scheme]');
+      btns.forEach((btn) => btn.addEventListener('click', cycleTheme));
+    }
+
+    // =======================
+    // HELPER: EVENT ATTACH
+    // =======================
+    function attachEvent(selector, event, fn) {
+      const matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
+      if (matches && matches.length) {
+        matches.forEach((elem) => elem.addEventListener(event, (e) => fn(e, elem)));
+      }
+    }
+
+    // =======================
+    // PAGE LOAD LOGIC
+    // =======================
+    const onLoad = function () {
+      let lastKnownScrollPosition = window.scrollY;
+      let ticking = true;
+
+      // HEADER MENU HANDLING
+      attachEvent('#header nav', 'click', function () {
+        document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
+        document.body.classList.remove('overflow-hidden');
+        document.getElementById('header')?.classList.remove('h-screen', 'expanded', 'bg-page');
+        document.querySelector('#header nav')?.classList.add('hidden');
+        document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
+      });
+
+      attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
+        elem.classList.toggle('expanded');
+        document.body.classList.toggle('overflow-hidden');
+        document.getElementById('header')?.classList.toggle('h-screen');
+        document.getElementById('header')?.classList.toggle('expanded');
+        document.getElementById('header')?.classList.toggle('bg-page');
+        document.querySelector('#header nav')?.classList.toggle('hidden');
+        document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
+      });
+
+      // SOCIAL SHARE HANDLING
+      attachEvent('[data-aw-social-share]', 'click', function (_, elem) {
+        const network = elem.getAttribute('data-aw-social-share');
+        const url = encodeURIComponent(elem.getAttribute('data-aw-url'));
+        const text = encodeURIComponent(elem.getAttribute('data-aw-text'));
+        let href;
+
+        switch (network) {
+          case 'facebook': href = `https://www.facebook.com/sharer.php?u=${url}`; break;
+          case 'twitter': href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`; break;
+          case 'linkedin': href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`; break;
+          case 'whatsapp': href = `https://wa.me/?text=${text}%20${url}`; break;
+          case 'mail': href = `mailto:?subject=${text}&body=${text}%20${url}`; break;
+          default: return;
+        }
+
+        const newlink = document.createElement('a');
+        newlink.target = '_blank';
+        newlink.href = href;
+        newlink.click();
+      });
+
+      // STICKY HEADER ON SCROLL
+      function applyHeaderStylesOnScroll() {
+        const header = document.querySelector('#header[data-aw-sticky-header]');
+        if (!header) return;
+        if (lastKnownScrollPosition > 60 && !header.classList.contains('scroll')) header.classList.add('scroll');
+        else if (lastKnownScrollPosition <= 60 && header.classList.contains('scroll')) header.classList.remove('scroll');
+        ticking = false;
+      }
+
+      attachEvent([document], 'scroll', function () {
+        lastKnownScrollPosition = window.scrollY;
+        if (!ticking) {
+          window.requestAnimationFrame(applyHeaderStylesOnScroll);
+          ticking = true;
+        }
+      });
+
+      // INITIALIZE THEME BUTTONS
+      attachThemeButtons();
+      initTheme();
+      applyHeaderStylesOnScroll();
+    };
+
+    const onPageShow = function () {
+      document.documentElement.classList.add('motion-safe:scroll-smooth');
       document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
       document.body.classList.remove('overflow-hidden');
-      document.getElementById('header')?.classList.remove('h-screen', 'expanded', 'bg-page');
+      document.getElementById('header')?.classList.remove('h-screen', 'expanded');
       document.querySelector('#header nav')?.classList.add('hidden');
-      document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
+    };
+
+    window.onload = onLoad;
+    window.onpageshow = onPageShow;
+
+    document.addEventListener('astro:after-swap', () => {
+      initTheme();
+      onLoad();
+      onPageShow();
     });
-
-    attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
-      elem.classList.toggle('expanded');
-      document.body.classList.toggle('overflow-hidden');
-      document.getElementById('header')?.classList.toggle('h-screen');
-      document.getElementById('header')?.classList.toggle('expanded');
-      document.getElementById('header')?.classList.toggle('bg-page');
-      document.querySelector('#header nav')?.classList.toggle('hidden');
-      document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
-    });
-
-    // SOCIAL SHARE HANDLING
-    attachEvent('[data-aw-social-share]', 'click', function (_, elem) {
-      const network = elem.getAttribute('data-aw-social-share');
-      const url = encodeURIComponent(elem.getAttribute('data-aw-url'));
-      const text = encodeURIComponent(elem.getAttribute('data-aw-text'));
-      let href;
-
-      switch (network) {
-        case 'facebook':
-          href = `https://www.facebook.com/sharer.php?u=${url}`;
-          break;
-        case 'twitter':
-          href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-          break;
-        case 'linkedin':
-          href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
-          break;
-        case 'whatsapp':
-          href = `https://wa.me/?text=${text}%20${url}`;
-          break;
-        case 'mail':
-          href = `mailto:?subject=${text}&body=${text}%20${url}`;
-          break;
-        default:
-          return;
-      }
-
-      const newlink = document.createElement('a');
-      newlink.target = '_blank';
-      newlink.href = href;
-      newlink.click();
-    });
-
-    // STICKY HEADER ON SCROLL
-    function applyHeaderStylesOnScroll() {
-      const header = document.querySelector('#header[data-aw-sticky-header]');
-      if (!header) return;
-      if (lastKnownScrollPosition > 60 && !header.classList.contains('scroll')) header.classList.add('scroll');
-      else if (lastKnownScrollPosition <= 60 && header.classList.contains('scroll')) header.classList.remove('scroll');
-      ticking = false;
-    }
-
-    attachEvent([document], 'scroll', function () {
-      lastKnownScrollPosition = window.scrollY;
-      if (!ticking) {
-        window.requestAnimationFrame(applyHeaderStylesOnScroll);
-        ticking = true;
-      }
-    });
-
-    // INITIALIZE THEME BUTTONS
-    attachThemeButtons();
-    initTheme();
-    applyHeaderStylesOnScroll();
-  };
-
-  const onPageShow = function () {
-    document.documentElement.classList.add('motion-safe:scroll-smooth');
-    document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
-    document.body.classList.remove('overflow-hidden');
-    document.getElementById('header')?.classList.remove('h-screen', 'expanded');
-    document.querySelector('#header nav')?.classList.add('hidden');
-  };
-
-  window.onload = onLoad;
-  window.onpageshow = onPageShow;
-
-  document.addEventListener('astro:after-swap', () => {
-    initTheme();
-    onLoad();
-    onPageShow();
-  });
+  } // End Browser Check
 </script>
 
 <script is:inline>
