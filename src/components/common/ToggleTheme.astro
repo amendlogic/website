@@ -1,14 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { UI } from 'astrowind:config';
-
-
-const states = ["system", "light", "dark"];
-
-function getNext(state) {
-  const i = states.indexOf(state);
-  return states[(i + 1) % states.length];
-}
 ---
 
 <button
@@ -18,29 +10,57 @@ function getNext(state) {
          rounded-lg text-sm p-2.5 inline-flex items-center"
   aria-label="Toggle color mode"
   data-aw-toggle-color-scheme
-  on:click={() => {
-    const current = localStorage.getItem('theme') || 'system';
-    const next = getNext(current);
-    localStorage.setItem('theme', next);
-    window.dispatchEvent(new CustomEvent('theme-change', { detail: next }));
-  }}
+  id="theme-toggle"
 >
   <Icon name="tabler:sun" class="w-6 h-6" />
 </button>
 
 <script>
-  const icon = document.querySelector('[data-aw-toggle-color-scheme] svg');
+  const states = ["system", "light", "dark"];
 
-  function updateIcon(theme) {
-    if (theme === 'system') icon.setAttribute('name', 'tabler:device-desktop');
-    if (theme === 'light') icon.setAttribute('name', 'tabler:sun');
-    if (theme === 'dark') icon.setAttribute('name', 'tabler:moon');
+  function getNext(state) {
+    const i = states.indexOf(state);
+    return states[(i + 1) % states.length];
   }
 
-  const saved = localStorage.getItem('theme') || 'system';
-  updateIcon(saved);
+  function applyTheme(theme) {
+    if (theme === "system") {
+      document.documentElement.classList.remove("dark");
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.classList.add("dark");
+      }
+    } else if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }
 
-  window.addEventListener('theme-change', (e) => {
-    updateIcon(e.detail);
-  });
+  function updateIcon(theme) {
+    const icon = document.querySelector("#theme-toggle svg");
+
+    if (!icon) return;
+
+    if (theme === "system") icon.setAttribute("name", "tabler:device-desktop");
+    if (theme === "light") icon.setAttribute("name", "tabler:sun");
+    if (theme === "dark") icon.setAttribute("name", "tabler:moon");
+  }
+
+  function toggleTheme() {
+    const current = localStorage.getItem("theme") || "system";
+    const next = getNext(current);
+
+    localStorage.setItem("theme", next);
+    applyTheme(next);
+    updateIcon(next);
+  }
+
+  // Initial state
+  const initial = localStorage.getItem("theme") || "system";
+  applyTheme(initial);
+  updateIcon(initial);
+
+  document
+    .querySelector("#theme-toggle")
+    .addEventListener("click", toggleTheme);
 </script>
