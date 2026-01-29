@@ -4,16 +4,23 @@ import { Icon } from 'astro-icon/components';
 <button
   type="button"
   aria-label="Toggle theme"
-  class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5 inline-flex items-center"
   data-theme-toggle
+  class="p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
 >
-  <span data-icon="system">
+  <span class="icon system">
     <Icon name="tabler:device-desktop" class="w-6 h-6" />
   </span>
-  <span data-icon="light">
+  <span class="icon light">
     <Icon name="tabler:sun" class="w-6 h-6" />
   </span>
-  <span data-icon="dark">
+  <span class="icon dark">
     <Icon name="tabler:moon" class="w-6 h-6" />
   </span>
 </button>
+
+<style>
+  [data-theme-toggle] .icon { display: none; }
+  [data-theme-toggle][data-theme="system"] .system { display: inline-flex; }
+  [data-theme-toggle][data-theme="light"] .light { display: inline-flex; }
+  [data-theme-toggle][data-theme="dark"] .dark { display: inline-flex; }
+</style>
