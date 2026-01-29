@@ -3,16 +3,38 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  const theme = localStorage.theme || 'system';
+  if (typeof window !== 'undefined') {
+    const THEMES = ['system', 'light', 'dark'];
 
-  function applyThemeMode(theme) {
-    if (theme === 'dark') document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-  }
+    function getStoredTheme() {
+      return localStorage.theme || 'system';
+    }
 
-  if (theme === 'system') {
-    applyThemeMode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  } else {
-    applyThemeMode(theme);
+    function applyTheme(theme) {
+      if (theme === 'dark') document.documentElement.classList.add('dark');
+      else document.documentElement.classList.remove('dark');
+
+      // optional: update button icon
+      const btns = document.querySelectorAll('[data-aw-toggle-color-scheme]');
+      btns.forEach((btn) => {
+        const icon = btn.querySelector('svg');
+        if (!icon) return;
+        icon.dataset.theme = theme;
+      });
+    }
+
+    function initTheme() {
+      let theme = getStoredTheme();
+
+      if (theme === 'system') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      applyTheme(theme);
+    }
+
+    // direkt beim Laden
+    window.addEventListener('DOMContentLoaded', initTheme);
+    document.addEventListener('astro:after-swap', initTheme);
   }
 </script>
