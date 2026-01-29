@@ -1,17 +1,6 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 
-import { footerData } from '~/navigation.ts';
-
-const homeFooterData = {
-  ...footerData,
-  disclaimer: [
-    { text: 'Trading financial markets involves significant risk.' },
-    { text: 'Past performance is not indicative of future results.' },
-    { text: 'This content is for informational purposes only.' },
-  ],
-};
-
 import Hero from '~/components/widgets/Hero.astro';
 import Note from '~/components/widgets/Note.astro';
 import Content from '~/components/widgets/Content.astro';
@@ -21,9 +10,23 @@ import Testimonials from '~/components/widgets/Testimonials.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
+import { footerData } from '~/navigation.ts';
+
 const metadata = {
   title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
   ignoreTitleTemplate: true,
+};
+
+const homeFooterData = {
+  ...footerData,
+  disclaimer: [
+    { text: 'Trading financial markets involves significant risk.' },
+    { text: 'Past performance is not indicative of future results.' },
+    { text: 'This content is for informational purposes only.' },
+    { text: 'This content is for informational purposes only.' },
+    { text: 'This content is for informational purposes only.' },
+    { text: 'This content is for informational purposes only.' },
+  ],
 };
 ---
 
