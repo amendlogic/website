@@ -1,43 +1,33 @@
 ---
 import { UI } from 'astrowind:config';
+
+// TODO: This code is temporary
 ---
+
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  if (window.__awThemeInit) return;
-  window.__awThemeInit = true;
-
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-  function systemTheme() {
-    return mediaQuery.matches ? 'dark' : 'light';
-  }
-
   function applyTheme(theme) {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    const matches = document.querySelectorAll('[data-aw-toggle-color-scheme] > input');
+
+    if (matches && matches.length) {
+      matches.forEach((elem) => {
+        elem.checked = theme !== 'dark';
+      });
+    }
   }
 
-  function currentTheme() {
-    return document.documentElement.classList.contains('dark')
-      ? 'dark'
-      : 'light';
+  if ((defaultTheme && defaultTheme.endsWith(':only')) || (!localStorage.theme && defaultTheme !== 'system')) {
+    applyTheme(defaultTheme.replace(':only', ''));
+  } else if (
+    localStorage.theme === 'dark' ||
+    (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  ) {
+    applyTheme('dark');
+  } else {
+    applyTheme('light');
   }
-
-  // INITIAL
-  const override = sessionStorage.getItem('themeOverride');
-  applyTheme(override || systemTheme());
-
-  // SYSTEM CHANGE → RESET OVERRIDE
-  mediaQuery.addEventListener('change', (e) => {
-    sessionStorage.removeItem('themeOverride');
-    applyTheme(e.matches ? 'dark' : 'light');
-  });
-
-  // TOGGLE HANDLER (event delegation)
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-aw-toggle-color-scheme]');
-    if (!btn) return;
-
-    const next = currentTheme() === 'dark' ? 'light' : 'dark';
-    sessionStorage.setItem('themeOverride', next);
-    applyTheme(next);
-  });
 </script>
