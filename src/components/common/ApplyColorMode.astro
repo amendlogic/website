@@ -1,57 +1,33 @@
-<script>
-(() => {
-  const STORAGE_KEY = 'theme'; // system | light | dark
-  const ORDER = ['system', 'light', 'dark'];
+---
+import { UI } from 'astrowind:config';
 
-  const media = window.matchMedia('(prefers-color-scheme: dark)');
+// TODO: This code is temporary
+---
 
-  function getTheme() {
-    return localStorage.getItem(STORAGE_KEY) || 'system';
-  }
-
-  function isDark(theme) {
-    return theme === 'dark' || (theme === 'system' && media.matches);
-  }
-
+<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
   function applyTheme(theme) {
-    document.documentElement.classList.toggle('dark', isDark(theme));
-    updateIcon(theme);
-  }
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    const matches = document.querySelectorAll('[data-aw-toggle-color-scheme] > input');
 
-  function updateIcon(theme) {
-    const btn = document.querySelector('[data-theme-toggle]');
-    if (!btn) return;
-    btn.dataset.theme = theme;
-  }
-
-  function cycleTheme() {
-    const current = getTheme();
-    const next = ORDER[(ORDER.indexOf(current) + 1) % ORDER.length];
-    localStorage.setItem(STORAGE_KEY, next);
-    applyTheme(next);
-  }
-
-  function init() {
-    applyTheme(getTheme());
-
-    const btn = document.querySelector('[data-theme-toggle]');
-    if (btn && !btn.dataset.bound) {
-      btn.dataset.bound = 'true';
-      btn.addEventListener('click', cycleTheme);
+    if (matches && matches.length) {
+      matches.forEach((elem) => {
+        elem.checked = theme !== 'dark';
+      });
     }
   }
 
-  // Initial
-  init();
-
-  // Astro page swap
-  document.addEventListener('astro:after-swap', init);
-
-  // System theme change
-  media.addEventListener('change', () => {
-    if (getTheme() === 'system') {
-      applyTheme('system');
-    }
-  });
-})();
+  if ((defaultTheme && defaultTheme.endsWith(':only')) || (!localStorage.theme && defaultTheme !== 'system')) {
+    applyTheme(defaultTheme.replace(':only', ''));
+  } else if (
+    localStorage.theme === 'dark' ||
+    (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  ) {
+    applyTheme('dark');
+  } else {
+    applyTheme('light');
+  }
 </script>
