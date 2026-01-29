@@ -13,19 +13,23 @@ export interface Props {
   footerData?: typeof defaultFooterData;
 }
 
-const { metadata } = Astro.props;
+// ✅ Entpacke footerData aus props und setze Default
+const { metadata, footerData = defaultFooterData } = Astro.props;
 ---
 
 <Layout metadata={metadata}>
   <slot name="announcement">
     <Announcement />
   </slot>
+
   <slot name="header">
     <Header {...headerData} isSticky showRssFeed showToggleTheme />
   </slot>
+
   <main>
     <slot />
   </main>
+
   <slot name="footer">
     <Footer {...footerData} />
   </slot>
