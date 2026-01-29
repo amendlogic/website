@@ -67,23 +67,42 @@ const serializedOptions = JSON.stringify(options);
 
 </WidgetWrapper>
 
-<script define:vars={{ chartOptions: serializedOptions, chartId }}>
-  // Load ECharts from CDN
-  document.addEventListener("DOMContentLoaded", async () => {
-    // Load ECharts core
-    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
+<script is:inline define:vars={{ chartOptions: serializedOptions, chartId }}>
+  let chartInstance;
 
-    // Initialize chart
-    const chartContainer = document.getElementById(chartId);
-    const chart = echarts.init(chartContainer);
+  async function initChart() {
+    const container = document.getElementById(chartId);
+    if (!container) return;
 
-    // Set chart options
-    const options = JSON.parse(chartOptions);
-    chart.setOption(options);
+    // ECharts laden (nur einmal)
+    const echarts = await import(
+      "https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js"
+    );
 
-    // Handle resize
-    window.addEventListener("resize", () => {
-      chart.resize();
-    });
+    // Falls noch ein Chart existiert → zerstören
+    if (chartInstance) {
+      chartInstance.dispose();
+    }
+
+    chartInstance = echarts.init(container);
+    chartInstance.setOption(JSON.parse(chartOptions));
+  }
+
+  // Bei JEDEM Seitenaufruf (auch Back / / Navigation)
+  document.addEventListener("astro:page-load", initChart);
+
+  // Cleanup beim Verlassen der Seite
+  document.addEventListener("astro:before-swap", () => {
+    if (chartInstance) {
+      chartInstance.dispose();
+      chartInstance = null;
+    }
+  });
+
+  // Resize
+  window.addEventListener("resize", () => {
+    if (chartInstance) {
+      chartInstance.resize();
+    }
   });
 </script>
