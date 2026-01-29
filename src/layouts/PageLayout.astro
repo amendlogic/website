@@ -6,15 +6,11 @@ import Announcement from '~/components/widgets/Announcement.astro';
 
 import { headerData, footerData as defaultFooterData } from '~/navigation';
 
-export interface Props {
-  metadata?: any;
-  footerData?: typeof defaultFooterData;
-}
-
 import type { MetaData } from '~/types';
 
 export interface Props {
   metadata?: MetaData;
+  footerData?: typeof defaultFooterData;
 }
 
 const { metadata } = Astro.props;
