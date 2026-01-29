@@ -11,23 +11,38 @@ import { UI } from 'astrowind:config';
     } else {
       document.documentElement.classList.remove('dark');
     }
-    const matches = document.querySelectorAll('[data-aw-toggle-color-scheme] > input');
-
-    if (matches && matches.length) {
-      matches.forEach((elem) => {
-        elem.checked = theme !== 'dark';
-      });
-    }
   }
 
-  if ((defaultTheme && defaultTheme.endsWith(':only')) || (!localStorage.theme && defaultTheme !== 'system')) {
-    applyTheme(defaultTheme.replace(':only', ''));
-  } else if (
-    localStorage.theme === 'dark' ||
-    (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-  ) {
-    applyTheme('dark');
+  function applyThemeFromSystem() {
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(systemDark ? 'dark' : 'light');
+  }
+
+  // 1) Prüfen ob ein Override existiert
+  const override = localStorage.getItem('themeOverride');
+
+  if (override) {
+    applyTheme(override);
   } else {
-    applyTheme('light');
+    applyThemeFromSystem();
   }
+
+  // 2) Systemwechsel überwachen → Override löschen
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    localStorage.removeItem('themeOverride');
+    applyThemeFromSystem();
+  });
+
+  // 3) Toggle‑Button registrieren
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-aw-toggle-color-scheme]');
+    if (!btn) return;
+
+    const isDark = document.documentElement.classList.contains('dark');
+    const newTheme = isDark ? 'light' : 'dark';
+
+    // Override setzen
+    localStorage.setItem('themeOverride', newTheme);
+    applyTheme(newTheme);
+  });
 </script>
