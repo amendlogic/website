@@ -3,58 +3,44 @@ import { Icon } from 'astro-icon/components';
 import { UI } from 'astrowind:config';
 ---
 
-<button 
-  type="button" 
-  class={className} 
-  aria-label={label} 
-  id="theme-toggler"
+const states = ["system", "light", "dark"];
+
+function getNext(state) {
+  const i = states.indexOf(state);
+  return states[(i + 1) % states.length];
+}
+---
+
+<button
+  type="button"
+  class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 
+         focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 
+         rounded-lg text-sm p-2.5 inline-flex items-center"
+  aria-label="Toggle color mode"
+  data-aw-toggle-color-scheme
+  on:click={() => {
+    const current = localStorage.getItem('theme') || 'system';
+    const next = getNext(current);
+    localStorage.setItem('theme', next);
+    window.dispatchEvent(new CustomEvent('theme-change', { detail: next }));
+  }}
 >
-  <Icon name="tabler:sun" class={`${iconClass} sun-icon`} />
-  <Icon name="tabler:moon" class={`${iconClass} moon-icon`} />
-  <Icon name="tabler:device-desktop" class={`${iconClass} system-icon`} />
+  <Icon name="tabler:sun" class="w-6 h-6" />
 </button>
 
-<style>
-  /* Grundzustand: Alle Icons verstecken */
-  .sun-icon, .moon-icon, .system-icon { display: none; }
-
-  /* Zeige Sun-Icon wenn Theme explizit Light */
-  :global(html[data-theme="light"]) .sun-icon { display: block; }
-  
-  /* Zeige Moon-Icon wenn Theme explizit Dark */
-  :global(html[data-theme="dark"]) .moon-icon { display: block; }
-  
-  /* Zeige Monitor-Icon wenn System-Modus aktiv */
-  :global(html[data-theme="system"]) .system-icon { display: block; }
-</style>
-
 <script>
-  const setupToggle = () => {
-    const btn = document.getElementById('theme-toggler');
-    if (!btn) return;
+  const icon = document.querySelector('[data-aw-toggle-color-scheme] svg');
 
-    btn.addEventListener('click', () => {
-      const current = localStorage.theme || 'system';
-      let next;
+  function updateIcon(theme) {
+    if (theme === 'system') icon.setAttribute('name', 'tabler:device-desktop');
+    if (theme === 'light') icon.setAttribute('name', 'tabler:sun');
+    if (theme === 'dark') icon.setAttribute('name', 'tabler:moon');
+  }
 
-      if (current === 'system') next = 'light';
-      else if (current === 'light') next = 'dark';
-      else next = 'system';
+  const saved = localStorage.getItem('theme') || 'system';
+  updateIcon(saved);
 
-      if (next === 'system') {
-        localStorage.removeItem('theme');
-      } else {
-        localStorage.theme = next;
-      }
-
-      // Die globale Funktion aufrufen - kein Reload nötig!
-      if (window.applyTheme) {
-        window.applyTheme(next);
-      }
-    });
-  };
-
-  // Initialisierung (auch für Astro View Transitions)
-  setupToggle();
-  document.addEventListener('astro:after-swap', setupToggle);
+  window.addEventListener('theme-change', (e) => {
+    updateIcon(e.detail);
+  });
 </script>
