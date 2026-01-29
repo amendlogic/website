@@ -1,59 +1,43 @@
 ---
 import { UI } from 'astrowind:config';
 
-// TODO: This code is temporary
+// Temporary implementation
 ---
+<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+  if (window.__awColorModeInit) {
+    return;
+  }
+  window.__awColorModeInit = true;
 
-<script is:inline>
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function getSystemTheme() {
+    return mediaQuery.matches ? 'dark' : 'light';
+  }
+
   function applyTheme(theme) {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', theme === 'dark');
   }
 
-  function applyThemeFromSystem() {
-    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    applyTheme(systemDark ? 'dark' : 'light');
-  }
-
-  function setupSystemListener() {
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = () => {
-      localStorage.removeItem('themeOverride');
-      applyThemeFromSystem();
-    };
-
-    if (media.addEventListener) {
-      media.addEventListener('change', handler);
-    } else if (media.addListener) {
-      media.addListener(handler);
-    }
-  }
-
-  function setupToggleButton() {
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-aw-toggle-color-scheme]');
-      if (!btn) return;
-
-      const isDark = document.documentElement.classList.contains('dark');
-      const newTheme = isDark ? 'light' : 'dark';
-
-      localStorage.setItem('themeOverride', newTheme);
-      applyTheme(newTheme);
-    });
-  }
-
-  // Initial load
-  const override = localStorage.getItem('themeOverride');
-
-  if (override) {
-    applyTheme(override);
+  // Initial apply
+  if (sessionStorage.getItem('themeOverride')) {
+    applyTheme(sessionStorage.getItem('themeOverride'));
   } else {
-    applyThemeFromSystem();
+    applyTheme(getSystemTheme());
   }
 
-  setupSystemListener();
-  setupToggleButton();
+  // Listen for system theme changes → reset override
+  mediaQuery.addEventListener('change', (e) => {
+    sessionStorage.removeItem('themeOverride');
+    applyTheme(e.matches ? 'dark' : 'light');
+  });
+
+  // Expose toggle globally
+  window.toggleTheme = () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    const nextTheme = isDark ? 'light' : 'dark';
+
+    sessionStorage.setItem('themeOverride', nextTheme);
+    applyTheme(nextTheme);
+  };
 </script>
