@@ -35,44 +35,32 @@ const {
 <script is:inline>
   const order = ['system', 'light', 'dark'];
 
-  function updateIcons(btn) {
-    const theme = btn.dataset.theme || 'system';
-
+  function updateIcons(btn, theme) {
     btn.querySelectorAll('[data-icon]').forEach((icon) => {
-      icon.classList.toggle('hidden', icon.dataset.icon !== theme);
+      icon.style.display = icon.dataset.icon === theme ? 'inline-flex' : 'none';
     });
   }
 
-  function applyTheme(theme) {
-    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.querySelectorAll('[data-aw-theme-toggle]').forEach((btn) => {
+    const current = localStorage.theme || 'system';
+    btn.dataset.theme = current;
+    updateIcons(btn, current);
 
-    document.documentElement.classList.toggle(
-      'dark',
-      theme === 'dark' || (theme === 'system' && systemDark)
-    );
-  }
+    btn.addEventListener('click', () => {
+      const next =
+        order[(order.indexOf(btn.dataset.theme) + 1) % order.length];
 
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-aw-theme-toggle]').forEach((btn) => {
-      // 🔑 Quelle der Wahrheit ist IMMER data-theme
-      btn.dataset.theme =
-        btn.dataset.theme ||
-        localStorage.theme ||
-        'system';
+      btn.dataset.theme = next;
+      localStorage.theme = next;
 
-      updateIcons(btn);
-      applyTheme(btn.dataset.theme);
+      document.documentElement.classList.toggle(
+        'dark',
+        next === 'dark' ||
+          (next === 'system' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+      );
 
-      btn.addEventListener('click', () => {
-        const next =
-          order[(order.indexOf(btn.dataset.theme) + 1) % order.length];
-
-        btn.dataset.theme = next;
-        localStorage.theme = next;
-
-        applyTheme(next);
-        updateIcons(btn);
-      });
+      updateIcons(btn, next);
     });
   });
 </script>
