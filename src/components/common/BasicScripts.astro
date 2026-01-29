@@ -3,159 +3,175 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  // =======================
-  // Alles nur im Browser
-  // =======================
-  if (typeof window !== 'undefined' && !window.basic_script) {
-    window.basic_script = true;
+  if (window.basic_script) {
+    return;
+  }
+  window.basic_script = true;
 
-    // =======================
-    // THEME SWITCHER SETUP
-    // =======================
-    const THEMES = ['system', 'light', 'dark'];
-
-    function getStoredTheme() {
-      return localStorage.theme || 'system';
-    }
-
-    function applyTheme(theme) {
-      if (theme === 'dark') document.documentElement.classList.add('dark');
-      else document.documentElement.classList.remove('dark');
-
-      updateButtonState(theme);
-    }
-
-    function updateButtonState(theme) {
-      const btns = document.querySelectorAll('[data-aw-toggle-color-scheme]');
-      btns.forEach((btn) => {
-        const icon = btn.querySelector('svg');
-        if (!icon) return;
-
-        if (theme === 'system') icon.dataset.theme = 'system';
-        else if (theme === 'light') icon.dataset.theme = 'light';
-        else icon.dataset.theme = 'dark';
-      });
-    }
-
-    function initTheme() {
-      let theme = getStoredTheme();
-      if (theme === 'system') {
-        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  // --- Theme Logik ---
+  function updateIcons(theme) {
+    document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
+      icon.classList.add('hidden');
+      if (icon.getAttribute('data-aw-theme-icon') === theme) {
+        icon.classList.remove('hidden');
       }
-      applyTheme(theme);
+    });
+  }
+
+  function applyTheme(theme) {
+    const resolvedTheme = (theme === 'system') 
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
+      : theme;
+
+    if (resolvedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
+    updateIcons(theme);
+  }
 
-    function cycleTheme() {
-      const current = getStoredTheme();
-      const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
-      localStorage.theme = next;
-      initTheme();
+  const initTheme = function () {
+    if (defaultTheme && defaultTheme.endsWith(':only')) {
+      applyTheme(defaultTheme.replace(':only', ''));
+      return;
     }
+    const savedTheme = localStorage.getItem('theme') || 'system';
+    applyTheme(savedTheme);
+  };
 
-    function attachThemeButtons() {
-      const btns = document.querySelectorAll('[data-aw-toggle-color-scheme]');
-      btns.forEach((btn) => btn.addEventListener('click', cycleTheme));
+  // --- Helper ---
+  function attachEvent(selector, event, fn) {
+    const matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
+    if (matches && matches.length) {
+      matches.forEach((elem) => {
+        elem.addEventListener(event, (e) => fn(e, elem), false);
+      });
     }
+  }
 
-    // =======================
-    // HELPER: EVENT ATTACH
-    // =======================
-    function attachEvent(selector, event, fn) {
-      const matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
-      if (matches && matches.length) {
-        matches.forEach((elem) => elem.addEventListener(event, (e) => fn(e, elem)));
-      }
-    }
+  const onLoad = function () {
+    let lastKnownScrollPosition = window.scrollY;
+    let ticking = true;
 
-    // =======================
-    // PAGE LOAD LOGIC
-    // =======================
-    const onLoad = function () {
-      let lastKnownScrollPosition = window.scrollY;
-      let ticking = true;
-
-      // HEADER MENU HANDLING
-      attachEvent('#header nav', 'click', function () {
-        document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
-        document.body.classList.remove('overflow-hidden');
-        document.getElementById('header')?.classList.remove('h-screen', 'expanded', 'bg-page');
-        document.querySelector('#header nav')?.classList.add('hidden');
-        document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
-      });
-
-      attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
-        elem.classList.toggle('expanded');
-        document.body.classList.toggle('overflow-hidden');
-        document.getElementById('header')?.classList.toggle('h-screen');
-        document.getElementById('header')?.classList.toggle('expanded');
-        document.getElementById('header')?.classList.toggle('bg-page');
-        document.querySelector('#header nav')?.classList.toggle('hidden');
-        document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
-      });
-
-      // SOCIAL SHARE HANDLING
-      attachEvent('[data-aw-social-share]', 'click', function (_, elem) {
-        const network = elem.getAttribute('data-aw-social-share');
-        const url = encodeURIComponent(elem.getAttribute('data-aw-url'));
-        const text = encodeURIComponent(elem.getAttribute('data-aw-text'));
-        let href;
-
-        switch (network) {
-          case 'facebook': href = `https://www.facebook.com/sharer.php?u=${url}`; break;
-          case 'twitter': href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`; break;
-          case 'linkedin': href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`; break;
-          case 'whatsapp': href = `https://wa.me/?text=${text}%20${url}`; break;
-          case 'mail': href = `mailto:?subject=${text}&body=${text}%20${url}`; break;
-          default: return;
-        }
-
-        const newlink = document.createElement('a');
-        newlink.target = '_blank';
-        newlink.href = href;
-        newlink.click();
-      });
-
-      // STICKY HEADER ON SCROLL
-      function applyHeaderStylesOnScroll() {
-        const header = document.querySelector('#header[data-aw-sticky-header]');
-        if (!header) return;
-        if (lastKnownScrollPosition > 60 && !header.classList.contains('scroll')) header.classList.add('scroll');
-        else if (lastKnownScrollPosition <= 60 && header.classList.contains('scroll')) header.classList.remove('scroll');
-        ticking = false;
-      }
-
-      attachEvent([document], 'scroll', function () {
-        lastKnownScrollPosition = window.scrollY;
-        if (!ticking) {
-          window.requestAnimationFrame(applyHeaderStylesOnScroll);
-          ticking = true;
-        }
-      });
-
-      // INITIALIZE THEME BUTTONS
-      attachThemeButtons();
-      initTheme();
-      applyHeaderStylesOnScroll();
-    };
-
-    const onPageShow = function () {
-      document.documentElement.classList.add('motion-safe:scroll-smooth');
+    // Header & Menü Logik
+    attachEvent('#header nav', 'click', function () {
       document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
       document.body.classList.remove('overflow-hidden');
-      document.getElementById('header')?.classList.remove('h-screen', 'expanded');
+      document.getElementById('header')?.classList.remove('h-screen', 'expanded', 'bg-page');
       document.querySelector('#header nav')?.classList.add('hidden');
-    };
-
-    window.onload = onLoad;
-    window.onpageshow = onPageShow;
-
-    document.addEventListener('astro:after-swap', () => {
-      initTheme();
-      onLoad();
-      onPageShow();
+      document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
     });
-  } // End Browser Check
+
+    attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
+      elem.classList.toggle('expanded');
+      document.body.classList.toggle('overflow-hidden');
+      const header = document.getElementById('header');
+      header?.classList.toggle('h-screen');
+      header?.classList.toggle('expanded');
+      header?.classList.toggle('bg-page');
+      document.querySelector('#header nav')?.classList.toggle('hidden');
+      document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
+    });
+
+    // Der neue 3-State Toggle
+    attachEvent('[data-aw-toggle-color-scheme]', 'click', function () {
+      if (defaultTheme.endsWith(':only')) return;
+
+      const currentTheme = localStorage.getItem('theme') || 'system';
+      let nextTheme = 'system';
+
+      if (currentTheme === 'system') nextTheme = 'light';
+      else if (currentTheme === 'light') nextTheme = 'dark';
+      else if (currentTheme === 'dark') nextTheme = 'system';
+
+      localStorage.setItem('theme', nextTheme);
+      applyTheme(nextTheme);
+    });
+
+    // Social Share Logik
+    attachEvent('[data-aw-social-share]', 'click', function (_, elem) {
+      const network = elem.getAttribute('data-aw-social-share');
+      const url = encodeURIComponent(elem.getAttribute('data-aw-url'));
+      const text = encodeURIComponent(elem.getAttribute('data-aw-text'));
+
+      let href;
+      switch (network) {
+        case 'facebook': href = `https://www.facebook.com/sharer.php?u=${url}`; break;
+        case 'twitter': href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`; break;
+        case 'linkedin': href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`; break;
+        case 'whatsapp': href = `https://wa.me/?text=${text}%20${url}`; break;
+        case 'mail': href = `mailto:?subject=%22${text}%22&body=${text}%20${url}`; break;
+        default: return;
+      }
+      const newlink = document.createElement('a');
+      newlink.target = '_blank';
+      newlink.href = href;
+      newlink.click();
+    });
+
+    // Screen Size & Scroll Handling
+    const screenSize = window.matchMedia('(max-width: 767px)');
+    screenSize.addEventListener('change', function () {
+      document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
+      document.body.classList.remove('overflow-hidden');
+      document.getElementById('header')?.classList.remove('h-screen', 'expanded', 'bg-page');
+      document.querySelector('#header nav')?.classList.add('hidden');
+      document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
+    });
+
+    function applyHeaderStylesOnScroll() {
+      const header = document.querySelector('#header[data-aw-sticky-header]');
+      if (!header) return;
+      if (lastKnownScrollPosition > 60 && !header.classList.contains('scroll')) {
+        header.classList.add('scroll');
+      } else if (lastKnownScrollPosition <= 60 && header.classList.contains('scroll')) {
+        header.classList.remove('scroll');
+      }
+      ticking = false;
+    }
+
+    attachEvent([document], 'scroll', function () {
+      lastKnownScrollPosition = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          applyHeaderStylesOnScroll();
+        });
+        ticking = true;
+      }
+    });
+
+    // System-Farbschema Änderungen überwachen
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (localStorage.getItem('theme') === 'system') {
+        applyTheme('system');
+      }
+    });
+
+    applyHeaderStylesOnScroll();
+  };
+
+  const onPageShow = function () {
+    document.documentElement.classList.add('motion-safe:scroll-smooth');
+    const elem = document.querySelector('[data-aw-toggle-menu]');
+    if (elem) elem.classList.remove('expanded');
+    document.body.classList.remove('overflow-hidden');
+    document.getElementById('header')?.classList.remove('h-screen', 'expanded');
+    document.querySelector('#header nav')?.classList.add('hidden');
+  };
+
+  window.onload = onLoad;
+  window.onpageshow = onPageShow;
+
+  initTheme(); // Initialer Check
+
+  document.addEventListener('astro:after-swap', () => {
+    initTheme();
+    onLoad();
+    onPageShow();
+  });
 </script>
+
 
 <script is:inline>
   /* Inspired by: https://github.com/heidkaemper/tailwindcss-intersect */
