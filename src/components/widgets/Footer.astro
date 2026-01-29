@@ -79,14 +79,11 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
       <div class="text-sm mr-4 dark:text-muted">
 
 {disclaimer?.length ? (
-  <ul class="text-xs text-muted dark:text-gray-500 space-y-1 max-w-3xl">
+  <ol class="list-decimal list-inside text-xs text-muted dark:text-gray-500 space-y-1 max-w-3xl">
     {disclaimer.map(({ text }) => (
-      <li class="flex gap-2">
-        <span>•</span>
-        <span set:html={text} />
-      </li>
+      <li set:html={text} />
     ))}
-  </ul>
+  </ol>
 ) : null}
 
       </div>
@@ -112,12 +109,9 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
           ''
         )
       }
-
       <div class="text-sm mr-4 dark:text-muted">
         <Fragment set:html={footNote} />
       </div>
-
-
     </div>
   </div>
 </footer>
