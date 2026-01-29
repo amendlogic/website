@@ -1,67 +1,28 @@
 ---
 import { Icon } from 'astro-icon/components';
+
 import { UI } from 'astrowind:config';
 
 export interface Props {
   label?: string;
   class?: string;
   iconClass?: string;
+  iconName?: string;
 }
 
 const {
-  label = 'Toggle theme',
-  class: className =
-    'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5 inline-flex items-center',
+  label = 'Toggle between Dark and Light mode',
+  class:
+    className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center',
   iconClass = 'w-6 h-6',
+  iconName = 'tabler:sun',
 } = Astro.props;
 ---
 
-{!(UI.theme && UI.theme.endsWith(':only')) && (
-  <button
-    type="button"
-    class={className}
-    aria-label={label}
-    data-aw-theme-toggle
-    data-theme="system"
-  >
-    <Icon name="tabler:device-desktop" class={iconClass} data-icon="system" />
-    <Icon name="tabler:sun" class={iconClass} data-icon="light" />
-    <Icon name="tabler:moon" class={iconClass} data-icon="dark" />
-  </button>
-)}
-
-<script is:inline>
-  const order = ['system', 'light', 'dark'];
-
-  function updateIcons(btn, theme) {
-    btn.querySelectorAll('[data-icon]').forEach((icon) => {
-      if (icon.dataset.icon === theme) {
-        icon.classList.add('active');
-      } else {
-        icon.classList.remove('active');
-      }
-    });
-  }
-
-  document.querySelectorAll('[data-aw-theme-toggle]').forEach((btn) => {
-    const current = localStorage.theme || 'system';
-    btn.dataset.theme = current;
-    updateIcons(btn, current);
-
-    btn.addEventListener('click', () => {
-      const next = order[(order.indexOf(btn.dataset.theme) + 1) % order.length];
-
-      btn.dataset.theme = next;
-      localStorage.theme = next;
-
-      document.documentElement.classList.toggle(
-        'dark',
-        next === 'dark' ||
-          (next === 'system' &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches)
-      );
-
-      updateIcons(btn, next);
-    });
-  });
-</script>
+{
+  !(UI.theme && UI.theme.endsWith(':only')) && (
+    <button type="button" class={className} aria-label={label} data-aw-toggle-color-scheme>
+      <Icon name={iconName} class={iconClass} />
+    </button>
+  )
+}
