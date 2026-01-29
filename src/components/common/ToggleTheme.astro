@@ -4,18 +4,16 @@ import { UI } from 'astrowind:config';
 ---
 
 <button
-  type="button"
+  id="theme-toggle"
   class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 
          focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 
          rounded-lg text-sm p-2.5 inline-flex items-center"
   aria-label="Toggle color mode"
-  data-aw-toggle-color-scheme
-  id="theme-toggle"
 >
-  <Icon name="tabler:sun" class="w-6 h-6" />
+  <Icon name="tabler:sun" class="w-6 h-6" data-icon />
 </button>
 
-<script>
+<script is:inline>
   const states = ["system", "light", "dark"];
 
   function getNext(state) {
@@ -37,8 +35,7 @@ import { UI } from 'astrowind:config';
   }
 
   function updateIcon(theme) {
-    const icon = document.querySelector("#theme-toggle svg");
-
+    const icon = document.querySelector("#theme-toggle [data-icon]");
     if (!icon) return;
 
     if (theme === "system") icon.setAttribute("name", "tabler:device-desktop");
@@ -55,12 +52,9 @@ import { UI } from 'astrowind:config';
     updateIcon(next);
   }
 
-  // Initial state
   const initial = localStorage.getItem("theme") || "system";
   applyTheme(initial);
   updateIcon(initial);
 
-  document
-    .querySelector("#theme-toggle")
-    .addEventListener("click", toggleTheme);
+  document.querySelector("#theme-toggle").addEventListener("click", toggleTheme);
 </script>
