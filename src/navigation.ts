@@ -32,7 +32,7 @@ export const headerData = {
       text: 'About',
       href: getPermalink('/terms'),
     },
-      {
+    {
       text: 'Insights',
       links: [
         {
@@ -47,6 +47,8 @@ export const headerData = {
           text: 'Blog',
           href: getPermalink('tutorials', 'category'),
         },
+      ],
+    },
     {
       text: 'Plans',
       href: getPermalink('/terms'),
