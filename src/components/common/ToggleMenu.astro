@@ -11,56 +11,32 @@ export interface Props {
 const {
   label = 'Toggle theme',
   class:
-    className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5 inline-flex items-center',
+    className =
+      'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5 inline-flex items-center',
   iconClass = 'w-6 h-6',
 } = Astro.props;
+
+const initialTheme = UI.theme?.replace(':only', '') || 'system';
 ---
 
 {
   !(UI.theme && UI.theme.endsWith(':only')) && (
     <button
       type="button"
-      class={className}
       aria-label={label}
-      data-aw-theme-toggle
-      data-theme="system"
+      class={className}
+      data-aw-color-toggle
+      data-theme={initialTheme}
     >
-      <Icon name="tabler:device-desktop" class={iconClass} data-icon="system" />
-      <Icon name="tabler:sun" class={iconClass} data-icon="light" />
-      <Icon name="tabler:moon" class={iconClass} data-icon="dark" />
+      <span data-icon="system" style={initialTheme === 'system' ? '' : 'display:none'}>
+        <Icon name="tabler:device-desktop" class={iconClass} />
+      </span>
+      <span data-icon="light" style={initialTheme === 'light' ? '' : 'display:none'}>
+        <Icon name="tabler:sun" class={iconClass} />
+      </span>
+      <span data-icon="dark" style={initialTheme === 'dark' ? '' : 'display:none'}>
+        <Icon name="tabler:moon" class={iconClass} />
+      </span>
     </button>
   )
 }
-
-<script is:inline>
-  const order = ['system', 'light', 'dark'];
-
-  function updateIcons(btn, theme) {
-    btn.querySelectorAll('[data-icon]').forEach((icon) => {
-      icon.style.display = icon.dataset.icon === theme ? 'inline-flex' : 'none';
-    });
-  }
-
-  document.querySelectorAll('[data-aw-theme-toggle]').forEach((btn) => {
-    const current = localStorage.theme || 'system';
-    btn.dataset.theme = current;
-    updateIcons(btn, current);
-
-    btn.addEventListener('click', () => {
-      const next =
-        order[(order.indexOf(btn.dataset.theme) + 1) % order.length];
-
-      btn.dataset.theme = next;
-      localStorage.theme = next;
-
-      document.documentElement.classList.toggle(
-        'dark',
-        next === 'dark' ||
-          (next === 'system' &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches)
-      );
-
-      updateIcons(btn, next);
-    });
-  });
-</script>
