@@ -25,9 +25,11 @@ const {
       data-aw-theme-toggle
       data-theme="system"
     >
-      <Icon name="tabler:device-desktop" class={iconClass} data-icon="system" />
-      <Icon name="tabler:sun" class={iconClass} data-icon="light" />
-      <Icon name="tabler:moon" class={iconClass} data-icon="dark" />
+      <Icon
+        name="tabler:device-desktop"
+        class={iconClass}
+        data-aw-theme-icon
+      />
     </button>
   )
 }
@@ -35,32 +37,33 @@ const {
 <script is:inline>
   const order = ['system', 'light', 'dark'];
 
-  function updateIcons(btn, theme) {
-    btn.querySelectorAll('[data-icon]').forEach((icon) => {
-      icon.style.display = icon.dataset.icon === theme ? 'inline-flex' : 'none';
-    });
-  }
+  const icons = {
+    system: 'tabler:device-desktop',
+    light: 'tabler:sun',
+    dark: 'tabler:moon',
+  };
 
   document.querySelectorAll('[data-aw-theme-toggle]').forEach((btn) => {
-    const current = localStorage.theme || 'system';
-    btn.dataset.theme = current;
-    updateIcons(btn, current);
+    const icon = btn.querySelector('[data-aw-theme-icon]');
+
+    let theme = localStorage.theme || 'system';
+    btn.dataset.theme = theme;
+    icon.setAttribute('name', icons[theme]);
 
     btn.addEventListener('click', () => {
-      const next =
-        order[(order.indexOf(btn.dataset.theme) + 1) % order.length];
-
-      btn.dataset.theme = next;
-      localStorage.theme = next;
+      theme = order[(order.indexOf(theme) + 1) % order.length];
+      localStorage.theme = theme;
+      btn.dataset.theme = theme;
 
       document.documentElement.classList.toggle(
         'dark',
-        next === 'dark' ||
-          (next === 'system' &&
+        theme === 'dark' ||
+          (theme === 'system' &&
             window.matchMedia('(prefers-color-scheme: dark)').matches)
       );
 
-      updateIcons(btn, next);
+      icon.setAttribute('name', icons[theme]);
     });
   });
 </script>
+
