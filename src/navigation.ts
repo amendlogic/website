@@ -52,8 +52,6 @@ export const headerData = {
     {
       text: 'Plans',
       href: getPermalink('/terms'),
-        },
-      ],
     },
     {
       text: 'Widgets',
