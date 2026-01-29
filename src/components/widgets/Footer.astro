@@ -19,6 +19,7 @@ export interface Props {
   links: Array<Links>;
   secondaryLinks: Array<Link>;
   socialLinks: Array<Link>;
+  disclaimer?: string;
   footNote?: string;
   theme?: string;
 }
@@ -97,9 +98,12 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
       }
 
       <div class="text-sm mr-4 dark:text-muted">
+        <Fragment set:html={disclaimer} />
+      </div>
+
+      <div class="text-sm mr-4 dark:text-muted">
         <Fragment set:html={footNote} />
       </div>
     </div>
-Test
   </div>
 </footer>
