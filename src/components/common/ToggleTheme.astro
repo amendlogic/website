@@ -25,11 +25,15 @@ const {
       data-aw-theme-toggle
       data-theme="system"
     >
-      <Icon
-        name="tabler:device-desktop"
-        class={iconClass}
-        data-aw-theme-icon
-      />
+      <span data-icon="system">
+        <Icon name="tabler:device-desktop" class={iconClass} />
+      </span>
+      <span data-icon="light" style="display:none">
+        <Icon name="tabler:sun" class={iconClass} />
+      </span>
+      <span data-icon="dark" style="display:none">
+        <Icon name="tabler:moon" class={iconClass} />
+      </span>
     </button>
   )
 }
@@ -37,18 +41,16 @@ const {
 <script is:inline>
   const order = ['system', 'light', 'dark'];
 
-  const icons = {
-    system: 'tabler:device-desktop',
-    light: 'tabler:sun',
-    dark: 'tabler:moon',
-  };
+  function updateIcon(btn, theme) {
+    btn.querySelectorAll('[data-icon]').forEach((wrap) => {
+      wrap.style.display = wrap.dataset.icon === theme ? 'inline-flex' : 'none';
+    });
+  }
 
   document.querySelectorAll('[data-aw-theme-toggle]').forEach((btn) => {
-    const icon = btn.querySelector('[data-aw-theme-icon]');
-
     let theme = localStorage.theme || 'system';
     btn.dataset.theme = theme;
-    icon.setAttribute('name', icons[theme]);
+    updateIcon(btn, theme);
 
     btn.addEventListener('click', () => {
       theme = order[(order.indexOf(theme) + 1) % order.length];
@@ -62,8 +64,7 @@ const {
             window.matchMedia('(prefers-color-scheme: dark)').matches)
       );
 
-      icon.setAttribute('name', icons[theme]);
+      updateIcon(btn, theme);
     });
   });
 </script>
-
