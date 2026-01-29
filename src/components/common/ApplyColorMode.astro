@@ -1,65 +1,15 @@
 ---
 import { UI } from 'astrowind:config';
 ---
-<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  const root = document.documentElement;
-  const ORDER = ['system', 'light', 'dark'];
+<script is:inline>
+  const theme =
+    localStorage.getItem('theme') ||
+    '{UI.theme || 'system'}'.replace(':only', '');
 
-  function resolveTheme(theme) {
-    if (theme === 'dark') return 'dark';
-    if (theme === 'light') return 'light';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
-  }
+  const isDark =
+    theme === 'dark' ||
+    (theme === 'system' &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-  function applyTheme(theme) {
-    const resolved = resolveTheme(theme);
-    root.classList.toggle('dark', resolved === 'dark');
-
-    // Icon-UI synchronisieren
-    document.querySelectorAll('[data-aw-color-toggle]').forEach((btn) => {
-      btn.dataset.theme = theme;
-      btn.querySelectorAll('[data-icon]').forEach((el) => {
-        el.style.display =
-          el.dataset.icon === theme ? 'inline-flex' : 'none';
-      });
-    });
-  }
-
-  function getTheme() {
-    if (localStorage.theme) return localStorage.theme;
-    if (defaultTheme.endsWith(':only')) {
-      return defaultTheme.replace(':only', '');
-    }
-    return defaultTheme;
-  }
-
-  function nextTheme(current) {
-    return ORDER[(ORDER.indexOf(current) + 1) % ORDER.length];
-  }
-
-  // INIT
-  let theme = getTheme();
-  localStorage.theme = theme;
-  applyTheme(theme);
-
-  // Klick-Handler (GLOBAL)
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-aw-color-toggle]');
-    if (!btn) return;
-
-    theme = nextTheme(theme);
-    localStorage.theme = theme;
-    applyTheme(theme);
-  });
-
-  // System-Theme live übernehmen
-  window
-    .matchMedia('(prefers-color-scheme: dark)')
-    .addEventListener('change', () => {
-      if (localStorage.theme === 'system') {
-        applyTheme('system');
-      }
-    });
+  document.documentElement.classList.toggle('dark', isDark);
 </script>
