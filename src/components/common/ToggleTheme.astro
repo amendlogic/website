@@ -11,7 +11,8 @@ export interface Props {
 const {
   label = 'Toggle theme',
   class:
-    className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5 inline-flex items-center',
+    className =
+      'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5 inline-flex items-center',
   iconClass = 'w-6 h-6',
 } = Astro.props;
 
@@ -30,12 +31,52 @@ const initialTheme = UI.theme?.replace(':only', '') || 'system';
       <span data-icon="system" style={initialTheme === 'system' ? '' : 'display:none'}>
         <Icon name="tabler:device-desktop" class={iconClass} />
       </span>
+
       <span data-icon="light" style={initialTheme === 'light' ? '' : 'display:none'}>
         <Icon name="tabler:sun" class={iconClass} />
       </span>
+
       <span data-icon="dark" style={initialTheme === 'dark' ? '' : 'display:none'}>
         <Icon name="tabler:moon" class={iconClass} />
       </span>
     </button>
   )
 }
+
+<script is:inline>
+  const ORDER = ['system', 'light', 'dark'];
+
+  function applyTheme(theme) {
+    document.documentElement.classList.toggle(
+      'dark',
+      theme === 'dark' ||
+        (theme === 'system' &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches)
+    );
+  }
+
+  function updateIcon(btn, theme) {
+    btn.querySelectorAll('[data-icon]').forEach((el) => {
+      el.style.display = el.dataset.icon === theme ? 'inline-flex' : 'none';
+    });
+  }
+
+  document.querySelectorAll('[data-aw-color-toggle]').forEach((btn) => {
+    let theme = localStorage.theme || btn.dataset.theme || 'system';
+
+    localStorage.theme = theme;
+    btn.dataset.theme = theme;
+
+    applyTheme(theme);
+    updateIcon(btn, theme);
+
+    btn.addEventListener('click', () => {
+      theme = ORDER[(ORDER.indexOf(theme) + 1) % ORDER.length];
+      localStorage.theme = theme;
+      btn.dataset.theme = theme;
+
+      applyTheme(theme);
+      updateIcon(btn, theme);
+    });
+  });
+</script>
