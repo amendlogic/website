@@ -4,7 +4,7 @@ import { UI } from 'astrowind:config';
 // TODO: This code is temporary
 ---
 
-<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+<script is:inline>
   function applyTheme(theme) {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -18,7 +18,34 @@ import { UI } from 'astrowind:config';
     applyTheme(systemDark ? 'dark' : 'light');
   }
 
-  // 1) Prüfen ob ein Override existiert
+  function setupSystemListener() {
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = () => {
+      localStorage.removeItem('themeOverride');
+      applyThemeFromSystem();
+    };
+
+    if (media.addEventListener) {
+      media.addEventListener('change', handler);
+    } else if (media.addListener) {
+      media.addListener(handler);
+    }
+  }
+
+  function setupToggleButton() {
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-aw-toggle-color-scheme]');
+      if (!btn) return;
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const newTheme = isDark ? 'light' : 'dark';
+
+      localStorage.setItem('themeOverride', newTheme);
+      applyTheme(newTheme);
+    });
+  }
+
+  // Initial load
   const override = localStorage.getItem('themeOverride');
 
   if (override) {
@@ -27,22 +54,6 @@ import { UI } from 'astrowind:config';
     applyThemeFromSystem();
   }
 
-  // 2) Systemwechsel überwachen → Override löschen
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    localStorage.removeItem('themeOverride');
-    applyThemeFromSystem();
-  });
-
-  // 3) Toggle‑Button registrieren
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-aw-toggle-color-scheme]');
-    if (!btn) return;
-
-    const isDark = document.documentElement.classList.contains('dark');
-    const newTheme = isDark ? 'light' : 'dark';
-
-    // Override setzen
-    localStorage.setItem('themeOverride', newTheme);
-    applyTheme(newTheme);
-  });
+  setupSystemListener();
+  setupToggleButton();
 </script>
