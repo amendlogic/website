@@ -35,32 +35,44 @@ const {
 <script is:inline>
   const order = ['system', 'light', 'dark'];
 
-  function updateIcons(btn, theme) {
+  function updateIcons(btn) {
+    const theme = btn.dataset.theme || 'system';
+
     btn.querySelectorAll('[data-icon]').forEach((icon) => {
       icon.classList.toggle('hidden', icon.dataset.icon !== theme);
     });
   }
 
-  document.querySelectorAll('[data-aw-theme-toggle]').forEach((btn) => {
-    const current = localStorage.theme || 'system';
-    btn.dataset.theme = current;
-    updateIcons(btn, current);
+  function applyTheme(theme) {
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    btn.addEventListener('click', () => {
-      const next =
-        order[(order.indexOf(btn.dataset.theme) + 1) % order.length];
+    document.documentElement.classList.toggle(
+      'dark',
+      theme === 'dark' || (theme === 'system' && systemDark)
+    );
+  }
 
-      btn.dataset.theme = next;
-      localStorage.theme = next;
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-aw-theme-toggle]').forEach((btn) => {
+      // 🔑 Quelle der Wahrheit ist IMMER data-theme
+      btn.dataset.theme =
+        btn.dataset.theme ||
+        localStorage.theme ||
+        'system';
 
-      document.documentElement.classList.toggle(
-        'dark',
-        next === 'dark' ||
-          (next === 'system' &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches)
-      );
+      updateIcons(btn);
+      applyTheme(btn.dataset.theme);
 
-      updateIcons(btn, next);
+      btn.addEventListener('click', () => {
+        const next =
+          order[(order.indexOf(btn.dataset.theme) + 1) % order.length];
+
+        btn.dataset.theme = next;
+        localStorage.theme = next;
+
+        applyTheme(next);
+        updateIcons(btn);
+      });
     });
   });
 </script>
