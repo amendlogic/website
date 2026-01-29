@@ -7,18 +7,30 @@ import Content from '~/components/widgets/Content.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import EChart from '~/components/widgets/EChart.astro'; 
 import Testimonials from '~/components/widgets/Testimonials.astro';
-import Pricing from '~/components/widgets/Pricing.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
+
+import { footerData } from '~/navigation.ts';
 
 const metadata = {
   title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
   ignoreTitleTemplate: true,
 };
+
+const homeFooterData = {
+  ...footerData,
+  disclaimer: [
+    { text: 'Trading financial markets involves significant risk.' },
+    { text: 'Past performance is not indicative of future results.' },
+    { text: 'This content is for informational purposes only.' },
+    { text: 'This content is for informational purposes only.' },
+    { text: 'This content is for informational purposes only.' },
+    { text: 'This content is for informational purposes only.' },
+  ],
+};
 ---
 
-<Layout metadata={metadata}>
+<Layout metadata={metadata} footerData={homeFooterData}>
   <!-- Hero Widget ******************* -->
 
   <Hero 
@@ -167,12 +179,7 @@ const metadata = {
       src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
       alt: 'Steps image',
     }}
-  >
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-</Steps>
-
+  />
 
   <!-- Chart Widget ******************* -->
 
@@ -238,10 +245,7 @@ const metadata = {
       }
     ]
   }}
->
-
-  </EChart>
-
+  />
 
  <!-- Testimonials Widget *********** -->
 
@@ -283,50 +287,6 @@ const metadata = {
       href: 'https://github.com/arthelokyo/astrowind',
       icon: 'tabler:chevron-right',
     }}
-  />
-
- <!-- Pricing Widget ******************* -->
-
-  <Pricing
-    tagline="Pricing"
-    title="Fair & Transparent"
-    prices={[
-      {
-        title: 'free',
-        subtitle: 'Access to core features and a wide range of templates',
-        price: '0',
-        period: '/ month',
-        callToAction: {
-          target: '_blank',
-          text: 'Get Started for Free',
-          href: '#',
-        },
-      },
-      {
-        title: 'pro',
-        subtitle: 'Premium templates and advanced customization',
-        price: 15,
-        period: '/ Month',
-        callToAction: {
-          target: '_blank',
-          text: 'Upgrade to Pro',
-          href: '#',
-        },
-        hasRibbon: true,
-        ribbonTitle: 'popular',
-      },
-      {
-        title: 'Enterprise',
-        subtitle: 'Tailored solutions for large-scale projects',
-        price: 45,
-        period: '/ Month',
-        callToAction: {
-          target: '_blank',
-          text: 'Unlock Enterprise Features',
-          href: '#',
-        },
-      },
-    ]}
   />
 
   <!-- FAQs Widget ******************* -->
@@ -388,20 +348,6 @@ const metadata = {
           "Our support team is available 24/7 via chat and email to assist you whenever needed.",
       },
     ]}
-  >
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-</FAQs>
-
-  <!-- HighlightedPosts Widget ******* -->
-
-  <BlogLatestPosts
-    title="Find out more content in our Blog"
-    information={`The blog is used to display AstroWind documentation.
-                        Each new article will be an important step that you will need to know to be an expert in creating a website using Astro + Tailwind CSS.
-                        Astro is a very interesting technology. Thanks.
-                `}
   />
 
   <!-- CallToAction Widget *********** -->
@@ -424,6 +370,10 @@ const metadata = {
     <Fragment slot="subtitle">
       Be very surprised by these huge fake numbers you are seeing on this page. <br class="hidden md:inline" />Don't
       waste more time! :P
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
   </CallToAction>
 
