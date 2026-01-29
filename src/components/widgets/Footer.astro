@@ -79,11 +79,11 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
       <div class="text-sm mr-4 dark:text-muted">
 
 {disclaimer?.length ? (
-  <ol class="list-decimal list-inside text-xs text-muted dark:text-gray-500 space-y-1 max-w-3xl">
+  <div class="text-xs text-muted dark:text-gray-500 space-y-1 leading-relaxed max-w-3xl">
     {disclaimer.map(({ text }) => (
-      <li set:html={text} />
+      <p set:html={text} />
     ))}
-  </ol>
+  </div>
 ) : null}
 
       </div>
