@@ -1,70 +1,63 @@
 ---
-import { Icon } from 'astro-icon/components';
-import { UI } from 'astrowind:config';
-
-export interface Props {
-  label?: string;
-  class?: string;
-  iconClass?: string;
-}
-
-const {
-  label = 'Toggle theme',
-  class:
-    className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2.5 inline-flex items-center',
-  iconClass = 'w-6 h-6',
-} = Astro.props;
+import { Icon } from "astro-icon/components";
 ---
 
-{
-  !(UI.theme && UI.theme.endsWith(':only')) && (
-    <button
-      type="button"
-      class={className}
-      aria-label={label}
-      data-aw-theme-toggle
-      data-theme="system"
-    >
-      <span data-icon="system">
-        <Icon name="tabler:device-desktop" class={iconClass} />
-      </span>
-      <span data-icon="light" style="display:none">
-        <Icon name="tabler:sun" class={iconClass} />
-      </span>
-      <span data-icon="dark" style="display:none">
-        <Icon name="tabler:moon" class={iconClass} />
-      </span>
-    </button>
-  )
-}
+<button
+  id="theme-toggle"
+  class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 
+         focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 
+         rounded-lg text-sm p-2.5 inline-flex items-center"
+  aria-label="Toggle color mode"
+>
+  <span id="theme-icon">
+    <Icon name="tabler:sun" class="w-6 h-6" />
+  </span>
+</button>
 
 <script is:inline>
-  const order = ['system', 'light', 'dark'];
+  const states = ["system", "light", "dark"];
 
-  function updateIcon(btn, theme) {
-    btn.querySelectorAll('[data-icon]').forEach((wrap) => {
-      wrap.style.display = wrap.dataset.icon === theme ? 'inline-flex' : 'none';
-    });
+  function getNext(state) {
+    const i = states.indexOf(state);
+    return states[(i + 1) % states.length];
   }
 
-  document.querySelectorAll('[data-aw-theme-toggle]').forEach((btn) => {
-    let theme = localStorage.theme || 'system';
-    btn.dataset.theme = theme;
-    updateIcon(btn, theme);
+  const icons = {
+    system: `<icon-element name="tabler:device-desktop" class="w-6 h-6"></icon-element>`,
+    light: `<icon-element name="tabler:sun" class="w-6 h-6"></icon-element>`,
+    dark: `<icon-element name="tabler:moon" class="w-6 h-6"></icon-element>`,
+  };
 
-    btn.addEventListener('click', () => {
-      theme = order[(order.indexOf(theme) + 1) % order.length];
-      localStorage.theme = theme;
-      btn.dataset.theme = theme;
+  function applyTheme(theme) {
+    if (theme === "system") {
+      document.documentElement.classList.remove("dark");
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.classList.add("dark");
+      }
+    } else if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }
 
-      document.documentElement.classList.toggle(
-        'dark',
-        theme === 'dark' ||
-          (theme === 'system' &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches)
-      );
+  function updateIcon(theme) {
+    const container = document.getElementById("theme-icon");
+    container.innerHTML = icons[theme];
+  }
 
-      updateIcon(btn, theme);
-    });
-  });
+  function toggleTheme() {
+    const current = localStorage.getItem("theme") || "system";
+    const next = getNext(current);
+
+    localStorage.setItem("theme", next);
+    applyTheme(next);
+    updateIcon(next);
+  }
+
+  const initial = localStorage.getItem("theme") || "system";
+  applyTheme(initial);
+  updateIcon(initial);
+
+  document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
 </script>
