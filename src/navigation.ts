@@ -1,4 +1,5 @@
 import { getPermalink, getBlogPermalink, getAsset } from './utils/permalinks';
+import { SITE } from 'astrowind:config';
 
 export const headerData = {
   links: [
@@ -117,6 +118,6 @@ export const footerData = {
     { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
   ],
   footNote: `
-    © ${new Date().getFullYear()} AmendLogic · Site by <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">Kevin Amend</a> · All rights reserved.
+    © ${new Date().getFullYear()} {SITE?.name} · Site by <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">Kevin Amend</a> · All rights reserved.
   `,
 };
