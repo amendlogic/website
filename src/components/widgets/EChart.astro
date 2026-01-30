@@ -2,93 +2,88 @@
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Headline from '~/components/ui/Headline.astro';
 
+interface Props {
+  title?: string;
+  subtitle?: string;
+  tagline?: string;
+
+  options: Record<string, any>;
+  height?: string;
+
+  id?: string;
+  isDark?: boolean;
+  classes?: {
+    container?: string;
+  };
+}
+
 const {
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
   tagline,
   content = await Astro.slots.render('content'),
+  isAfterContent = false,
+
   options,
   height = '400px',
+
   id,
   isDark = false,
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
+// Unique chart id
 const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
+const serializedOptions = JSON.stringify(options);
 ---
 
-<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
-  <Headline title={title} subtitle={subtitle} tagline={tagline} />
+<WidgetWrapper
+  id={id}
+  isDark={isDark}
+  containerClass={`max-w-6xl mx-auto ${isAfterContent ? 'pt-0 md:pt-0 lg:pt-0' : ''} ${classes?.container ?? ''}`}
+  bg={bg}
+>
+  <Headline
+    title={title}
+    subtitle={subtitle}
+    tagline={tagline}
+    classes={{
+      container: 'max-w-xl sm:mx-auto lg:max-w-2xl',
+      title: 'text-4xl md:text-5xl font-bold tracking-tighter mb-4 font-heading',
+      subtitle: 'max-w-3xl mx-auto sm:text-center text-xl text-muted dark:text-slate-400',
+    }}
+  />
 
-  {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
 
-  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600">
-    <div 
-      id={chartId} 
-      class="echart-container" 
-      data-chart-options={JSON.stringify(options)} 
+        {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
+
+<div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600">
+    <div
+      id={chartId}
       style={`width:100%; height:${height};`}
     ></div>
-  </div>
+</div>
+
 </WidgetWrapper>
 
-<script is:inline>
-  (function() {
-    let echartsModule;
+<script define:vars={{ chartOptions: serializedOptions, chartId }}>
+  // Load ECharts from CDN
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Load ECharts core
+    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
 
-    // Debounce-Funktion für bessere Performance beim Resizen
-    function debounce(func, wait) {
-      let timeout;
-      return function(...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
-      };
-    }
+    // Initialize chart
+    const chartContainer = document.getElementById(chartId);
+    const chart = echarts.init(chartContainer);
 
-    async function initCharts() {
-      const containers = document.querySelectorAll('.echart-container');
-      if (containers.length === 0) return;
+    // Set chart options
+    const options = JSON.parse(chartOptions);
+    chart.setOption(options);
 
-      if (!echartsModule) {
-        echartsModule = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
-      }
-
-      const activeCharts = [];
-
-      containers.forEach((container) => {
-        // Alte Instanzen sauber entfernen
-        const existingInstance = echartsModule.getInstanceByDom(container);
-        if (existingInstance) existingInstance.dispose();
-
-        const chart = echartsModule.init(container);
-        const options = JSON.parse(container.dataset.chartOptions || '{}');
-        chart.setOption(options);
-        
-        activeCharts.push(chart);
-      });
-
-      // Zentraler Resize-Handler für alle Charts auf der aktuellen Seite
-      const handleResize = debounce(() => {
-        activeCharts.forEach(chart => {
-          if (chart && !chart.isDisposed()) {
-            chart.resize();
-          } 
-        });
-      }, 150); // Erhöhe auf 150ms für mehr "Luft" für das CSS-Layout
-
-      window.addEventListener('resize', handleResize);
-
-      // WICHTIG: Cleanup beim Verlassen der Seite
-      document.addEventListener('astro:before-swap', () => {
-        window.removeEventListener('resize', handleResize);
-        activeCharts.forEach(chart => {
-          if (chart && !chart.isDisposed()) chart.dispose();
-        });
-      }, { once: true });
-    }
-
-    // Astro-Integration
-    document.addEventListener('astro:page-load', initCharts);
-  })();
+    // Handle resize
+    window.addEventListener("resize", () => {
+      chart.resize();
+    });
+  });
 </script>
