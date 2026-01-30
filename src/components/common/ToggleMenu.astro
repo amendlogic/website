@@ -1,25 +1,29 @@
 ---
-import { Icon } from "astro-icon/components";
-import { UI } from "astrowind:config";
+export interface Props {
+  label?: string;
+  class?: string;
+}
+
+const {
+  label = 'Toggle Menu',
+  class: className = 'flex flex-col h-12 w-12 rounded justify-center items-center cursor-pointer group',
+} = Astro.props;
 ---
 
-{!(UI.theme && UI.theme.endsWith(':only')) && (
-  <button
-    type="button"
-    data-aw-theme-toggle
-    class="p-2 rounded-lg text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 inline-flex items-center gap-2"
-    aria-label="Theme wechseln"
-    title="Theme wechseln"
-  >
-    <span data-icon="system" aria-hidden="true"><Icon name="tabler:device-laptop" class="w-6 h-6" /></span>
-    <span data-icon="light"  aria-hidden="true"><Icon name="tabler:sun"           class="w-6 h-6" /></span>
-    <span data-icon="dark"   aria-hidden="true"><Icon name="tabler:moon"          class="w-6 h-6" /></span>
-  </button>
-)}
-
-<style is:global>
-  [data-icon] { display: none; }
-  html[data-theme-mode="system"] [data-icon="system"],
-  html[data-theme-mode="light"]  [data-icon="light"],
-  html[data-theme-mode="dark"]   [data-icon="dark"] { display: inline-flex; }
-</style>
+<button type="button" class={className} aria-label={label} data-aw-toggle-menu>
+  <span class="sr-only">{label}</span>
+  <slot>
+    <span
+      aria-hidden="true"
+      class="h-0.5 w-6 my-1 rounded-full bg-black dark:bg-white transition ease transform duration-200 opacity-80 group-[.expanded]:rotate-45 group-[.expanded]:translate-y-2.5"
+    ></span>
+    <span
+      aria-hidden="true"
+      class="h-0.5 w-6 my-1 rounded-full bg-black dark:bg-white transition ease transform duration-200 opacity-80 group-[.expanded]:opacity-0"
+    ></span>
+    <span
+      aria-hidden="true"
+      class="h-0.5 w-6 my-1 rounded-full bg-black dark:bg-white transition ease transform duration-200 opacity-80 group-[.expanded]:-rotate-45 group-[.expanded]:-translate-y-2.5"
+    ></span>
+  </slot>
+</button>
