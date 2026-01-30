@@ -62,38 +62,14 @@ import { UI } from 'astrowind:config';
     document.querySelectorAll('[data-aw-toggle-color-scheme]').forEach(el => el.onclick = toggleTheme);
 
     // Sticky Header (Debounced für flüssiges Resizing/Scrolling)
-    const throttle = (fn, limit) => {
-      let inThrottle;
-      return (...args) => {
-        if (!inThrottle) {
-          fn(...args);
-          inThrottle = true;
-          setTimeout(() => (inThrottle = false), limit);
-        }
-      };
-    };
-
-    // 2. Die Setup-Funktion anpassen
-    const setup = () => {
-      const header = document.getElementById('header');
-      const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
-
-      const checkHeader = () => {
-        if (stickyHeader) {
-          // Nutze window.pageYOffset für bessere Browser-Kompatibilität
-          const scrollPos = window.scrollY || window.pageYOffset;
-          if (scrollPos > 10) { // Niedrigerer Schwellenwert für schnellere Reaktion
-            stickyHeader.classList.add('scroll');
-          } else {
-            stickyHeader.classList.remove('scroll');
-          }
-        }
-      };
-
-      window.addEventListener('scroll', throttle(checkHeader, 10));
-  
-  // Initialer Check
-  checkHeader();
+    const header = document.querySelector('#header[data-aw-sticky-header]');
+      if (!header) return;
+      if (lastKnownScrollPosition > 60 && !header.classList.contains('scroll')) {
+        header.classList.add('scroll');
+      } else if (lastKnownScrollPosition <= 60 && header.classList.contains('scroll')) {
+        header.classList.remove('scroll');
+      }
+      ticking = false;
 
   const onPageLoad = () => {
     applyTheme(localStorage.getItem('theme') || 'system');
