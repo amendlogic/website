@@ -34,43 +34,61 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 </WidgetWrapper>
 
 <script is:inline>
-  // Wir kapseln alles in einer Funktion, um den globalen Scope nicht zu verschmutzen
   (function() {
     let echartsModule;
+
+    // Debounce-Funktion für bessere Performance beim Resizen
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
 
     async function initCharts() {
       const containers = document.querySelectorAll('.echart-container');
       if (containers.length === 0) return;
 
-      // ECharts nur laden, wenn noch nicht geschehen
       if (!echartsModule) {
         echartsModule = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
       }
 
+      const activeCharts = [];
+
       containers.forEach((container) => {
-        // Falls bereits eine Instanz existiert (z.B. durch View Transitions), löschen
+        // Alte Instanzen sauber entfernen
         const existingInstance = echartsModule.getInstanceByDom(container);
-        if (existingInstance) {
-          existingInstance.dispose();
-        }
+        if (existingInstance) existingInstance.dispose();
 
         const chart = echartsModule.init(container);
         const options = JSON.parse(container.dataset.chartOptions || '{}');
         chart.setOption(options);
-
-        // Responsive Anpassung
-        const resizeHandler = () => chart.resize();
-        window.addEventListener('resize', resizeHandler);
-
-        // Cleanup-Event für Astro View Transitions
-        document.addEventListener('astro:before-swap', () => {
-          window.removeEventListener('resize', resizeHandler);
-          chart.dispose();
-        }, { once: true });
+        
+        activeCharts.push(chart);
       });
+
+      // Zentraler Resize-Handler für alle Charts auf der aktuellen Seite
+      const handleResize = debounce(() => {
+        activeCharts.forEach(chart => {
+          if (chart && !chart.isDisposed()) {
+            chart.resize({ animation: { duration: 300 } }); // Sanfter Übergang
+          }
+        });
+      }, 100); // 100ms warten, bis das Resizen "stoppt"
+
+      window.addEventListener('resize', handleResize);
+
+      // WICHTIG: Cleanup beim Verlassen der Seite
+      document.addEventListener('astro:before-swap', () => {
+        window.removeEventListener('resize', handleResize);
+        activeCharts.forEach(chart => {
+          if (chart && !chart.isDisposed()) chart.dispose();
+        });
+      }, { once: true });
     }
 
-    // Initialer Start und Start nach jedem Astro-Seitenwechsel
+    // Astro-Integration
     document.addEventListener('astro:page-load', initCharts);
   })();
 </script>
