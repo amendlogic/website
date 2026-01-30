@@ -34,43 +34,76 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 </WidgetWrapper>
 
 <script is:inline>
-  // Wir kapseln alles in einer Funktion, um den globalen Scope nicht zu verschmutzen
   (function() {
     let echartsModule;
+    const chartInstances = new Map(); // Speichert Instanzen pro Container-ID
+
+    // Performance-Helper: Debounce
+    const debounce = (fn, delay) => {
+      let timeout;
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn(...args), delay);
+      };
+    };
 
     async function initCharts() {
       const containers = document.querySelectorAll('.echart-container');
       if (containers.length === 0) return;
 
-      // ECharts nur laden, wenn noch nicht geschehen
+      // 1. ECharts erst laden, wenn der Browser im Leerlauf ist
       if (!echartsModule) {
         echartsModule = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
       }
 
       containers.forEach((container) => {
-        // Falls bereits eine Instanz existiert (z.B. durch View Transitions), löschen
-        const existingInstance = echartsModule.getInstanceByDom(container);
-        if (existingInstance) {
-          existingInstance.dispose();
+        const id = container.id;
+        
+        // Alte Instanz aufräumen
+        if (chartInstances.has(id)) {
+          chartInstances.get(id).dispose();
+          chartInstances.delete(id);
         }
 
-        const chart = echartsModule.init(container);
-        const options = JSON.parse(container.dataset.chartOptions || '{}');
-        chart.setOption(options);
-
-        // Responsive Anpassung
-        const resizeHandler = () => chart.resize();
-        window.addEventListener('resize', resizeHandler);
-
-        // Cleanup-Event für Astro View Transitions
-        document.addEventListener('astro:before-swap', () => {
-          window.removeEventListener('resize', resizeHandler);
-          chart.dispose();
-        }, { once: true });
+        // 2. Initialisierung in einem RequestAnimationFrame, um Frame-Drops zu vermeiden
+        requestAnimationFrame(() => {
+          const chart = echartsModule.init(container);
+          const options = JSON.parse(container.dataset.chartOptions || '{}');
+          chart.setOption(options);
+          chartInstances.set(id, chart);
+        });
       });
+
+      // 3. Hochperformanter Resize-Handler
+      const handleResize = debounce(() => {
+        chartInstances.forEach((chart) => {
+          if (chart && !chart.isDisposed()) {
+            // Resize mit kleiner Animation für flüssige Optik
+            chart.resize({ animation: { duration: 200 } });
+          }
+        });
+      }, 150); // Genügend Zeit für das CSS-Layout (Textgrößen) lassen
+
+      window.addEventListener('resize', handleResize);
+
+      // Cleanup bei Astro View-Transitions
+      document.addEventListener('astro:before-swap', () => {
+        window.removeEventListener('resize', handleResize);
+        chartInstances.forEach(chart => chart.dispose());
+        chartInstances.clear();
+      }, { once: true });
     }
 
-    // Initialer Start und Start nach jedem Astro-Seitenwechsel
-    document.addEventListener('astro:page-load', initCharts);
+    // --- Start-Logik ---
+    // Wir nutzen requestIdleCallback, damit ECharts niemals das erste Rendern verzögert
+    const startLogic = () => {
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(() => initCharts());
+      } else {
+        setTimeout(initCharts, 200);
+      }
+    };
+
+    document.addEventListener('astro:page-load', startLogic);
   })();
 </script>
