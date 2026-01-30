@@ -6,21 +6,7 @@ import { UI } from 'astrowind:config';
   if (window.basic_script) return;
   window.basic_script = true;
 
-  // --- 1. PERFORMANCE HELPERS ---
-  
-  // Throttle: Garantiert Ausführung alle X ms (Perfekt für Scroll/Header)
-  const throttle = (fn, limit) => {
-    let inThrottle;
-    return (...args) => {
-      if (!inThrottle) {
-        fn(...args);
-        inThrottle = true;
-        setTimeout(() => (inThrottle = false), limit);
-      }
-    };
-  };
-
-  // Debounce: Wartet bis die Aktion stoppt (Perfekt für Resize/Suche)
+  // --- PERFORMANCE HELPERS ---
   const debounce = (fn, delay) => {
     let timeout;
     return (...args) => {
@@ -29,7 +15,7 @@ import { UI } from 'astrowind:config';
     };
   };
 
-  // --- 2. THEME LOGIK (3-State) ---
+  // --- THEME LOGIK ---
   function applyTheme(theme) {
     const resolvedTheme = (theme === 'system') 
       ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
@@ -44,27 +30,11 @@ import { UI } from 'astrowind:config';
     window.Observer?.removeAnimationDelay();
   }
 
-  // --- 3. CORE SETUP ---
+  // --- CORE SETUP ---
   const setup = () => {
     const header = document.getElementById('header');
-    const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
 
-    // Schnelle Header-Scroll-Logik
-    const checkHeader = () => {
-      if (stickyHeader) {
-        if (window.scrollY > 10) {
-          stickyHeader.classList.add('scroll');
-        } else {
-          stickyHeader.classList.remove('scroll');
-        }
-      }
-    };
-
-    // Throttle auf 10ms für Echtzeit-Gefühl beim Scrollen
-    window.addEventListener('scroll', throttle(checkHeader, 10));
-    checkHeader();
-
-    // Hamburger Menü Toggle
+    // Menü-Toggle
     const toggleMenu = () => {
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
       if (!menuBtn) return;
@@ -77,9 +47,7 @@ import { UI } from 'astrowind:config';
       document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
     };
 
-    document.querySelectorAll('[data-aw-toggle-menu]').forEach(el => {
-      el.onclick = toggleMenu;
-    });
+    document.querySelectorAll('[data-aw-toggle-menu]').forEach(el => el.onclick = toggleMenu);
 
     // Theme-Toggle Rotation
     const toggleTheme = () => {
@@ -91,31 +59,18 @@ import { UI } from 'astrowind:config';
       applyTheme(next);
     };
 
-    document.querySelectorAll('[data-aw-toggle-color-scheme]').forEach(el => {
-      el.onclick = toggleTheme;
-    });
+    document.querySelectorAll('[data-aw-toggle-color-scheme]').forEach(el => el.onclick = toggleTheme);
 
-    // Social Share
-    const handleShare = (elem) => {
-      const network = elem.getAttribute('data-aw-social-share');
-      const url = encodeURIComponent(elem.getAttribute('data-aw-url') || window.location.href);
-      const text = encodeURIComponent(elem.getAttribute('data-aw-text') || '');
-      const links = {
-        facebook: `https://www.facebook.com/sharer.php?u=${url}`,
-        twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
-        linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`,
-        whatsapp: `https://wa.me/?text=${text}%20${url}`,
-        mail: `mailto:?subject=${text}&body=${url}`
-      };
-      if (links[network]) window.open(links[network], '_blank');
-    };
+    // Sticky Header (Debounced für flüssiges Resizing/Scrolling)
+    const checkHeader = debounce(() => {
+      const sticky = document.querySelector('#header[data-aw-sticky-header]');
+      if (sticky) window.scrollY > 60 ? sticky.classList.add('scroll') : sticky.classList.remove('scroll');
+    }, 20);
 
-    document.querySelectorAll('[data-aw-social-share]').forEach(el => {
-      el.onclick = () => handleShare(el);
-    });
+    window.addEventListener('scroll', checkHeader);
+    checkHeader();
   };
 
-  // --- 4. LIFECYCLE ---
   const onPageLoad = () => {
     applyTheme(localStorage.getItem('theme') || 'system');
     setup();
@@ -124,14 +79,10 @@ import { UI } from 'astrowind:config';
 
   window.onload = onPageLoad;
   document.addEventListener('astro:after-swap', onPageLoad);
-
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (localStorage.getItem('theme') === 'system') applyTheme('system');
-  });
 </script>
 
 <script is:inline>
-  // --- 5. OPTIMIERTER INTERSECTION OBSERVER ---
+  // --- OPTIMIERTER INTERSECTION OBSERVER ---
   window.Observer = {
     observer: null,
     start() {
@@ -158,7 +109,7 @@ import { UI } from 'astrowind:config';
         els.forEach(el => this.observer.observe(el));
       };
 
-      // Nutzt Leerlaufzeit für Animationen, damit Text/Layout Vorrang haben
+      // Führt Animation-Check nur aus, wenn der Browser gerade nicht mit Layout/Text beschäftigt ist
       (window.requestIdleCallback || ((cb) => setTimeout(cb, 100)))(init);
     },
     removeAnimationDelay() {
