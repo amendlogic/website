@@ -3,10 +3,11 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+  // Verhindert mehrfache Initialisierung
   if (window.basic_script) return;
   window.basic_script = true;
 
-  // --- Theme Logik ---
+  // --- THEME LOGIK ---
   function applyTheme(theme) {
     const resolvedTheme = (theme === 'system') 
       ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
@@ -18,14 +19,21 @@ import { UI } from 'astrowind:config';
     icons.forEach((icon) => {
       icon.classList.toggle('hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
     });
+    
+    // Fix für flackernde Animationen beim Theme-Wechsel
+    if (window.Observer && typeof window.Observer.removeAnimationDelay === 'function') {
+      window.Observer.removeAnimationDelay();
+    }
   }
 
-  const initTheme = () => {
-    const savedTheme = localStorage.getItem('theme') || 'system';
-    applyTheme(savedTheme);
+  const initTheme = function () {
+    if (defaultTheme && defaultTheme.endsWith(':only')) {
+      return applyTheme(defaultTheme.replace(':only', ''));
+    }
+    applyTheme(localStorage.getItem('theme') || 'system');
   };
 
-  // --- Helper ---
+  // --- HELPER ---
   function attachEvent(selector, event, fn) {
     const matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
     if (matches && matches.length) {
@@ -33,10 +41,10 @@ import { UI } from 'astrowind:config';
     }
   }
 
-  const setup = () => {
+  const setup = function () {
     const header = document.getElementById('header');
-
-    // Hamburger Menü Toggle
+    
+    // Menü-Logik (Robust für Mobile)
     attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
       elem.classList.toggle('expanded');
       document.body.classList.toggle('overflow-hidden');
@@ -47,8 +55,9 @@ import { UI } from 'astrowind:config';
       document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
     });
 
-    // 3-State Theme Switcher (Rotation)
+    // 3-State Toggle Rotation
     attachEvent('[data-aw-toggle-color-scheme]', 'click', function () {
+      if (defaultTheme.endsWith(':only')) return;
       const themes = ['system', 'light', 'dark'];
       const currentTheme = localStorage.getItem('theme') || 'system';
       const nextTheme = themes[(themes.indexOf(currentTheme) + 1) % 3];
@@ -60,152 +69,88 @@ import { UI } from 'astrowind:config';
     // Social Share
     attachEvent('[data-aw-social-share]', 'click', function (_, elem) {
       const network = elem.getAttribute('data-aw-social-share');
-      const url = encodeURIComponent(elem.getAttribute('data-aw-url'));
-      const text = encodeURIComponent(elem.getAttribute('data-aw-text'));
-      let href;
-      switch (network) {
-        case 'facebook': href = `https://www.facebook.com/sharer.php?u=${url}`; break;
-        case 'twitter': href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`; break;
-        case 'linkedin': href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`; break;
-        case 'whatsapp': href = `https://wa.me/?text=${text}%20${url}`; break;
-        case 'mail': href = `mailto:?subject=%22${text}%22&body=${text}%20${url}`; break;
-        default: return;
-      }
-      window.open(href, '_blank');
+      const url = encodeURIComponent(elem.getAttribute('data-aw-url') || window.location.href);
+      const text = encodeURIComponent(elem.getAttribute('data-aw-text') || '');
+      
+      const shareLinks = {
+        facebook: `https://www.facebook.com/sharer.php?u=${url}`,
+        twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+        linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`,
+        whatsapp: `https://wa.me/?text=${text}%20${url}`,
+        mail: `mailto:?subject=${text}&body=${url}`
+      };
+      
+      if (shareLinks[network]) window.open(shareLinks[network], '_blank');
     });
 
     // Sticky Header Scroll
     const applyHeaderStylesOnScroll = () => {
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
-      if (!stickyHeader) return;
-      window.scrollY > 60 ? stickyHeader.classList.add('scroll') : stickyHeader.classList.remove('scroll');
+      if (stickyHeader) {
+        window.scrollY > 60 ? stickyHeader.classList.add('scroll') : stickyHeader.classList.remove('scroll');
+      }
     };
-
     window.addEventListener('scroll', applyHeaderStylesOnScroll);
     applyHeaderStylesOnScroll();
-
-    // System-Sync bei Änderungen am Betriebssystem-Theme
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      if (localStorage.getItem('theme') === 'system') applyTheme('system');
-    });
   };
 
-  // Initialisierung
-  initTheme();
-  setup();
-
-  // Astro View Transitions Support
-  document.addEventListener('astro:after-swap', () => {
+  // --- INITIALISIERUNG ---
+  const onPageLoad = () => {
     initTheme();
     setup();
+    if (window.Observer) window.Observer.start();
+  };
+
+  window.onload = onPageLoad;
+  document.addEventListener('astro:after-swap', onPageLoad);
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (localStorage.getItem('theme') === 'system') applyTheme('system');
   });
 </script>
 
 <script is:inline>
-  /* Inspired by: https://github.com/heidkaemper/tailwindcss-intersect */
-  const Observer = {
+  // Globaler Observer für Intersect-Animationen
+  window.Observer = {
     observer: null,
-    delayBetweenAnimations: 100,
+    elements: [],
     animationCounter: 0,
-    elements: null,
-
+    
     start() {
-      const selectors = [
-        '[class*=" intersect:"]',
-        '[class*=":intersect:"]',
-        '[class^="intersect:"]',
-        '[class="intersect"]',
-        '[class*=" intersect "]',
-        '[class^="intersect "]',
-        '[class$=" intersect"]',
-      ];
-
+      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]'];
       this.elements = Array.from(document.querySelectorAll(selectors.join(',')));
-
-      const getThreshold = (element) => {
-        if (element.classList.contains('intersect-full')) return 0.99;
-        if (element.classList.contains('intersect-half')) return 0.5;
-        if (element.classList.contains('intersect-quarter')) return 0.25;
-        return 0;
-      };
+      
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const target = entry.target;
+            if (!target.hasAttribute('data-animated')) {
+              target.removeAttribute('no-intersect');
+              target.setAttribute('data-animated', 'true');
+              const delay = this.animationCounter * 100;
+              target.style.transitionDelay = `${delay}ms`;
+              this.animationCounter++;
+              if (target.classList.contains('intersect-once')) this.observer.unobserve(target);
+            }
+          } else if (!entry.target.classList.contains('intersect-once')) {
+            entry.target.setAttribute('no-intersect', '');
+            entry.target.removeAttribute('data-animated');
+            this.animationCounter = 0;
+          }
+        });
+      }, { threshold: [0, 0.25, 0.5, 0.99] });
 
       this.elements.forEach((el) => {
         el.setAttribute('no-intersect', '');
-        el._intersectionThreshold = getThreshold(el);
-      });
-
-      const callback = (entries) => {
-        entries.forEach((entry) => {
-          requestAnimationFrame(() => {
-            const target = entry.target;
-            const intersectionRatio = entry.intersectionRatio;
-            const threshold = target._intersectionThreshold;
-
-            if (target.classList.contains('intersect-no-queue')) {
-              if (entry.isIntersecting) {
-                target.removeAttribute('no-intersect');
-                if (target.classList.contains('intersect-once')) {
-                  this.observer.unobserve(target);
-                }
-              } else {
-                target.setAttribute('no-intersect', '');
-              }
-              return;
-            }
-
-            if (intersectionRatio >= threshold) {
-              if (!target.hasAttribute('data-animated')) {
-                target.removeAttribute('no-intersect');
-                target.setAttribute('data-animated', 'true');
-
-                const delay = this.animationCounter * this.delayBetweenAnimations;
-                this.animationCounter++;
-
-                target.style.transitionDelay = `${delay}ms`;
-                target.style.animationDelay = `${delay}ms`;
-
-                if (target.classList.contains('intersect-once')) {
-                  this.observer.unobserve(target);
-                }
-              }
-            } else {
-              target.setAttribute('no-intersect', '');
-              target.removeAttribute('data-animated');
-              target.style.transitionDelay = '';
-              target.style.animationDelay = '';
-
-              this.animationCounter = 0;
-            }
-          });
-        });
-      };
-
-      this.observer = new IntersectionObserver(callback.bind(this), { threshold: [0, 0.25, 0.5, 0.99] });
-
-      this.elements.forEach((el) => {
         this.observer.observe(el);
       });
     },
-
-    /* 
-      REF: #643;
-      We need to remove the delay to fix flickering/delay
-      when toggling the theme. Observer only removes them
-      after data-animated is gone (out of view).
-    */
+    
     removeAnimationDelay() {
       this.elements.forEach((el) => {
-        if (el.getAttribute('data-animated') === 'true') {
-          el.style.transitionDelay = '';
-          el.style.animationDelay = '';
-        }
+        el.style.transitionDelay = '0ms';
+        el.style.animationDelay = '0ms';
       });
-    },
+    }
   };
-
-  Observer.start();
-
-  document.addEventListener('astro:after-swap', () => {
-    Observer.start();
-  });
 </script>
