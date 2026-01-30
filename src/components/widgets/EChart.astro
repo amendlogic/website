@@ -72,10 +72,10 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       const handleResize = debounce(() => {
         activeCharts.forEach(chart => {
           if (chart && !chart.isDisposed()) {
-            chart.resize({ animation: { duration: 300 } }); // Sanfter Übergang
-          }
+            chart.resize();
+          } 
         });
-      }, 100); // 100ms warten, bis das Resizen "stoppt"
+      }, 150); // Erhöhe auf 150ms für mehr "Luft" für das CSS-Layout
 
       window.addEventListener('resize', handleResize);
 
