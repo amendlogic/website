@@ -8,14 +8,8 @@ import { UI } from 'astrowind:config';
       ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
       : theme;
     
-    // 1. Theme-Klasse sofort setzen (Verhindert Flackern)
-    if (resolvedTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
 
-    // 2. Icons erst anpassen, wenn das DOM geladen ist
     const updateIcons = () => {
       const icons = document.querySelectorAll('[data-aw-theme-icon]');
       icons.forEach(icon => {
@@ -23,10 +17,11 @@ import { UI } from 'astrowind:config';
       });
     };
 
+    // Icons erst setzen, wenn der Browser Zeit hat (verhindert Verzögerung beim Text-Rendering)
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', updateIcons);
     } else {
-      updateIcons();
+      (window.requestIdleCallback || ((cb) => setTimeout(cb, 1)))(updateIcons);
     }
   }
 
