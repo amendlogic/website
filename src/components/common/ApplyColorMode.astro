@@ -1,11 +1,26 @@
-<script is:inline>
-  (function () {
-    const MODE_KEY = "themeMode";
-    const mode = localStorage.getItem(MODE_KEY) || "system";
-    const isDark =
-      mode === "dark" ||
-      (mode === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    document.documentElement.dataset.themeMode = mode;
-    document.documentElement.classList.toggle("dark", isDark);
-  })();
+---
+import { UI } from 'astrowind:config';
+---
+
+<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+  function applyTheme(theme) {
+    const resolvedTheme = (theme === 'system') 
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
+      : theme;
+    
+    if (resolvedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    // Sofortige Icon-Anpassung, um Layout-Sprünge zu vermeiden
+    const icons = document.querySelectorAll('[data-aw-theme-icon]');
+    icons.forEach(icon => {
+      icon.classList.toggle('hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
+    });
+  }
+
+  const savedTheme = localStorage.getItem('theme') || (defaultTheme.endsWith(':only') ? defaultTheme.replace(':only', '') : 'system');
+  applyTheme(savedTheme);
 </script>
