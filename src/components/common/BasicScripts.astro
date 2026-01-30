@@ -1,250 +1,275 @@
+
 ---
 import { UI } from 'astrowind:config';
 ---
 
-<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  // Verhindert doppelte Registrierung bei HMR/astro:after-swap
-  if (window.__aw_basic_script_loaded) {
-    window.__aw_rebind?.();
-    // Beim Rebind trotzdem das aktuelle Theme konsistent halten
-    (function reapplyTheme() {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-      const mode = document.documentElement.dataset.themeMode || 'system';
-      const isDark = mode === 'dark' || (mode === 'system' && prefersDark.matches);
-      document.documentElement.classList.toggle('dark', isDark);
-    })();
+<script is:inline define:vars={{ defaultTheme: UI.theme }}>
+  if (window.basic_script) {
     return;
   }
-  window.__aw_basic_script_loaded = true;
 
-  (function () {
-    // =========================
-    // THEME: 3-State (system|light|dark)
-    // =========================
-    const MODE_KEY = 'themeMode';
-    const LEGACY_KEY = 'theme'; // evtl. vorhandener light/dark Wert
+  window.basic_script = true;
 
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-
-    function readStoredMode() {
-      const stored = localStorage.getItem(MODE_KEY) || localStorage.getItem(LEGACY_KEY);
-      if (stored === 'system' || stored === 'light' || stored === 'dark') return stored;
-      if (stored === 'dark' || stored === 'light') return stored; // legacy fallback
-      return null;
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
+  }
 
-    function resolveInitialMode() {
-      // UI.theme kann z. B. 'dark:only' sein → hart erzwingen
-      if (defaultTheme && defaultTheme.endsWith(':only')) {
-        return defaultTheme.replace(':only', '');
-      }
-      const stored = readStoredMode();
-      if (!stored && defaultTheme && defaultTheme !== 'system') return defaultTheme;
-      return stored || 'system';
+  const initTheme = function () {
+    if ((defaultTheme && defaultTheme.endsWith(':only')) || (!localStorage.theme && defaultTheme !== 'system')) {
+      applyTheme(defaultTheme.replace(':only', ''));
+    } else if (
+      localStorage.theme === 'dark' ||
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      applyTheme('dark');
+    } else {
+      applyTheme('light');
     }
+  };
+  initTheme();
 
-    function isDarkMode(mode) {
-      if (mode === 'dark') return true;
-      if (mode === 'light') return false;
-      return prefersDark.matches; // system
-    }
-
-    function applyTheme(mode, persist = false) {
-      document.documentElement.dataset.themeMode = mode;
-      document.documentElement.classList.toggle('dark', isDarkMode(mode));
-      if (persist) localStorage.setItem(MODE_KEY, mode);
-      updateThemeToggleButtons(mode);
-    }
-
-    function nextMode(mode) {
-      return mode === 'system' ? 'light' : mode === 'light' ? 'dark' : 'system';
-    }
-
-    function currentMode() {
-      return document.documentElement.dataset.themeMode || 'system';
-    }
-
-    function updateThemeToggleButtons(mode) {
-      const buttons = document.querySelectorAll('[data-aw-theme-toggle], [data-theme-toggle]');
-      const labelByMode = {
-        system: 'Theme: System (folgt OS)',
-        light: 'Theme: Hell',
-        dark: 'Theme: Dunkel',
-      };
-      buttons.forEach((btn) => {
-        btn.setAttribute('data-active-theme', mode);
-        btn.setAttribute('aria-label', labelByMode[mode] || 'Theme umschalten');
-        btn.title = `${labelByMode[mode]} – klicken zum Wechseln`;
+  function attachEvent(selector, event, fn) {
+    const matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
+    if (matches && matches.length) {
+      matches.forEach((elem) => {
+        elem.addEventListener(event, (e) => fn(e, elem), false);
       });
     }
+  }
 
-    // Initial so früh wie möglich auf Basis von default/UI
-    applyTheme(resolveInitialMode(), false);
+  const onLoad = function () {
+    let lastKnownScrollPosition = window.scrollY;
+    let ticking = true;
 
-    // Reagiere nur im System-Modus auf OS-Wechsel
-    function handleSystemChange() {
-      if (currentMode() === 'system') {
-        applyTheme('system', false);
-      }
-    }
-    prefersDark.addEventListener?.('change', handleSystemChange);
-
-    // =========================
-    // HELPERS
-    // =========================
-    function attachEvent(selector, event, fn) {
-      const matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
-      if (matches && matches.length) {
-        matches.forEach((elem) => {
-          elem.addEventListener(event, (e) => fn(e, elem), false);
-        });
-      }
-    }
-
-    // =========================
-    // ONLOAD / UI
-    // =========================
-    const onLoad = function () {
-      let lastKnownScrollPosition = window.scrollY;
-      let ticking = true;
-
-      // Navigation schließen, wenn innerhalb nav geklickt wird
-      attachEvent('#header nav', 'click', function () {
-        document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
-        document.body.classList.remove('overflow-hidden');
-        document.getElementById('header')?.classList.remove('h-screen');
-        document.getElementById('header')?.classList.remove('expanded');
-        document.getElementById('header')?.classList.remove('bg-page');
-        document.querySelector('#header nav')?.classList.add('hidden');
-        document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
-      });
-
-      // Hamburger Toggle
-      attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
-        elem.classList.toggle('expanded');
-        document.body.classList.toggle('overflow-hidden');
-        document.getElementById('header')?.classList.toggle('h-screen');
-        document.getElementById('header')?.classList.toggle('expanded');
-        document.getElementById('header')?.classList.toggle('bg-page');
-        document.querySelector('#header nav')?.classList.toggle('hidden');
-        document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
-      });
-
-      // 3‑State Theme Toggle (unterstützt beide Selektoren)
-      attachEvent(['[data-aw-theme-toggle]', '[data-theme-toggle]'].join(','), 'click', function () {
-        if (defaultTheme && defaultTheme.endsWith(':only')) return; // erzwungen
-        // Optional: AstroWind Observer Animationen entfernen, falls vorhanden
-        try { window.Observer?.removeAnimationDelay?.(); } catch {}
-        const next = nextMode(currentMode());
-        applyTheme(next, true);
-      });
-
-      // Social Share
-      attachEvent('[data-aw-social-share]', 'click', function (_, elem) {
-        const network = elem.getAttribute('data-aw-social-share');
-        const url = encodeURIComponent(elem.getAttribute('data-aw-url') || location.href);
-        const text = encodeURIComponent(elem.getAttribute('data-aw-text') || document.title);
-
-        let href;
-        switch (network) {
-          case 'facebook':
-            href = `https://www.facebook.com/sharer.php?u=${url}`;
-            break;
-          case 'twitter':
-          case 'x':
-            href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-            break;
-          case 'linkedin':
-            href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
-            break;
-          case 'whatsapp':
-            href = `https://wa.me/?text=${text}%20${url}`;
-            break;
-          case 'mail':
-            href = `mailto:?subject=%22${text}%22&body=${text}%20${url}`;
-            break;
-          default:
-            return;
-        }
-        const a = document.createElement('a');
-        a.target = '_blank';
-        a.href = href;
-        a.rel = 'noopener';
-        a.click();
-      });
-
-      // Breakpoint: Menü aufräumen bei Wechsel
-      const screenSize = window.matchMedia('(max-width: 767px)');
-      const onBpChange = function () {
-        document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
-        document.body.classList.remove('overflow-hidden');
-        document.getElementById('header')?.classList.remove('h-screen');
-        document.getElementById('header')?.classList.remove('expanded');
-        document.getElementById('header')?.classList.remove('bg-page');
-        document.querySelector('#header nav')?.classList.add('hidden');
-        document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
-      };
-      // Remove previous to avoid stacking (in HMR cases)
-      try { screenSize.removeEventListener('change', onBpChange); } catch {}
-      try { screenSize.addEventListener('change', onBpChange); } catch {}
-
-      // Sticky Header on Scroll
-      function applyHeaderStylesOnScroll() {
-        const header = document.querySelector('#header[data-aw-sticky-header]');
-        if (!header) return;
-        if (lastKnownScrollPosition > 60 && !header.classList.contains('scroll')) {
-          header.classList.add('scroll');
-        } else if (lastKnownScrollPosition <= 60 && header.classList.contains('scroll')) {
-          header.classList.remove('scroll');
-        }
-        ticking = false;
-      }
-      applyHeaderStylesOnScroll();
-
-      attachEvent([document], 'scroll', function () {
-        lastKnownScrollPosition = window.scrollY;
-        if (!ticking) {
-          window.requestAnimationFrame(applyHeaderStylesOnScroll);
-          ticking = true;
-        }
-      });
-
-      // Labels/States der Theme-Buttons nach dem Mount aktualisieren
-      updateThemeToggleButtons(currentMode());
-    };
-
-    const onPageShow = function () {
-      document.documentElement.classList.add('motion-safe:scroll-smooth');
-      const elem = document.querySelector('[data-aw-toggle-menu]');
-      if (elem) elem.classList.remove('expanded');
+    attachEvent('#header nav', 'click', function () {
+      document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
       document.body.classList.remove('overflow-hidden');
       document.getElementById('header')?.classList.remove('h-screen');
       document.getElementById('header')?.classList.remove('expanded');
+      document.getElementById('header')?.classList.remove('bg-page');
       document.querySelector('#header nav')?.classList.add('hidden');
-    };
-
-    // Initiale Bindings
-    window.onload = onLoad;
-    window.onpageshow = onPageShow;
-
-    // Astro Router Navigationen
-    document.addEventListener('astro:after-swap', () => {
-      // Theme konsistent halten (kein Persist nötig)
-      (function reapplyTheme() {
-        const mode = document.documentElement.dataset.themeMode || resolveInitialMode();
-        applyTheme(mode, false);
-      })();
-
-      onLoad();
-      onPageShow();
+      document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
     });
 
-    // Externe Rebind-API (falls Script bereits existiert)
-    window.__aw_rebind = () => {
-      const mode = document.documentElement.dataset.themeMode || resolveInitialMode();
-      applyTheme(mode, false);
-      onLoad();
-      onPageShow();
-    };
-  })();
+    attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
+      elem.classList.toggle('expanded');
+      document.body.classList.toggle('overflow-hidden');
+      document.getElementById('header')?.classList.toggle('h-screen');
+      document.getElementById('header')?.classList.toggle('expanded');
+      document.getElementById('header')?.classList.toggle('bg-page');
+      document.querySelector('#header nav')?.classList.toggle('hidden');
+      document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
+    });
+
+    attachEvent('[data-aw-toggle-color-scheme]', 'click', function () {
+      if (defaultTheme.endsWith(':only')) {
+        return;
+      }
+
+      Observer.removeAnimationDelay();
+
+      document.documentElement.classList.toggle('dark');
+      localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    });
+
+    attachEvent('[data-aw-social-share]', 'click', function (_, elem) {
+      const network = elem.getAttribute('data-aw-social-share');
+      const url = encodeURIComponent(elem.getAttribute('data-aw-url'));
+      const text = encodeURIComponent(elem.getAttribute('data-aw-text'));
+
+      let href;
+      switch (network) {
+        case 'facebook':
+          href = `https://www.facebook.com/sharer.php?u=${url}`;
+          break;
+        case 'twitter':
+          href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+          break;
+        case 'linkedin':
+          href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
+          break;
+        case 'whatsapp':
+          href = `https://wa.me/?text=${text}%20${url}`;
+          break;
+        case 'mail':
+          href = `mailto:?subject=%22${text}%22&body=${text}%20${url}`;
+          break;
+
+        default:
+          return;
+      }
+
+      const newlink = document.createElement('a');
+      newlink.target = '_blank';
+      newlink.href = href;
+      newlink.click();
+    });
+
+    const screenSize = window.matchMedia('(max-width: 767px)');
+    screenSize.addEventListener('change', function () {
+      document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
+      document.body.classList.remove('overflow-hidden');
+      document.getElementById('header')?.classList.remove('h-screen');
+      document.getElementById('header')?.classList.remove('expanded');
+      document.getElementById('header')?.classList.remove('bg-page');
+      document.querySelector('#header nav')?.classList.add('hidden');
+      document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
+    });
+
+    function applyHeaderStylesOnScroll() {
+      const header = document.querySelector('#header[data-aw-sticky-header]');
+      if (!header) return;
+      if (lastKnownScrollPosition > 60 && !header.classList.contains('scroll')) {
+        header.classList.add('scroll');
+      } else if (lastKnownScrollPosition <= 60 && header.classList.contains('scroll')) {
+        header.classList.remove('scroll');
+      }
+      ticking = false;
+    }
+    applyHeaderStylesOnScroll();
+
+    attachEvent([document], 'scroll', function () {
+      lastKnownScrollPosition = window.scrollY;
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          applyHeaderStylesOnScroll();
+        });
+        ticking = true;
+      }
+    });
+  };
+  const onPageShow = function () {
+    document.documentElement.classList.add('motion-safe:scroll-smooth');
+    const elem = document.querySelector('[data-aw-toggle-menu]');
+    if (elem) {
+      elem.classList.remove('expanded');
+    }
+    document.body.classList.remove('overflow-hidden');
+    document.getElementById('header')?.classList.remove('h-screen');
+    document.getElementById('header')?.classList.remove('expanded');
+    document.querySelector('#header nav')?.classList.add('hidden');
+  };
+
+  window.onload = onLoad;
+  window.onpageshow = onPageShow;
+
+  document.addEventListener('astro:after-swap', () => {
+    initTheme();
+    onLoad();
+    onPageShow();
+  });
+</script>
+
+<script is:inline>
+  /* Inspired by: https://github.com/heidkaemper/tailwindcss-intersect */
+  const Observer = {
+    observer: null,
+    delayBetweenAnimations: 100,
+    animationCounter: 0,
+    elements: null,
+
+    start() {
+      const selectors = [
+        '[class*=" intersect:"]',
+        '[class*=":intersect:"]',
+        '[class^="intersect:"]',
+        '[class="intersect"]',
+        '[class*=" intersect "]',
+        '[class^="intersect "]',
+        '[class$=" intersect"]',
+      ];
+
+      this.elements = Array.from(document.querySelectorAll(selectors.join(',')));
+
+      const getThreshold = (element) => {
+        if (element.classList.contains('intersect-full')) return 0.99;
+        if (element.classList.contains('intersect-half')) return 0.5;
+        if (element.classList.contains('intersect-quarter')) return 0.25;
+        return 0;
+      };
+
+      this.elements.forEach((el) => {
+        el.setAttribute('no-intersect', '');
+        el._intersectionThreshold = getThreshold(el);
+      });
+
+      const callback = (entries) => {
+        entries.forEach((entry) => {
+          requestAnimationFrame(() => {
+            const target = entry.target;
+            const intersectionRatio = entry.intersectionRatio;
+            const threshold = target._intersectionThreshold;
+
+            if (target.classList.contains('intersect-no-queue')) {
+              if (entry.isIntersecting) {
+                target.removeAttribute('no-intersect');
+                if (target.classList.contains('intersect-once')) {
+                  this.observer.unobserve(target);
+                }
+              } else {
+                target.setAttribute('no-intersect', '');
+              }
+              return;
+            }
+
+            if (intersectionRatio >= threshold) {
+              if (!target.hasAttribute('data-animated')) {
+                target.removeAttribute('no-intersect');
+                target.setAttribute('data-animated', 'true');
+
+                const delay = this.animationCounter * this.delayBetweenAnimations;
+                this.animationCounter++;
+
+                target.style.transitionDelay = `${delay}ms`;
+                target.style.animationDelay = `${delay}ms`;
+
+                if (target.classList.contains('intersect-once')) {
+                  this.observer.unobserve(target);
+                }
+              }
+            } else {
+              target.setAttribute('no-intersect', '');
+              target.removeAttribute('data-animated');
+              target.style.transitionDelay = '';
+              target.style.animationDelay = '';
+
+              this.animationCounter = 0;
+            }
+          });
+        });
+      };
+
+      this.observer = new IntersectionObserver(callback.bind(this), { threshold: [0, 0.25, 0.5, 0.99] });
+
+      this.elements.forEach((el) => {
+        this.observer.observe(el);
+      });
+    },
+
+    /* 
+      REF: #643;
+      We need to remove the delay to fix flickering/delay
+      when toggling the theme. Observer only removes them
+      after data-animated is gone (out of view).
+    */
+    removeAnimationDelay() {
+      this.elements.forEach((el) => {
+        if (el.getAttribute('data-animated') === 'true') {
+          el.style.transitionDelay = '';
+          el.style.animationDelay = '';
+        }
+      });
+    },
+  };
+
+  Observer.start();
+
+  document.addEventListener('astro:after-swap', () => {
+    Observer.start();
+  });
 </script>
