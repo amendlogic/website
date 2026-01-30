@@ -3,18 +3,17 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  // Verhindert mehrfache Ausführung, falls Astro das Script neu injectet
+  // Verhindert mehrfache Ausführung
   if (window.basic_script_init) return;
   window.basic_script_init = true;
 
   (function() {
-    let cleanupFns = []; // Stack für Cleanup-Funktionen
+    let cleanupFns = []; // Stack für Cleanup
 
     // --- UTILS ---
     const attachEvent = (selector, event, fn) => {
       const elements = document.querySelectorAll(selector);
       elements.forEach(el => el.addEventListener(event, fn));
-      // Keine Cleanup nötig für Element-Listener, da Astro den Body tauscht
     };
 
     // --- THEME LOGIK ---
@@ -35,21 +34,19 @@ import { UI } from 'astrowind:config';
       if (localStorage.getItem('theme') === 'system') applyTheme('system');
     };
     themeObserver.addEventListener('change', themeHandler);
-    // Globalen Listener merken für Cleanup wäre hier perfekt, aber für App-Lebensdauer okay.
 
-    // --- SCROLL HANDLER (Ultra-Performance + Cleanup) ---
+    // --- SCROLL & HEADER LOGIK ---
     const initScroll = () => {
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
 
       let isTicking = false;
-      let lastState = false; // State-Cache um DOM-Zugriffe zu minimieren
+      let lastState = false;
 
       const onScroll = () => {
         if (!isTicking) {
           window.requestAnimationFrame(() => {
             const isScrolled = window.scrollY > 10;
-            // Nur DOM anfassen, wenn sich der State ändert!
             if (isScrolled !== lastState) {
               stickyHeader.classList.toggle('scroll', isScrolled);
               lastState = isScrolled;
@@ -62,19 +59,18 @@ import { UI } from 'astrowind:config';
 
       window.addEventListener('scroll', onScroll, { passive: true });
       
-      // Initialer Check
       const isScrolled = window.scrollY > 10;
       if(isScrolled) stickyHeader.classList.add('scroll');
       lastState = isScrolled;
 
-      // WICHTIG: Cleanup registrieren
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- SETUP ---
+    // --- SETUP (inkl. Smooth Scroll Fix) ---
     const setup = () => {
-      // 1. Header Menü
       const header = document.getElementById('header');
+
+      // 1. Mobile Menü
       const toggleMenu = (e) => {
         const btn = e.currentTarget;
         btn.classList.toggle('expanded');
@@ -103,21 +99,52 @@ import { UI } from 'astrowind:config';
         const network = el.getAttribute('data-aw-social-share');
         const url = encodeURIComponent(el.getAttribute('data-aw-url') || window.location.href);
         const text = encodeURIComponent(el.getAttribute('data-aw-text') || '');
-        // ... (Share Logik hier, gekürzt für Übersicht)
-        const href = network === 'mail' ? `mailto:?subject=${text}&body=${url}` : '#'; 
-        // Für einfaches Beispiel: window.open logic hier einfügen
+        const href = network === 'mail' ? `mailto:?subject=${text}&body=${url}` : '#';
+        // (Window Open Logik hier einfügen wenn benötigt)
       });
 
-      // 4. Scroll Logic starten
+      // 4. NEU: Smooth Scroll für #links mit Header-Offset
+      const handleSmoothScroll = (e) => {
+        // Sucht das nächste <a> Element, falls auf ein Icon geklickt wurde
+        const link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+        if (href === '#') return; // Ignoriere leere Hash-Links
+
+        const targetEl = document.querySelector(href);
+        if (targetEl) {
+          e.preventDefault(); // Standard-Sprung verhindern
+          
+          // Header-Höhe dynamisch berechnen oder festlegen (ca 60-80px)
+          const headerOffset = header ? header.offsetHeight : 0;
+          const elementPosition = targetEl.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+
+          // Mobile Menü schließen, falls geöffnet
+          if (header?.classList.contains('expanded')) {
+             document.querySelector('[data-aw-toggle-menu]')?.click();
+          }
+        }
+      };
+      
+      // Listener auf document (delegiert), damit es auch bei dynamischen Inhalten geht
+      document.addEventListener('click', handleSmoothScroll);
+      cleanupFns.push(() => document.removeEventListener('click', handleSmoothScroll));
+
+      // 5. Scroll Logic starten
       initScroll();
     };
 
-    // --- OBSERVER (Singleton Pattern) ---
+    // --- OBSERVER ---
     let observerInstance = null;
-    
     const initObserver = () => {
-      if (observerInstance) observerInstance.disconnect(); // Alten Observer töten
-
+      if (observerInstance) observerInstance.disconnect();
       const els = document.querySelectorAll('[class*="intersect"]');
       if (els.length === 0) return;
 
@@ -139,20 +166,17 @@ import { UI } from 'astrowind:config';
 
       observerInstance = new IntersectionObserver(callback, { threshold: 0.1 });
       els.forEach(el => observerInstance.observe(el));
-      
       cleanupFns.push(() => observerInstance.disconnect());
     };
 
-    // --- LIFECYCLE MANAGEMENT ---
+    // --- LIFECYCLE ---
     const run = () => {
-      // Alte Cleanups ausführen bevor wir neu initialisieren
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
       applyTheme(localStorage.getItem('theme') || 'system');
       setup();
       
-      // Idle Execution für Observer
       if (window.requestIdleCallback) {
         window.requestIdleCallback(initObserver);
       } else {
@@ -160,7 +184,6 @@ import { UI } from 'astrowind:config';
       }
     };
 
-    // Start
     run();
     document.addEventListener('astro:after-swap', run);
   })();
