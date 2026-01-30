@@ -1,25 +1,33 @@
 ---
-import { Icon } from "astro-icon/components";
-import { UI } from "astrowind:config";
+import { Icon } from 'astro-icon/components';
+import { UI } from 'astrowind:config';
+
+export interface Props {
+  label?: string;
+  class?: string;
+  iconClass?: string;
+}
+
+const {
+  label = 'Toggle between System/Light/Dark mode',
+  class: className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center',
+  iconClass = 'w-6 h-6',
+} = Astro.props;
 ---
 
-{!(UI.theme && UI.theme.endsWith(':only')) && (
-  <button
-    type="button"
-    data-aw-theme-toggle
-    class="p-2 rounded-lg text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 inline-flex items-center gap-2"
-    aria-label="Theme wechseln"
-    title="Theme wechseln"
-  >
-    <span data-icon="system" aria-hidden="true"><Icon name="tabler:device-laptop" class="w-6 h-6" /></span>
-    <span data-icon="light"  aria-hidden="true"><Icon name="tabler:sun"           class="w-6 h-6" /></span>
-    <span data-icon="dark"   aria-hidden="true"><Icon name="tabler:moon"          class="w-6 h-6" /></span>
-  </button>
-)}
+{
+  !(UI.theme && UI.theme.endsWith(':only')) && (
+    <button type="button" class={className} aria-label={label} data-aw-toggle-color-scheme>
+      <Icon name="tabler:device-desktop" class={`${iconClass} hidden`} data-aw-theme-icon="system" />
+      <Icon name="tabler:sun" class={`${iconClass} hidden`} data-aw-theme-icon="light" />
+      <Icon name="tabler:moon" class={`${iconClass} hidden`} data-aw-theme-icon="dark" />
+    </button>
+  )
+}
 
 <style is:global>
-  [data-icon] { display: none; }
-  html[data-theme-mode="system"] [data-icon="system"],
-  html[data-theme-mode="light"]  [data-icon="light"],
-  html[data-theme-mode="dark"]   [data-icon="dark"] { display: inline-flex; }
+  /* Verhindert das Verschwinden/Flickern */
+  [data-aw-theme-icon].hidden {
+    display: none !important;
+  }
 </style>
