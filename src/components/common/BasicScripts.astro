@@ -6,16 +6,7 @@ import { UI } from 'astrowind:config';
   if (window.basic_script) return;
   window.basic_script = true;
 
-  // --- PERFORMANCE HELPERS ---
-  const debounce = (fn, delay) => {
-    let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => fn(...args), delay);
-    };
-  };
-
-  // --- THEME LOGIK ---
+  // --- 1. THEME LOGIK (3-State) ---
   function applyTheme(theme) {
     const resolvedTheme = (theme === 'system') 
       ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
@@ -30,11 +21,34 @@ import { UI } from 'astrowind:config';
     window.Observer?.removeAnimationDelay();
   }
 
-  // --- CORE SETUP ---
+  // --- 2. CORE SETUP ---
   const setup = () => {
     const header = document.getElementById('header');
+    const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
 
-    // Menü-Toggle
+    // --- ULTRA-PERFORMANCE HEADER SCROLL ---
+    let isTicking = false;
+    const checkHeader = () => {
+      if (stickyHeader) {
+        if (window.scrollY > 10) {
+          stickyHeader.classList.add('scroll');
+        } else {
+          stickyHeader.classList.remove('scroll');
+        }
+      }
+      isTicking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!isTicking) {
+        window.requestAnimationFrame(checkHeader);
+        isTicking = true;
+      }
+    }, { passive: true }); // passive: true verbessert die Scroll-Performance zusätzlich
+
+    checkHeader();
+
+    // Hamburger Menü Toggle
     const toggleMenu = () => {
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
       if (!menuBtn) return;
@@ -47,7 +61,9 @@ import { UI } from 'astrowind:config';
       document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
     };
 
-    document.querySelectorAll('[data-aw-toggle-menu]').forEach(el => el.onclick = toggleMenu);
+    document.querySelectorAll('[data-aw-toggle-menu]').forEach(el => {
+      el.onclick = toggleMenu;
+    });
 
     // Theme-Toggle Rotation
     const toggleTheme = () => {
@@ -59,24 +75,29 @@ import { UI } from 'astrowind:config';
       applyTheme(next);
     };
 
-    document.querySelectorAll('[data-aw-toggle-color-scheme]').forEach(el => el.onclick = toggleTheme);
-
-    // Sticky Header (Debounced für flüssiges Resizing/Scrolling)
-    let isTicking = false;
-
-    window.addEventListener('scroll', () => {
-      if (!isTicking) {
-        window.requestAnimationFrame(() => {
-          const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
-          if (stickyHeader) {
-            window.scrollY > 10 ? stickyHeader.classList.add('scroll') : stickyHeader.classList.remove('scroll');
-          }
-          isTicking = false;
-        });
-        isTicking = true;
-      }
+    document.querySelectorAll('[data-aw-toggle-color-scheme]').forEach(el => {
+      el.onclick = toggleTheme;
     });
 
+    // Social Share
+    document.querySelectorAll('[data-aw-social-share]').forEach(el => {
+      el.onclick = () => {
+        const network = el.getAttribute('data-aw-social-share');
+        const url = encodeURIComponent(el.getAttribute('data-aw-url') || window.location.href);
+        const text = encodeURIComponent(el.getAttribute('data-aw-text') || '');
+        const links = {
+          facebook: `https://www.facebook.com/sharer.php?u=${url}`,
+          twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+          linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`,
+          whatsapp: `https://wa.me/?text=${text}%20${url}`,
+          mail: `mailto:?subject=${text}&body=${url}`
+        };
+        if (links[network]) window.open(links[network], '_blank');
+      };
+    });
+  };
+
+  // --- 3. LIFECYCLE ---
   const onPageLoad = () => {
     applyTheme(localStorage.getItem('theme') || 'system');
     setup();
@@ -85,10 +106,14 @@ import { UI } from 'astrowind:config';
 
   window.onload = onPageLoad;
   document.addEventListener('astro:after-swap', onPageLoad);
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (localStorage.getItem('theme') === 'system') applyTheme('system');
+  });
 </script>
 
 <script is:inline>
-  // --- OPTIMIERTER INTERSECTION OBSERVER ---
+  // --- 4. OPTIMIERTER INTERSECTION OBSERVER ---
   window.Observer = {
     observer: null,
     start() {
@@ -115,8 +140,8 @@ import { UI } from 'astrowind:config';
         els.forEach(el => this.observer.observe(el));
       };
 
-      // Führt Animation-Check nur aus, wenn der Browser gerade nicht mit Layout/Text beschäftigt ist
-      (window.requestIdleCallback || ((cb) => setTimeout(cb, 100)))(init);
+      // Nutzt Leerlaufzeit (Idle), damit Layout/Scroll-Events Vorrang haben
+      (window.requestIdleCallback || ((cb) => setTimeout(cb, 150)))(init);
     },
     removeAnimationDelay() {
       document.querySelectorAll('[data-animated]').forEach(el => {
