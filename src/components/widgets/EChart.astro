@@ -67,23 +67,62 @@ const serializedOptions = JSON.stringify(options);
 
 </WidgetWrapper>
 
-<script define:vars={{ chartOptions: serializedOptions, chartId }}>
-  // Load ECharts from CDN
-  document.addEventListener("DOMContentLoaded", async () => {
-    // Load ECharts core
-    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
+<script is:inline>
+  (function() {
+    let echartsModule;
 
-    // Initialize chart
-    const chartContainer = document.getElementById(chartId);
-    const chart = echarts.init(chartContainer);
+    // Debounce-Funktion für bessere Performance beim Resizen
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
 
-    // Set chart options
-    const options = JSON.parse(chartOptions);
-    chart.setOption(options);
+    async function initCharts() {
+      const containers = document.querySelectorAll('.echart-container');
+      if (containers.length === 0) return;
 
-    // Handle resize
-    window.addEventListener("resize", () => {
-      chart.resize();
-    });
-  });
+      if (!echartsModule) {
+        echartsModule = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
+      }
+
+      const activeCharts = [];
+
+      containers.forEach((container) => {
+        // Alte Instanzen sauber entfernen
+        const existingInstance = echartsModule.getInstanceByDom(container);
+        if (existingInstance) existingInstance.dispose();
+
+        const chart = echartsModule.init(container);
+        const options = JSON.parse(container.dataset.chartOptions || '{}');
+        chart.setOption(options);
+        
+        activeCharts.push(chart);
+      });
+
+      // Zentraler Resize-Handler für alle Charts auf der aktuellen Seite
+      const handleResize = debounce(() => {
+        activeCharts.forEach(chart => {
+          if (chart && !chart.isDisposed()) {
+            chart.resize({ animation: { duration: 300 } }); // Sanfter Übergang
+          }
+        });
+      }, 100); // 100ms warten, bis das Resizen "stoppt"
+
+      window.addEventListener('resize', handleResize);
+
+      // WICHTIG: Cleanup beim Verlassen der Seite
+      document.addEventListener('astro:before-swap', () => {
+        window.removeEventListener('resize', handleResize);
+        activeCharts.forEach(chart => {
+          if (chart && !chart.isDisposed()) chart.dispose();
+        });
+      }, { once: true });
+    }
+
+    // Astro-Integration
+    document.addEventListener('astro:page-load', initCharts);
+  })();
 </script>
