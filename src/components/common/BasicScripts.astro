@@ -3,10 +3,11 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+  // Verhindert mehrfache Initialisierung
   if (window.basic_script) return;
   window.basic_script = true;
 
-  // --- 1. THEME LOGIK (3-State) ---
+  // --- THEME LOGIK ---
   function applyTheme(theme) {
     const resolvedTheme = (theme === 'system') 
       ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
@@ -19,19 +20,20 @@ import { UI } from 'astrowind:config';
       icon.classList.toggle('hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
     });
     
+    // Fix für flackernde Animationen beim Theme-Wechsel
     if (window.Observer && typeof window.Observer.removeAnimationDelay === 'function') {
       window.Observer.removeAnimationDelay();
     }
   }
 
-  const initTheme = () => {
+  const initTheme = function () {
     if (defaultTheme && defaultTheme.endsWith(':only')) {
       return applyTheme(defaultTheme.replace(':only', ''));
     }
     applyTheme(localStorage.getItem('theme') || 'system');
   };
 
-  // --- 2. HELPER & PERFORMANCE ---
+  // --- HELPER ---
   function attachEvent(selector, event, fn) {
     const matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
     if (matches && matches.length) {
@@ -39,20 +41,10 @@ import { UI } from 'astrowind:config';
     }
   }
 
-  // Debounce für flüssiges Resizen
-  function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-  }
-
-  // --- 3. HAUPTFUNKTIONEN ---
-  const setup = () => {
+  const setup = function () {
     const header = document.getElementById('header');
-
-    // Hamburger Menü
+    
+    // Menü-Logik (Robust für Mobile)
     attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
       elem.classList.toggle('expanded');
       document.body.classList.toggle('overflow-hidden');
@@ -63,7 +55,7 @@ import { UI } from 'astrowind:config';
       document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
     });
 
-    // Theme Toggle (Rotation)
+    // 3-State Toggle Rotation
     attachEvent('[data-aw-toggle-color-scheme]', 'click', function () {
       if (defaultTheme.endsWith(':only')) return;
       const themes = ['system', 'light', 'dark'];
@@ -79,29 +71,30 @@ import { UI } from 'astrowind:config';
       const network = elem.getAttribute('data-aw-social-share');
       const url = encodeURIComponent(elem.getAttribute('data-aw-url') || window.location.href);
       const text = encodeURIComponent(elem.getAttribute('data-aw-text') || '');
-      const links = {
+      
+      const shareLinks = {
         facebook: `https://www.facebook.com/sharer.php?u=${url}`,
         twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
         linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`,
         whatsapp: `https://wa.me/?text=${text}%20${url}`,
         mail: `mailto:?subject=${text}&body=${url}`
       };
-      if (links[network]) window.open(links[network], '_blank');
+      
+      if (shareLinks[network]) window.open(shareLinks[network], '_blank');
     });
 
-    // Sticky Header mit Debounce für Performance
+    // Sticky Header Scroll
     const applyHeaderStylesOnScroll = () => {
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (stickyHeader) {
         window.scrollY > 60 ? stickyHeader.classList.add('scroll') : stickyHeader.classList.remove('scroll');
       }
     };
-
-    window.addEventListener('scroll', debounce(applyHeaderStylesOnScroll, 10));
+    window.addEventListener('scroll', applyHeaderStylesOnScroll);
     applyHeaderStylesOnScroll();
   };
 
-  // --- 4. LIFECYCLE ---
+  // --- INITIALISIERUNG ---
   const onPageLoad = () => {
     initTheme();
     setup();
@@ -117,48 +110,40 @@ import { UI } from 'astrowind:config';
 </script>
 
 <script is:inline>
-  // --- 5. INTERSECTION OBSERVER (ANIMATIONEN) ---
+  // Globaler Observer für Intersect-Animationen
   window.Observer = {
     observer: null,
     elements: [],
     animationCounter: 0,
     
     start() {
-      // Nutze RequestIdleCallback, damit das Layout (Textgröße) Vorrang hat
-      const init = () => {
-        const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]'];
-        this.elements = Array.from(document.querySelectorAll(selectors.join(',')));
-        
-        this.observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const target = entry.target;
-              if (!target.hasAttribute('data-animated')) {
-                target.removeAttribute('no-intersect');
-                target.setAttribute('data-animated', 'true');
-                target.style.transitionDelay = `${this.animationCounter * 100}ms`;
-                this.animationCounter++;
-                if (target.classList.contains('intersect-once')) this.observer.unobserve(target);
-              }
-            } else if (!entry.target.classList.contains('intersect-once')) {
-              entry.target.setAttribute('no-intersect', '');
-              entry.target.removeAttribute('data-animated');
-              this.animationCounter = 0;
+      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]'];
+      this.elements = Array.from(document.querySelectorAll(selectors.join(',')));
+      
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const target = entry.target;
+            if (!target.hasAttribute('data-animated')) {
+              target.removeAttribute('no-intersect');
+              target.setAttribute('data-animated', 'true');
+              const delay = this.animationCounter * 100;
+              target.style.transitionDelay = `${delay}ms`;
+              this.animationCounter++;
+              if (target.classList.contains('intersect-once')) this.observer.unobserve(target);
             }
-          });
-        }, { threshold: [0, 0.25, 0.5] });
-
-        this.elements.forEach((el) => {
-          el.setAttribute('no-intersect', '');
-          this.observer.observe(el);
+          } else if (!entry.target.classList.contains('intersect-once')) {
+            entry.target.setAttribute('no-intersect', '');
+            entry.target.removeAttribute('data-animated');
+            this.animationCounter = 0;
+          }
         });
-      };
+      }, { threshold: [0, 0.25, 0.5, 0.99] });
 
-      if (window.requestIdleCallback) {
-        window.requestIdleCallback(init);
-      } else {
-        setTimeout(init, 100);
-      }
+      this.elements.forEach((el) => {
+        el.setAttribute('no-intersect', '');
+        this.observer.observe(el);
+      });
     },
     
     removeAnimationDelay() {
