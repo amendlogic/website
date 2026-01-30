@@ -1,30 +1,11 @@
----
-import { UI } from 'astrowind:config';
----
-
-<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  function applyTheme(theme) {
-    const resolvedTheme = (theme === 'system') 
-      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
-      : theme;
-    
-    if (resolvedTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-
-    // Icons sofort setzen, damit der Button nicht leer oder falsch aussieht
-    const icons = document.querySelectorAll('[data-aw-theme-icon]');
-    icons.forEach(icon => {
-      if (icon.getAttribute('data-aw-theme-icon') === theme) {
-        icon.classList.remove('hidden');
-      } else {
-        icon.classList.add('hidden');
-      }
-    });
-  }
-
-  const savedTheme = localStorage.getItem('theme') || 'system';
-  applyTheme(savedTheme);
+<script is:inline>
+  (function () {
+    const MODE_KEY = "themeMode";
+    const mode = localStorage.getItem(MODE_KEY) || "system";
+    const isDark =
+      mode === "dark" ||
+      (mode === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.dataset.themeMode = mode;
+    document.documentElement.classList.toggle("dark", isDark);
+  })();
 </script>
