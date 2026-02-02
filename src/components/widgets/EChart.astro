@@ -23,10 +23,10 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
   {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
 
-  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900 overflow-hidden">
+  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
     <div 
       id={chartId} 
-      class="echart-container w-full" 
+      class="overflow-hidden w-full" 
       data-chart-options={JSON.stringify(options)} 
       style={`height:${height}; min-height:${height};`}
     ></div>
@@ -134,11 +134,3 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
   })();
 </script>
-
-<style>
-  /* Sicherheitshalber global für ECharts Container */
-  .echart-container {
-    overflow: hidden; /* Verhindert Canvas-Overflow */
-    width: 100% !important; /* Erzwingt volle Breite */
-  }
-</style>
