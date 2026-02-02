@@ -65,7 +65,6 @@ export const footerData = {
         { text: 'How it Works', href: '#' },
         { text: 'Performance', href: '#' },
         { text: 'User Feedback', href: '#' },
-        { text: 'Customer stories', href: '#' },
       ],
     },
     {
@@ -73,11 +72,6 @@ export const footerData = {
       links: [
         { text: 'About', href: '#' },
         { text: 'Blog', href: '#' },
-        { text: 'Careers', href: '#' },
-        { text: 'Press', href: '#' },
-        { text: 'Inclusion', href: '#' },
-        { text: 'Social Impact', href: '#' },
-        { text: 'Shop', href: '#' },
       ],
     },
     {
