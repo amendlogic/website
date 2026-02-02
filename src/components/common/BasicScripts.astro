@@ -9,7 +9,6 @@ import { UI } from 'astrowind:config';
   (function() {
     let cleanupFns = [];
 
-    // --- UTILS ---
     const attachEvent = (selector, event, fn) => {
       document.querySelectorAll(selector).forEach(el => el.addEventListener(event, fn));
     };
@@ -24,7 +23,6 @@ import { UI } from 'astrowind:config';
       });
     };
 
-    // --- SCROLL & HEADER ---
     const initScroll = () => {
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
@@ -49,11 +47,10 @@ import { UI } from 'astrowind:config';
       onScroll();
     };
 
-    // --- SETUP ---
     const setup = () => {
       const header = document.getElementById('header');
 
-      // Mobile Menu
+      // 1. Mobile Menü
       attachEvent('[data-aw-toggle-menu]', 'click', (e) => {
         const btn = e.currentTarget;
         btn.classList.toggle('expanded');
@@ -65,7 +62,7 @@ import { UI } from 'astrowind:config';
         document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
       });
 
-      // Theme Toggle
+      // 2. Theme Toggle
       attachEvent('[data-aw-toggle-color-scheme]', 'click', () => {
         const themes = ['system', 'light', 'dark'];
         const current = localStorage.getItem('theme') || 'system';
@@ -74,100 +71,83 @@ import { UI } from 'astrowind:config';
         applyTheme(next);
       });
 
-      // Smooth Scroll
-      const handleSmoothScroll = (e) => {
-        const link = e.target.closest('a[href^="#"]');
-        if (!link) return;
-        const href = link.getAttribute('href');
-        if (href === '#' || !href) return;
-        const targetEl = document.querySelector(href);
-        if (targetEl) {
-          e.preventDefault();
-          const headerOffset = header ? header.offsetHeight : 0;
-          const offsetPosition = targetEl.getBoundingClientRect().top + window.scrollY - headerOffset;
-          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-          if (header?.classList.contains('expanded')) document.querySelector('[data-aw-toggle-menu]')?.click();
+      // 3. ROBUSTER SMOOTH SCROLL FIX
+      const onLinkClick = (e) => {
+        const target = e.target.closest('a');
+        // Prüfen, ob es ein interner Anker-Link ist
+        if (
+          target &&
+          target.hash &&
+          target.origin === window.location.origin &&
+          target.pathname === window.location.pathname
+        ) {
+          const targetElement = document.querySelector(target.hash);
+          if (targetElement) {
+            e.preventDefault();
+            
+            const headerOffset = header ? header.offsetHeight : 80;
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+
+            // URL Hash aktualisieren ohne Sprung
+            history.pushState(null, null, target.hash);
+
+            // Menü schließen auf Mobilgeräten
+            if (header?.classList.contains('expanded')) {
+              document.querySelector('[data-aw-toggle-menu]')?.click();
+            }
+          }
         }
       };
-      document.addEventListener('click', handleSmoothScroll);
-      cleanupFns.push(() => document.removeEventListener('click', handleSmoothScroll));
+
+      document.addEventListener('click', onLinkClick);
+      cleanupFns.push(() => document.removeEventListener('click', onLinkClick));
 
       initScroll();
     };
 
-    // --- ORIGINAL INTERSECT LOGIK (OPTIMIERT) ---
+    // --- INTERSECT LOGIK ---
     let observerInstance = null;
-
     const initObserver = () => {
       if (observerInstance) observerInstance.disconnect();
-
-      // Original-Selektoren von AstroWind
-      const selectors = [
-        '[class*=" intersect:"]',
-        '[class*=":intersect:"]',
-        '[class^="intersect:"]',
-        '[class="intersect"]',
-        '.intersect-once',
-        '.intersect-quarter',
-      ];
-      
+      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
       const elements = document.querySelectorAll(selectors.join(','));
       if (elements.length === 0) return;
 
       let animationCounter = 0;
-
-      const callback = (entries) => {
+      observerInstance = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          const target = entry.target;
-
           if (entry.isIntersecting) {
+            const target = entry.target;
             if (!target.hasAttribute('data-aw-animated')) {
               target.setAttribute('data-aw-animated', 'true');
               target.removeAttribute('no-intersect');
-              
-              // Original Staggering-Logik: Delay basierend auf Reihenfolge des Erscheinens
               target.style.transitionDelay = `${animationCounter * 100}ms`;
               animationCounter++;
-
-              if (target.classList.contains('intersect-once')) {
-                observerInstance.unobserve(target);
-              }
-            }
-          } else {
-            // Nur zurücksetzen, wenn es NICHT nur einmal animiert werden soll
-            if (!target.classList.contains('intersect-once')) {
-              target.setAttribute('no-intersect', '');
-              target.removeAttribute('data-aw-animated');
-              target.style.transitionDelay = '0ms';
-              animationCounter = 0; // Reset counter wenn alles aus dem Viewport ist
+              if (target.classList.contains('intersect-once')) observerInstance.unobserve(target);
             }
           }
         });
-      };
-
-      observerInstance = new IntersectionObserver(callback, { 
-        threshold: [0, 0.25, 0.5] 
-      });
+      }, { threshold: [0, 0.25, 0.5] });
 
       elements.forEach((el) => {
-        el.setAttribute('no-intersect', ''); // Initial-Zustand für CSS
+        el.setAttribute('no-intersect', '');
         observerInstance.observe(el);
       });
-
       cleanupFns.push(() => observerInstance.disconnect());
     };
 
-    // --- LIFECYCLE ---
     const run = () => {
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
       applyTheme(localStorage.getItem('theme') || 'system');
       setup();
-      
-      // Nutzt requestAnimationFrame für den ersten Paint-Check
-      window.requestAnimationFrame(() => {
-        initObserver();
-      });
+      window.requestAnimationFrame(initObserver);
     };
 
     run();
