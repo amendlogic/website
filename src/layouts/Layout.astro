@@ -1,6 +1,5 @@
 ---
 import '~/assets/styles/tailwind.css';
-import '~/assets/styles/cookie-custom.css';
 
 import { I18N } from 'astrowind:config';
 
@@ -37,7 +36,9 @@ const { language, textDirection } = I18N;
     <SiteVerification />
     <Analytics />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css">
-
+    <script>
+      import "~/assets/styles/cookie-custom.css";
+    </script>
     <!-- Comment the line below to disable View Transitions -->
     <ClientRouter fallback="swap" />
   </head>
