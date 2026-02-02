@@ -44,86 +44,85 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
     let echartsModule = null;
     let resizeObserver = null;
     let cleanupFns = [];
-    const instances = new Map(); // Speichert aktive Charts
+    const instances = new Map();
 
-    // --- HELPER: THEME COLORS ---
     const getThemeColors = () => {
       const isDark = document.documentElement.classList.contains('dark');
       return {
-        text: isDark ? '#cbd5e1' : '#475569', // slate-300 : slate-600
-        grid: isDark ? '#334155' : '#e2e8f0',
+        text: isDark ? '#cbd5e1' : '#475569',
         tooltipBg: isDark ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-        tooltipText: isDark ? '#f8fafc' : '#1e293b'
       };
     };
 
-    // --- 1. CORE RENDER FUNCTION ---
+    // --- 1. CORE RENDER FUNCTION (MIT ERROR HANDLING & FIX) ---
     const renderChart = async (container) => {
-      // Library nur einmal laden
-      if (!echartsModule) {
-        echartsModule = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
+      if (instances.has(container.id)) return;
+
+      try {
+        // Laden der Library
+        if (!echartsModule) {
+          const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.esm.min.js");
+          // WICHTIGER FIX: Prüfen ob default export oder named export vorliegt
+          echartsModule = mod.default || mod;
+        }
+
+        // Sicherheitscheck: Wurde ECharts geladen?
+        if (!echartsModule || !echartsModule.init) {
+          console.error("ECharts konnte nicht initialisiert werden. Modul-Struktur:", echartsModule);
+          container.innerHTML = '<div class="text-red-500 text-sm p-4">Error loading chart library</div>';
+          return;
+        }
+
+        const chart = echartsModule.init(container, null, { renderer: 'canvas' });
+        const rawOptions = JSON.parse(container.dataset.chartOptions || '{}');
+        const colors = getThemeColors();
+
+        const baseOptions = {
+          backgroundColor: 'transparent',
+          textStyle: { fontFamily: 'inherit', color: colors.text },
+          ...rawOptions
+        };
+
+        chart.setOption(baseOptions);
+        instances.set(container.id, chart);
+
+        // Loading entfernen
+        const loader = container.querySelector('.loading-text');
+        if (loader) loader.remove();
+
+        if (resizeObserver) resizeObserver.observe(container);
+
+      } catch (error) {
+        console.error("Fehler beim Laden des Charts:", error);
+        container.innerHTML = `<div class="text-red-500 text-sm p-4">Connection Error: ${error.message}</div>`;
       }
-
-      if (instances.has(container.id)) return; // Schon gerendert
-
-      const chart = echartsModule.init(container, null, { renderer: 'canvas' }); // 'svg' für noch mehr Performance bei einfachen Charts
-      const rawOptions = JSON.parse(container.dataset.chartOptions || '{}');
-      const colors = getThemeColors();
-
-      // Globale Styles injecten (damit es zum Theme passt)
-      const baseOptions = {
-        backgroundColor: 'transparent',
-        textStyle: { fontFamily: 'inherit', color: colors.text },
-        ...rawOptions
-      };
-
-      chart.setOption(baseOptions);
-      instances.set(container.id, chart);
-
-      // Loading-Text entfernen (falls vorhanden)
-      const loader = container.querySelector('div');
-      if (loader) loader.remove();
-
-      // Resize Observer registrieren
-      if (resizeObserver) resizeObserver.observe(container);
     };
 
-    // --- 2. RESIZE OBSERVER (High Performance) ---
-    // Feuert nur, wenn sich die Box-Größe wirklich ändert
+    // --- 2. RESIZE OBSERVER ---
     resizeObserver = new ResizeObserver((entries) => {
-      // RequestAnimationFrame für Drosselung (Throttling)
       window.requestAnimationFrame(() => {
         entries.forEach(entry => {
           const chart = instances.get(entry.target.id);
           if (chart && !chart.isDisposed()) {
-            chart.resize({ animation: { duration: 300 } });
+            chart.resize();
           }
         });
       });
     });
 
     // --- 3. THEME SYNC ---
-    const syncTheme = () => {
-      if (instances.size === 0) return;
-      const colors = getThemeColors();
-      
-      instances.forEach(chart => {
-        // Wir updaten nur Farben, behalten Daten bei
-        chart.setOption({
-          textStyle: { color: colors.text }
-          // Hier ggf. weitere Theme-Properties anpassen (Legende, Achsen, etc.)
-        });
-      });
-    };
-
-    // MutationObserver für Klassenänderungen am HTML-Tag (Light/Dark Switch)
     const themeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') syncTheme();
+        if (mutation.attributeName === 'class' && instances.size > 0) {
+          const colors = getThemeColors();
+          instances.forEach(chart => {
+            chart.setOption({ textStyle: { color: colors.text } });
+          });
+        }
       });
     });
 
-    // --- 4. LAZY LOADING (Viewport Observer) ---
+    // --- 4. LAZY LOADING ---
     const initLazyLoader = () => {
       const containers = document.querySelectorAll('.echart-lazy-container');
       if (containers.length === 0) return;
@@ -131,12 +130,11 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       const io = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            // Chart ist sichtbar -> Laden!
             renderChart(entry.target);
-            observer.unobserve(entry.target); // Nur einmal laden
+            observer.unobserve(entry.target);
           }
         });
-      }, { rootMargin: '200px' }); // 200px bevor es sichtbar wird laden
+      }, { rootMargin: '200px' });
 
       containers.forEach(c => io.observe(c));
       
@@ -149,11 +147,9 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
     // --- LIFECYCLE ---
     const run = () => {
-      // Cleanup previous page stuff
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
       
-      // Start Observers
       themeObserver.observe(document.documentElement, { attributes: true });
       cleanupFns.push(() => themeObserver.disconnect());
       
