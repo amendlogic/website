@@ -26,7 +26,7 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
     <div 
       id={chartId} 
-      class="overflow-hidden w-full" 
+      class="echart-container overflow-hidden w-full" 
       data-chart-options={JSON.stringify(options)} 
       style={`height:${height}; min-height:${height};`}
     ></div>
