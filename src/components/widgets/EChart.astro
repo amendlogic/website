@@ -23,54 +23,49 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
   {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
 
-  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
+  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900 overflow-hidden">
     <div 
       id={chartId} 
-      class="echart-container" 
+      class="echart-container w-full" 
       data-chart-options={JSON.stringify(options)} 
-      style={`width:100%; height:${height}; min-height:${height};`}
+      style={`height:${height}; min-height:${height};`}
     ></div>
   </div>
 </WidgetWrapper>
 
 <script is:inline>
   (function() {
-    // Singleton-Check (verhindert doppelte Ausführung)
     if (window.echarts_optimized_init) return;
     window.echarts_optimized_init = true;
 
-    let echartsLib = null; // Speichert die geladene Library
+    let echartsLib = null;
     let resizeObserver = null;
     let cleanupFns = [];
     const instances = new Map();
 
-    // --- 1. RENDER FUNKTION ---
     async function renderChart(container) {
       if (instances.has(container.id)) return;
 
       try {
-        // Library nur laden, wenn noch nicht da
         if (!echartsLib) {
           const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
-          // WICHTIG: Fallback für Module-Export-Typen (fixiert das "Loading..." Problem)
           echartsLib = mod.default || mod;
         }
 
         const chart = echartsLib.init(container, null, { renderer: 'canvas' });
         const options = JSON.parse(container.dataset.chartOptions || '{}');
         
-        // Theme-Anpassung (Dark Mode Support)
+        // Theme Logic
         const isDark = document.documentElement.classList.contains('dark');
         if (isDark && !options.backgroundColor) {
           options.backgroundColor = 'transparent';
           if (!options.textStyle) options.textStyle = {};
-          options.textStyle.color = '#cbd5e1'; // slate-300
+          options.textStyle.color = '#cbd5e1';
         }
 
         chart.setOption(options);
         instances.set(container.id, chart);
 
-        // Performance: Resize Observer für diesen Container registrieren
         if (resizeObserver) resizeObserver.observe(container);
 
       } catch (e) {
@@ -78,38 +73,37 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       }
     }
 
-    // --- 2. START LOGIK (Intersection Observer) ---
-    // Lädt ECharts NUR wenn das Element sichtbar wird -> PageSpeed Boost!
     function init() {
       const containers = document.querySelectorAll('.echart-container');
       if (containers.length === 0) return;
 
-      // Zentraler Resize Observer (Memory effizient)
+      // OPTIMIERTER RESIZE OBSERVER
       resizeObserver = new ResizeObserver((entries) => {
-        // requestAnimationFrame verhindert "Layout Thrashing"
-        window.requestAnimationFrame(() => {
-          entries.forEach(entry => {
-            const chart = instances.get(entry.target.id);
-            if (chart && !chart.isDisposed()) {
-              chart.resize();
-            }
-          });
+        // Wir nutzen kein requestAnimationFrame hier, um "Lag" zu vermeiden,
+        // der die Scrollbar verursachen könnte. Wir reagieren sofort.
+        entries.forEach(entry => {
+          const chart = instances.get(entry.target.id);
+          if (chart && !chart.isDisposed()) {
+            // WICHTIG: width: 'auto' zwingt ECharts, den Container neu zu messen
+            chart.resize({
+              width: 'auto',
+              animation: { duration: 0 } // Animation beim Resizen aus (verhindert Glitches)
+            });
+          }
         });
       });
 
-      // Viewport Observer (Lazy Load)
       const viewportObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             renderChart(entry.target);
-            observer.unobserve(entry.target); // Sofort aufhören zu beobachten
+            observer.unobserve(entry.target);
           }
         });
-      }, { rootMargin: '200px' }); // Lädt 200px bevor es sichtbar wird
+      }, { rootMargin: '200px' });
 
       containers.forEach(c => viewportObserver.observe(c));
 
-      // Cleanup registrieren
       cleanupFns.push(() => {
         viewportObserver.disconnect();
         resizeObserver.disconnect();
@@ -118,31 +112,21 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       });
     }
 
-    // --- 3. LIFECYCLE ---
     const run = () => {
-      // Aufräumen alter Instanzen (Memory Leak Prevention)
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
-
-      // Starten wenn Browser Zeit hat
-      if (window.requestIdleCallback) {
-        window.requestIdleCallback(init);
-      } else {
-        setTimeout(init, 100);
-      }
+      if (window.requestIdleCallback) window.requestIdleCallback(init);
+      else setTimeout(init, 100);
     };
 
-    // Astro Event Listener
     document.addEventListener('astro:page-load', run);
     
-    // Theme Switch Listener (Optional: Passt Farben beim Umschalten an)
+    // Theme Switch
     const themeObserver = new MutationObserver((mutations) => {
       if (instances.size > 0 && mutations[0].attributeName === 'class') {
          const isDark = document.documentElement.classList.contains('dark');
          instances.forEach(chart => {
-            chart.setOption({ 
-              textStyle: { color: isDark ? '#cbd5e1' : '#475569' } 
-            });
+            chart.setOption({ textStyle: { color: isDark ? '#cbd5e1' : '#475569' } });
          });
       }
     });
@@ -150,3 +134,11 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
   })();
 </script>
+
+<style>
+  /* Sicherheitshalber global für ECharts Container */
+  .echart-container {
+    overflow: hidden; /* Verhindert Canvas-Overflow */
+    width: 100% !important; /* Erzwingt volle Breite */
+  }
+</style>
