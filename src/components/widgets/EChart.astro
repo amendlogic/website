@@ -26,152 +26,127 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
     <div 
       id={chartId} 
-      class="echart-lazy-container" 
+      class="echart-container" 
       data-chart-options={JSON.stringify(options)} 
       style={`width:100%; height:${height}; min-height:${height};`}
-    >
-      <div class="flex items-center justify-center h-full text-muted text-sm">Loading Chart...</div>
-    </div>
+    ></div>
   </div>
 </WidgetWrapper>
 
 <script is:inline>
-  if (window.echarts_manager_init) return;
-  window.echarts_manager_init = true;
-
   (function() {
+    // Singleton-Check (verhindert doppelte Ausführung)
+    if (window.echarts_optimized_init) return;
+    window.echarts_optimized_init = true;
+
+    let echartsLib = null; // Speichert die geladene Library
     let resizeObserver = null;
     let cleanupFns = [];
     const instances = new Map();
 
-    const getThemeColors = () => {
-      const isDark = document.documentElement.classList.contains('dark');
-      return {
-        text: isDark ? '#cbd5e1' : '#475569',
-        tooltipBg: isDark ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-      };
-    };
-
-    // --- 1. LOADER: Script Injection (Die robuste Methode) ---
-    const loadEChartsLibrary = () => {
-      return new Promise((resolve, reject) => {
-        if (window.echarts) {
-          resolve(window.echarts); // Schon da
-          return;
-        }
-
-        const script = document.createElement('script');
-        // Wir nutzen die volle 'dist/echarts.min.js' (UMD Bundle)
-        script.src = 'https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js';
-        script.defer = true;
-        
-        script.onload = () => resolve(window.echarts);
-        script.onerror = () => reject(new Error('Failed to load ECharts CDN'));
-        
-        document.head.appendChild(script);
-      });
-    };
-
-    // --- 2. RENDER LOGIC ---
-    const renderChart = async (container) => {
+    // --- 1. RENDER FUNKTION ---
+    async function renderChart(container) {
       if (instances.has(container.id)) return;
 
       try {
-        await loadEChartsLibrary(); // Wartet, bis window.echarts verfügbar ist
+        // Library nur laden, wenn noch nicht da
+        if (!echartsLib) {
+          const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
+          // WICHTIG: Fallback für Module-Export-Typen (fixiert das "Loading..." Problem)
+          echartsLib = mod.default || mod;
+        }
 
-        // Prüfen, ob der Container noch existiert (User könnte weggescrollt haben)
-        if (!document.body.contains(container)) return;
+        const chart = echartsLib.init(container, null, { renderer: 'canvas' });
+        const options = JSON.parse(container.dataset.chartOptions || '{}');
+        
+        // Theme-Anpassung (Dark Mode Support)
+        const isDark = document.documentElement.classList.contains('dark');
+        if (isDark && !options.backgroundColor) {
+          options.backgroundColor = 'transparent';
+          if (!options.textStyle) options.textStyle = {};
+          options.textStyle.color = '#cbd5e1'; // slate-300
+        }
 
-        const chart = window.echarts.init(container, null, { renderer: 'canvas' });
-        const rawOptions = JSON.parse(container.dataset.chartOptions || '{}');
-        const colors = getThemeColors();
-
-        const baseOptions = {
-          backgroundColor: 'transparent',
-          textStyle: { fontFamily: 'inherit', color: colors.text },
-          ...rawOptions
-        };
-
-        chart.setOption(baseOptions);
+        chart.setOption(options);
         instances.set(container.id, chart);
 
-        // Loading Text entfernen
-        const loader = container.querySelector('.loading-text');
-        if (loader) loader.remove();
-
+        // Performance: Resize Observer für diesen Container registrieren
         if (resizeObserver) resizeObserver.observe(container);
 
-      } catch (error) {
-        console.error("ECharts Error:", error);
-        container.innerHTML = `<div class="text-red-500 text-sm p-4 text-center">Fehler: ${error.message}</div>`;
+      } catch (e) {
+        console.error("Chart Render Error:", e);
       }
-    };
+    }
 
-    // --- 3. RESIZE OBSERVER ---
-    resizeObserver = new ResizeObserver((entries) => {
-      window.requestAnimationFrame(() => {
-        entries.forEach(entry => {
-          const chart = instances.get(entry.target.id);
-          if (chart && !chart.isDisposed()) {
-            chart.resize();
-          }
-        });
-      });
-    });
-
-    // --- 4. THEME SYNC ---
-    const themeObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class' && instances.size > 0) {
-          const colors = getThemeColors();
-          instances.forEach(chart => {
-            chart.setOption({ textStyle: { color: colors.text } });
-          });
-        }
-      });
-    });
-
-    // --- 5. LAZY LOADING ---
-    const initLazyLoader = () => {
-      const containers = document.querySelectorAll('.echart-lazy-container');
+    // --- 2. START LOGIK (Intersection Observer) ---
+    // Lädt ECharts NUR wenn das Element sichtbar wird -> PageSpeed Boost!
+    function init() {
+      const containers = document.querySelectorAll('.echart-container');
       if (containers.length === 0) return;
 
-      const io = new IntersectionObserver((entries, observer) => {
+      // Zentraler Resize Observer (Memory effizient)
+      resizeObserver = new ResizeObserver((entries) => {
+        // requestAnimationFrame verhindert "Layout Thrashing"
+        window.requestAnimationFrame(() => {
+          entries.forEach(entry => {
+            const chart = instances.get(entry.target.id);
+            if (chart && !chart.isDisposed()) {
+              chart.resize();
+            }
+          });
+        });
+      });
+
+      // Viewport Observer (Lazy Load)
+      const viewportObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             renderChart(entry.target);
-            observer.unobserve(entry.target);
+            observer.unobserve(entry.target); // Sofort aufhören zu beobachten
           }
         });
-      }, { rootMargin: '200px' });
+      }, { rootMargin: '200px' }); // Lädt 200px bevor es sichtbar wird
 
-      containers.forEach(c => io.observe(c));
-      
-      cleanupFns.push(() => io.disconnect());
+      containers.forEach(c => viewportObserver.observe(c));
+
+      // Cleanup registrieren
       cleanupFns.push(() => {
-        instances.forEach(i => i.dispose());
+        viewportObserver.disconnect();
+        resizeObserver.disconnect();
+        instances.forEach(c => c.dispose());
         instances.clear();
       });
-    };
+    }
 
-    // --- LIFECYCLE ---
+    // --- 3. LIFECYCLE ---
     const run = () => {
+      // Aufräumen alter Instanzen (Memory Leak Prevention)
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
-      
-      themeObserver.observe(document.documentElement, { attributes: true });
-      cleanupFns.push(() => themeObserver.disconnect());
-      
-      if (resizeObserver) cleanupFns.push(() => resizeObserver.disconnect());
 
+      // Starten wenn Browser Zeit hat
       if (window.requestIdleCallback) {
-        window.requestIdleCallback(initLazyLoader);
+        window.requestIdleCallback(init);
       } else {
-        setTimeout(initLazyLoader, 100);
+        setTimeout(init, 100);
       }
     };
 
-    run();
-    document.addEventListener('astro:after-swap', run);
+    // Astro Event Listener
+    document.addEventListener('astro:page-load', run);
+    
+    // Theme Switch Listener (Optional: Passt Farben beim Umschalten an)
+    const themeObserver = new MutationObserver((mutations) => {
+      if (instances.size > 0 && mutations[0].attributeName === 'class') {
+         const isDark = document.documentElement.classList.contains('dark');
+         instances.forEach(chart => {
+            chart.setOption({ 
+              textStyle: { color: isDark ? '#cbd5e1' : '#475569' } 
+            });
+         });
+      }
+    });
+    themeObserver.observe(document.documentElement, { attributes: true });
+
   })();
 </script>
