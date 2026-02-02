@@ -49,7 +49,7 @@ export const headerData = {
       ],
     },
     {
-      text: 'Plans',
+      text: 'Pricing',
       href: getPermalink('/terms'),
     },
   ],
