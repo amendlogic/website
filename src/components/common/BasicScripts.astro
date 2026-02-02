@@ -9,12 +9,10 @@ import { UI } from 'astrowind:config';
   (function() {
     let cleanupFns = [];
 
-    // --- HELPER: EVENTS ---
     const attachEvent = (selector, event, fn) => {
       document.querySelectorAll(selector).forEach(el => el.addEventListener(event, fn));
     };
 
-    // --- THEME MANAGEMENT ---
     const applyTheme = (theme) => {
       const resolvedTheme = (theme === 'system') 
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
@@ -25,7 +23,6 @@ import { UI } from 'astrowind:config';
       });
     };
 
-    // --- HEADER SCROLL LOGIC (PERFORMANCE MODE) ---
     const initScroll = () => {
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
@@ -47,15 +44,12 @@ import { UI } from 'astrowind:config';
       };
       window.addEventListener('scroll', onScroll, { passive: true });
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
-      onScroll(); // Initial check
     };
 
-    // --- CORE SETUP ---
     const setup = () => {
       const header = document.getElementById('header');
       const menuButton = document.querySelector('[data-aw-toggle-menu]');
 
-      // 1. Mobile Menü Toggle Funktion
       const toggleMenu = () => {
         if (!menuButton) return;
         menuButton.classList.toggle('expanded');
@@ -71,7 +65,6 @@ import { UI } from 'astrowind:config';
         menuButton.onclick = toggleMenu;
       }
 
-      // 2. Theme Toggle (3-State)
       attachEvent('[data-aw-toggle-color-scheme]', 'click', () => {
         const themes = ['system', 'light', 'dark'];
         const current = localStorage.getItem('theme') || 'system';
@@ -80,51 +73,46 @@ import { UI } from 'astrowind:config';
         applyTheme(next);
       });
 
-      // 3. ULTRA-ROBUSTER SMOOTH SCROLL (Desktop & Mobile)
+      // --- ROBUSTER SMOOTH SCROLL FIX ---
       const onLinkClick = (e) => {
         const target = e.target.closest('a');
         
-        if (
-          target &&
-          target.hash &&
-          target.origin === window.location.origin &&
-          target.pathname === window.location.pathname
-        ) {
+        if (target && target.hash && target.origin === window.location.origin && target.pathname === window.location.pathname) {
           const targetElement = document.querySelector(target.hash);
+          
           if (targetElement) {
+            // 1. Sofort verhindern, dass der Browser springt
             e.preventDefault();
-            
-            // Mobile-Fix: Menü schließen wenn offen
+            e.stopPropagation();
+
+            // 2. Menü schließen falls offen
             if (header?.classList.contains('expanded')) {
               toggleMenu();
             }
 
-            // Desktop-Fix: Fokus entfernen (schließt Dropdowns)
-            target.blur();
+            // 3. Offset berechnen
+            const headerHeight = header ? header.getBoundingClientRect().height : 0;
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+            const finalPosition = targetPosition - headerHeight;
 
-            const headerOffset = header ? header.offsetHeight : 80;
-            const elementPosition = targetElement.getBoundingClientRect().top;
-            
-            // Relatives Scrollen zur aktuellen Position abzüglich Header-Höhe
-            window.scrollBy({
-              top: elementPosition - headerOffset,
+            // 4. Manueller Scroll-Befehl
+            window.scrollTo({
+              top: finalPosition,
               behavior: 'smooth'
             });
 
-            // URL Hash aktualisieren ohne Sprung
+            // 5. URL Hash setzen ohne Sprung
             history.pushState(null, null, target.hash);
           }
         }
       };
 
-      document.addEventListener('click', onLinkClick);
-      cleanupFns.push(() => document.removeEventListener('click', onLinkClick));
+      document.addEventListener('click', onLinkClick, { capture: true }); // Capture-Phase um anderen Skripten zuvorzukommen
+      cleanupFns.push(() => document.removeEventListener('click', onLinkClick, { capture: true }));
 
       initScroll();
     };
 
-    // --- ANIMATION OBSERVER (ORIGINAL LOGIC) ---
-    let observerInstance = null;
     const initObserver = () => {
       if (observerInstance) observerInstance.disconnect();
       const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
@@ -139,7 +127,6 @@ import { UI } from 'astrowind:config';
             if (!target.hasAttribute('data-aw-animated')) {
               target.setAttribute('data-aw-animated', 'true');
               target.removeAttribute('no-intersect');
-              // Staggering-Effekt
               target.style.transitionDelay = `${animationCounter * 100}ms`;
               animationCounter++;
               if (target.classList.contains('intersect-once')) observerInstance.unobserve(target);
@@ -152,20 +139,14 @@ import { UI } from 'astrowind:config';
         el.setAttribute('no-intersect', '');
         observerInstance.observe(el);
       });
-      cleanupFns.push(() => observerInstance.disconnect());
     };
 
-    // --- LIFECYCLE ---
+    let observerInstance = null;
     const run = () => {
-      // 1. Cleanup alter Listener
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
-      
-      // 2. Initialisierung
       applyTheme(localStorage.getItem('theme') || 'system');
       setup();
-      
-      // 3. Observer zeitverzögert für Paint-Performance starten
       window.requestAnimationFrame(initObserver);
     };
 
