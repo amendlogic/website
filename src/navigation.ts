@@ -69,14 +69,7 @@ export const footerData = {
       ],
     },
     {
-      title: 'Company',
-      links: [
-        { text: 'About', href: '#' },
-        { text: 'Blog', href: '#' },
-      ],
-    },
-    {
-      title: 'Support',
+      title: 'Resources',
       links: [
         { text: 'Docs', href: '#' },
         { text: 'Discord Community', href: '#' },
@@ -85,7 +78,15 @@ export const footerData = {
       ],
     },
     {
-      title: 'Legal & Privacy',
+      title: 'Company',
+      links: [
+        { text: 'About', href: '#' },
+        { text: 'Team', href: '#' },
+        { text: 'Blog', href: '#' },
+      ],
+    },
+    {
+      title: 'Legal',
       links: [
         { text: 'Legal Notice', href: '#' },
         { text: 'Privacy Policy', href: '#' },
