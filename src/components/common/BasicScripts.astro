@@ -3,26 +3,24 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  // 1. Singleton Check
+  // Singleton Pattern
   if (window.basic_script_init) return;
   window.basic_script_init = true;
 
   (function() {
     let cleanupFns = [];
 
-    // --- UTILS ---
+    // --- HELPER ---
     const toggleClass = (el, className, condition) => {
       if (condition) el.classList.add(className);
       else el.classList.remove(className);
     };
 
-    // --- THEME ---
     const applyTheme = (theme) => {
       const resolvedTheme = (theme === 'system') 
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
         : theme;
       
-      // Batch DOM updates
       requestAnimationFrame(() => {
         toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
         document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
@@ -31,39 +29,26 @@ import { UI } from 'astrowind:config';
       });
     };
 
-    // --- HEADER LOGIK (OBSERVER STATT SCROLL-LISTENER) ---
-    // Das ist der Performance-Gamechanger für Mobile!
+    // --- 1. HEADER SCROLL (Sentinel) ---
     const initHeader = () => {
       const header = document.getElementById('header');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
 
-      // Wir erzeugen einen unsichtbaren "Wächter" am Anfang der Seite
       const sentinel = document.createElement('div');
       sentinel.id = 'header-sentinel';
-      sentinel.style.position = 'absolute';
-      sentinel.style.top = '0';
-      sentinel.style.left = '0';
-      sentinel.style.height = '1px'; // Ab wann soll der Header umschalten?
-      sentinel.style.width = '1px';
-      sentinel.style.pointerEvents = 'none';
-      sentinel.style.visibility = 'hidden';
+      Object.assign(sentinel.style, { position: 'absolute', top: '0', left: '0', height: '1px', width: '1px', visibility: 'hidden' });
       document.body.prepend(sentinel);
 
       const observer = new IntersectionObserver((entries) => {
-        // Wenn der Sentinel NICHT mehr sichtbar ist, haben wir gescrollt -> Klasse hinzufügen
-        const isScrolled = !entries[0].isIntersecting;
-        toggleClass(stickyHeader, 'scroll', isScrolled);
+        toggleClass(stickyHeader, 'scroll', !entries[0].isIntersecting);
       }, { rootMargin: '10px 0px 0px 0px', threshold: 0 });
 
       observer.observe(sentinel);
-      cleanupFns.push(() => {
-        observer.disconnect();
-        sentinel.remove();
-      });
+      cleanupFns.push(() => { observer.disconnect(); sentinel.remove(); });
     };
 
-    // --- MENU LOGIK ---
+    // --- 2. MENU LOGIK (Original AstroWind Ansatz) ---
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
@@ -71,16 +56,27 @@ import { UI } from 'astrowind:config';
       if (!menuBtn || !header) return;
 
       const toggleMenu = () => {
+        // Grundlegende Layout-Klassen
         menuBtn.classList.toggle('expanded');
         document.body.classList.toggle('overflow-hidden');
         header.classList.toggle('h-screen');
         header.classList.toggle('expanded');
         header.classList.toggle('bg-page');
-        
+
+        // A) ICON LOGIK: Wir suchen die Icons im Button und toggeln 'hidden'
+        // Das erste Icon ist meist Hamburger, das zweite ist Close
+        const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
+        if (icons.length > 1) {
+            icons.forEach(icon => icon.classList.toggle('hidden'));
+        }
+
+        // B) CONTENT LOGIK: Navigation sichtbar machen
         const nav = header.querySelector('nav');
-        const actions = header.querySelector('div > div:last-child');
-        
         if (nav) nav.classList.toggle('hidden');
+
+        // C) ACTION BAR LOGIK: RSS, Theme-Toggle, Button sichtbar machen
+        // AstroWind packt das meist in das letzte DIV im Header-Grid
+        const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
         if (actions) actions.classList.toggle('hidden');
       };
 
@@ -88,10 +84,10 @@ import { UI } from 'astrowind:config';
       window.toggleMenuInstance = toggleMenu;
     };
 
-    // --- GLOBAL CLICK & SMOOTH SCROLL ---
+    // --- 3. GLOBAL EVENTS ---
     const initGlobalEvents = () => {
       const onClick = (e) => {
-        // Theme Check (Optimiert)
+        // Theme Toggle
         const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
         if (themeBtn) {
           const themes = ['system', 'light', 'dark'];
@@ -102,19 +98,20 @@ import { UI } from 'astrowind:config';
           return;
         }
 
-        // Link Check
+        // Smooth Scroll & Link Handling
         const link = e.target.closest('a');
         if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
           const targetEl = document.querySelector(link.hash);
           if (targetEl) {
             e.preventDefault();
             
+            // Wenn Menü offen -> Schließen (ruft unsere Logik von oben auf)
             if (document.getElementById('header')?.classList.contains('expanded') && window.toggleMenuInstance) {
               window.toggleMenuInstance();
             }
             link.blur();
 
-            // Berechnung und Scroll
+            // Präzise Scroll-Berechnung
             const header = document.getElementById('header');
             const headerHeight = header ? header.getBoundingClientRect().height : 0;
             const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
@@ -129,25 +126,22 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
     };
 
-    // --- ANIMATIONS (Lazy Loading) ---
+    // --- 4. ANIMATIONS ---
     const initAnimations = () => {
       const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
       const elements = document.querySelectorAll(selectors.join(','));
       if (elements.length === 0) return;
 
-      // Wir nutzen einen Observer, der nur feuert, wenn wirklich was passiert
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const el = entry.target;
-            // Direktes Setzen der Attribute ohne komplexe Berechnungen
             el.setAttribute('data-aw-animated', 'true');
             el.removeAttribute('no-intersect');
-            
             if (el.classList.contains('intersect-once')) observer.unobserve(el);
           }
         });
-      }, { threshold: 0.1 }); // Niedriger Threshold = früher laden = flüssiger
+      }, { threshold: 0.1 });
 
       elements.forEach(el => {
         el.setAttribute('no-intersect', '');
@@ -157,29 +151,22 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => observer.disconnect());
     };
 
-    // --- MAIN INIT (Chunked execution) ---
+    // --- MAIN ---
     const run = () => {
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
-      // Priority 1: Visual Stability (Sofort)
       applyTheme(localStorage.getItem('theme') || 'system');
       
-      // Priority 2: Interactivity (Im nächsten Frame)
       requestAnimationFrame(() => {
-        initHeader(); // Observer-based = Fast!
+        initHeader();
         initMenu();
       });
 
-      // Priority 3: Global Events (Kurz danach)
       setTimeout(initGlobalEvents, 0);
 
-      // Priority 4: Animations (Wenn CPU idle ist)
-      if (window.requestIdleCallback) {
-        window.requestIdleCallback(initAnimations);
-      } else {
-        setTimeout(initAnimations, 200);
-      }
+      if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
+      else setTimeout(initAnimations, 200);
     };
 
     run();
