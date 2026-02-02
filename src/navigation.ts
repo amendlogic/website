@@ -4,11 +4,10 @@ export const headerData = {
   links: [
     {
       text: 'Product',
-      href: getPermalink('/'),
       links: [
         {
           text: 'Features',
-          href: getPermalink('/homes/saas'),
+          href: getPermalink('/#features'),
         },
         {
           text: 'How it Works',
@@ -105,8 +104,8 @@ export const footerData = {
     },
   ],
   secondaryLinks: [
-    { text: 'Terms', href: getPermalink('/terms') },
-    { text: 'Privacy Policy', href: getPermalink('/privacy') },
+    { text: 'We speak English', href: getPermalink('/terms') },
+    { text: 'Wir sprechen Deutsch', href: getPermalink('/privacy') },
   ],
   socialLinks: [
     { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
