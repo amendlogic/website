@@ -35,6 +35,7 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
 <script is:inline>
   (function() {
+    // Singleton Check
     if (window.echarts_optimized_init) return;
     window.echarts_optimized_init = true;
 
@@ -47,22 +48,17 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       if (instances.has(container.id)) return;
 
       try {
+        // Library lazy laden
         if (!echartsLib) {
           const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
           echartsLib = mod.default || mod;
         }
 
         const chart = echartsLib.init(container, null, { renderer: 'canvas' });
+        
+        // Optionen direkt übernehmen (keine Theme-Manipulation mehr hier)
         const options = JSON.parse(container.dataset.chartOptions || '{}');
         
-        // Theme Logic
-        const isDark = document.documentElement.classList.contains('dark');
-        if (isDark && !options.backgroundColor) {
-          options.backgroundColor = 'transparent';
-          if (!options.textStyle) options.textStyle = {};
-          options.textStyle.color = '#cbd5e1';
-        }
-
         chart.setOption(options);
         instances.set(container.id, chart);
 
@@ -77,22 +73,20 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       const containers = document.querySelectorAll('.echart-container');
       if (containers.length === 0) return;
 
-      // OPTIMIERTER RESIZE OBSERVER
+      // OPTIMIERTER RESIZE OBSERVER (gegen Scrollbars)
       resizeObserver = new ResizeObserver((entries) => {
-        // Wir nutzen kein requestAnimationFrame hier, um "Lag" zu vermeiden,
-        // der die Scrollbar verursachen könnte. Wir reagieren sofort.
         entries.forEach(entry => {
           const chart = instances.get(entry.target.id);
           if (chart && !chart.isDisposed()) {
-            // WICHTIG: width: 'auto' zwingt ECharts, den Container neu zu messen
             chart.resize({
               width: 'auto',
-              animation: { duration: 0 } // Animation beim Resizen aus (verhindert Glitches)
+              animation: { duration: 0 }
             });
           }
         });
       });
 
+      // VIEWPORT OBSERVER (Lazy Loading)
       const viewportObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -104,6 +98,7 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
       containers.forEach(c => viewportObserver.observe(c));
 
+      // Cleanup registrieren
       cleanupFns.push(() => {
         viewportObserver.disconnect();
         resizeObserver.disconnect();
@@ -121,16 +116,5 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
     document.addEventListener('astro:page-load', run);
     
-    // Theme Switch
-    const themeObserver = new MutationObserver((mutations) => {
-      if (instances.size > 0 && mutations[0].attributeName === 'class') {
-         const isDark = document.documentElement.classList.contains('dark');
-         instances.forEach(chart => {
-            chart.setOption({ textStyle: { color: isDark ? '#cbd5e1' : '#475569' } });
-         });
-      }
-    });
-    themeObserver.observe(document.documentElement, { attributes: true });
-
   })();
 </script>
