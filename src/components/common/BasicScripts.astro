@@ -3,29 +3,43 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+  // Verhindert mehrfache Ausführung
   if (window.basic_script_init) return;
   window.basic_script_init = true;
 
   (function() {
-    let cleanupFns = [];
+    let cleanupFns = []; // Stack für Cleanup
 
+    // --- UTILS ---
     const attachEvent = (selector, event, fn) => {
-      document.querySelectorAll(selector).forEach(el => el.addEventListener(event, fn));
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(el => el.addEventListener(event, fn));
     };
 
+    // --- THEME LOGIK ---
     const applyTheme = (theme) => {
       const resolvedTheme = (theme === 'system') 
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
         : theme;
+      
       document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
+      
       document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
         icon.classList.toggle('hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
       });
     };
 
+    const themeObserver = window.matchMedia('(prefers-color-scheme: dark)');
+    const themeHandler = () => {
+      if (localStorage.getItem('theme') === 'system') applyTheme('system');
+    };
+    themeObserver.addEventListener('change', themeHandler);
+
+    // --- SCROLL & HEADER LOGIK ---
     const initScroll = () => {
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
+
       let isTicking = false;
       let lastState = false;
 
@@ -42,17 +56,24 @@ import { UI } from 'astrowind:config';
           isTicking = true;
         }
       };
+
       window.addEventListener('scroll', onScroll, { passive: true });
+      
+      const isScrolled = window.scrollY > 10;
+      if(isScrolled) stickyHeader.classList.add('scroll');
+      lastState = isScrolled;
+
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
+    // --- SETUP (inkl. Smooth Scroll Fix) ---
     const setup = () => {
       const header = document.getElementById('header');
-      const menuButton = document.querySelector('[data-aw-toggle-menu]');
 
-      const toggleMenu = () => {
-        if (!menuButton) return;
-        menuButton.classList.toggle('expanded');
+      // 1. Mobile Menü
+      const toggleMenu = (e) => {
+        const btn = e.currentTarget;
+        btn.classList.toggle('expanded');
         document.body.classList.toggle('overflow-hidden');
         header?.classList.toggle('h-screen');
         header?.classList.toggle('expanded');
@@ -60,12 +81,11 @@ import { UI } from 'astrowind:config';
         document.querySelector('#header nav')?.classList.toggle('hidden');
         document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
       };
+      attachEvent('[data-aw-toggle-menu]', 'click', toggleMenu);
 
-      if (menuButton) {
-        menuButton.onclick = toggleMenu;
-      }
-
+      // 2. Theme Toggle
       attachEvent('[data-aw-toggle-color-scheme]', 'click', () => {
+        if (defaultTheme.endsWith(':only')) return;
         const themes = ['system', 'light', 'dark'];
         const current = localStorage.getItem('theme') || 'system';
         const next = themes[(themes.indexOf(current) + 1) % 3];
@@ -73,81 +93,95 @@ import { UI } from 'astrowind:config';
         applyTheme(next);
       });
 
-      // --- ROBUSTER SMOOTH SCROLL FIX ---
-      const onLinkClick = (e) => {
-        const target = e.target.closest('a');
-        
-        if (target && target.hash && target.origin === window.location.origin && target.pathname === window.location.pathname) {
-          const targetElement = document.querySelector(target.hash);
+      // 3. Social Share
+      attachEvent('[data-aw-social-share]', 'click', (e) => {
+        const el = e.currentTarget;
+        const network = el.getAttribute('data-aw-social-share');
+        const url = encodeURIComponent(el.getAttribute('data-aw-url') || window.location.href);
+        const text = encodeURIComponent(el.getAttribute('data-aw-text') || '');
+        const href = network === 'mail' ? `mailto:?subject=${text}&body=${url}` : '#';
+        // (Window Open Logik hier einfügen wenn benötigt)
+      });
+
+      // 4. NEU: Smooth Scroll für #links mit Header-Offset
+      const handleSmoothScroll = (e) => {
+        // Sucht das nächste <a> Element, falls auf ein Icon geklickt wurde
+        const link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+        if (href === '#') return; // Ignoriere leere Hash-Links
+
+        const targetEl = document.querySelector(href);
+        if (targetEl) {
+          e.preventDefault(); // Standard-Sprung verhindern
           
-          if (targetElement) {
-            // 1. Sofort verhindern, dass der Browser springt
-            e.preventDefault();
-            e.stopPropagation();
+          // Header-Höhe dynamisch berechnen oder festlegen (ca 60-80px)
+          const headerOffset = header ? header.offsetHeight : 0;
+          const elementPosition = targetEl.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
-            // 2. Menü schließen falls offen
-            if (header?.classList.contains('expanded')) {
-              toggleMenu();
-            }
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
 
-            // 3. Offset berechnen
-            const headerHeight = header ? header.getBoundingClientRect().height : 0;
-            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-            const finalPosition = targetPosition - headerHeight;
-
-            // 4. Manueller Scroll-Befehl
-            window.scrollTo({
-              top: finalPosition,
-              behavior: 'smooth'
-            });
-
-            // 5. URL Hash setzen ohne Sprung
-            history.pushState(null, null, target.hash);
+          // Mobile Menü schließen, falls geöffnet
+          if (header?.classList.contains('expanded')) {
+             document.querySelector('[data-aw-toggle-menu]')?.click();
           }
         }
       };
+      
+      // Listener auf document (delegiert), damit es auch bei dynamischen Inhalten geht
+      document.addEventListener('click', handleSmoothScroll);
+      cleanupFns.push(() => document.removeEventListener('click', handleSmoothScroll));
 
-      document.addEventListener('click', onLinkClick, { capture: true }); // Capture-Phase um anderen Skripten zuvorzukommen
-      cleanupFns.push(() => document.removeEventListener('click', onLinkClick, { capture: true }));
-
+      // 5. Scroll Logic starten
       initScroll();
     };
 
+    // --- OBSERVER ---
+    let observerInstance = null;
     const initObserver = () => {
       if (observerInstance) observerInstance.disconnect();
-      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
-      const elements = document.querySelectorAll(selectors.join(','));
-      if (elements.length === 0) return;
+      const els = document.querySelectorAll('[class*="intersect"]');
+      if (els.length === 0) return;
 
-      let animationCounter = 0;
-      observerInstance = new IntersectionObserver((entries) => {
+      const callback = (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const target = entry.target;
-            if (!target.hasAttribute('data-aw-animated')) {
-              target.setAttribute('data-aw-animated', 'true');
-              target.removeAttribute('no-intersect');
-              target.style.transitionDelay = `${animationCounter * 100}ms`;
-              animationCounter++;
-              if (target.classList.contains('intersect-once')) observerInstance.unobserve(target);
+            const t = entry.target;
+            if (!t.dataset.animated) {
+              t.dataset.animated = 'true';
+              t.removeAttribute('no-intersect');
+              if (t.classList.contains('intersect-once')) observerInstance.unobserve(t);
             }
+          } else if (!entry.target.classList.contains('intersect-once')) {
+            entry.target.removeAttribute('data-animated');
+            entry.target.setAttribute('no-intersect', '');
           }
         });
-      }, { threshold: [0, 0.25, 0.5] });
+      };
 
-      elements.forEach((el) => {
-        el.setAttribute('no-intersect', '');
-        observerInstance.observe(el);
-      });
+      observerInstance = new IntersectionObserver(callback, { threshold: 0.1 });
+      els.forEach(el => observerInstance.observe(el));
+      cleanupFns.push(() => observerInstance.disconnect());
     };
 
-    let observerInstance = null;
+    // --- LIFECYCLE ---
     const run = () => {
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
+
       applyTheme(localStorage.getItem('theme') || 'system');
       setup();
-      window.requestAnimationFrame(initObserver);
+      
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(initObserver);
+      } else {
+        setTimeout(initObserver, 200);
+      }
     };
 
     run();
