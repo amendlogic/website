@@ -9,6 +9,7 @@ import { UI } from 'astrowind:config';
   (function() {
     let cleanupFns = [];
 
+    // --- HELPER ---
     const toggleClass = (el, className, condition) => {
       if (condition) el.classList.add(className);
       else el.classList.remove(className);
@@ -27,8 +28,7 @@ import { UI } from 'astrowind:config';
       });
     };
 
-    // --- 1. HEADER LOGIK (ROBUST - SCROLL LISTENER) ---
-    // Das behebt das "Verschwinden beim Refresh" Problem zu 100%
+    // --- 1. HEADER LOGIK (ROBUST VERSION) ---
     const initHeader = () => {
       const header = document.getElementById('header');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
@@ -51,13 +51,10 @@ import { UI } from 'astrowind:config';
         }
       };
 
-      // Listener hinzufügen
       window.addEventListener('scroll', onScroll, { passive: true });
       
-      // WICHTIG: Sofortiger Check beim Laden!
-      // Wenn man refreshed und scrollY > 10 ist, wird die Klasse SOFORT gesetzt.
-      const isScrolled = window.scrollY > 10;
-      if (isScrolled) {
+      // Initial-Check gegen "Verschwinden beim Refresh"
+      if (window.scrollY > 10) {
         stickyHeader.classList.add('scroll');
         lastState = true;
       }
@@ -65,12 +62,13 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- 2. MENU LOGIK (INKL. DROPDOWN FIX) ---
+    // --- 2. MENU LOGIK (MEMORY OPTIMIZED) ---
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
+      const nav = header?.querySelector('nav');
       
-      if (!menuBtn || !header) return;
+      if (!menuBtn || !header || !nav) return;
 
       const toggleMenu = () => {
         menuBtn.classList.toggle('expanded');
@@ -82,8 +80,7 @@ import { UI } from 'astrowind:config';
         const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
         if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
 
-        const nav = header.querySelector('nav');
-        if (nav) nav.classList.toggle('hidden');
+        nav.classList.toggle('hidden');
 
         const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
         if (actions) actions.classList.toggle('hidden');
@@ -92,24 +89,33 @@ import { UI } from 'astrowind:config';
       menuBtn.onclick = toggleMenu;
       window.toggleMenuInstance = toggleMenu;
 
-      // --- DROPDOWN LOGIK FÜR MOBILE (Wichtig für Untermenüs) ---
-      const dropdowns = header.querySelectorAll('nav .dropdown > button, nav .dropdown > a');
-      dropdowns.forEach(trigger => {
-        trigger.onclick = (e) => {
-          if (window.getComputedStyle(menuBtn).display === 'none') return;
-          e.preventDefault(); 
-          const subMenu = trigger.nextElementSibling;
-          if (subMenu) {
+      // OPTIMIERUNG: Event Delegation für Dropdowns
+      // Statt viele Listener zu erzeugen, nutzen wir nur einen am Parent (nav)
+      const onNavClick = (e) => {
+        // Wir suchen, ob ein Dropdown-Trigger geklickt wurde
+        const trigger = e.target.closest('.dropdown > button, .dropdown > a');
+        
+        // Abbruch wenn kein Trigger oder wenn wir nicht im Mobile-Mode sind
+        if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
+
+        // Dropdown Logic
+        e.preventDefault();
+        const subMenu = trigger.nextElementSibling;
+        if (subMenu) {
             subMenu.classList.toggle('hidden');
             trigger.classList.toggle('expanded');
-          }
-        };
-      });
+        }
+      };
+
+      nav.addEventListener('click', onNavClick);
+      // Event Listener beim Cleanup entfernen nicht vergessen!
+      // Da 'nav' beim Seitenwechsel bestehen bleibt bis Swap, ist das sauber.
     };
 
-    // --- 3. GLOBAL EVENTS ---
+    // --- 3. GLOBAL EVENTS (LINKS & SMOOTH SCROLL) ---
     const initGlobalEvents = () => {
       const onClick = (e) => {
+        // Theme Toggle
         const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
         if (themeBtn) {
           const themes = ['system', 'light', 'dark'];
@@ -120,6 +126,7 @@ import { UI } from 'astrowind:config';
           return;
         }
 
+        // Smooth Scroll
         const link = e.target.closest('a');
         if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
           const targetEl = document.querySelector(link.hash);
@@ -142,7 +149,7 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
     };
 
-    // --- 4. ANIMATIONS ---
+    // --- 4. ANIMATIONS (LAZY) ---
     const initAnimations = () => {
       const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
       const elements = document.querySelectorAll(selectors.join(','));
@@ -167,15 +174,15 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => observer.disconnect());
     };
 
-    // --- MAIN ---
+    // --- MAIN LIFECYCLE ---
     const run = () => {
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
       applyTheme(localStorage.getItem('theme') || 'system');
       
-      initHeader(); // Nutzt jetzt window.scrollY -> Robust beim Refresh
-      initMenu();
+      initHeader(); // Robust & Sofort
+      initMenu();   // Memory Optimized
 
       setTimeout(initGlobalEvents, 0);
 
