@@ -3,185 +3,163 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  // Verhindert mehrfache Ausführung
   if (window.basic_script_init) return;
   window.basic_script_init = true;
 
   (function() {
-    let cleanupFns = []; // Stack für Cleanup
+    let cleanupFns = [];
 
-    // --- UTILS ---
-    const attachEvent = (selector, event, fn) => {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(el => el.addEventListener(event, fn));
+    const toggleClass = (el, className, condition) => {
+      if (condition) el.classList.add(className);
+      else el.classList.remove(className);
     };
 
-    // --- THEME LOGIK ---
     const applyTheme = (theme) => {
       const resolvedTheme = (theme === 'system') 
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
         : theme;
       
-      document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
-      
-      document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
-        icon.classList.toggle('hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
+      requestAnimationFrame(() => {
+        toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
+        document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
+          toggleClass(icon, 'hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
+        });
       });
     };
 
-    const themeObserver = window.matchMedia('(prefers-color-scheme: dark)');
-    const themeHandler = () => {
-      if (localStorage.getItem('theme') === 'system') applyTheme('system');
-    };
-    themeObserver.addEventListener('change', themeHandler);
-
-    // --- SCROLL & HEADER LOGIK ---
-    const initScroll = () => {
+    // --- 1. HEADER LOGIK (ROBUST & PERFORMANCE) ---
+    const initHeader = () => {
+      const header = document.getElementById('header');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
 
-      let isTicking = false;
-      let lastState = false;
+      // A) Sentinel für High-Performance Scrollen
+      const sentinel = document.createElement('div');
+      sentinel.id = 'header-sentinel';
+      Object.assign(sentinel.style, { position: 'absolute', top: '0', left: '0', height: '1px', width: '1px', visibility: 'hidden', pointerEvents: 'none' });
+      document.body.prepend(sentinel);
 
-      const onScroll = () => {
-        if (!isTicking) {
-          window.requestAnimationFrame(() => {
-            const isScrolled = window.scrollY > 10;
-            if (isScrolled !== lastState) {
-              stickyHeader.classList.toggle('scroll', isScrolled);
-              lastState = isScrolled;
-            }
-            isTicking = false;
-          });
-          isTicking = true;
-        }
-      };
+      const observer = new IntersectionObserver((entries) => {
+        const isScrolled = !entries[0].isIntersecting;
+        toggleClass(stickyHeader, 'scroll', isScrolled);
+      }, { rootMargin: '10px 0px 0px 0px', threshold: 0 });
 
-      window.addEventListener('scroll', onScroll, { passive: true });
-      
-      const isScrolled = window.scrollY > 10;
-      if(isScrolled) stickyHeader.classList.add('scroll');
-      lastState = isScrolled;
+      observer.observe(sentinel);
 
-      cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
+      // B) "Refresh-Fix": Initialer Status-Check (Synchron!)
+      // Prüft sofort beim Laden, ob wir schon unten sind.
+      // Das verhindert, dass der Background beim Refresh verschwindet.
+      if (window.scrollY > 10) {
+        stickyHeader.classList.add('scroll');
+      }
+
+      cleanupFns.push(() => { observer.disconnect(); sentinel.remove(); });
     };
 
-    // --- SETUP (inkl. Smooth Scroll Fix) ---
-    const setup = () => {
+    // --- 2. MENU LOGIK ---
+    const initMenu = () => {
       const header = document.getElementById('header');
+      const menuBtn = document.querySelector('[data-aw-toggle-menu]');
+      
+      if (!menuBtn || !header) return;
 
-      // 1. Mobile Menü
-      const toggleMenu = (e) => {
-        const btn = e.currentTarget;
-        btn.classList.toggle('expanded');
+      const toggleMenu = () => {
+        menuBtn.classList.toggle('expanded');
         document.body.classList.toggle('overflow-hidden');
-        header?.classList.toggle('h-screen');
-        header?.classList.toggle('expanded');
-        header?.classList.toggle('bg-page');
-        document.querySelector('#header nav')?.classList.toggle('hidden');
-        document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
+        header.classList.toggle('h-screen');
+        header.classList.toggle('expanded');
+        header.classList.toggle('bg-page');
+
+        const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
+        if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
+
+        const nav = header.querySelector('nav');
+        if (nav) nav.classList.toggle('hidden');
+
+        const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
+        if (actions) actions.classList.toggle('hidden');
       };
-      attachEvent('[data-aw-toggle-menu]', 'click', toggleMenu);
 
-      // 2. Theme Toggle
-      attachEvent('[data-aw-toggle-color-scheme]', 'click', () => {
-        if (defaultTheme.endsWith(':only')) return;
-        const themes = ['system', 'light', 'dark'];
-        const current = localStorage.getItem('theme') || 'system';
-        const next = themes[(themes.indexOf(current) + 1) % 3];
-        localStorage.setItem('theme', next);
-        applyTheme(next);
-      });
+      menuBtn.onclick = toggleMenu;
+      window.toggleMenuInstance = toggleMenu;
+    };
 
-      // 3. Social Share
-      attachEvent('[data-aw-social-share]', 'click', (e) => {
-        const el = e.currentTarget;
-        const network = el.getAttribute('data-aw-social-share');
-        const url = encodeURIComponent(el.getAttribute('data-aw-url') || window.location.href);
-        const text = encodeURIComponent(el.getAttribute('data-aw-text') || '');
-        const href = network === 'mail' ? `mailto:?subject=${text}&body=${url}` : '#';
-        // (Window Open Logik hier einfügen wenn benötigt)
-      });
+    // --- 3. GLOBAL EVENTS ---
+    const initGlobalEvents = () => {
+      const onClick = (e) => {
+        const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
+        if (themeBtn) {
+          const themes = ['system', 'light', 'dark'];
+          const current = localStorage.getItem('theme') || 'system';
+          const next = themes[(themes.indexOf(current) + 1) % 3];
+          localStorage.setItem('theme', next);
+          applyTheme(next);
+          return;
+        }
 
-      // 4. NEU: Smooth Scroll für #links mit Header-Offset
-      const handleSmoothScroll = (e) => {
-        // Sucht das nächste <a> Element, falls auf ein Icon geklickt wurde
-        const link = e.target.closest('a[href^="#"]');
-        if (!link) return;
-
-        const href = link.getAttribute('href');
-        if (href === '#') return; // Ignoriere leere Hash-Links
-
-        const targetEl = document.querySelector(href);
-        if (targetEl) {
-          e.preventDefault(); // Standard-Sprung verhindern
-          
-          // Header-Höhe dynamisch berechnen oder festlegen (ca 60-80px)
-          const headerOffset = header ? header.offsetHeight : 0;
-          const elementPosition = targetEl.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          });
-
-          // Mobile Menü schließen, falls geöffnet
-          if (header?.classList.contains('expanded')) {
-             document.querySelector('[data-aw-toggle-menu]')?.click();
+        const link = e.target.closest('a');
+        if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
+          const targetEl = document.querySelector(link.hash);
+          if (targetEl) {
+            e.preventDefault();
+            if (document.getElementById('header')?.classList.contains('expanded') && window.toggleMenuInstance) {
+              window.toggleMenuInstance();
+            }
+            link.blur();
+            const header = document.getElementById('header');
+            const headerHeight = header ? header.getBoundingClientRect().height : 0;
+            const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
+            history.pushState(null, null, link.hash);
           }
         }
       };
-      
-      // Listener auf document (delegiert), damit es auch bei dynamischen Inhalten geht
-      document.addEventListener('click', handleSmoothScroll);
-      cleanupFns.push(() => document.removeEventListener('click', handleSmoothScroll));
 
-      // 5. Scroll Logic starten
-      initScroll();
+      document.addEventListener('click', onClick, { capture: true, passive: false });
+      cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
     };
 
-    // --- OBSERVER ---
-    let observerInstance = null;
-    const initObserver = () => {
-      if (observerInstance) observerInstance.disconnect();
-      const els = document.querySelectorAll('[class*="intersect"]');
-      if (els.length === 0) return;
+    // --- 4. ANIMATIONS ---
+    const initAnimations = () => {
+      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
+      const elements = document.querySelectorAll(selectors.join(','));
+      if (elements.length === 0) return;
 
-      const callback = (entries) => {
+      const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const t = entry.target;
-            if (!t.dataset.animated) {
-              t.dataset.animated = 'true';
-              t.removeAttribute('no-intersect');
-              if (t.classList.contains('intersect-once')) observerInstance.unobserve(t);
-            }
-          } else if (!entry.target.classList.contains('intersect-once')) {
-            entry.target.removeAttribute('data-animated');
-            entry.target.setAttribute('no-intersect', '');
+            const el = entry.target;
+            el.setAttribute('data-aw-animated', 'true');
+            el.removeAttribute('no-intersect');
+            if (el.classList.contains('intersect-once')) observer.unobserve(el);
           }
         });
-      };
+      }, { threshold: 0.1 });
 
-      observerInstance = new IntersectionObserver(callback, { threshold: 0.1 });
-      els.forEach(el => observerInstance.observe(el));
-      cleanupFns.push(() => observerInstance.disconnect());
+      elements.forEach(el => {
+        el.setAttribute('no-intersect', '');
+        observer.observe(el);
+      });
+
+      cleanupFns.push(() => observer.disconnect());
     };
 
-    // --- LIFECYCLE ---
+    // --- MAIN ---
     const run = () => {
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
       applyTheme(localStorage.getItem('theme') || 'system');
-      setup();
       
-      if (window.requestIdleCallback) {
-        window.requestIdleCallback(initObserver);
-      } else {
-        setTimeout(initObserver, 200);
-      }
+      // Header muss SOFORT initialisiert werden, nicht verzögert, 
+      // damit der Background beim Refresh sofort da ist.
+      initHeader(); 
+      initMenu();
+
+      setTimeout(initGlobalEvents, 0);
+
+      if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
+      else setTimeout(initAnimations, 200);
     };
 
     run();
