@@ -210,23 +210,3 @@ import { UI } from 'astrowind:config';
     document.addEventListener('astro:after-swap', start);
   })();
 </script>
-
-<style is:global>
-  /* Hardware-Beschleunigung für Header & Animationen */
-  #header {
-    will-change: transform, background-color;
-  }
-  
-  [data-aw-animated] {
-    will-change: opacity, transform;
-  }
-
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 80px; /* Fallback für CSS-only scroll */
-  }
-
-  [no-intersect] {
-    opacity: 0;
-  }
-</style>
