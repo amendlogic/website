@@ -85,6 +85,7 @@ export const footerData = {
       links: [
         { text: 'Docs', href: '#' },
         { text: 'Discord', href: '#' },
+        { text: 'GitHub', href: '#' },
         { text: 'FAQs', href: '#' },
       ],
     },
@@ -110,6 +111,7 @@ export const footerData = {
     { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
     { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
     { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
+    { ariaLabel: 'Discord', icon: 'tabler:brand-discord', href: 'https://github.com/arthelokyo/astrowind' },
     { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
   ],
   footNote: `
