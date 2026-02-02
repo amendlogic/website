@@ -29,23 +29,35 @@ import { UI } from 'astrowind:config';
       });
     };
 
-    // --- 1. HEADER SCROLL (Sentinel) ---
-    const initHeader = () => {
-      const header = document.getElementById('header');
+    // --- SCROLL & HEADER LOGIK ---
+    const initScroll = () => {
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
 
-      const sentinel = document.createElement('div');
-      sentinel.id = 'header-sentinel';
-      Object.assign(sentinel.style, { position: 'absolute', top: '0', left: '0', height: '1px', width: '1px', visibility: 'hidden' });
-      document.body.prepend(sentinel);
+      let isTicking = false;
+      let lastState = false;
 
-      const observer = new IntersectionObserver((entries) => {
-        toggleClass(stickyHeader, 'scroll', !entries[0].isIntersecting);
-      }, { rootMargin: '10px 0px 0px 0px', threshold: 0 });
+      const onScroll = () => {
+        if (!isTicking) {
+          window.requestAnimationFrame(() => {
+            const isScrolled = window.scrollY > 10;
+            if (isScrolled !== lastState) {
+              stickyHeader.classList.toggle('scroll', isScrolled);
+              lastState = isScrolled;
+            }
+            isTicking = false;
+          });
+          isTicking = true;
+        }
+      };
 
-      observer.observe(sentinel);
-      cleanupFns.push(() => { observer.disconnect(); sentinel.remove(); });
+      window.addEventListener('scroll', onScroll, { passive: true });
+      
+      const isScrolled = window.scrollY > 10;
+      if(isScrolled) stickyHeader.classList.add('scroll');
+      lastState = isScrolled;
+
+      cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
     // --- 2. MENU LOGIK (Original AstroWind Ansatz) ---
