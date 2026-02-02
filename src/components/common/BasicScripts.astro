@@ -3,14 +3,12 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  // Singleton Pattern
   if (window.basic_script_init) return;
   window.basic_script_init = true;
 
   (function() {
     let cleanupFns = [];
 
-    // --- HELPER ---
     const toggleClass = (el, className, condition) => {
       if (condition) el.classList.add(className);
       else el.classList.remove(className);
@@ -29,38 +27,36 @@ import { UI } from 'astrowind:config';
       });
     };
 
-    // --- SCROLL & HEADER LOGIK ---
-    const initScroll = () => {
+    // --- 1. HEADER LOGIK (ROBUST & PERFORMANCE) ---
+    const initHeader = () => {
+      const header = document.getElementById('header');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
 
-      let isTicking = false;
-      let lastState = false;
+      // A) Sentinel für High-Performance Scrollen
+      const sentinel = document.createElement('div');
+      sentinel.id = 'header-sentinel';
+      Object.assign(sentinel.style, { position: 'absolute', top: '0', left: '0', height: '1px', width: '1px', visibility: 'hidden', pointerEvents: 'none' });
+      document.body.prepend(sentinel);
 
-      const onScroll = () => {
-        if (!isTicking) {
-          window.requestAnimationFrame(() => {
-            const isScrolled = window.scrollY > 10;
-            if (isScrolled !== lastState) {
-              stickyHeader.classList.toggle('scroll', isScrolled);
-              lastState = isScrolled;
-            }
-            isTicking = false;
-          });
-          isTicking = true;
-        }
-      };
+      const observer = new IntersectionObserver((entries) => {
+        const isScrolled = !entries[0].isIntersecting;
+        toggleClass(stickyHeader, 'scroll', isScrolled);
+      }, { rootMargin: '10px 0px 0px 0px', threshold: 0 });
 
-      window.addEventListener('scroll', onScroll, { passive: true });
-      
-      const isScrolled = window.scrollY > 10;
-      if(isScrolled) stickyHeader.classList.add('scroll');
-      lastState = isScrolled;
+      observer.observe(sentinel);
 
-      cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
+      // B) "Refresh-Fix": Initialer Status-Check (Synchron!)
+      // Prüft sofort beim Laden, ob wir schon unten sind.
+      // Das verhindert, dass der Background beim Refresh verschwindet.
+      if (window.scrollY > 10) {
+        stickyHeader.classList.add('scroll');
+      }
+
+      cleanupFns.push(() => { observer.disconnect(); sentinel.remove(); });
     };
 
-    // --- 2. MENU LOGIK (Original AstroWind Ansatz) ---
+    // --- 2. MENU LOGIK ---
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
@@ -68,26 +64,18 @@ import { UI } from 'astrowind:config';
       if (!menuBtn || !header) return;
 
       const toggleMenu = () => {
-        // Grundlegende Layout-Klassen
         menuBtn.classList.toggle('expanded');
         document.body.classList.toggle('overflow-hidden');
         header.classList.toggle('h-screen');
         header.classList.toggle('expanded');
         header.classList.toggle('bg-page');
 
-        // A) ICON LOGIK: Wir suchen die Icons im Button und toggeln 'hidden'
-        // Das erste Icon ist meist Hamburger, das zweite ist Close
         const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
-        if (icons.length > 1) {
-            icons.forEach(icon => icon.classList.toggle('hidden'));
-        }
+        if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
 
-        // B) CONTENT LOGIK: Navigation sichtbar machen
         const nav = header.querySelector('nav');
         if (nav) nav.classList.toggle('hidden');
 
-        // C) ACTION BAR LOGIK: RSS, Theme-Toggle, Button sichtbar machen
-        // AstroWind packt das meist in das letzte DIV im Header-Grid
         const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
         if (actions) actions.classList.toggle('hidden');
       };
@@ -99,7 +87,6 @@ import { UI } from 'astrowind:config';
     // --- 3. GLOBAL EVENTS ---
     const initGlobalEvents = () => {
       const onClick = (e) => {
-        // Theme Toggle
         const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
         if (themeBtn) {
           const themes = ['system', 'light', 'dark'];
@@ -110,24 +97,18 @@ import { UI } from 'astrowind:config';
           return;
         }
 
-        // Smooth Scroll & Link Handling
         const link = e.target.closest('a');
         if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
           const targetEl = document.querySelector(link.hash);
           if (targetEl) {
             e.preventDefault();
-            
-            // Wenn Menü offen -> Schließen (ruft unsere Logik von oben auf)
             if (document.getElementById('header')?.classList.contains('expanded') && window.toggleMenuInstance) {
               window.toggleMenuInstance();
             }
             link.blur();
-
-            // Präzise Scroll-Berechnung
             const header = document.getElementById('header');
             const headerHeight = header ? header.getBoundingClientRect().height : 0;
             const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-            
             window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
             history.pushState(null, null, link.hash);
           }
@@ -170,10 +151,10 @@ import { UI } from 'astrowind:config';
 
       applyTheme(localStorage.getItem('theme') || 'system');
       
-      requestAnimationFrame(() => {
-        initHeader();
-        initMenu();
-      });
+      // Header muss SOFORT initialisiert werden, nicht verzögert, 
+      // damit der Background beim Refresh sofort da ist.
+      initHeader(); 
+      initMenu();
 
       setTimeout(initGlobalEvents, 0);
 
