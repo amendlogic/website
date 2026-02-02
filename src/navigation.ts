@@ -71,9 +71,9 @@ export const footerData = {
     {
       title: 'Resources',
       links: [
-        { text: 'Docs', href: '#' },
-        { text: 'Discord Community', href: '#' },
-        { text: 'GitHub Repo', href: '#' },
+        { text: 'Documentation', href: '#' },
+        { text: 'Community (Discord)', href: '#' },
+        { text: 'GitHub', href: '#' },
         { text: 'FAQs', href: '#' },
       ],
     },
@@ -83,16 +83,17 @@ export const footerData = {
         { text: 'About', href: '#' },
         { text: 'Team', href: '#' },
         { text: 'Blog', href: '#' },
+        { text: 'Contact', href: '#' },
       ],
     },
     {
       title: 'Legal',
       links: [
-        { text: 'Legal Notice', href: '#' },
-        { text: 'Privacy Policy', href: '#' },
+        { text: 'Imprint', href: '#' },
         { text: 'Terms of Service', href: '#' },
+        { text: 'Privacy Policy', href: '#' },
         { text: 'Cookie Policy', href: '#' },
-        { text: 'Cookie-Settings', href: '#', attrs: { 'data-cc': 'show-preferencesModal' } },
+        { text: 'Risk Disclosure', href: '#' },
       ],
     },
   ],
@@ -110,6 +111,6 @@ export const footerData = {
     { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
   ],
   footNote: `
-    © ${new Date().getFullYear()} AmendLogic · Site by <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">Kevin Amend</a> · All rights reserved.
+    © ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">AmendLogic</a> · All rights reserved · <a href="#" data-cc="show-preferencesModal" class="text-blue-600 underline dark:text-muted">Cookie Settings</a>
   `,
 };
