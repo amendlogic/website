@@ -35,78 +35,31 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
 <script is:inline>
   (function() {
+    // Singleton Check
     if (window.echarts_optimized_init) return;
     window.echarts_optimized_init = true;
-
-    // --- 1. KONFIGURATION MIT CSS VARIABLEN ---
-    // Hier definierst du nur die Variablennamen aus deiner CSS-Datei
-    const GLOBAL_CONFIG = {
-      fontFamily: "'Inter', sans-serif",
-      textColorVar: '--aw-color-text-muted',  // Die Haupt-Textfarbe
-      gridColorVar: '--aw-color-text-muted',  // Ggf. eine schwächere Farbe für Linien (z.B. border)
-      // Tipp: Für Grid Lines könntest du auch opacity nutzen oder eine eigene Variable definieren
-    };
 
     let echartsLib = null;
     let resizeObserver = null;
     let cleanupFns = [];
     const instances = new Map();
 
-    // --- HELPER: CSS Variable auslesen ---
-    // Wandelt '--aw-color-text-muted' in 'rgb(r,g,b)' um
-    const getCSS = (varName) => {
-      return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-    };
-
     async function renderChart(container) {
       if (instances.has(container.id)) return;
 
       try {
+        // Library lazy laden
         if (!echartsLib) {
           const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
           echartsLib = mod.default || mod;
         }
 
         const chart = echartsLib.init(container, null, { renderer: 'canvas' });
-        const datasetOptions = JSON.parse(container.dataset.chartOptions || '{}');
         
-        // Farben jetzt dynamisch abrufen
-        const textColor = getCSS(GLOBAL_CONFIG.textColorVar);
-        const gridColor = getCSS(GLOBAL_CONFIG.gridColorVar); // Oder textColor mit Opacity nutzen
-
-        // --- BASIS OPTIONS ---
-        const baseOptions = {
-          textStyle: {
-            fontFamily: GLOBAL_CONFIG.fontFamily,
-            fontSize: 13,
-            color: textColor,
-          },
-          title: {
-            textStyle: { color: textColor, fontWeight: '600' }
-          },
-          legend: {
-            textStyle: { color: textColor }
-          },
-          // Grid-Lines mit reduzierter Deckkraft (damit sie nicht so hart sind wie Text)
-          xAxis: {
-            axisLine: { lineStyle: { color: gridColor, opacity: 0.2 } },
-            axisLabel: { color: textColor, opacity: 0.8 },
-            splitLine: { lineStyle: { color: gridColor, opacity: 0.1 } }
-          },
-          yAxis: {
-            axisLine: { lineStyle: { color: gridColor, opacity: 0.2 } },
-            axisLabel: { color: textColor, opacity: 0.8 },
-            splitLine: { lineStyle: { color: gridColor, opacity: 0.1 } }
-          },
-          tooltip: {
-            backgroundColor: getComputedStyle(document.body).backgroundColor, // Passt sich Background an
-            borderColor: gridColor,
-            textStyle: { color: textColor, fontFamily: GLOBAL_CONFIG.fontFamily }
-          }
-        };
-
-        chart.setOption(baseOptions);
-        chart.setOption(datasetOptions);
+        // Optionen direkt übernehmen (keine Theme-Manipulation mehr hier)
+        const options = JSON.parse(container.dataset.chartOptions || '{}');
+        
+        chart.setOption(options);
         instances.set(container.id, chart);
 
         if (resizeObserver) resizeObserver.observe(container);
@@ -120,15 +73,20 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       const containers = document.querySelectorAll('.echart-container');
       if (containers.length === 0) return;
 
+      // OPTIMIERTER RESIZE OBSERVER (gegen Scrollbars)
       resizeObserver = new ResizeObserver((entries) => {
         entries.forEach(entry => {
           const chart = instances.get(entry.target.id);
           if (chart && !chart.isDisposed()) {
-            chart.resize({ width: 'auto', animation: { duration: 0 } });
+            chart.resize({
+              width: 'auto',
+              animation: { duration: 0 }
+            });
           }
         });
       });
 
+      // VIEWPORT OBSERVER (Lazy Loading)
       const viewportObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -140,6 +98,7 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
       containers.forEach(c => viewportObserver.observe(c));
 
+      // Cleanup registrieren
       cleanupFns.push(() => {
         viewportObserver.disconnect();
         resizeObserver.disconnect();
@@ -156,5 +115,6 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
     };
 
     document.addEventListener('astro:page-load', run);
+    
   })();
 </script>
