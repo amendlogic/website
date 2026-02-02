@@ -27,36 +27,45 @@ import { UI } from 'astrowind:config';
       });
     };
 
-    // --- 1. HEADER LOGIK (ROBUST & PERFORMANCE) ---
+    // --- 1. HEADER LOGIK (ROBUST - SCROLL LISTENER) ---
+    // Das behebt das "Verschwinden beim Refresh" Problem zu 100%
     const initHeader = () => {
       const header = document.getElementById('header');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
 
-      // A) Sentinel für High-Performance Scrollen
-      const sentinel = document.createElement('div');
-      sentinel.id = 'header-sentinel';
-      Object.assign(sentinel.style, { position: 'absolute', top: '0', left: '0', height: '1px', width: '1px', visibility: 'hidden', pointerEvents: 'none' });
-      document.body.prepend(sentinel);
+      let isTicking = false;
+      let lastState = false;
 
-      const observer = new IntersectionObserver((entries) => {
-        const isScrolled = !entries[0].isIntersecting;
-        toggleClass(stickyHeader, 'scroll', isScrolled);
-      }, { rootMargin: '10px 0px 0px 0px', threshold: 0 });
+      const onScroll = () => {
+        if (!isTicking) {
+          window.requestAnimationFrame(() => {
+            const isScrolled = window.scrollY > 10;
+            if (isScrolled !== lastState) {
+              stickyHeader.classList.toggle('scroll', isScrolled);
+              lastState = isScrolled;
+            }
+            isTicking = false;
+          });
+          isTicking = true;
+        }
+      };
 
-      observer.observe(sentinel);
-
-      // B) "Refresh-Fix": Initialer Status-Check (Synchron!)
-      // Prüft sofort beim Laden, ob wir schon unten sind.
-      // Das verhindert, dass der Background beim Refresh verschwindet.
-      if (window.scrollY > 10) {
+      // Listener hinzufügen
+      window.addEventListener('scroll', onScroll, { passive: true });
+      
+      // WICHTIG: Sofortiger Check beim Laden!
+      // Wenn man refreshed und scrollY > 10 ist, wird die Klasse SOFORT gesetzt.
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled) {
         stickyHeader.classList.add('scroll');
+        lastState = true;
       }
 
-      cleanupFns.push(() => { observer.disconnect(); sentinel.remove(); });
+      cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- 2. MENU LOGIK ---
+    // --- 2. MENU LOGIK (INKL. DROPDOWN FIX) ---
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
@@ -82,6 +91,20 @@ import { UI } from 'astrowind:config';
 
       menuBtn.onclick = toggleMenu;
       window.toggleMenuInstance = toggleMenu;
+
+      // --- DROPDOWN LOGIK FÜR MOBILE (Wichtig für Untermenüs) ---
+      const dropdowns = header.querySelectorAll('nav .dropdown > button, nav .dropdown > a');
+      dropdowns.forEach(trigger => {
+        trigger.onclick = (e) => {
+          if (window.getComputedStyle(menuBtn).display === 'none') return;
+          e.preventDefault(); 
+          const subMenu = trigger.nextElementSibling;
+          if (subMenu) {
+            subMenu.classList.toggle('hidden');
+            trigger.classList.toggle('expanded');
+          }
+        };
+      });
     };
 
     // --- 3. GLOBAL EVENTS ---
@@ -151,9 +174,7 @@ import { UI } from 'astrowind:config';
 
       applyTheme(localStorage.getItem('theme') || 'system');
       
-      // Header muss SOFORT initialisiert werden, nicht verzögert, 
-      // damit der Background beim Refresh sofort da ist.
-      initHeader(); 
+      initHeader(); // Nutzt jetzt window.scrollY -> Robust beim Refresh
       initMenu();
 
       setTimeout(initGlobalEvents, 0);
