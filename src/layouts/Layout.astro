@@ -45,6 +45,8 @@ const { language, textDirection } = I18N;
     <slot />
 
     <BasicScripts />
-    <script type="module" src="~/utils/cookieconsent-config.js"></script>
+    <script>
+      import "~/utils/cookieconsent-config.js";
+    </script>
   </body>
 </html>
