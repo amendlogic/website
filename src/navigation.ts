@@ -64,8 +64,8 @@ export const footerData = {
         { text: 'Features', href: '#' },
         { text: 'How it Works', href: '#' },
         { text: 'Performance', href: '#' },
-        { text: 'Testimonials', href: '#' },
         { text: 'Pricing', href: '#' },
+        { text: 'Changelog', href: '#' },
       ],
     },
     {
@@ -74,7 +74,7 @@ export const footerData = {
         { text: 'Documentation', href: '#' },
         { text: 'Community (Discord)', href: '#' },
         { text: 'GitHub', href: '#' },
-        { text: 'FAQs', href: '#' },
+        { text: 'Help Center', href: '#' },
       ],
     },
     {
