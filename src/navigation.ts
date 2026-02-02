@@ -96,7 +96,7 @@ export const footerData = {
         { text: 'Legal Notice', href: '#' },
         { text: 'Privacy Policy', href: '#' },
         { text: 'Cookie Policy', href: '#' },
-        { text: 'Cookie-Settings', href: '#', attrs: { 'data-cc': 'show-settings' } },
+        { text: 'Cookie-Settings', href: '#', attrs: { 'data-cc': 'show-preferencesModal' } },
       ],
     },
   ],
