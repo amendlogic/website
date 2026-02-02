@@ -1,57 +1,27 @@
----
-import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
-import Headline from '~/components/ui/Headline.astro';
-
-const {
-  title = await Astro.slots.render('title'),
-  subtitle = await Astro.slots.render('subtitle'),
-  tagline,
-  content = await Astro.slots.render('content'),
-  options,
-  height = '400px',
-  id,
-  isDark = false,
-  classes = {},
-  bg = await Astro.slots.render('bg'),
-} = Astro.props;
-
-const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
----
-
-<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
-  <Headline title={title} subtitle={subtitle} tagline={tagline} />
-
-  {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
-
-  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
-    <div 
-      id={chartId} 
-      class="echart-container overflow-hidden w-full" 
-      data-chart-options={JSON.stringify(options)} 
-      style={`height:${height}; min-height:${height};`}
-    ></div>
-  </div>
-</WidgetWrapper>
-
 <script is:inline>
   (function() {
-    // Singleton Check
     if (window.echarts_optimized_init) return;
     window.echarts_optimized_init = true;
 
-    // --- 1. GLOBALE KONFIGURATION ---
-    // Hier kannst du deine Farben und Fonts zentral steuern
-    const GLOBAL_STYLES = {
-      fontFamily: "'Inter', sans-serif", // Deine Schriftart
-      fontSize: 13,                      // Basis Schriftgröße
-      fontColor: 'var(--aw-color-text-muted)',              // Textfarbe (z.B. Slate-500)
-      gridColor: 'var(--aw-color-text-muted)',              // Grid-Linien Farbe (z.B. Slate-200)
+    // --- 1. KONFIGURATION MIT CSS VARIABLEN ---
+    // Hier definierst du nur die Variablennamen aus deiner CSS-Datei
+    const GLOBAL_CONFIG = {
+      fontFamily: "'Inter', sans-serif",
+      textColorVar: '--aw-color-text-muted',  // Die Haupt-Textfarbe
+      gridColorVar: '--aw-color-text-muted',  // Ggf. eine schwächere Farbe für Linien (z.B. border)
+      // Tipp: Für Grid Lines könntest du auch opacity nutzen oder eine eigene Variable definieren
     };
 
     let echartsLib = null;
     let resizeObserver = null;
     let cleanupFns = [];
     const instances = new Map();
+
+    // --- HELPER: CSS Variable auslesen ---
+    // Wandelt '--aw-color-text-muted' in 'rgb(r,g,b)' um
+    const getCSS = (varName) => {
+      return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    };
 
     async function renderChart(container) {
       if (instances.has(container.id)) return;
@@ -63,47 +33,45 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
         }
 
         const chart = echartsLib.init(container, null, { renderer: 'canvas' });
-        
-        // Spezifische Daten aus dem HTML holen
         const datasetOptions = JSON.parse(container.dataset.chartOptions || '{}');
         
-        // --- BASIS OPTIONS ZUSAMMENBAUEN ---
+        // Farben jetzt dynamisch abrufen
+        const textColor = getCSS(GLOBAL_CONFIG.textColorVar);
+        const gridColor = getCSS(GLOBAL_CONFIG.gridColorVar); // Oder textColor mit Opacity nutzen
+
+        // --- BASIS OPTIONS ---
         const baseOptions = {
           textStyle: {
-            fontFamily: GLOBAL_STYLES.fontFamily,
-            fontSize: GLOBAL_STYLES.fontSize,
-            color: GLOBAL_STYLES.fontColor,
+            fontFamily: GLOBAL_CONFIG.fontFamily,
+            fontSize: 13,
+            color: textColor,
           },
-          // Standard-Styling für Titel und Legende
           title: {
-            textStyle: { color: GLOBAL_STYLES.fontColor, fontWeight: '600' }
+            textStyle: { color: textColor, fontWeight: '600' }
           },
           legend: {
-            textStyle: { color: GLOBAL_STYLES.fontColor }
+            textStyle: { color: textColor }
           },
-          // Grid-Styling (Standard für X und Y Achsen)
+          // Grid-Lines mit reduzierter Deckkraft (damit sie nicht so hart sind wie Text)
           xAxis: {
-            axisLine: { lineStyle: { color: GLOBAL_STYLES.gridColor } },
-            axisLabel: { color: GLOBAL_STYLES.fontColor },
-            splitLine: { lineStyle: { color: GLOBAL_STYLES.gridColor } }
+            axisLine: { lineStyle: { color: gridColor, opacity: 0.2 } },
+            axisLabel: { color: textColor, opacity: 0.8 },
+            splitLine: { lineStyle: { color: gridColor, opacity: 0.1 } }
           },
           yAxis: {
-            axisLine: { lineStyle: { color: GLOBAL_STYLES.gridColor } },
-            axisLabel: { color: GLOBAL_STYLES.fontColor },
-            splitLine: { lineStyle: { color: GLOBAL_STYLES.gridColor } }
+            axisLine: { lineStyle: { color: gridColor, opacity: 0.2 } },
+            axisLabel: { color: textColor, opacity: 0.8 },
+            splitLine: { lineStyle: { color: gridColor, opacity: 0.1 } }
           },
-          // Tooltip Styling (optional, damit es zum Font passt)
           tooltip: {
-            textStyle: { fontFamily: GLOBAL_STYLES.fontFamily }
+            backgroundColor: getComputedStyle(document.body).backgroundColor, // Passt sich Background an
+            borderColor: gridColor,
+            textStyle: { color: textColor, fontFamily: GLOBAL_CONFIG.fontFamily }
           }
         };
 
-        // 1. Globale Styles anwenden
         chart.setOption(baseOptions);
-        
-        // 2. Spezifische Chart-Daten anwenden (merged automatisch)
         chart.setOption(datasetOptions);
-
         instances.set(container.id, chart);
 
         if (resizeObserver) resizeObserver.observe(container);
@@ -121,10 +89,7 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
         entries.forEach(entry => {
           const chart = instances.get(entry.target.id);
           if (chart && !chart.isDisposed()) {
-            chart.resize({
-              width: 'auto',
-              animation: { duration: 0 }
-            });
+            chart.resize({ width: 'auto', animation: { duration: 0 } });
           }
         });
       });
