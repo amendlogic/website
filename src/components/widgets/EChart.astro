@@ -36,12 +36,10 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 </WidgetWrapper>
 
 <script is:inline>
-  // Singleton Pattern
   if (window.echarts_manager_init) return;
   window.echarts_manager_init = true;
 
   (function() {
-    let echartsModule = null;
     let resizeObserver = null;
     let cleanupFns = [];
     const instances = new Map();
@@ -54,26 +52,37 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       };
     };
 
-    // --- 1. CORE RENDER FUNCTION (MIT ERROR HANDLING & FIX) ---
+    // --- 1. LOADER: Script Injection (Die robuste Methode) ---
+    const loadEChartsLibrary = () => {
+      return new Promise((resolve, reject) => {
+        if (window.echarts) {
+          resolve(window.echarts); // Schon da
+          return;
+        }
+
+        const script = document.createElement('script');
+        // Wir nutzen die volle 'dist/echarts.min.js' (UMD Bundle)
+        script.src = 'https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js';
+        script.defer = true;
+        
+        script.onload = () => resolve(window.echarts);
+        script.onerror = () => reject(new Error('Failed to load ECharts CDN'));
+        
+        document.head.appendChild(script);
+      });
+    };
+
+    // --- 2. RENDER LOGIC ---
     const renderChart = async (container) => {
       if (instances.has(container.id)) return;
 
       try {
-        // Laden der Library
-        if (!echartsModule) {
-          const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.esm.min.js");
-          // WICHTIGER FIX: Prüfen ob default export oder named export vorliegt
-          echartsModule = mod.default || mod;
-        }
+        await loadEChartsLibrary(); // Wartet, bis window.echarts verfügbar ist
 
-        // Sicherheitscheck: Wurde ECharts geladen?
-        if (!echartsModule || !echartsModule.init) {
-          console.error("ECharts konnte nicht initialisiert werden. Modul-Struktur:", echartsModule);
-          container.innerHTML = '<div class="text-red-500 text-sm p-4">Error loading chart library</div>';
-          return;
-        }
+        // Prüfen, ob der Container noch existiert (User könnte weggescrollt haben)
+        if (!document.body.contains(container)) return;
 
-        const chart = echartsModule.init(container, null, { renderer: 'canvas' });
+        const chart = window.echarts.init(container, null, { renderer: 'canvas' });
         const rawOptions = JSON.parse(container.dataset.chartOptions || '{}');
         const colors = getThemeColors();
 
@@ -86,19 +95,19 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
         chart.setOption(baseOptions);
         instances.set(container.id, chart);
 
-        // Loading entfernen
+        // Loading Text entfernen
         const loader = container.querySelector('.loading-text');
         if (loader) loader.remove();
 
         if (resizeObserver) resizeObserver.observe(container);
 
       } catch (error) {
-        console.error("Fehler beim Laden des Charts:", error);
-        container.innerHTML = `<div class="text-red-500 text-sm p-4">Connection Error: ${error.message}</div>`;
+        console.error("ECharts Error:", error);
+        container.innerHTML = `<div class="text-red-500 text-sm p-4 text-center">Fehler: ${error.message}</div>`;
       }
     };
 
-    // --- 2. RESIZE OBSERVER ---
+    // --- 3. RESIZE OBSERVER ---
     resizeObserver = new ResizeObserver((entries) => {
       window.requestAnimationFrame(() => {
         entries.forEach(entry => {
@@ -110,7 +119,7 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       });
     });
 
-    // --- 3. THEME SYNC ---
+    // --- 4. THEME SYNC ---
     const themeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'class' && instances.size > 0) {
@@ -122,7 +131,7 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       });
     });
 
-    // --- 4. LAZY LOADING ---
+    // --- 5. LAZY LOADING ---
     const initLazyLoader = () => {
       const containers = document.querySelectorAll('.echart-lazy-container');
       if (containers.length === 0) return;
@@ -155,7 +164,6 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       
       if (resizeObserver) cleanupFns.push(() => resizeObserver.disconnect());
 
-      // Start Logic
       if (window.requestIdleCallback) {
         window.requestIdleCallback(initLazyLoader);
       } else {
