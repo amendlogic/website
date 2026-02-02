@@ -1,1 +1,78 @@
+/**
+ * CookieConsent v3 Design für AstroWind
+ * Basiert auf Tailwind Colors: Slate & Indigo
+ */
+
+:root {
+  /* --- Grundeinstellungen & Light Mode --- */
+  
+  /* Schriftart: Erbt von AstroWind (Inter/System) */
+  --cc-font-family: inherit;
+  
+  /* Hintergrund & Text */
+  --cc-bg: #ffffff;
+  --cc-text: #0f172a; /* Slate 900 */
+  --cc-separator: #e2e8f0; /* Slate 200 */
+  
+  /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
+  --cc-btn-primary-bg: #4f46e5; /* Indigo 600 */
+  --cc-btn-primary-text: #ffffff;
+  --cc-btn-primary-hover-bg: #4338ca; /* Indigo 700 */
+  
+  /* Sekundär-Button (Einstellungen/Ablehnen) */
+  --cc-btn-secondary-bg: #f1f5f9; /* Slate 100 */
+  --cc-btn-secondary-text: #334155; /* Slate 700 */
+  --cc-btn-secondary-hover-bg: #e2e8f0; /* Slate 200 */
+  
+  /* Toggles (Schalter) */
+  --cc-toggle-bg-off: #cbd5e1; /* Slate 300 */
+  --cc-toggle-bg-on: #4f46e5; /* Indigo 600 */
+  --cc-toggle-bg-readonly: #94a3b8; /* Slate 400 */
+  --cc-toggle-knob-bg: #ffffff;
+  --cc-toggle-knob-icon-color: #ecf0f1;
+
+  /* Links & Footer */
+  --cc-cookie-category-block-bg: #f8fafc; /* Slate 50 */
+  --cc-cookie-category-block-bg-hover: #f1f5f9; /* Slate 100 */
+  
+  /* Form - Rundungen anpassen (AstroWind nutzt oft rounded-lg) */
+  --cc-modal-border-radius: 0.75rem; /* 12px */
+  --cc-btn-border-radius: 0.5rem;    /* 8px */
+}
+
+/* --- Dark Mode --- */
+/* AstroWind nutzt die Klasse .dark auf dem html tag */
+.dark {
+  /* Hintergrund: AstroWind Dark BG (oft Slate 900 oder dunkles Blau) */
+  --cc-bg: #030620; /* Sehr dunkles Blau/Slate, typisch für AstroWind */
+  --cc-text: #f8fafc; /* Slate 50 */
+  --cc-separator: #1e293b; /* Slate 800 */
+
+  /* Buttons im Dark Mode */
+  --cc-btn-primary-bg: #6366f1; /* Indigo 500 (etwas heller für Dark Mode) */
+  --cc-btn-primary-hover-bg: #4f46e5; /* Indigo 600 */
+  
+  --cc-btn-secondary-bg: #1e293b; /* Slate 800 */
+  --cc-btn-secondary-text: #e2e8f0; /* Slate 200 */
+  --cc-btn-secondary-hover-bg: #334155; /* Slate 700 */
+
+  /* Toggles Dark Mode */
+  --cc-toggle-bg-off: #475569; /* Slate 600 */
+  --cc-toggle-bg-on: #6366f1; /* Indigo 500 */
+  
+  /* Blöcke */
+  --cc-cookie-category-block-bg: #0f172a; /* Slate 900 */
+  --cc-cookie-category-block-bg-hover: #1e293b; /* Slate 800 */
+}
+
+/* --- Optional: Fein-Tuning für AstroWind Typografie --- */
+#cc-main .cm__title {
+  font-weight: 700;
+  letter-spacing: -0.025em; /* Tight tracking wie in AstroWind Überschriften */
+}
+
+#cc-main .cm__btn {
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
 
