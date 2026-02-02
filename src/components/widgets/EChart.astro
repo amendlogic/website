@@ -39,6 +39,15 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
     if (window.echarts_optimized_init) return;
     window.echarts_optimized_init = true;
 
+    // --- 1. GLOBALE KONFIGURATION ---
+    // Hier kannst du deine Farben und Fonts zentral steuern
+    const GLOBAL_STYLES = {
+      fontFamily: "'Inter', sans-serif", // Deine Schriftart
+      fontSize: 13,                      // Basis Schriftgröße
+      fontColor: '#64748b',              // Textfarbe (z.B. Slate-500)
+      gridColor: '#e2e8f0',              // Grid-Linien Farbe (z.B. Slate-200)
+    };
+
     let echartsLib = null;
     let resizeObserver = null;
     let cleanupFns = [];
@@ -48,7 +57,6 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       if (instances.has(container.id)) return;
 
       try {
-        // Library lazy laden
         if (!echartsLib) {
           const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
           echartsLib = mod.default || mod;
@@ -56,10 +64,46 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
         const chart = echartsLib.init(container, null, { renderer: 'canvas' });
         
-        // Optionen direkt übernehmen (keine Theme-Manipulation mehr hier)
-        const options = JSON.parse(container.dataset.chartOptions || '{}');
+        // Spezifische Daten aus dem HTML holen
+        const datasetOptions = JSON.parse(container.dataset.chartOptions || '{}');
         
-        chart.setOption(options);
+        // --- BASIS OPTIONS ZUSAMMENBAUEN ---
+        const baseOptions = {
+          textStyle: {
+            fontFamily: GLOBAL_STYLES.fontFamily,
+            fontSize: GLOBAL_STYLES.fontSize,
+            color: GLOBAL_STYLES.fontColor,
+          },
+          // Standard-Styling für Titel und Legende
+          title: {
+            textStyle: { color: GLOBAL_STYLES.fontColor, fontWeight: '600' }
+          },
+          legend: {
+            textStyle: { color: GLOBAL_STYLES.fontColor }
+          },
+          // Grid-Styling (Standard für X und Y Achsen)
+          xAxis: {
+            axisLine: { lineStyle: { color: GLOBAL_STYLES.gridColor } },
+            axisLabel: { color: GLOBAL_STYLES.fontColor },
+            splitLine: { lineStyle: { color: GLOBAL_STYLES.gridColor } }
+          },
+          yAxis: {
+            axisLine: { lineStyle: { color: GLOBAL_STYLES.gridColor } },
+            axisLabel: { color: GLOBAL_STYLES.fontColor },
+            splitLine: { lineStyle: { color: GLOBAL_STYLES.gridColor } }
+          },
+          // Tooltip Styling (optional, damit es zum Font passt)
+          tooltip: {
+            textStyle: { fontFamily: GLOBAL_STYLES.fontFamily }
+          }
+        };
+
+        // 1. Globale Styles anwenden
+        chart.setOption(baseOptions);
+        
+        // 2. Spezifische Chart-Daten anwenden (merged automatisch)
+        chart.setOption(datasetOptions);
+
         instances.set(container.id, chart);
 
         if (resizeObserver) resizeObserver.observe(container);
@@ -73,7 +117,6 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       const containers = document.querySelectorAll('.echart-container');
       if (containers.length === 0) return;
 
-      // OPTIMIERTER RESIZE OBSERVER (gegen Scrollbars)
       resizeObserver = new ResizeObserver((entries) => {
         entries.forEach(entry => {
           const chart = instances.get(entry.target.id);
@@ -86,7 +129,6 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
         });
       });
 
-      // VIEWPORT OBSERVER (Lazy Loading)
       const viewportObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -98,7 +140,6 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 
       containers.forEach(c => viewportObserver.observe(c));
 
-      // Cleanup registrieren
       cleanupFns.push(() => {
         viewportObserver.disconnect();
         resizeObserver.disconnect();
@@ -115,6 +156,5 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
     };
 
     document.addEventListener('astro:page-load', run);
-    
   })();
 </script>
