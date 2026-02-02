@@ -18,7 +18,7 @@ export const headerData = {
           href: getPermalink('/homes/mobile-app'),
         },
         {
-          text: 'User Feedback',
+          text: 'Testimonials',
           href: getPermalink('/homes/personal'),
         },
         {
@@ -64,7 +64,8 @@ export const footerData = {
         { text: 'Features', href: '#' },
         { text: 'How it Works', href: '#' },
         { text: 'Performance', href: '#' },
-        { text: 'User Feedback', href: '#' },
+        { text: 'Testimonials', href: '#' },
+        { text: 'Pricing', href: '#' },
       ],
     },
     {
@@ -78,18 +79,17 @@ export const footerData = {
       title: 'Support',
       links: [
         { text: 'Docs', href: '#' },
-        { text: 'Discord', href: '#' },
-        { text: 'GitHub', href: '#' },
+        { text: 'Discord Community', href: '#' },
+        { text: 'GitHub Repo', href: '#' },
         { text: 'FAQs', href: '#' },
       ],
     },
     {
       title: 'Legal & Privacy',
       links: [
-        { text: 'Terms of Service', href: '#' },
-        { text: 'Disclaimer', href: '#' },
         { text: 'Legal Notice', href: '#' },
         { text: 'Privacy Policy', href: '#' },
+        { text: 'Terms of Service', href: '#' },
         { text: 'Cookie Policy', href: '#' },
         { text: 'Cookie-Settings', href: '#', attrs: { 'data-cc': 'show-preferencesModal' } },
       ],
