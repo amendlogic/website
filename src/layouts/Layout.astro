@@ -37,7 +37,7 @@ const { language, textDirection } = I18N;
     <SiteVerification />
     <Analytics />
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css">
+    <link rel="stylesheet" href="/libs/cookieconsent.css">
 
     <!-- Comment the line below to disable View Transitions -->
     <ClientRouter fallback="swap" />
@@ -48,41 +48,18 @@ const { language, textDirection } = I18N;
 
     <BasicScripts />
 
-    <script is:inline src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v3.0.0/dist/cookieconsent.umd.js" defer></script>
-<script>
-            import { config } from "~/utils/cookieconsent-config.js";
-
-            // Hauptfunktion
-            function initCC() {
-                if (!window.CookieConsent) return;
-
-                // 1. Reset: Löscht nur das HTML (DOM), NICHT das Cookie!
-                // Das ist notwendig, weil Astro den Body ausgetauscht hat.
+    <script is:inline src="/libs/cookieconsent.umd.js" defer></script>
+    <script>
+            import { config } from "/libs/cookieconsent-config.js";
+            function initCookieBanner() {
+                if (!window.CookieConsent) {
+                    setTimeout(initCookieBanner, 50);
+                    return;
+                }
                 window.CookieConsent.reset();
-
-                // 2. Starten
-                // Das Tool prüft jetzt automatisch: "Gibt es das Cookie 'cc_cookie'?"
-                // Falls JA -> Es passiert NICHTS (kein Popup).
-                // Falls NEIN -> Popup kommt.
                 window.CookieConsent.run(config);
             }
-
-            // Diese Logik sorgt dafür, dass es beim Seitenwechsel klappt
-            // Wir nutzen 'astro:page-load', das feuert immer wenn der neue Inhalt da ist.
-            document.addEventListener('astro:page-load', () => {
-                // Warte kurz, bis die externe Library sicher geladen ist
-                if (window.CookieConsent) {
-                    initCC();
-                } else {
-                    // Fallback beim allerersten Laden (falls CDN langsam ist)
-                    const interval = setInterval(() => {
-                        if (window.CookieConsent) {
-                            clearInterval(interval);
-                            initCC();
-                        }
-                    }, 100);
-                }
-            });
+            document.addEventListener('astro:page-load', initCookieBanner);
 		</script>
 
   </body>
