@@ -3,76 +3,95 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+  /* Verhindert doppelte Ausführung falls Skript mehrfach geladen wird */
   if (window.basic_script_init) return;
   window.basic_script_init = true;
 
   (function() {
-    let cleanup = [];
-    const doc = document.documentElement;
+    let cleanup = []; // Speichert Event-Listener zum Entfernen beim Seitenwechsel
 
-    // --- UTILS ---
+    // --- HELPER ---
     const toggle = (el, c, condition) => el?.classList.toggle(c, condition);
     const getHeaderHeight = () => document.getElementById('header')?.getBoundingClientRect().height || 0;
 
-    // --- THEME ---
+    // --- THEME LOGIK ---
     const applyTheme = (theme) => {
       const mode = theme === 'system' 
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
         : theme;
-      toggle(doc, 'dark', mode === 'dark');
+      
+      toggle(document.documentElement, 'dark', mode === 'dark');
+      
       document.querySelectorAll('[data-aw-theme-icon]').forEach(el => {
         toggle(el, 'hidden', el.getAttribute('data-aw-theme-icon') !== theme);
       });
     };
 
-    // --- SCROLL HANDLING (Sticky Header & Hash Fix) ---
+    // --- SCROLL & HEADER LOGIK (Robust) ---
     const initScroll = () => {
-      const header = document.querySelector('#header[data-aw-sticky-header]');
-      
-      const onScroll = () => {
-        if (!header) return;
-        // Einfachere Throttling-Logik via rAF
-        requestAnimationFrame(() => toggle(header, 'scroll', window.scrollY > 10));
+      const header = document.getElementById('header');
+      if (!header) return;
+
+      // 1. Funktion: Header Background Status prüfen
+      // Wir definieren das separat, damit wir es beim Scrollen UND sofort beim Start aufrufen können.
+      const updateHeaderState = () => {
+        const isScrolled = window.scrollY > 10;
+        if (isScrolled) header.classList.add('scroll');
+        else header.classList.remove('scroll');
       };
 
-      // FIX: Beim Laden/Refresh korrekte Position ansteuern (Header-Offset)
-      const checkHashPosition = () => {
-        if (window.location.hash) {
-          const target = document.querySelector(window.location.hash);
-          if (target) {
-            setTimeout(() => {
-              const offset = target.getBoundingClientRect().top + window.scrollY - getHeaderHeight();
-              window.scrollTo({ top: offset, behavior: 'instant' }); // 'instant' beim Refresh verhindert visuelles Springen
-            }, 100); // Kleiner Delay für DOM-Rendering
-          }
+      // 2. Scroll Listener mit Performance-Optimierung (Throttle)
+      let ticking = false;
+      const onScroll = () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            updateHeaderState();
+            ticking = false;
+          });
+          ticking = true;
         }
       };
 
       window.addEventListener('scroll', onScroll, { passive: true });
       cleanup.push(() => window.removeEventListener('scroll', onScroll));
-      
-      onScroll(); // Init status check
-      checkHashPosition(); // Init hash check
+
+      // 3. WICHTIG: Sofortiger Check beim Laden (verhindert verschwundenen Background)
+      updateHeaderState();
+
+      // 4. Hash-Position Fix (wenn URL #section enthält)
+      if (window.location.hash) {
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+          // Kleiner Timeout, damit das Layout fertig ist
+          setTimeout(() => {
+            const offset = target.getBoundingClientRect().top + window.scrollY - getHeaderHeight();
+            // 'instant' verhindert visuelles Springen beim Refresh
+            window.scrollTo({ top: offset, behavior: 'instant' }); 
+          }, 0);
+        }
+      }
     };
 
-    // --- INTERACTIVE (Menu & Clicks) ---
+    // --- INTERAKTIONEN (Menü, Clicks, Links) ---
     const initInteractions = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
       const nav = header?.querySelector('nav');
 
-      // Globaler Click Listener (Delegation Pattern)
+      // Zentraler Click-Handler für alles (Delegation)
       const onClick = (e) => {
-        // A) Theme Toggle
+        
+        // A) Theme Button
         const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
         if (themeBtn) {
           const themes = ['system', 'light', 'dark'];
-          const next = themes[(themes.indexOf(localStorage.theme || 'system') + 1) % 3];
+          const current = localStorage.theme || defaultTheme; // Fallback auf Variable aus define:vars
+          const next = themes[(themes.indexOf(current) + 1) % 3];
           localStorage.setItem('theme', next);
           return applyTheme(next);
         }
 
-        // B) Menu Toggle
+        // B) Mobile Menü Toggle
         if (menuBtn?.contains(e.target)) {
           menuBtn.classList.toggle('expanded');
           toggle(document.body, 'overflow-hidden');
@@ -80,15 +99,14 @@ import { UI } from 'astrowind:config';
           toggle(header, 'expanded');
           toggle(header, 'bg-page');
           nav?.classList.toggle('hidden');
-          header.querySelector('nav + div')?.classList.toggle('hidden');
+          header.querySelector('nav + div')?.classList.toggle('hidden'); // Actions Div
           
-          // Icon Toggle
           const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
           if(icons.length > 1) icons.forEach(i => i.classList.toggle('hidden'));
           return;
         }
 
-        // C) Dropdowns (Mobile)
+        // C) Dropdowns (nur Mobile relevant meistens)
         const dropTrigger = e.target.closest('.dropdown > button, .dropdown > a');
         if (dropTrigger && nav?.contains(dropTrigger) && getComputedStyle(menuBtn).display !== 'none') {
           e.preventDefault();
@@ -97,15 +115,16 @@ import { UI } from 'astrowind:config';
           return;
         }
 
-        // D) Smooth Scroll Links
+        // D) Smooth Scroll für Anker-Links
         const link = e.target.closest('a[href^="#"]');
         if (link && link.origin === location.origin && link.pathname === location.pathname) {
           const target = document.querySelector(link.hash);
           if (target) {
             e.preventDefault();
-            // Menü schließen falls offen
+            // Falls Mobile Menü offen ist -> schließen
             if (header?.classList.contains('expanded')) menuBtn.click();
             
+            // Offset berechnen
             const offset = target.getBoundingClientRect().top + window.scrollY - getHeaderHeight();
             window.scrollTo({ top: offset, behavior: 'smooth' });
             history.pushState(null, null, link.hash);
@@ -117,8 +136,9 @@ import { UI } from 'astrowind:config';
       cleanup.push(() => document.removeEventListener('click', onClick));
     };
 
-    // --- ANIMATIONS ---
+    // --- ANIMATIONEN (Intersection Observer) ---
     const initAnimations = () => {
+      // Wählt alle Elemente aus, die Animationen brauchen
       const els = document.querySelectorAll('.intersect-once, .intersect-quarter, [class*="intersect:"]');
       if (!els.length) return;
 
@@ -129,26 +149,33 @@ import { UI } from 'astrowind:config';
             if (e.target.classList.contains('intersect-once')) obs.unobserve(e.target);
           }
         });
-      }, { rootMargin: '-10% 0px' }); // Etwas früher triggern
+      }, { rootMargin: '-10% 0px' }); 
 
       els.forEach(el => obs.observe(el));
       cleanup.push(() => obs.disconnect());
     };
 
-    // --- LIFECYCLE ---
+    // --- MAIN LIFECYCLE ---
     const run = () => {
+      // 1. Alte Listener aufräumen (wichtig bei Astro View Transitions)
       cleanup.forEach(fn => fn());
       cleanup = [];
 
-      applyTheme(localStorage.getItem('theme') || 'system');
-      initScroll();
-      initInteractions();
+      // 2. Theme setzen
+      applyTheme(localStorage.getItem('theme') || defaultTheme);
+
+      // 3. Funktionen initialisieren
+      initScroll();       // Header & Hash Position
+      initInteractions(); // Clicks & Menü
       
-      // Animations lazy laden
+      // 4. Animationen lazy laden (Performance)
       (window.requestIdleCallback || setTimeout)(initAnimations, 200);
     };
 
+    // Start beim ersten Laden
     run();
+
+    // Start nach jedem Seitenwechsel (Astro View Transitions)
     document.addEventListener('astro:after-swap', run);
   })();
 </script>
