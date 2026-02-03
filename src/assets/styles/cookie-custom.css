@@ -16,7 +16,7 @@
   --cc-separator: #e2e8f0; /* Slate 200 */
   
   /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
-  --cc-btn-primary-bg: rgb(1 97 239);
+  --cc-btn-primary-bg: var(--aw-color-primary);
   --cc-btn-primary-text: #ffffff;
   --cc-btn-primary-hover-bg: rgb(1 84 207);
   
@@ -27,7 +27,7 @@
   
   /* Toggles (Schalter) */
   --cc-toggle-bg-off: #cbd5e1; /* Slate 300 */
-  --cc-toggle-bg-on: #4f46e5; /* Indigo 600 */
+  --cc-toggle-bg-on: var(--aw-color-primary)
   --cc-toggle-bg-readonly: #94a3b8; /* Slate 400 */
   --cc-toggle-knob-bg: #ffffff;
   --cc-toggle-knob-icon-color: #ecf0f1;
@@ -40,7 +40,7 @@
 
   
   /* Form - Rundungen anpassen (AstroWind nutzt oft rounded-lg) */
-  --cc-modal-border-radius: 9999px;
+  --cc-modal-border-radius: .375rem;
   --cc-btn-border-radius: 9999px;
 }
 
