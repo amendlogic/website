@@ -13,7 +13,7 @@
   --cc-bg: #ffffff;
   --cc-text: var(--aw-color-text-muted);
     
-  --cc-separator: #e2e8f0; /* Slate 200 */
+  --cc-separator: rgb(229 231 235);
   
   /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
   --cc-btn-primary-bg: var(--aw-color-primary);
@@ -54,7 +54,7 @@
   /* Hintergrund: AstroWind Dark BG (oft Slate 900 oder dunkles Blau) */
   --cc-bg: #030620; /* Sehr dunkles Blau/Slate, typisch für AstroWind */
   --cc-text: #f8fafc; /* Slate 50 */
-  --cc-separator: #1e293b; /* Slate 800 */
+  --cc-separator: rgb(30 41 59);
 
   /* Buttons im Dark Mode */
   --cc-btn-primary-bg: #6366f1; /* Indigo 500 (etwas heller für Dark Mode) */
