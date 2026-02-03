@@ -3,7 +3,7 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  // Singleton: Verhindert doppelte Ausführung
+  // Schutz vor doppelter Ausführung
   if (window.basic_script_init) return;
   window.basic_script_init = true;
 
@@ -16,192 +16,169 @@ import { UI } from 'astrowind:config';
       return header ? header.getBoundingClientRect().height : 0;
     };
 
-    // --- THEME ---
+    const toggleClass = (el, cls, condition) => {
+        if(condition) el.classList.add(cls); else el.classList.remove(cls);
+    };
+
+    // --- CORE FUNCTIONS (ACTIONS) ---
+
+    // 1. Schließt ALLES (Mobile Menu & alle Dropdowns)
+    const closeAll = () => {
+        // Dropdowns zu
+        document.querySelectorAll('.dropdown > .expanded').forEach(el => {
+            el.classList.remove('expanded');
+            if (el.nextElementSibling) el.nextElementSibling.classList.add('hidden');
+        });
+        
+        // Mobile Menu zu
+        const menuBtn = document.querySelector('[data-aw-toggle-menu]');
+        if (menuBtn && menuBtn.classList.contains('expanded')) {
+            menuBtn.classList.remove('expanded');
+            document.body.classList.remove('overflow-hidden');
+            const header = document.getElementById('header');
+            if(header) {
+                header.classList.remove('h-screen', 'expanded', 'bg-page');
+                const nav = header.querySelector('nav');
+                if(nav) nav.classList.add('hidden');
+                header.querySelector('div > div:last-child')?.classList.add('hidden'); // Actions
+            }
+        }
+    };
+
+    // 2. Nur Dropdowns schließen (behält Mobile Menu offen, falls man drin ist)
+    const closeDropdownsOnly = () => {
+        document.querySelectorAll('.dropdown > .expanded').forEach(el => {
+            el.classList.remove('expanded');
+            if (el.nextElementSibling) el.nextElementSibling.classList.add('hidden');
+        });
+    };
+
+    // 3. Theme
     const applyTheme = (theme) => {
       const resolvedTheme = (theme === 'system') 
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
         : theme;
       
       requestAnimationFrame(() => {
-        if (resolvedTheme === 'dark') document.documentElement.classList.add('dark');
-        else document.documentElement.classList.remove('dark');
-        
+        toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
         document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
-          if (icon.getAttribute('data-aw-theme-icon') === theme) icon.classList.remove('hidden');
-          else icon.classList.add('hidden');
+          toggleClass(icon, 'hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
         });
       });
     };
 
-    const initTheme = () => {
-      const stored = localStorage.getItem('theme') || defaultTheme;
-      applyTheme(stored);
-    };
+    // --- INIT MODULES ---
 
-    // --- 1. HEADER SCROLL STATE ---
     const initHeader = () => {
-      const header = document.getElementById('header');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
-
-      let isTicking = false;
+      
       const onScroll = () => {
-        if (!isTicking) {
-          window.requestAnimationFrame(() => {
-            stickyHeader.classList.toggle('scroll', window.scrollY > 10);
-            isTicking = false;
-          });
-          isTicking = true;
-        }
+         window.requestAnimationFrame(() => {
+             stickyHeader.classList.toggle('scroll', window.scrollY > 10);
+         });
       };
-
+      
       window.addEventListener('scroll', onScroll, { passive: true });
       if (window.scrollY > 10) stickyHeader.classList.add('scroll');
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- 2. MENU & DROPDOWN LOGIK (STRICT CLOSE) ---
-    const initMenu = () => {
-      const header = document.getElementById('header');
-      const menuBtn = document.querySelector('[data-aw-toggle-menu]');
-      const nav = header?.querySelector('nav');
+    // --- CENTRAL EVENT LISTENER (THE BRAIN) ---
+    // Ersetzt alle einzelnen Listener für maximale Kontrolle
+    const initGlobalListener = () => {
       
-      if (!menuBtn || !header || !nav) return;
+      const handleGlobalClick = (e) => {
+        const target = e.target;
 
-      // HELPER: Schließt ALLE Dropdowns (wichtig für sauberen Zustand)
-      const closeAllDropdowns = () => {
-        document.querySelectorAll('.dropdown > .expanded').forEach(el => {
-            el.classList.remove('expanded');
-            if (el.nextElementSibling) el.nextElementSibling.classList.add('hidden');
-        });
-      };
-
-      // HELPER: Schließt das Mobile Menü komplett
-      const closeMobileMenu = () => {
-        menuBtn.classList.remove('expanded');
-        document.body.classList.remove('overflow-hidden');
-        header.classList.remove('h-screen');
-        header.classList.remove('expanded');
-        header.classList.remove('bg-page');
-        nav.classList.add('hidden');
-        closeAllDropdowns(); // Auch Dropdowns innen schließen
-      };
-
-      // 1. Mobile Toggle Button
-      menuBtn.onclick = (e) => {
-        e.stopPropagation(); // Verhindert Bubbling zum Document
-        menuBtn.classList.toggle('expanded');
-        document.body.classList.toggle('overflow-hidden');
-        header.classList.toggle('h-screen');
-        header.classList.toggle('expanded');
-        header.classList.toggle('bg-page');
-        nav.classList.toggle('hidden');
-      };
-
-      // 2. Dropdown Trigger Logic (Delegation)
-      const onNavClick = (e) => {
-        // Suche nach dem Button/Link, der das Dropdown öffnet
-        const trigger = e.target.closest('.dropdown > button, .dropdown > a');
-        
-        if (trigger) {
-            e.preventDefault();
-            e.stopPropagation(); // WICHTIG: Damit der Klick nicht das "Document Close" feuert
-
-            const isAlreadyOpen = trigger.classList.contains('expanded');
-
-            // Erstmal alles schließen (Accordion-Effekt & Aufräumen)
-            closeAllDropdowns();
-
-            // Wenn es vorher NICHT offen war, jetzt öffnen. 
-            // Wenn es offen war, bleibt es durch closeAllDropdowns() jetzt zu (Toggle-Effekt).
-            if (!isAlreadyOpen) {
-                trigger.classList.add('expanded');
-                if (trigger.nextElementSibling) trigger.nextElementSibling.classList.remove('hidden');
-            }
-        }
-      };
-
-      // 3. Document Listener: Klick irgendwo anders hin schließt alles
-      const onDocumentClick = (e) => {
-        // Wenn Klick NICHT im Header/Nav war -> Alles zu
-        if (!e.target.closest('#header nav') && !e.target.closest('[data-aw-toggle-menu]')) {
-             closeMobileMenu(); // Schließt Mobile Menu wenn man daneben klickt
-        }
-        
-        // Generell Dropdowns schließen, wenn man nicht gerade drin klickt
-        // Ausnahme: Man klickt IN ein Dropdown Inhalt -> soll offen bleiben
-        if (!e.target.closest('.dropdown')) {
-             closeAllDropdowns();
-        }
-      };
-
-      nav.addEventListener('click', onNavClick);
-      document.addEventListener('click', onDocumentClick);
-
-      // Expose für externe Nutzung
-      window.awCloseMobileMenu = closeMobileMenu;
-
-      cleanupFns.push(() => {
-          menuBtn.onclick = null;
-          nav.removeEventListener('click', onNavClick);
-          document.removeEventListener('click', onDocumentClick);
-      });
-    };
-
-    // --- 3. GLOBAL EVENTS (LINKS & SCROLL) ---
-    const initGlobalEvents = () => {
-      const onClick = (e) => {
-        // Theme Toggle
-        const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
+        // A) Theme Button
+        const themeBtn = target.closest('[data-aw-toggle-color-scheme]');
         if (themeBtn) {
-          e.preventDefault();
-          const themes = ['system', 'light', 'dark'];
-          const current = localStorage.getItem('theme') || 'system';
-          const next = themes[(themes.indexOf(current) + 1) % 3];
-          localStorage.setItem('theme', next);
-          applyTheme(next);
-          return;
+            e.preventDefault();
+            const themes = ['system', 'light', 'dark'];
+            const current = localStorage.getItem('theme') || 'system';
+            const next = themes[(themes.indexOf(current) + 1) % 3];
+            localStorage.setItem('theme', next);
+            applyTheme(next);
+            return;
         }
 
-        // Smooth Scroll & Link Handling
-        const link = e.target.closest('a');
-        if (link) {
-            // Wenn es ein Link ist (egal ob Hash oder Seite): Menü schließen!
-            if (window.awCloseMobileMenu) window.awCloseMobileMenu();
+        // B) Mobile Menu Toggle (Hamburger)
+        const menuBtn = target.closest('[data-aw-toggle-menu]');
+        if (menuBtn) {
+            e.stopPropagation(); // Stop, damit "Close All" nicht sofort feuert
+            const header = document.getElementById('header');
+            const nav = header?.querySelector('nav');
+            
+            // Status toggeln
+            menuBtn.classList.toggle('expanded');
+            document.body.classList.toggle('overflow-hidden');
+            header?.classList.toggle('h-screen');
+            header?.classList.toggle('expanded');
+            header?.classList.toggle('bg-page');
+            nav?.classList.toggle('hidden');
+            
+            // Wenn wir das Menü schließen, auch Dropdowns resetten
+            if (!menuBtn.classList.contains('expanded')) {
+                closeDropdownsOnly();
+            }
+            return;
+        }
 
-            // Speziell für Hash Links (#section) -> Smooth Scroll
+        // C) Dropdown Toggle (Der Titel/Pfeil)
+        const dropdownTrigger = target.closest('.dropdown > button, .dropdown > a');
+        if (dropdownTrigger) {
+            // Logik: Toggle (Auf/Zu)
+            e.preventDefault();
+            e.stopPropagation(); // Isoliert den Klick
+
+            const wasOpen = dropdownTrigger.classList.contains('expanded');
+            
+            // 1. Erstmal ALLE Dropdowns schließen (Reset)
+            // Das löst das Problem, dass alte offen bleiben
+            closeDropdownsOnly();
+
+            // 2. Wenn es vorher NICHT offen war -> Jetzt öffnen
+            // Wenn es vorher offen war, bleibt es durch Schritt 1 jetzt zu (Toggle-Effekt)
+            if (!wasOpen) {
+                dropdownTrigger.classList.add('expanded');
+                if(dropdownTrigger.nextElementSibling) dropdownTrigger.nextElementSibling.classList.remove('hidden');
+            }
+            return;
+        }
+
+        // D) Links (Navigation & Smooth Scroll)
+        const link = target.closest('a');
+        if (link) {
+            // Bei JEDEM Link-Klick: Alles aufräumen
+            closeAll();
+
+            // Ist es ein Anchor-Link (#section)?
             if (link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-                const targetEl = document.querySelector(link.hash);
-                if (targetEl) {
+                const el = document.querySelector(link.hash);
+                if (el) {
                     e.preventDefault();
                     const headerHeight = getHeaderHeight();
-                    const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
+                    const targetPos = el.getBoundingClientRect().top + window.scrollY;
                     window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
                     history.pushState(null, null, link.hash);
                 }
             }
+            return;
+        }
+
+        // E) Klick irgendwo anders hin (Hintergrund, Text)
+        // Prüfen: Haben wir NICHT ins Nav geklickt?
+        if (!target.closest('#header nav') && !target.closest('[data-aw-toggle-menu]')) {
+            closeAll();
         }
       };
 
-      document.addEventListener('click', onClick, { capture: true, passive: false });
-      cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
+      document.addEventListener('click', handleGlobalClick, { capture: true, passive: false });
+      cleanupFns.push(() => document.removeEventListener('click', handleGlobalClick, { capture: true }));
     };
 
-    // --- 4. RELOAD SCROLL FIX ---
-    const fixInitialHashScroll = () => {
-        if (window.location.hash) {
-            const target = document.querySelector(window.location.hash);
-            if (target) {
-                setTimeout(() => {
-                    const headerHeight = getHeaderHeight();
-                    const targetPos = target.getBoundingClientRect().top + window.scrollY;
-                    window.scrollTo({ top: targetPos - headerHeight, behavior: 'instant' });
-                }, 10);
-            }
-        }
-    };
-
-    // --- 5. ANIMATIONS ---
+    // --- ANIMATIONS ---
     const initAnimations = () => {
        const elements = document.querySelectorAll('.intersect, [class*="intersect:"]');
        if(!elements.length) return;
@@ -217,19 +194,29 @@ import { UI } from 'astrowind:config';
        cleanupFns.push(() => observer.disconnect());
     };
 
-    // --- RUN ---
+    // --- RELOAD FIX ---
+    const fixInitialHashScroll = () => {
+        if (window.location.hash) {
+            const target = document.querySelector(window.location.hash);
+            if (target) {
+                setTimeout(() => {
+                    const headerHeight = getHeaderHeight();
+                    const targetPos = target.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({ top: targetPos - headerHeight, behavior: 'instant' });
+                }, 10); // Kleines Delay für Layout-Shift Sicherheit
+            }
+        }
+    };
+
+    // --- MAIN RUN ---
     const run = () => {
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
-      initTheme();
+      applyTheme(localStorage.getItem('theme') || defaultTheme);
       initHeader();
-      initMenu();
-
-      setTimeout(() => {
-          initGlobalEvents();
-          fixInitialHashScroll();
-      }, 0);
+      initGlobalListener(); // <-- Der neue, zentrale Listener
+      fixInitialHashScroll();
 
       if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
       else setTimeout(initAnimations, 200);
