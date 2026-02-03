@@ -36,6 +36,7 @@ const { language, textDirection } = I18N;
     <Metadata {...metadata} />
     <SiteVerification />
     <Analytics />
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css">
 
     <!-- Comment the line below to disable View Transitions -->
@@ -47,7 +48,10 @@ const { language, textDirection } = I18N;
 
     <BasicScripts />
     <script>
-      import '~/utils/cookieconsent-config.js';
+      import { initCookieConsent } from '~/utils/cookieconsent-config.js';
+      document.addEventListener('astro:page-load', () => {
+        initCookieConsent();
+      });
     </script>
   </body>
 </html>
