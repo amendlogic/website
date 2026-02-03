@@ -11,46 +11,44 @@ import { UI } from 'astrowind:config';
     let cleanupFns = [];
 
     // --- HELPER ---
-    const toggleClass = (el, className, condition) => {
-      if (condition) el.classList.add(className);
-      else el.classList.remove(className);
-    };
-
     const getHeaderHeight = () => {
       const header = document.getElementById('header');
-      if (!header) return 0;
-      return header.getBoundingClientRect().height;
+      return header ? header.getBoundingClientRect().height : 0;
     };
 
-    // --- THEME LOGIK ---
+    // --- THEME ---
     const applyTheme = (theme) => {
       const resolvedTheme = (theme === 'system') 
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
         : theme;
       
       requestAnimationFrame(() => {
-        toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
+        if (resolvedTheme === 'dark') document.documentElement.classList.add('dark');
+        else document.documentElement.classList.remove('dark');
+        
         document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
-          toggleClass(icon, 'hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
+          if (icon.getAttribute('data-aw-theme-icon') === theme) icon.classList.remove('hidden');
+          else icon.classList.add('hidden');
         });
       });
     };
 
-    // --- 1. HEADER LOGIK ---
+    const initTheme = () => {
+      const stored = localStorage.getItem('theme') || defaultTheme;
+      applyTheme(stored);
+    };
+
+    // --- 1. HEADER SCROLL STATE ---
     const initHeader = () => {
       const header = document.getElementById('header');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
 
       let isTicking = false;
-
       const onScroll = () => {
         if (!isTicking) {
           window.requestAnimationFrame(() => {
-            const isScrolled = window.scrollY > 10;
-            if (stickyHeader.classList.contains('scroll') !== isScrolled) {
-              stickyHeader.classList.toggle('scroll', isScrolled);
-            }
+            stickyHeader.classList.toggle('scroll', window.scrollY > 10);
             isTicking = false;
           });
           isTicking = true;
@@ -62,7 +60,7 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- 2. MENU LOGIK ---
+    // --- 2. MENU LOGIK (ORIGINAL + ROBUST) ---
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
@@ -70,65 +68,85 @@ import { UI } from 'astrowind:config';
       
       if (!menuBtn || !header || !nav) return;
 
-      const toggleMenu = () => {
+      // Die Funktion zum kompletten Schließen (Original-Logik + Dropdown Fix)
+      const closeMenu = () => {
+        // 1. Original Logik: Mobile Menu Reset
+        menuBtn.classList.remove('expanded');
+        document.body.classList.remove('overflow-hidden');
+        header.classList.remove('h-screen');
+        header.classList.remove('expanded');
+        header.classList.remove('bg-page');
+        nav.classList.add('hidden');
+        document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
+
+        // 2. Zusatz für Desktop: Auch offene Dropdowns schließen
+        const expandedDropdowns = document.querySelectorAll('.dropdown > .expanded');
+        expandedDropdowns.forEach(el => {
+            el.classList.remove('expanded');
+            if (el.nextElementSibling) el.nextElementSibling.classList.add('hidden');
+        });
+      };
+
+      // Toggle Funktion für den Hamburger Button
+      menuBtn.onclick = (e) => {
+        e.stopPropagation(); // Verhindert, dass der Klick gleich wieder das Menü schließt
         menuBtn.classList.toggle('expanded');
         document.body.classList.toggle('overflow-hidden');
         header.classList.toggle('h-screen');
         header.classList.toggle('expanded');
         header.classList.toggle('bg-page');
-
-        const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
-        if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
-
         nav.classList.toggle('hidden');
-
-        const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
-        if (actions) actions.classList.toggle('hidden');
+        document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
       };
 
-      menuBtn.onclick = toggleMenu;
-      window.toggleMenuInstance = toggleMenu; 
-
+      // Event Delegation für Dropdowns
       const onNavClick = (e) => {
-        // Wir suchen nach Buttons oder Links, die ein Dropdown steuern
         const trigger = e.target.closest('.dropdown > button, .dropdown > a');
-        
-        // WICHTIG: Im Desktop-Modus wollen wir auch Dropdowns öffnen/schließen können,
-        // daher entfernen wir die Prüfung auf "display: none" des MenuBtns hier, 
-        // oder passen sie an, falls Dropdowns im Desktop per Hover gehen sollen.
-        // AstroWind Standard ist oft Click auch auf Desktop.
-        if (!trigger) return;
-
-        // Falls wir Mobile sind ODER Click-Event gewünscht ist:
-        e.preventDefault();
-        const subMenu = trigger.nextElementSibling;
-        if (subMenu) {
-            // Toggle Dropdown
-            subMenu.classList.toggle('hidden');
+        if (trigger) {
+            // Dropdown Logik
+            e.preventDefault(); 
+            // Andere Dropdowns schließen (Accordion Effekt, optional aber sauber)
+            const parent = trigger.closest('.dropdown').parentElement;
+            if(parent) {
+                parent.querySelectorAll('.expanded').forEach( sib => {
+                    if(sib !== trigger) {
+                        sib.classList.remove('expanded');
+                        if(sib.nextElementSibling) sib.nextElementSibling.classList.add('hidden');
+                    }
+                });
+            }
             trigger.classList.toggle('expanded');
-            
-            // Optional: Andere offene Dropdowns schließen (Accordion-Effekt)
-            const otherExpanded = document.querySelectorAll('.dropdown > .expanded');
-            otherExpanded.forEach(el => {
-                if (el !== trigger) {
-                    el.classList.remove('expanded');
-                    if (el.nextElementSibling) el.nextElementSibling.classList.add('hidden');
-                }
-            });
+            if (trigger.nextElementSibling) trigger.nextElementSibling.classList.toggle('hidden');
+            e.stopPropagation(); // Damit der "Schließen"-Listener am Nav nicht feuert
         }
       };
 
-      nav.addEventListener('click', onNavClick);
+      // WICHTIG: Das ist die Logik aus deinem Original-Skript
+      // Bei Klick auf Nav (Hintergrund oder Links) -> Alles schließen
+      const onNavGeneralClick = (e) => {
+         // Nur schließen, wenn wir NICHT gerade ein Dropdown oder den Toggle geklickt haben
+         if (!e.target.closest('.dropdown > button')) {
+             closeMenu();
+         }
+      };
+
+      nav.addEventListener('click', onNavClick);     // Für Dropdown Toggle
+      nav.addEventListener('click', onNavGeneralClick); // Zum Schließen bei Links
+
+      // Expose closeMenu für den Scroll-Handler
+      window.awCloseMenu = closeMenu;
+
       cleanupFns.push(() => {
           menuBtn.onclick = null;
           nav.removeEventListener('click', onNavClick);
+          nav.removeEventListener('click', onNavGeneralClick);
       });
     };
 
-    // --- 3. GLOBAL EVENTS (CLICK HANDLING) ---
+    // --- 3. GLOBAL EVENTS (LINKS & SCROLL) ---
     const initGlobalEvents = () => {
       const onClick = (e) => {
-        // A) Theme Toggle
+        // Theme Toggle
         const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
         if (themeBtn) {
           e.preventDefault();
@@ -140,33 +158,15 @@ import { UI } from 'astrowind:config';
           return;
         }
 
-        // B) Smooth Scroll & Menu/Dropdown Close
+        // Smooth Scroll & Menu Close
         const link = e.target.closest('a');
         if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
           const targetEl = document.querySelector(link.hash);
           if (targetEl) {
             e.preventDefault();
             
-            const menuBtn = document.querySelector('[data-aw-toggle-menu]');
-            
-            // UNTERSCHEIDUNG: Mobile vs Desktop
-            const isMobile = menuBtn && window.getComputedStyle(menuBtn).display !== 'none';
-
-            if (isMobile) {
-                // 1. Mobile: Ganzes Menü schließen
-                if (menuBtn.classList.contains('expanded') && window.toggleMenuInstance) {
-                    window.toggleMenuInstance();
-                }
-            } else {
-                // 2. Desktop: Nur Dropdowns schließen
-                const expandedTriggers = document.querySelectorAll('.dropdown > .expanded');
-                expandedTriggers.forEach(trigger => {
-                    trigger.classList.remove('expanded');
-                    if (trigger.nextElementSibling) {
-                        trigger.nextElementSibling.classList.add('hidden');
-                    }
-                });
-            }
+            // Menü schließen (über die oben definierte Logik)
+            if (window.awCloseMenu) window.awCloseMenu();
             
             const headerHeight = getHeaderHeight();
             const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
@@ -174,16 +174,6 @@ import { UI } from 'astrowind:config';
             window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
             history.pushState(null, null, link.hash);
           }
-        } else {
-            // C) Klick irgendwo anders hin (nicht auf einen Link)
-            // Schließt Dropdowns, wenn man daneben klickt (UX Verbesserung)
-            if (!e.target.closest('nav')) {
-                 const expandedTriggers = document.querySelectorAll('.dropdown > .expanded');
-                 expandedTriggers.forEach(trigger => {
-                    trigger.classList.remove('expanded');
-                    if (trigger.nextElementSibling) trigger.nextElementSibling.classList.add('hidden');
-                });
-            }
         }
       };
 
@@ -191,36 +181,13 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
     };
 
-    // --- 4. ANIMATIONS ---
-    const initAnimations = () => {
-      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
-      const elements = document.querySelectorAll(selectors.join(','));
-      if (elements.length === 0) return;
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const el = entry.target;
-            el.setAttribute('data-aw-animated', 'true');
-            el.removeAttribute('no-intersect');
-            if (el.classList.contains('intersect-once')) observer.unobserve(el);
-          }
-        });
-      }, { threshold: 0.1 });
-
-      elements.forEach(el => {
-        el.setAttribute('no-intersect', '');
-        observer.observe(el);
-      });
-
-      cleanupFns.push(() => observer.disconnect());
-    };
-
-    // --- 5. RELOAD SCROLL FIX ---
+    // --- 4. RELOAD SCROLL FIX ---
+    // Lädt die Seite an der korrekten Position (Header offset) neu
     const fixInitialHashScroll = () => {
         if (window.location.hash) {
             const target = document.querySelector(window.location.hash);
             if (target) {
+                // setTimeout 0 reicht oft, um dem Browser Render-Zeit zu geben
                 setTimeout(() => {
                     const headerHeight = getHeaderHeight();
                     const targetPos = target.getBoundingClientRect().top + window.scrollY;
@@ -230,18 +197,35 @@ import { UI } from 'astrowind:config';
         }
     };
 
+    // --- 5. ANIMATIONS ---
+    const initAnimations = () => {
+       const elements = document.querySelectorAll('.intersect, [class*="intersect:"]');
+       if(!elements.length) return;
+       const observer = new IntersectionObserver(entries => {
+           entries.forEach(entry => {
+               if(entry.isIntersecting) {
+                   entry.target.setAttribute('data-aw-animated', 'true');
+                   if (entry.target.classList.contains('intersect-once')) observer.unobserve(entry.target);
+               }
+           });
+       }, {threshold: 0.1});
+       elements.forEach(el => observer.observe(el));
+       cleanupFns.push(() => observer.disconnect());
+    };
+
     // --- RUN ---
     const run = () => {
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
-      applyTheme(localStorage.getItem('theme') || defaultTheme);
+      initTheme();
       initHeader();
       initMenu();
 
+      // Events asynchron initialisieren für Performance
       setTimeout(() => {
           initGlobalEvents();
-          fixInitialHashScroll();
+          fixInitialHashScroll(); // Fix für Reload-Position
       }, 0);
 
       if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
