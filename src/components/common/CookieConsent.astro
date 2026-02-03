@@ -1,76 +1,15 @@
-<script is:inline>
-  // Wir definieren die Funktion global, damit sie immer verfügbar ist
-  function initMyCookieConsent() {
-      // Sicherheitscheck: Ist die Bibliothek geladen?
-      if (typeof CookieConsent === 'undefined') return;
+---
+import 'vanilla-cookieconsent/dist/cookieconsent.css';
+import '../styles/ccElegantBlack.css';
+---
+<button type="button" data-cc="show-preferencesModal">Show preferences modal</button>
 
-      // 1. Deine Konfiguration
-      const config = {
-          guiOptions: {
-              consentModal: { layout: "box", position: "bottom right", flipButtons: false },
-              preferencesModal: { layout: "box", position: "right", flipButtons: false }
-          },
-          categories: {
-              necessary: { readOnly: true },
-              functionality: {},
-              analytics: {},
-              marketing: {}
-          },
-          language: {
-              default: "de",
-              autoDetect: "browser",
-              translations: {
-                  de: {
-                      consentModal: {
-                          title: "Cookie Einstellungen",
-                          description: "Wir verwenden Cookies für die beste Nutzererfahrung.",
-                          acceptAllBtn: "Alle akzeptieren",
-                          acceptNecessaryBtn: "Ablehnen",
-                          showPreferencesBtn: "Einstellungen"
-                      },
-                      preferencesModal: {
-                          title: "Einstellungen verwalten",
-                          acceptAllBtn: "Alle akzeptieren",
-                          acceptNecessaryBtn: "Alle ablehnen",
-                          savePreferencesBtn: "Speichern",
-                          closeIconLabel: "Schließen",
-                          sections: [
-                              { title: "Verwendung", description: "Wir nutzen Cookies..." },
-                              { title: "Notwendig", linkedCategory: "necessary" },
-                              { title: "Analyse", linkedCategory: "analytics" },
-                              { title: "Marketing", linkedCategory: "marketing" }
-                          ]
-                      }
-                  }
-              }
-          }
-      };
+<script>
+    import { run } from 'vanilla-cookieconsent';
+    import { config } from './CookieConsentConfig';
 
-      // 2. CookieConsent starten
-      // WICHTIG: Wir resetten es nicht hart, aber wir rufen .run() auf,
-      // damit das HTML wieder in den DOM geschrieben wird.
-      CookieConsent.run(config);
+    // toggle custom black theme
+    document.body.classList.add('cc--elegant-black');
 
-      // 3. Button für Einstellungen wiederbeleben
-      // Sucht nach Button mit Klasse 'js-cookie-settings' oder Attribut 'data-aw-cookie-prefs'
-      const triggers = document.querySelectorAll('.js-cookie-settings, [data-aw-cookie-prefs]');
-      triggers.forEach(btn => {
-          // Alten Listener entfernen ist bei Inline-Skripten schwer, aber
-          // da der Button durch Astro neu gerendert wurde, ist er "frisch".
-          btn.addEventListener('click', (e) => {
-              e.preventDefault();
-              CookieConsent.showPreferences();
-          });
-      });
-  }
-
-  // --- DER ENTSCHEIDENDE TEIL ---
-  
-  // 1. Beim allerersten Laden der Seite ausführen
-  initMyCookieConsent();
-
-  // 2. Bei jedem Astro-Seitenwechsel (View Transition) erneut ausführen
-  document.addEventListener('astro:after-swap', () => {
-      initMyCookieConsent();
-  });
+    run(config);
 </script>
