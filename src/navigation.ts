@@ -93,7 +93,7 @@ export const footerData = {
         { text: 'Terms of Service', href: '#' },
         { text: 'Privacy Policy', href: '#' },
         { text: 'Cookie Policy', href: '#' },
-        { text: 'Risk Disclosure', href: 'javascript:void(0)', attrs: { 'data-cc': 'show-preferencesModal' } },
+        { text: 'Risk Disclosure', href: '#' },
       ],
     },
   ],
