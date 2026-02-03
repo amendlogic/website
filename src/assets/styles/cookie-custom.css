@@ -75,6 +75,10 @@
 }
 
 /* --- Optional: Fein-Tuning für AstroWind Typografie --- */
+#cc-main .cm {
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow);
+}
+
 #cc-main .cm__title {
   font-weight: 700;
   letter-spacing: -0.025em; /* Tight tracking wie in AstroWind Überschriften */
