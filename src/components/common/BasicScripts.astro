@@ -9,38 +9,7 @@ import { UI } from 'astrowind:config';
   (function() {
     let cleanupFns = [];
 
-    // --- HELPER: HEADER HEIGHT ---
-    const getHeaderHeight = () => {
-      const header = document.getElementById('header');
-      return header ? header.getBoundingClientRect().height : 0;
-    };
-
-    // --- HELPER: CLOSE ALL (Der "Alles zu"-Resetter) ---
-    const closeAll = () => {
-        // A. Mobile Menu
-        const menuBtn = document.querySelector('[data-aw-toggle-menu]');
-        if (menuBtn) menuBtn.classList.remove('expanded');
-        document.body.classList.remove('overflow-hidden');
-        
-        const header = document.getElementById('header');
-        if (header) {
-            header.classList.remove('h-screen', 'expanded', 'bg-page');
-            header.querySelector('nav')?.classList.add('hidden');
-            header.querySelector('div > div:last-child')?.classList.add('hidden');
-        }
-
-        // B. Dropdowns (WICHTIG: md:hidden wiederherstellen für Desktop Reset)
-        document.querySelectorAll('.dropdown').forEach(d => {
-            d.querySelector('button')?.classList.remove('expanded');
-            const content = d.querySelector('.dropdown-menu');
-            if (content) {
-                content.classList.add('hidden');
-                content.classList.add('md:hidden'); 
-            }
-        });
-    };
-
-    // --- THEME ---
+    // --- HELPER ---
     const toggleClass = (el, className, condition) => {
       if (condition) el.classList.add(className);
       else el.classList.remove(className);
@@ -59,17 +28,43 @@ import { UI } from 'astrowind:config';
       });
     };
 
+    // --- NEU: Korrektur der Scrollposition bei Refresh (#anker) ---
+    const restoreScrollPosition = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const targetEl = document.querySelector(hash);
+        if (targetEl) {
+          // Kleiner Timeout damit das Layout (Bilder/Fonts) stabil ist
+          setTimeout(() => {
+            const header = document.getElementById('header');
+            const headerHeight = header ? header.getBoundingClientRect().height : 0;
+            const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
+            
+            window.scrollTo({
+              top: targetPos - headerHeight,
+              behavior: 'auto' // 'auto' für sofortigen Sprung beim Laden
+            });
+          }, 10);
+        }
+      }
+    };
+
     // --- 1. HEADER LOGIK ---
     const initHeader = () => {
-      const header = document.getElementById('header');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
 
       let isTicking = false;
+      let lastState = false;
+
       const onScroll = () => {
         if (!isTicking) {
           window.requestAnimationFrame(() => {
-            stickyHeader.classList.toggle('scroll', window.scrollY > 10);
+            const isScrolled = window.scrollY > 10;
+            if (isScrolled !== lastState) {
+              stickyHeader.classList.toggle('scroll', isScrolled);
+              lastState = isScrolled;
+            }
             isTicking = false;
           });
           isTicking = true;
@@ -81,190 +76,117 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- 2. MENU LOGIK (Optimized & Fixed) ---
+    // --- 2. MENU LOGIK ---
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
       const nav = header?.querySelector('nav');
-      
       if (!menuBtn || !header || !nav) return;
 
-      // Mobile Toggle
-      const toggleMenu = (e) => {
-        e?.stopPropagation();
-        
-        // Wenn es schon offen ist -> Close All (sauberer Reset)
-        if (menuBtn.classList.contains('expanded')) {
-            closeAll();
-            return;
-        }
+      const toggleMenu = () => {
+        menuBtn.classList.toggle('expanded');
+        document.body.classList.toggle('overflow-hidden');
+        header.classList.toggle('h-screen');
+        header.classList.toggle('expanded');
+        header.classList.toggle('bg-page');
 
-        menuBtn.classList.add('expanded');
-        document.body.classList.add('overflow-hidden');
-        header.classList.add('h-screen', 'expanded', 'bg-page');
-        nav.classList.remove('hidden');
-        header.querySelector('div > div:last-child')?.classList.remove('hidden');
+        const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
+        if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
+        nav.classList.toggle('hidden');
       };
 
       menuBtn.onclick = toggleMenu;
+      window.toggleMenuInstance = toggleMenu;
 
-      // Dropdown Logic (Event Delegation)
       const onNavClick = (e) => {
-        // Wir suchen den Button
-        const trigger = e.target.closest('.dropdown > button');
-        if (!trigger) return; // Wenn kein Trigger geklickt wurde, raus hier
-
-        // Dropdown Logic
-        e.preventDefault();
-        e.stopPropagation();
-
-        const parent = trigger.closest('.dropdown');
-        const content = parent.querySelector('.dropdown-menu'); 
-        const wasOpen = trigger.classList.contains('expanded');
-
-        // 1. Alle anderen Dropdowns schließen
-        document.querySelectorAll('.dropdown').forEach(d => {
-            if (d !== parent) {
-                d.querySelector('button')?.classList.remove('expanded');
-                const c = d.querySelector('.dropdown-menu');
-                if (c) {
-                    c.classList.add('hidden');
-                    c.classList.add('md:hidden');
-                }
-            }
-        });
-
-        // 2. Aktuelles toggeln
-        if (wasOpen) {
-            trigger.classList.remove('expanded');
-            if(content) {
-                content.classList.add('hidden');
-                content.classList.add('md:hidden');
-            }
-        } else {
-            trigger.classList.add('expanded');
-            if(content) {
-                content.classList.remove('hidden');
-                content.classList.remove('md:hidden'); // FIX: md:hidden entfernen!
-            }
+        const trigger = e.target.closest('.dropdown > button, .dropdown > a');
+        if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
+        
+        const subMenu = trigger.nextElementSibling;
+        if (subMenu) {
+          e.preventDefault();
+          subMenu.classList.toggle('hidden');
+          trigger.classList.toggle('expanded');
         }
       };
 
       nav.addEventListener('click', onNavClick);
-      
-      // Cleanup
-      cleanupFns.push(() => {
-          menuBtn.onclick = null;
-          nav.removeEventListener('click', onNavClick);
-      });
     };
 
-    // --- 3. GLOBAL EVENTS ---
+    // --- 3. GLOBAL EVENTS (SMOOTH SCROLL) ---
     const initGlobalEvents = () => {
       const onClick = (e) => {
-        // A) Theme Toggle (Persistent)
         const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
         if (themeBtn) {
-          e.preventDefault();
           const themes = ['system', 'light', 'dark'];
-          // Hole aktuellen Wert aus LocalStorage oder Default
           const current = localStorage.getItem('theme') || 'system';
           const next = themes[(themes.indexOf(current) + 1) % 3];
-          
-          localStorage.setItem('theme', next); // Speichern!
+          localStorage.setItem('theme', next);
           applyTheme(next);
           return;
         }
 
-        // B) Links & Smooth Scroll
         const link = e.target.closest('a');
-        if (link) {
-            // Ignoriere Links, die nur Dropdown-Placeholder sind (# oder javascript)
-            if (link.getAttribute('href') === '#' || link.getAttribute('href')?.startsWith('javascript')) return;
-
-            // 1. ZUERST ALLES SCHLIEßEN
-            closeAll();
-
-            // 2. Smooth Scroll bei Hash
-            if (link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-                const targetEl = document.querySelector(link.hash);
-                if (targetEl) {
-                    e.preventDefault();
-                    // Timeout für Layout-Update nach Schließen
-                    setTimeout(() => {
-                        const headerHeight = getHeaderHeight();
-                        const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-                        window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
-                        history.pushState(null, null, link.hash);
-                    }, 10);
-                }
+        if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
+          const targetEl = document.querySelector(link.hash);
+          if (targetEl) {
+            e.preventDefault();
+            if (document.getElementById('header')?.classList.contains('expanded')) {
+              window.toggleMenuInstance?.();
             }
-        } else {
-            // C) Klick ins Leere -> Schließen
-            if (!e.target.closest('#header nav') && !e.target.closest('[data-aw-toggle-menu]')) {
-                closeAll();
-            }
+            link.blur();
+            const header = document.getElementById('header');
+            const headerHeight = header ? header.getBoundingClientRect().height : 0;
+            const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
+            
+            window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
+            history.pushState(null, null, link.hash);
+          }
         }
       };
 
-      document.addEventListener('click', onClick, { capture: true, passive: false });
+      document.addEventListener('click', onClick, { capture: true });
       cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
     };
 
-    // --- 4. RELOAD POSITION FIX ---
-    const fixInitialHashScroll = () => {
-        if (window.location.hash) {
-            const target = document.querySelector(window.location.hash);
-            if (target) {
-                setTimeout(() => {
-                    const headerHeight = getHeaderHeight();
-                    const targetPos = target.getBoundingClientRect().top + window.scrollY;
-                    window.scrollTo({ top: targetPos - headerHeight, behavior: 'instant' });
-                }, 100);
-            }
-        }
-    };
-
-    // --- 5. ANIMATIONS ---
+    // --- 4. ANIMATIONS ---
     const initAnimations = () => {
-      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
+      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','.intersect'];
       const elements = document.querySelectorAll(selectors.join(','));
       if (elements.length === 0) return;
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const el = entry.target;
-            el.setAttribute('data-aw-animated', 'true');
-            el.removeAttribute('no-intersect');
-            if (el.classList.contains('intersect-once')) observer.unobserve(el);
+            entry.target.setAttribute('data-aw-animated', 'true');
+            if (entry.target.classList.contains('intersect-once')) observer.unobserve(entry.target);
           }
         });
       }, { threshold: 0.1 });
 
-      elements.forEach(el => {
-        el.setAttribute('no-intersect', '');
-        observer.observe(el);
-      });
-
+      elements.forEach(el => observer.observe(el));
       cleanupFns.push(() => observer.disconnect());
     };
 
     // --- MAIN LIFECYCLE ---
     const run = () => {
+      // WICHTIG: Verhindert das automatische Springen des Browsers
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
-      // Theme: Laden aus LocalStorage (Persistent)
-      applyTheme(localStorage.getItem('theme') || defaultTheme);
-      
+      applyTheme(localStorage.getItem('theme') || 'system');
       initHeader();
       initMenu();
-      
+
+      // Erst Events binden, dann Position wiederherstellen
       setTimeout(() => {
-          initGlobalEvents();
-          fixInitialHashScroll();
-      }, 0);
+        initGlobalEvents();
+        restoreScrollPosition();
+      }, 1);
 
       if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
       else setTimeout(initAnimations, 200);
