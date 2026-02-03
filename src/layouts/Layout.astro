@@ -50,42 +50,32 @@ const { language, textDirection } = I18N;
 
     <script is:inline src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v3.0.0/dist/cookieconsent.umd.js" defer></script>
     <script>
-    import { config } from "~/utils/cookieconsent-config.js";
+            import { config } from "../utils/cookieconsent-config";
 
-    const initConsent = () => {
-        // Sicherheitscheck: Ist die Library geladen?
-        if (!window.CookieConsent) {
-            setTimeout(initConsent, 100);
-            return;
-        }
+            function runCookieConsent() {
+                // Warten bis Library da ist
+                if (!window.CookieConsent) {
+                    setTimeout(runCookieConsent, 100);
+                    return;
+                }
 
-        try {
-            // 1. Reset: Löscht altes HTML (wichtig bei Astro Seitenwechsel)
-            // 'true' behält aber die gespeicherte Entscheidung des Nutzers!
-            window.CookieConsent.reset(true);
+                // HIER LAG DER FEHLER:
+                // reset() ohne 'true' löscht nur die internen Daten, NICHT das Cookie.
+                // Das ist notwendig, damit das Tool merkt "Oh, das HTML ist weg (wegen Astro), ich muss neu zeichnen".
+                window.CookieConsent.reset(); 
 
-            // 2. Starten: Baut das HTML neu auf
-            // Die Library prüft automatisch: Gibt es ein Cookie?
-            // JA -> Kein Popup, aber Button funktioniert.
-            // NEIN -> Popup anzeigen.
-            window.CookieConsent.run(config);
+                // Jetzt starten. Das Tool prüft selbst: "Gibt es schon ein Cookie?"
+                // Wenn JA -> Kein Popup, nur Config laden.
+                // Wenn NEIN -> Popup anzeigen.
+                window.CookieConsent.run(config);
+            }
+
+            // Initialer Start
+            document.addEventListener('DOMContentLoaded', runCookieConsent);
             
-            console.log("CookieConsent ready");
-
-        } catch (e) {
-            console.error("Cookie Init Fehler:", e);
-        }
-    };
-
-    // Event Listener für Astro Navigation
-    // 'astro:page-load' deckt Erstbesuch UND Seitenwechsel ab
-    document.addEventListener('astro:page-load', initConsent);
-    
-    // Fallback falls ViewTransitions mal klemmen
-    if (!document.querySelector('meta[name="astro-view-transitions-enabled"]')) {
-        document.addEventListener('DOMContentLoaded', initConsent);
-    }
-  </script>
+            // Neustart bei Astro Seitenwechsel
+            document.addEventListener('astro:page-load', runCookieConsent);
+		</script>
 
   </body>
 </html>
