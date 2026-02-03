@@ -1,6 +1,16 @@
 export const config = {
-    // WICHTIG: Hier das Root-Element angeben, sonst hängt es sich manchmal falsch an
-    root: "body",
+export const config = {
+  // 1. WICHTIG: Cookie-Einstellungen explizit setzen
+  cookie: {
+    name: 'cc_cookie',
+    expiresAfterDays: 182,
+    domain: '', // Leer lassen = automatisch aktuelle Domain (wichtig für localhost!)
+    path: '/',
+    sameSite: 'Lax', 
+  },
+
+  // 2. Root Element definieren
+  root: "body",
       guiOptions: {
           consentModal: {
               layout: "box",
