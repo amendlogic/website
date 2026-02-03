@@ -49,33 +49,38 @@ const { language, textDirection } = I18N;
     <BasicScripts />
 
     <script is:inline src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v3.0.0/dist/cookieconsent.umd.js" defer></script>
-    <script>
-            import { config } from "../utils/cookieconsent-config";
+<script>
+            import { config } from "~/utils/cookieconsent-config.js";
 
-            /**
-             * Funktion, die das Cookie-Banner startet
-             */
-            function initCookieConsent() {
-                // Prüfen, ob die externe Bibliothek fertig geladen ist
-                if (window.CookieConsent) {
-                    // Starten (oder Neustarten beim Seitenwechsel)
-                    window.CookieConsent.run(config);
-                } else {
-                    // Falls das CDN noch lädt, versuchen wir es in 50ms nochmal
-                    setTimeout(initCookieConsent, 50);
+            // Diese Funktion startet das Banner
+            const startConsent = () => {
+                if (!window.CookieConsent) {
+                    // Noch nicht geladen? Kurz warten...
+                    setTimeout(startConsent, 100);
+                    return;
                 }
-            }
 
-            // DAS IST NEU:
-            // 'astro:page-load' feuert beim ersten Laden UND bei jedem Seitenwechsel
-            document.addEventListener('astro:page-load', initCookieConsent);
+                try {
+                    // WICHTIG: Zuerst alles zurücksetzen!
+                    // Das zwingt das Tool, das HTML neu in den Body zu schreiben.
+                    window.CookieConsent.reset(true);
+                    
+                    // Dann neu starten
+                    window.CookieConsent.run(config);
+                    console.log("CookieConsent neu initialisiert");
+                } catch (e) {
+                    console.error("CookieConsent Fehler:", e);
+                }
+            };
 
-            // Fallback: Falls du ViewTransitions NICHT nutzt, feuert astro:page-load manchmal nicht.
-            // Daher zur Sicherheit auch beim normalen Laden prüfen:
-            if (!document.querySelector('meta[name="astro-view-transitions-enabled"]')) {
-                 window.addEventListener('load', initCookieConsent);
-            }
-		</script>w.addEventListener('load', initCookieConsent);
+            // Starten beim ersten Laden (Classic)
+            document.addEventListener('DOMContentLoaded', startConsent);
+
+            // Starten bei Astro Seitenwechsel (View Transitions)
+            document.addEventListener('astro:page-load', startConsent);
+            
+            // Sicher ist sicher: Nach dem Wechsel nochmal prüfen
+            document.addEventListener('astro:after-swap', startConsent);
 		</script>
 
   </body>
