@@ -31,8 +31,8 @@
   --cc-btn-secondary-hover-border-color: rgb(75 85 99);
   
   /* Toggles (Schalter) */
-  --cc-toggle-bg-off: rgb(203 213 225);
-  --cc-toggle-bg-on: var(--aw-color-primary);
+  --cc-toggle-off-bg: rgb(203 213 225);
+  --cc-toggle-on-bg: var(--aw-color-primary);
   --cc-toggle-bg-readonly: var(--aw-color-secondary);
   --cc-toggle-knob-bg: #ffffff;
   --cc-toggle-knob-icon-color: #ecf0f1;
@@ -40,7 +40,8 @@
   /* Links & Footer */
   --cc-cookie-category-block-bg: #f8fafc; /* Slate 50 */
   --cc-cookie-category-block-hover-bg: #f1f5f9; /* Slate 100 */
-
+  --cc-cookie-category-block-border: #ffffff;
+  --cc-cookie-category-block-hover-border: #ffffff;
 
   --cc-footer-bg: rgb(239 246 255);
 
