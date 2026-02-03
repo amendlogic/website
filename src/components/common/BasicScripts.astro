@@ -272,23 +272,3 @@ import { UI } from 'astrowind:config';
     Observer.start();
   });
 </script>
-
-<script is:inline>
-  document.addEventListener('astro:page-load', () => {
-document.addEventListener('click', (e) => {
-  const target = e.target as HTMLElement;
-  
-  // Prüfen, ob das geklickte Element das Attribut data-cc="show-preferencesModal" hat
-  if (target && target.closest('[data-cc="show-preferencesModal"]')) {
-    e.preventDefault(); // Verhindert das Scrollen nach oben (#)
-    
-    // Prüfen, ob die Library verfügbar ist und Modal öffnen
-    if (window.CookieConsent) {
-      window.CookieConsent.showPreferences();
-    } else {
-      console.warn("CookieConsent ist noch nicht geladen");
-    }
-  }
-});
-  });
-</script>
