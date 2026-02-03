@@ -18,12 +18,14 @@
   /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
   --cc-btn-primary-bg: var(--aw-color-primary);
   --cc-btn-primary-text: #ffffff;
-  --cc-btn-primary-hover-bg: rgb(1 84 207);
+  --cc-btn-primary-hover-bg: var(--aw-color-secondary);
+  --cc-btn-primary-border-color: var(--aw-color-primary);
   
   /* Sekundär-Button (Einstellungen/Ablehnen) */
   --cc-btn-secondary-bg: #ffffff;
   --cc-btn-secondary-text: #334155; /* Slate 700 */
   --cc-btn-secondary-hover-bg: rgb(243 244 246);
+  --cc-btn-secondary-border-color: rgb(156 163 175);
   
   /* Toggles (Schalter) */
   --cc-toggle-bg-off: var(--aw-color-text-muted);
