@@ -76,7 +76,7 @@
 
 /* --- Optional: Fein-Tuning für AstroWind Typografie --- */
 #cc-main .cm {
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), 0 20px 25px -5px rgb(0 0 0 / .1), 0 8px 10px -6px rgb(0 0 0 / .1);
 }
 
 #cc-main .cm__title {
