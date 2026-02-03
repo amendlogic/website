@@ -28,29 +28,9 @@ import { UI } from 'astrowind:config';
       });
     };
 
-    // --- NEU: Korrektur der Scrollposition bei Refresh (#anker) ---
-    const restoreScrollPosition = () => {
-      const hash = window.location.hash;
-      if (hash) {
-        const targetEl = document.querySelector(hash);
-        if (targetEl) {
-          // Kleiner Timeout damit das Layout (Bilder/Fonts) stabil ist
-          setTimeout(() => {
-            const header = document.getElementById('header');
-            const headerHeight = header ? header.getBoundingClientRect().height : 0;
-            const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-            
-            window.scrollTo({
-              top: targetPos - headerHeight,
-              behavior: 'auto' // 'auto' für sofortigen Sprung beim Laden
-            });
-          }, 10);
-        }
-      }
-    };
-
-    // --- 1. HEADER LOGIK ---
+    // --- 1. HEADER LOGIK (ROBUST VERSION) ---
     const initHeader = () => {
+      const header = document.getElementById('header');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
 
@@ -72,15 +52,22 @@ import { UI } from 'astrowind:config';
       };
 
       window.addEventListener('scroll', onScroll, { passive: true });
-      if (window.scrollY > 10) stickyHeader.classList.add('scroll');
+      
+      // Initial-Check gegen "Verschwinden beim Refresh"
+      if (window.scrollY > 10) {
+        stickyHeader.classList.add('scroll');
+        lastState = true;
+      }
+
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- 2. MENU LOGIK ---
+    // --- 2. MENU LOGIK (MEMORY OPTIMIZED) ---
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
       const nav = header?.querySelector('nav');
+      
       if (!menuBtn || !header || !nav) return;
 
       const toggleMenu = () => {
@@ -92,30 +79,43 @@ import { UI } from 'astrowind:config';
 
         const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
         if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
+
         nav.classList.toggle('hidden');
+
+        const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
+        if (actions) actions.classList.toggle('hidden');
       };
 
       menuBtn.onclick = toggleMenu;
       window.toggleMenuInstance = toggleMenu;
 
+      // OPTIMIERUNG: Event Delegation für Dropdowns
+      // Statt viele Listener zu erzeugen, nutzen wir nur einen am Parent (nav)
       const onNavClick = (e) => {
+        // Wir suchen, ob ein Dropdown-Trigger geklickt wurde
         const trigger = e.target.closest('.dropdown > button, .dropdown > a');
-        if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
         
+        // Abbruch wenn kein Trigger oder wenn wir nicht im Mobile-Mode sind
+        if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
+
+        // Dropdown Logic
+        e.preventDefault();
         const subMenu = trigger.nextElementSibling;
         if (subMenu) {
-          e.preventDefault();
-          subMenu.classList.toggle('hidden');
-          trigger.classList.toggle('expanded');
+            subMenu.classList.toggle('hidden');
+            trigger.classList.toggle('expanded');
         }
       };
 
       nav.addEventListener('click', onNavClick);
+      // Event Listener beim Cleanup entfernen nicht vergessen!
+      // Da 'nav' beim Seitenwechsel bestehen bleibt bis Swap, ist das sauber.
     };
 
-    // --- 3. GLOBAL EVENTS (SMOOTH SCROLL) ---
+    // --- 3. GLOBAL EVENTS (LINKS & SMOOTH SCROLL) ---
     const initGlobalEvents = () => {
       const onClick = (e) => {
+        // Theme Toggle
         const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
         if (themeBtn) {
           const themes = ['system', 'light', 'dark'];
@@ -126,67 +126,65 @@ import { UI } from 'astrowind:config';
           return;
         }
 
+        // Smooth Scroll
         const link = e.target.closest('a');
         if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
           const targetEl = document.querySelector(link.hash);
           if (targetEl) {
             e.preventDefault();
-            if (document.getElementById('header')?.classList.contains('expanded')) {
-              window.toggleMenuInstance?.();
+            if (document.getElementById('header')?.classList.contains('expanded') && window.toggleMenuInstance) {
+              window.toggleMenuInstance();
             }
             link.blur();
             const header = document.getElementById('header');
             const headerHeight = header ? header.getBoundingClientRect().height : 0;
             const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-            
             window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
             history.pushState(null, null, link.hash);
           }
         }
       };
 
-      document.addEventListener('click', onClick, { capture: true });
+      document.addEventListener('click', onClick, { capture: true, passive: false });
       cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
     };
 
-    // --- 4. ANIMATIONS ---
+    // --- 4. ANIMATIONS (LAZY) ---
     const initAnimations = () => {
-      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','.intersect'];
+      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
       const elements = document.querySelectorAll(selectors.join(','));
       if (elements.length === 0) return;
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.setAttribute('data-aw-animated', 'true');
-            if (entry.target.classList.contains('intersect-once')) observer.unobserve(entry.target);
+            const el = entry.target;
+            el.setAttribute('data-aw-animated', 'true');
+            el.removeAttribute('no-intersect');
+            if (el.classList.contains('intersect-once')) observer.unobserve(el);
           }
         });
       }, { threshold: 0.1 });
 
-      elements.forEach(el => observer.observe(el));
+      elements.forEach(el => {
+        el.setAttribute('no-intersect', '');
+        observer.observe(el);
+      });
+
       cleanupFns.push(() => observer.disconnect());
     };
 
     // --- MAIN LIFECYCLE ---
     const run = () => {
-      // WICHTIG: Verhindert das automatische Springen des Browsers
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-      }
-
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
       applyTheme(localStorage.getItem('theme') || 'system');
-      initHeader();
-      initMenu();
+      
+      initHeader(); // Robust & Sofort
+      initMenu();   // Memory Optimized
 
-      // Erst Events binden, dann Position wiederherstellen
-      setTimeout(() => {
-        initGlobalEvents();
-        restoreScrollPosition();
-      }, 1);
+      setTimeout(initGlobalEvents, 0);
 
       if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
       else setTimeout(initAnimations, 200);
