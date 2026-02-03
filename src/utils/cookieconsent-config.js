@@ -1,5 +1,4 @@
 export const config = {
-export const config = {
   // 1. WICHTIG: Cookie-Einstellungen explizit setzen
   cookie: {
     name: 'cc_cookie',
