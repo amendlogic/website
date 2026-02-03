@@ -44,20 +44,6 @@ import { UI } from 'astrowind:config';
     let lastKnownScrollPosition = window.scrollY;
     let ticking = true;
 
-    // --- NEU: Cookie Settings Handler ---
-    attachEvent('[data-cc="show-preferencesModal"]', 'click', function (e) {
-      e.preventDefault();
-      // Versuche verschiedene bekannte Methoden der Library aufzurufen
-      if (window.CookieConsent && typeof window.CookieConsent.showPreferences === 'function') {
-        window.CookieConsent.showPreferences();
-      } else if (window.CookieConsent && typeof window.CookieConsent.showSettings === 'function') {
-        window.CookieConsent.showSettings();
-      } else if (typeof window.initCookieConsent === 'function') {
-        window.initCookieConsent().showSettings();
-      }
-    });
-    // ------------------------------------
-
     attachEvent('#header nav', 'click', function () {
       document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
       document.body.classList.remove('overflow-hidden');
@@ -111,6 +97,7 @@ import { UI } from 'astrowind:config';
         case 'mail':
           href = `mailto:?subject=%22${text}%22&body=${text}%20${url}`;
           break;
+
         default:
           return;
       }
@@ -155,7 +142,6 @@ import { UI } from 'astrowind:config';
       }
     });
   };
-
   const onPageShow = function () {
     document.documentElement.classList.add('motion-safe:scroll-smooth');
     const elem = document.querySelector('[data-aw-toggle-menu]');
@@ -179,7 +165,7 @@ import { UI } from 'astrowind:config';
 </script>
 
 <script is:inline>
-  // Observer Logik (unverändert)
+  /* Inspired by: https://github.com/heidkaemper/tailwindcss-intersect */
   const Observer = {
     observer: null,
     delayBetweenAnimations: 100,
@@ -264,6 +250,12 @@ import { UI } from 'astrowind:config';
       });
     },
 
+    /* 
+      REF: #643;
+      We need to remove the delay to fix flickering/delay
+      when toggling the theme. Observer only removes them
+      after data-animated is gone (out of view).
+    */
     removeAnimationDelay() {
       this.elements.forEach((el) => {
         if (el.getAttribute('data-animated') === 'true') {
@@ -278,5 +270,25 @@ import { UI } from 'astrowind:config';
 
   document.addEventListener('astro:after-swap', () => {
     Observer.start();
+  });
+</script>
+
+<script is:inline>
+  document.addEventListener('astro:page-load', () => {
+document.addEventListener('click', (e) => {
+  const target = e.target as HTMLElement;
+  
+  // Prüfen, ob das geklickte Element das Attribut data-cc="show-preferencesModal" hat
+  if (target && target.closest('[data-cc="show-preferencesModal"]')) {
+    e.preventDefault(); // Verhindert das Scrollen nach oben (#)
+    
+    // Prüfen, ob die Library verfügbar ist und Modal öffnen
+    if (window.CookieConsent) {
+      window.CookieConsent.showPreferences();
+    } else {
+      console.warn("CookieConsent ist noch nicht geladen");
+    }
+  }
+});
   });
 </script>
