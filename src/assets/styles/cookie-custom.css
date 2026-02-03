@@ -11,7 +11,8 @@
   
   /* Hintergrund & Text */
   --cc-bg: #ffffff;
-  --cc-text: var(--aw-color-text-muted)
+  --cc-text: var(--aw-color-text-muted);
+    
   --cc-separator: #e2e8f0; /* Slate 200 */
   
   /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
