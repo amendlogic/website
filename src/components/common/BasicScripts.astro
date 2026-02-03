@@ -3,66 +3,79 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+  // Singleton Check: Verhindert doppeltes Ausführen
   if (window.basic_script_init) return;
   window.basic_script_init = true;
 
   (function() {
     let cleanupFns = [];
 
-    // --- HELPER ---
-    const toggleClass = (el, className, condition) => {
-      if (condition) el.classList.add(className);
-      else el.classList.remove(className);
-    };
-
+    // --- 1. THEME LOGIK ---
     const applyTheme = (theme) => {
-      const resolvedTheme = (theme === 'system') 
-        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
+      const resolvedTheme = theme === 'system'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         : theme;
       
-      requestAnimationFrame(() => {
-        toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
-        document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
-          toggleClass(icon, 'hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
-        });
+      const root = document.documentElement;
+      // Native Toggle: Fügt hinzu wenn true, entfernt wenn false
+      root.classList.toggle('dark', resolvedTheme === 'dark');
+
+      document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
+        icon.classList.toggle('hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
       });
     };
 
-    // --- 1. HEADER LOGIK (ROBUST VERSION) ---
-    const initHeader = () => {
-      const header = document.getElementById('header');
-      const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
-      if (!stickyHeader) return;
+    const initTheme = () => {
+      const handleThemeToggle = (e) => {
+        const btn = e.target.closest('[data-aw-toggle-color-scheme]');
+        if (!btn) return;
 
-      let isTicking = false;
-      let lastState = false;
+        const current = localStorage.getItem('theme') || 'system';
+        const themes = ['system', 'light', 'dark'];
+        const next = themes[(themes.indexOf(current) + 1) % themes.length];
+        
+        localStorage.setItem('theme', next);
+        applyTheme(next);
+      };
+      
+      document.addEventListener('click', handleThemeToggle);
+      cleanupFns.push(() => document.removeEventListener('click', handleThemeToggle));
+    };
+
+    // --- 2. HEADER LOGIK (High-Performance rAF) ---
+    const initHeader = () => {
+      const header = document.querySelector('#header[data-aw-sticky-header]');
+      if (!header) return;
+
+      let ticking = false;
+      let lastState = window.scrollY > 10;
+
+      // Initial setzen
+      header.classList.toggle('scroll', lastState);
+
+      const updateHeader = () => {
+        const isScrolled = window.scrollY > 10;
+        // DOM nur anfassen, wenn sich der Status wirklich geändert hat!
+        if (isScrolled !== lastState) {
+          header.classList.toggle('scroll', isScrolled);
+          lastState = isScrolled;
+        }
+        ticking = false;
+      };
 
       const onScroll = () => {
-        if (!isTicking) {
-          window.requestAnimationFrame(() => {
-            const isScrolled = window.scrollY > 10;
-            if (isScrolled !== lastState) {
-              stickyHeader.classList.toggle('scroll', isScrolled);
-              lastState = isScrolled;
-            }
-            isTicking = false;
-          });
-          isTicking = true;
+        if (!ticking) {
+          window.requestAnimationFrame(updateHeader);
+          ticking = true;
         }
       };
 
+      // { passive: true } ist extrem wichtig für Scroll-Performance auf Mobile
       window.addEventListener('scroll', onScroll, { passive: true });
-      
-      // Initial-Check gegen "Verschwinden beim Refresh"
-      if (window.scrollY > 10) {
-        stickyHeader.classList.add('scroll');
-        lastState = true;
-      }
-
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- 2. MENU LOGIK (MEMORY OPTIMIZED) ---
+    // --- 3. MENU LOGIK ---
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
@@ -71,121 +84,104 @@ import { UI } from 'astrowind:config';
       if (!menuBtn || !header || !nav) return;
 
       const toggleMenu = () => {
-        menuBtn.classList.toggle('expanded');
-        document.body.classList.toggle('overflow-hidden');
-        header.classList.toggle('h-screen');
-        header.classList.toggle('expanded');
-        header.classList.toggle('bg-page');
-
-        const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
-        if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
-
-        nav.classList.toggle('hidden');
-
+        const isExpanded = menuBtn.classList.toggle('expanded');
+        document.body.classList.toggle('overflow-hidden', isExpanded);
+        header.classList.toggle('h-screen', isExpanded);
+        header.classList.toggle('expanded', isExpanded);
+        header.classList.toggle('bg-page', isExpanded);
+        
+        nav.classList.toggle('hidden', !isExpanded);
+        
+        // Icons toggeln (Hamburger <-> Kreuz)
+        menuBtn.querySelectorAll('svg').forEach(el => el.classList.toggle('hidden'));
+        
+        // Actions Button (Rechts oben)
         const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
-        if (actions) actions.classList.toggle('hidden');
+        if (actions) actions.classList.toggle('hidden', isExpanded);
       };
 
       menuBtn.onclick = toggleMenu;
-      window.toggleMenuInstance = toggleMenu;
+      window.toggleMenuInstance = toggleMenu; // Für externen Zugriff
 
-      // OPTIMIERUNG: Event Delegation für Dropdowns
-      // Statt viele Listener zu erzeugen, nutzen wir nur einen am Parent (nav)
+      // Dropdown Logik (Event Delegation)
       const onNavClick = (e) => {
-        // Wir suchen, ob ein Dropdown-Trigger geklickt wurde
         const trigger = e.target.closest('.dropdown > button, .dropdown > a');
-        
-        // Abbruch wenn kein Trigger oder wenn wir nicht im Mobile-Mode sind
+        // Nur feuern, wenn wir im Mobile-Mode sind (Menu-Button sichtbar ist)
         if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
 
-        // Dropdown Logic
         e.preventDefault();
+        trigger.classList.toggle('expanded');
         const subMenu = trigger.nextElementSibling;
-        if (subMenu) {
-            subMenu.classList.toggle('hidden');
-            trigger.classList.toggle('expanded');
-        }
+        if (subMenu) subMenu.classList.toggle('hidden');
       };
 
       nav.addEventListener('click', onNavClick);
-      // Event Listener beim Cleanup entfernen nicht vergessen!
-      // Da 'nav' beim Seitenwechsel bestehen bleibt bis Swap, ist das sauber.
     };
 
-    // --- 3. GLOBAL EVENTS (LINKS & SMOOTH SCROLL) ---
-    const initGlobalEvents = () => {
+    // --- 4. SMOOTH SCROLL (Clean Version) ---
+    const initScroll = () => {
       const onClick = (e) => {
-        // Theme Toggle
-        const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
-        if (themeBtn) {
-          const themes = ['system', 'light', 'dark'];
-          const current = localStorage.getItem('theme') || 'system';
-          const next = themes[(themes.indexOf(current) + 1) % 3];
-          localStorage.setItem('theme', next);
-          applyTheme(next);
-          return;
+        const link = e.target.closest('a[href^="#"]');
+        // Checken ob Hash-Link und ob selbe Seite
+        if (!link || link.origin !== window.location.origin) return;
+        
+        const targetId = link.getAttribute('href');
+        if(targetId === '#') return;
+        
+        const targetEl = document.querySelector(targetId);
+        if (!targetEl) return;
+
+        e.preventDefault();
+        
+        // Mobile Menu schließen falls offen
+        if (document.getElementById('header')?.classList.contains('expanded')) {
+           window.toggleMenuInstance?.();
         }
 
-        // Smooth Scroll
-        const link = e.target.closest('a');
-        if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-          const targetEl = document.querySelector(link.hash);
-          if (targetEl) {
-            e.preventDefault();
-            if (document.getElementById('header')?.classList.contains('expanded') && window.toggleMenuInstance) {
-              window.toggleMenuInstance();
-            }
-            link.blur();
-            const header = document.getElementById('header');
-            const headerHeight = header ? header.getBoundingClientRect().height : 0;
-            const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-            window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
-            history.pushState(null, null, link.hash);
-          }
-        }
+        const headerHeight = document.getElementById('header')?.getBoundingClientRect().height || 0;
+        const targetPos = targetEl.getBoundingClientRect().top + window.scrollY - headerHeight;
+
+        window.scrollTo({ top: targetPos, behavior: 'smooth' });
+        history.pushState(null, null, targetId);
       };
 
-      document.addEventListener('click', onClick, { capture: true, passive: false });
-      cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
+      document.addEventListener('click', onClick);
+      cleanupFns.push(() => document.removeEventListener('click', onClick));
     };
 
-    // --- 4. ANIMATIONS (LAZY) ---
+    // --- 5. ANIMATIONS ---
     const initAnimations = () => {
-      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
-      const elements = document.querySelectorAll(selectors.join(','));
-      if (elements.length === 0) return;
+      const elements = document.querySelectorAll('[class*="intersect"]');
+      if (!elements.length) return;
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const el = entry.target;
-            el.setAttribute('data-aw-animated', 'true');
-            el.removeAttribute('no-intersect');
-            if (el.classList.contains('intersect-once')) observer.unobserve(el);
+            entry.target.setAttribute('data-aw-animated', 'true');
+            if (entry.target.classList.contains('intersect-once')) {
+              observer.unobserve(entry.target);
+            }
           }
         });
       }, { threshold: 0.1 });
 
-      elements.forEach(el => {
-        el.setAttribute('no-intersect', '');
-        observer.observe(el);
-      });
-
+      elements.forEach(el => observer.observe(el));
       cleanupFns.push(() => observer.disconnect());
     };
 
-    // --- MAIN LIFECYCLE ---
+    // --- MAIN ---
     const run = () => {
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
-      applyTheme(localStorage.getItem('theme') || 'system');
+      applyTheme(localStorage.getItem('theme') || defaultTheme);
       
-      initHeader(); // Robust & Sofort
-      initMenu();   // Memory Optimized
-
-      setTimeout(initGlobalEvents, 0);
-
+      initTheme();
+      initHeader();
+      initMenu();
+      initScroll();
+      
+      // Animationen niedrig priorisiert laden
       if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
       else setTimeout(initAnimations, 200);
     };
