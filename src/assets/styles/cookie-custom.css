@@ -25,13 +25,13 @@
   
   /* Sekundär-Button (Einstellungen/Ablehnen) */
   --cc-btn-secondary-bg: #ffffff;
-  --cc-btn-secondary-text: #334155; /* Slate 700 */
+  --cc-btn-secondary-text: var(--aw-color-text-default);
   --cc-btn-secondary-hover-bg: rgb(243 244 246);
   --cc-btn-secondary-border-color: rgb(156 163 175);
   --cc-btn-secondary-hover-border-color: rgb(75 85 99);
   
   /* Toggles (Schalter) */
-  --cc-toggle-bg-off: var(--aw-color-text-muted);
+  --cc-toggle-bg-off: rgb(203 213 225);
   --cc-toggle-bg-on: var(--aw-color-primary);
   --cc-toggle-bg-readonly: var(--aw-color-secondary);
   --cc-toggle-knob-bg: #ffffff;
@@ -39,7 +39,9 @@
 
   /* Links & Footer */
   --cc-cookie-category-block-bg: #f8fafc; /* Slate 50 */
-  --cc-cookie-category-block-bg-hover: #f1f5f9; /* Slate 100 */
+  --cc-cookie-category-block-hover-bg: #f1f5f9; /* Slate 100 */
+
+
   --cc-footer-bg: rgb(239 246 255);
 
 
