@@ -26,9 +26,9 @@
   --cc-btn-secondary-hover-bg: rgb(243 244 246);
   
   /* Toggles (Schalter) */
-  --cc-toggle-bg-off: #cbd5e1; /* Slate 300 */
-  --cc-toggle-bg-on: var(--aw-color-primary)
-  --cc-toggle-bg-readonly: #94a3b8; /* Slate 400 */
+  --cc-toggle-bg-off: var(--aw-color-text-muted);
+  --cc-toggle-bg-on: var(--aw-color-primary);
+  --cc-toggle-bg-readonly: var(--aw-color-secondary);
   --cc-toggle-knob-bg: #ffffff;
   --cc-toggle-knob-icon-color: #ecf0f1;
 
@@ -41,7 +41,7 @@
   
   /* Form - Rundungen anpassen (AstroWind nutzt oft rounded-lg) */
   --cc-modal-border-radius: .375rem;
-  --cc-btn-border-radius: 9999px;
+  --cc-btn-border-radius: .375rem;
 }
 
 /* --- Dark Mode --- */
