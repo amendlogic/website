@@ -50,17 +50,32 @@ const { language, textDirection } = I18N;
 
     <script is:inline src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v3.0.0/dist/cookieconsent.umd.js" defer></script>
     <script>
-            // Wir importieren deine Config-Datei
-            import { config } from "~/utils/cookieconsent-config.js";
-            
+            import { config } from "../utils/cookieconsent-config";
+
+            /**
+             * Funktion, die das Cookie-Banner startet
+             */
             function initCookieConsent() {
+                // Prüfen, ob die externe Bibliothek fertig geladen ist
                 if (window.CookieConsent) {
+                    // Starten (oder Neustarten beim Seitenwechsel)
                     window.CookieConsent.run(config);
                 } else {
-                    setTimeout(initCookieConsent, 100);
+                    // Falls das CDN noch lädt, versuchen wir es in 50ms nochmal
+                    setTimeout(initCookieConsent, 50);
                 }
             }
-            window.addEventListener('load', initCookieConsent);
+
+            // DAS IST NEU:
+            // 'astro:page-load' feuert beim ersten Laden UND bei jedem Seitenwechsel
+            document.addEventListener('astro:page-load', initCookieConsent);
+
+            // Fallback: Falls du ViewTransitions NICHT nutzt, feuert astro:page-load manchmal nicht.
+            // Daher zur Sicherheit auch beim normalen Laden prüfen:
+            if (!document.querySelector('meta[name="astro-view-transitions-enabled"]')) {
+                 window.addEventListener('load', initCookieConsent);
+            }
+		</script>w.addEventListener('load', initCookieConsent);
 		</script>
 
   </body>
