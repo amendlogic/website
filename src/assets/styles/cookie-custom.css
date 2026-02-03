@@ -40,8 +40,8 @@
   /* Links & Footer */
   --cc-cookie-category-block-bg: #f8fafc; /* Slate 50 */
   --cc-cookie-category-block-hover-bg: #f1f5f9; /* Slate 100 */
-  --cc-cookie-category-block-border: #ffffff;
-  --cc-cookie-category-block-hover-border: #ffffff;
+  --cc-cookie-category-block-border: rgb(203 213 225);
+  --cc-cookie-category-block-hover-border: rgb(203 213 225);
 
   --cc-footer-bg: rgb(239 246 255);
 
