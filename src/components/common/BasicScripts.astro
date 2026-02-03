@@ -3,7 +3,7 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  // Singleton Pattern
+  // Singleton: Verhindert doppelte Ausführung
   if (window.basic_script_init) return;
   window.basic_script_init = true;
 
@@ -60,7 +60,7 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- 2. MENU LOGIK (ORIGINAL + ROBUST) ---
+    // --- 2. MENU & DROPDOWN LOGIK (STRICT CLOSE) ---
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
@@ -68,78 +68,83 @@ import { UI } from 'astrowind:config';
       
       if (!menuBtn || !header || !nav) return;
 
-      // Die Funktion zum kompletten Schließen (Original-Logik + Dropdown Fix)
-      const closeMenu = () => {
-        // 1. Original Logik: Mobile Menu Reset
+      // HELPER: Schließt ALLE Dropdowns (wichtig für sauberen Zustand)
+      const closeAllDropdowns = () => {
+        document.querySelectorAll('.dropdown > .expanded').forEach(el => {
+            el.classList.remove('expanded');
+            if (el.nextElementSibling) el.nextElementSibling.classList.add('hidden');
+        });
+      };
+
+      // HELPER: Schließt das Mobile Menü komplett
+      const closeMobileMenu = () => {
         menuBtn.classList.remove('expanded');
         document.body.classList.remove('overflow-hidden');
         header.classList.remove('h-screen');
         header.classList.remove('expanded');
         header.classList.remove('bg-page');
         nav.classList.add('hidden');
-        document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
-
-        // 2. Zusatz für Desktop: Auch offene Dropdowns schließen
-        const expandedDropdowns = document.querySelectorAll('.dropdown > .expanded');
-        expandedDropdowns.forEach(el => {
-            el.classList.remove('expanded');
-            if (el.nextElementSibling) el.nextElementSibling.classList.add('hidden');
-        });
+        closeAllDropdowns(); // Auch Dropdowns innen schließen
       };
 
-      // Toggle Funktion für den Hamburger Button
+      // 1. Mobile Toggle Button
       menuBtn.onclick = (e) => {
-        e.stopPropagation(); // Verhindert, dass der Klick gleich wieder das Menü schließt
+        e.stopPropagation(); // Verhindert Bubbling zum Document
         menuBtn.classList.toggle('expanded');
         document.body.classList.toggle('overflow-hidden');
         header.classList.toggle('h-screen');
         header.classList.toggle('expanded');
         header.classList.toggle('bg-page');
         nav.classList.toggle('hidden');
-        document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
       };
 
-      // Event Delegation für Dropdowns
+      // 2. Dropdown Trigger Logic (Delegation)
       const onNavClick = (e) => {
+        // Suche nach dem Button/Link, der das Dropdown öffnet
         const trigger = e.target.closest('.dropdown > button, .dropdown > a');
+        
         if (trigger) {
-            // Dropdown Logik
-            e.preventDefault(); 
-            // Andere Dropdowns schließen (Accordion Effekt, optional aber sauber)
-            const parent = trigger.closest('.dropdown').parentElement;
-            if(parent) {
-                parent.querySelectorAll('.expanded').forEach( sib => {
-                    if(sib !== trigger) {
-                        sib.classList.remove('expanded');
-                        if(sib.nextElementSibling) sib.nextElementSibling.classList.add('hidden');
-                    }
-                });
+            e.preventDefault();
+            e.stopPropagation(); // WICHTIG: Damit der Klick nicht das "Document Close" feuert
+
+            const isAlreadyOpen = trigger.classList.contains('expanded');
+
+            // Erstmal alles schließen (Accordion-Effekt & Aufräumen)
+            closeAllDropdowns();
+
+            // Wenn es vorher NICHT offen war, jetzt öffnen. 
+            // Wenn es offen war, bleibt es durch closeAllDropdowns() jetzt zu (Toggle-Effekt).
+            if (!isAlreadyOpen) {
+                trigger.classList.add('expanded');
+                if (trigger.nextElementSibling) trigger.nextElementSibling.classList.remove('hidden');
             }
-            trigger.classList.toggle('expanded');
-            if (trigger.nextElementSibling) trigger.nextElementSibling.classList.toggle('hidden');
-            e.stopPropagation(); // Damit der "Schließen"-Listener am Nav nicht feuert
         }
       };
 
-      // WICHTIG: Das ist die Logik aus deinem Original-Skript
-      // Bei Klick auf Nav (Hintergrund oder Links) -> Alles schließen
-      const onNavGeneralClick = (e) => {
-         // Nur schließen, wenn wir NICHT gerade ein Dropdown oder den Toggle geklickt haben
-         if (!e.target.closest('.dropdown > button')) {
-             closeMenu();
-         }
+      // 3. Document Listener: Klick irgendwo anders hin schließt alles
+      const onDocumentClick = (e) => {
+        // Wenn Klick NICHT im Header/Nav war -> Alles zu
+        if (!e.target.closest('#header nav') && !e.target.closest('[data-aw-toggle-menu]')) {
+             closeMobileMenu(); // Schließt Mobile Menu wenn man daneben klickt
+        }
+        
+        // Generell Dropdowns schließen, wenn man nicht gerade drin klickt
+        // Ausnahme: Man klickt IN ein Dropdown Inhalt -> soll offen bleiben
+        if (!e.target.closest('.dropdown')) {
+             closeAllDropdowns();
+        }
       };
 
-      nav.addEventListener('click', onNavClick);     // Für Dropdown Toggle
-      nav.addEventListener('click', onNavGeneralClick); // Zum Schließen bei Links
+      nav.addEventListener('click', onNavClick);
+      document.addEventListener('click', onDocumentClick);
 
-      // Expose closeMenu für den Scroll-Handler
-      window.awCloseMenu = closeMenu;
+      // Expose für externe Nutzung
+      window.awCloseMobileMenu = closeMobileMenu;
 
       cleanupFns.push(() => {
           menuBtn.onclick = null;
           nav.removeEventListener('click', onNavClick);
-          nav.removeEventListener('click', onNavGeneralClick);
+          document.removeEventListener('click', onDocumentClick);
       });
     };
 
@@ -158,22 +163,23 @@ import { UI } from 'astrowind:config';
           return;
         }
 
-        // Smooth Scroll & Menu Close
+        // Smooth Scroll & Link Handling
         const link = e.target.closest('a');
-        if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-          const targetEl = document.querySelector(link.hash);
-          if (targetEl) {
-            e.preventDefault();
-            
-            // Menü schließen (über die oben definierte Logik)
-            if (window.awCloseMenu) window.awCloseMenu();
-            
-            const headerHeight = getHeaderHeight();
-            const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-            
-            window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
-            history.pushState(null, null, link.hash);
-          }
+        if (link) {
+            // Wenn es ein Link ist (egal ob Hash oder Seite): Menü schließen!
+            if (window.awCloseMobileMenu) window.awCloseMobileMenu();
+
+            // Speziell für Hash Links (#section) -> Smooth Scroll
+            if (link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
+                const targetEl = document.querySelector(link.hash);
+                if (targetEl) {
+                    e.preventDefault();
+                    const headerHeight = getHeaderHeight();
+                    const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
+                    history.pushState(null, null, link.hash);
+                }
+            }
         }
       };
 
@@ -182,12 +188,10 @@ import { UI } from 'astrowind:config';
     };
 
     // --- 4. RELOAD SCROLL FIX ---
-    // Lädt die Seite an der korrekten Position (Header offset) neu
     const fixInitialHashScroll = () => {
         if (window.location.hash) {
             const target = document.querySelector(window.location.hash);
             if (target) {
-                // setTimeout 0 reicht oft, um dem Browser Render-Zeit zu geben
                 setTimeout(() => {
                     const headerHeight = getHeaderHeight();
                     const targetPos = target.getBoundingClientRect().top + window.scrollY;
@@ -222,10 +226,9 @@ import { UI } from 'astrowind:config';
       initHeader();
       initMenu();
 
-      // Events asynchron initialisieren für Performance
       setTimeout(() => {
           initGlobalEvents();
-          fixInitialHashScroll(); // Fix für Reload-Position
+          fixInitialHashScroll();
       }, 0);
 
       if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
