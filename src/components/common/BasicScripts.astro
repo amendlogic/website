@@ -3,7 +3,7 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  // Singleton: Verhindert doppelte Ausführung
+  // Singleton Pattern
   if (window.basic_script_init) return;
   window.basic_script_init = true;
 
@@ -90,13 +90,31 @@ import { UI } from 'astrowind:config';
       window.toggleMenuInstance = toggleMenu; 
 
       const onNavClick = (e) => {
+        // Wir suchen nach Buttons oder Links, die ein Dropdown steuern
         const trigger = e.target.closest('.dropdown > button, .dropdown > a');
-        if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
+        
+        // WICHTIG: Im Desktop-Modus wollen wir auch Dropdowns öffnen/schließen können,
+        // daher entfernen wir die Prüfung auf "display: none" des MenuBtns hier, 
+        // oder passen sie an, falls Dropdowns im Desktop per Hover gehen sollen.
+        // AstroWind Standard ist oft Click auch auf Desktop.
+        if (!trigger) return;
+
+        // Falls wir Mobile sind ODER Click-Event gewünscht ist:
         e.preventDefault();
         const subMenu = trigger.nextElementSibling;
         if (subMenu) {
+            // Toggle Dropdown
             subMenu.classList.toggle('hidden');
             trigger.classList.toggle('expanded');
+            
+            // Optional: Andere offene Dropdowns schließen (Accordion-Effekt)
+            const otherExpanded = document.querySelectorAll('.dropdown > .expanded');
+            otherExpanded.forEach(el => {
+                if (el !== trigger) {
+                    el.classList.remove('expanded');
+                    if (el.nextElementSibling) el.nextElementSibling.classList.add('hidden');
+                }
+            });
         }
       };
 
@@ -122,18 +140,32 @@ import { UI } from 'astrowind:config';
           return;
         }
 
-        // B) Smooth Scroll & Menu Close
+        // B) Smooth Scroll & Menu/Dropdown Close
         const link = e.target.closest('a');
         if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
           const targetEl = document.querySelector(link.hash);
           if (targetEl) {
             e.preventDefault();
             
-            // --- FIX: Menu schließen ---
-            // Wir prüfen jetzt direkt den Button, das ist sicherer als der Header
             const menuBtn = document.querySelector('[data-aw-toggle-menu]');
-            if (menuBtn && menuBtn.classList.contains('expanded') && window.toggleMenuInstance) {
-              window.toggleMenuInstance();
+            
+            // UNTERSCHEIDUNG: Mobile vs Desktop
+            const isMobile = menuBtn && window.getComputedStyle(menuBtn).display !== 'none';
+
+            if (isMobile) {
+                // 1. Mobile: Ganzes Menü schließen
+                if (menuBtn.classList.contains('expanded') && window.toggleMenuInstance) {
+                    window.toggleMenuInstance();
+                }
+            } else {
+                // 2. Desktop: Nur Dropdowns schließen
+                const expandedTriggers = document.querySelectorAll('.dropdown > .expanded');
+                expandedTriggers.forEach(trigger => {
+                    trigger.classList.remove('expanded');
+                    if (trigger.nextElementSibling) {
+                        trigger.nextElementSibling.classList.add('hidden');
+                    }
+                });
             }
             
             const headerHeight = getHeaderHeight();
@@ -142,6 +174,16 @@ import { UI } from 'astrowind:config';
             window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
             history.pushState(null, null, link.hash);
           }
+        } else {
+            // C) Klick irgendwo anders hin (nicht auf einen Link)
+            // Schließt Dropdowns, wenn man daneben klickt (UX Verbesserung)
+            if (!e.target.closest('nav')) {
+                 const expandedTriggers = document.querySelectorAll('.dropdown > .expanded');
+                 expandedTriggers.forEach(trigger => {
+                    trigger.classList.remove('expanded');
+                    if (trigger.nextElementSibling) trigger.nextElementSibling.classList.add('hidden');
+                });
+            }
         }
       };
 
