@@ -1,0 +1,40 @@
+---
+import { UI } from 'astrowind:config';
+---
+
+<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+  // IIFE (Immediately Invoked Function Expression) um Scope sauber zu halten
+  (function() {
+    function applyTheme(theme) {
+      const resolvedTheme = (theme === 'system') 
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
+        : theme;
+
+      // 1. Klasse setzen (Blocking, verhindert weißes Blitzen)
+      const root = document.documentElement;
+      if (resolvedTheme === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+
+      // 2. Icons synchronisieren (kann warten)
+      const syncIcons = () => {
+        const icons = document.querySelectorAll('[data-aw-theme-icon]');
+        if (icons.length === 0) return;
+        icons.forEach(icon => {
+          icon.classList.toggle('hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
+        });
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', syncIcons);
+      } else {
+        syncIcons();
+      }
+    }
+
+    const savedTheme = localStorage.getItem('theme') || (defaultTheme.endsWith(':only') ? defaultTheme.replace(':only', '') : 'system');
+    applyTheme(savedTheme);
+  })();
+</script>
