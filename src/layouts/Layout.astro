@@ -49,32 +49,40 @@ const { language, textDirection } = I18N;
     <BasicScripts />
 
     <script is:inline src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v3.0.0/dist/cookieconsent.umd.js" defer></script>
-    <script>
-            import { config } from "../utils/cookieconsent-config";
+<script>
+            import { config } from "~/utils/cookieconsent-config.js";
 
-            function runCookieConsent() {
-                // Warten bis Library da ist
-                if (!window.CookieConsent) {
-                    setTimeout(runCookieConsent, 100);
-                    return;
-                }
+            // Hauptfunktion
+            function initCC() {
+                if (!window.CookieConsent) return;
 
-                // HIER LAG DER FEHLER:
-                // reset() ohne 'true' löscht nur die internen Daten, NICHT das Cookie.
-                // Das ist notwendig, damit das Tool merkt "Oh, das HTML ist weg (wegen Astro), ich muss neu zeichnen".
-                window.CookieConsent.reset(); 
+                // 1. Reset: Löscht nur das HTML (DOM), NICHT das Cookie!
+                // Das ist notwendig, weil Astro den Body ausgetauscht hat.
+                window.CookieConsent.reset();
 
-                // Jetzt starten. Das Tool prüft selbst: "Gibt es schon ein Cookie?"
-                // Wenn JA -> Kein Popup, nur Config laden.
-                // Wenn NEIN -> Popup anzeigen.
+                // 2. Starten
+                // Das Tool prüft jetzt automatisch: "Gibt es das Cookie 'cc_cookie'?"
+                // Falls JA -> Es passiert NICHTS (kein Popup).
+                // Falls NEIN -> Popup kommt.
                 window.CookieConsent.run(config);
             }
 
-            // Initialer Start
-            document.addEventListener('DOMContentLoaded', runCookieConsent);
-            
-            // Neustart bei Astro Seitenwechsel
-            document.addEventListener('astro:page-load', runCookieConsent);
+            // Diese Logik sorgt dafür, dass es beim Seitenwechsel klappt
+            // Wir nutzen 'astro:page-load', das feuert immer wenn der neue Inhalt da ist.
+            document.addEventListener('astro:page-load', () => {
+                // Warte kurz, bis die externe Library sicher geladen ist
+                if (window.CookieConsent) {
+                    initCC();
+                } else {
+                    // Fallback beim allerersten Laden (falls CDN langsam ist)
+                    const interval = setInterval(() => {
+                        if (window.CookieConsent) {
+                            clearInterval(interval);
+                            initCC();
+                        }
+                    }, 100);
+                }
+            });
 		</script>
 
   </body>
