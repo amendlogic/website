@@ -49,39 +49,43 @@ const { language, textDirection } = I18N;
     <BasicScripts />
 
     <script is:inline src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v3.0.0/dist/cookieconsent.umd.js" defer></script>
-<script>
-            import { config } from "~/utils/cookieconsent-config.js";
+    <script>
+    import { config } from "~/utils/cookieconsent-config.js";
 
-            // Diese Funktion startet das Banner
-            const startConsent = () => {
-                if (!window.CookieConsent) {
-                    // Noch nicht geladen? Kurz warten...
-                    setTimeout(startConsent, 100);
-                    return;
-                }
+    const initConsent = () => {
+        // Sicherheitscheck: Ist die Library geladen?
+        if (!window.CookieConsent) {
+            setTimeout(initConsent, 100);
+            return;
+        }
 
-                try {
-                    // WICHTIG: Zuerst alles zurücksetzen!
-                    // Das zwingt das Tool, das HTML neu in den Body zu schreiben.
-                    window.CookieConsent.reset(true);
-                    
-                    // Dann neu starten
-                    window.CookieConsent.run(config);
-                    console.log("CookieConsent neu initialisiert");
-                } catch (e) {
-                    console.error("CookieConsent Fehler:", e);
-                }
-            };
+        try {
+            // 1. Reset: Löscht altes HTML (wichtig bei Astro Seitenwechsel)
+            // 'true' behält aber die gespeicherte Entscheidung des Nutzers!
+            window.CookieConsent.reset(true);
 
-            // Starten beim ersten Laden (Classic)
-            document.addEventListener('DOMContentLoaded', startConsent);
-
-            // Starten bei Astro Seitenwechsel (View Transitions)
-            document.addEventListener('astro:page-load', startConsent);
+            // 2. Starten: Baut das HTML neu auf
+            // Die Library prüft automatisch: Gibt es ein Cookie?
+            // JA -> Kein Popup, aber Button funktioniert.
+            // NEIN -> Popup anzeigen.
+            window.CookieConsent.run(config);
             
-            // Sicher ist sicher: Nach dem Wechsel nochmal prüfen
-            document.addEventListener('astro:after-swap', startConsent);
-		</script>
+            console.log("CookieConsent ready");
+
+        } catch (e) {
+            console.error("Cookie Init Fehler:", e);
+        }
+    };
+
+    // Event Listener für Astro Navigation
+    // 'astro:page-load' deckt Erstbesuch UND Seitenwechsel ab
+    document.addEventListener('astro:page-load', initConsent);
+    
+    // Fallback falls ViewTransitions mal klemmen
+    if (!document.querySelector('meta[name="astro-view-transitions-enabled"]')) {
+        document.addEventListener('DOMContentLoaded', initConsent);
+    }
+  </script>
 
   </body>
 </html>
