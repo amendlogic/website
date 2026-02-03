@@ -3,12 +3,11 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  // Singleton Pattern: Verhindert doppelte Ausführung
+  // Singleton: Verhindert doppelte Ausführung
   if (window.basic_script_init) return;
   window.basic_script_init = true;
 
   (function() {
-    // Speicher für Cleanup-Funktionen (wichtig für ViewTransitions)
     let cleanupFns = [];
 
     // --- HELPER ---
@@ -17,10 +16,8 @@ import { UI } from 'astrowind:config';
       else el.classList.remove(className);
     };
 
-    // Robuste Header-Höhen Berechnung
     const getHeaderHeight = () => {
       const header = document.getElementById('header');
-      // Prüfen ob Header sticky oder fixed ist, sonst ist offset 0 meist ok
       if (!header) return 0;
       return header.getBoundingClientRect().height;
     };
@@ -31,7 +28,6 @@ import { UI } from 'astrowind:config';
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
         : theme;
       
-      // DOM-Manipulationen immer im Animation Frame
       requestAnimationFrame(() => {
         toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
         document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
@@ -40,7 +36,7 @@ import { UI } from 'astrowind:config';
       });
     };
 
-    // --- 1. HEADER LOGIK (SCROLL STATE) ---
+    // --- 1. HEADER LOGIK ---
     const initHeader = () => {
       const header = document.getElementById('header');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
@@ -52,7 +48,6 @@ import { UI } from 'astrowind:config';
         if (!isTicking) {
           window.requestAnimationFrame(() => {
             const isScrolled = window.scrollY > 10;
-            // Nur anfassen, wenn sich der Status wirklich geändert hat (Performance)
             if (stickyHeader.classList.contains('scroll') !== isScrolled) {
               stickyHeader.classList.toggle('scroll', isScrolled);
             }
@@ -63,14 +58,11 @@ import { UI } from 'astrowind:config';
       };
 
       window.addEventListener('scroll', onScroll, { passive: true });
-      
-      // Initial State setzen
       if (window.scrollY > 10) stickyHeader.classList.add('scroll');
-
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- 2. MENU LOGIK (MOBILE) ---
+    // --- 2. MENU LOGIK ---
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
@@ -90,19 +82,16 @@ import { UI } from 'astrowind:config';
 
         nav.classList.toggle('hidden');
 
-        // Optional: Action Buttons im Header
         const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
         if (actions) actions.classList.toggle('hidden');
       };
 
       menuBtn.onclick = toggleMenu;
-      window.toggleMenuInstance = toggleMenu; // Für externen Zugriff (z.B. beim Klicken eines Links)
+      window.toggleMenuInstance = toggleMenu; 
 
-      // Event Delegation für Dropdowns (Performance Optimierung)
       const onNavClick = (e) => {
         const trigger = e.target.closest('.dropdown > button, .dropdown > a');
         if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
-
         e.preventDefault();
         const subMenu = trigger.nextElementSibling;
         if (subMenu) {
@@ -112,7 +101,6 @@ import { UI } from 'astrowind:config';
       };
 
       nav.addEventListener('click', onNavClick);
-      // Cleanup ist hier wichtig bei SPA Navigation
       cleanupFns.push(() => {
           menuBtn.onclick = null;
           nav.removeEventListener('click', onNavClick);
@@ -134,25 +122,24 @@ import { UI } from 'astrowind:config';
           return;
         }
 
-        // B) Smooth Scroll für Anker-Links
+        // B) Smooth Scroll & Menu Close
         const link = e.target.closest('a');
         if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
           const targetEl = document.querySelector(link.hash);
           if (targetEl) {
             e.preventDefault();
             
-            // Menu schließen, falls offen
-            if (document.getElementById('header')?.classList.contains('expanded') && window.toggleMenuInstance) {
+            // --- FIX: Menu schließen ---
+            // Wir prüfen jetzt direkt den Button, das ist sicherer als der Header
+            const menuBtn = document.querySelector('[data-aw-toggle-menu]');
+            if (menuBtn && menuBtn.classList.contains('expanded') && window.toggleMenuInstance) {
               window.toggleMenuInstance();
             }
             
-            // Berechnung der Scroll-Position
             const headerHeight = getHeaderHeight();
             const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
             
             window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
-            
-            // URL aktualisieren ohne Sprung
             history.pushState(null, null, link.hash);
           }
         }
@@ -162,9 +149,8 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
     };
 
-    // --- 4. ANIMATIONS (INTERSECTION OBSERVER) ---
+    // --- 4. ANIMATIONS ---
     const initAnimations = () => {
-      // Wählt alle Elemente aus, die Animation-Klassen haben
       const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
       const elements = document.querySelectorAll(selectors.join(','));
       if (elements.length === 0) return;
@@ -173,7 +159,6 @@ import { UI } from 'astrowind:config';
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const el = entry.target;
-            // Attribut setzen, damit CSS Animation greift
             el.setAttribute('data-aw-animated', 'true');
             el.removeAttribute('no-intersect');
             if (el.classList.contains('intersect-once')) observer.unobserve(el);
@@ -189,54 +174,39 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => observer.disconnect());
     };
 
-    // --- 5. INITIAL HASH SCROLL FIX (RELOAD FIX) ---
-    // Sorgt dafür, dass beim Neuladen (F5) mit #hash die Position stimmt
+    // --- 5. RELOAD SCROLL FIX ---
     const fixInitialHashScroll = () => {
         if (window.location.hash) {
             const target = document.querySelector(window.location.hash);
             if (target) {
-                // Kurze Verzögerung, um Layout-Shift abzuwarten
                 setTimeout(() => {
                     const headerHeight = getHeaderHeight();
                     const targetPos = target.getBoundingClientRect().top + window.scrollY;
-                    
-                    window.scrollTo({ 
-                        top: targetPos - headerHeight, 
-                        behavior: 'instant' // Wichtig: Instant beim Laden, nicht smooth
-                    });
+                    window.scrollTo({ top: targetPos - headerHeight, behavior: 'instant' });
                 }, 10);
             }
         }
     };
 
-    // --- MAIN LIFECYCLE ---
+    // --- RUN ---
     const run = () => {
-      // Alte Listener aufräumen
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
-      // Theme anwenden
       applyTheme(localStorage.getItem('theme') || defaultTheme);
-      
-      // Module starten
       initHeader();
       initMenu();
 
-      // Events verzögern um Main Thread beim Laden zu entlasten
       setTimeout(() => {
           initGlobalEvents();
-          fixInitialHashScroll(); // <-- Hier wird der Reload-Position-Fix aufgerufen
+          fixInitialHashScroll();
       }, 0);
 
-      // Animationen via IdleCallback laden (Performance!)
       if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
       else setTimeout(initAnimations, 200);
     };
 
-    // Start
     run();
-    
-    // Astro View Transitions Hook
     document.addEventListener('astro:after-swap', run);
   })();
 </script>
