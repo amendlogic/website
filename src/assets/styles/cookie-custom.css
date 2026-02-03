@@ -11,7 +11,8 @@
   
   /* Hintergrund & Text */
   --cc-bg: #ffffff;
-  --cc-text: var(--aw-color-text-muted);
+  --cc-text: var(--aw-color-text-default);
+  --cc-secondary-color: var(--aw-color-text-muted);
     
   --cc-separator: rgb(229 231 235);
   
