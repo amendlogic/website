@@ -126,22 +126,3 @@ CookieConsent.run({
         }
     }
 });
-
-// 2. Diese Funktion EXPORTIEREN wir jetzt
-export const initCookieConsent = () => {
-    
-    // Prüfen ob Lib da ist
-    if (typeof CookieConsent === 'undefined') return;
-
-    // CookieConsent starten
-    CookieConsent.run(config);
-
-    // Button Logic verbinden
-    const triggers = document.querySelectorAll('.js-cookie-settings, [data-aw-cookie-prefs]');
-    triggers.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            CookieConsent.showPreferences();
-        });
-    });
-};
