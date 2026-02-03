@@ -11,7 +11,7 @@
   
   /* Hintergrund & Text */
   --cc-bg: #ffffff;
-  --cc-text: #0f172a; /* Slate 900 */
+  --cc-text: var(--aw-color-text-muted)
   --cc-separator: #e2e8f0; /* Slate 200 */
   
   /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
@@ -34,6 +34,9 @@
   /* Links & Footer */
   --cc-cookie-category-block-bg: #f8fafc; /* Slate 50 */
   --cc-cookie-category-block-bg-hover: #f1f5f9; /* Slate 100 */
+  --cc-footer-bg: rgb(239 246 255);
+
+
   
   /* Form - Rundungen anpassen (AstroWind nutzt oft rounded-lg) */
   --cc-modal-border-radius: 0.75rem; /* 12px */
