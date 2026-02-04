@@ -49,34 +49,29 @@ const { language, textDirection } = I18N;
 
     <BasicScripts />
 
-    <!-- ========================== -->
-    <!-- CookieConsent Library -->
-    <!-- ========================== -->
-    <script src="/libs/cookieconsent.umd.js"></script>
+<!-- CookieConsent Library -->
+<script src="/libs/cookieconsent.umd.js" is:inline></script>
 
-    <!-- ========================== -->
-    <!-- CookieConsent Config & Init -->
-    <!-- ========================== -->
-    <script type="module">
-      import { config } from "/libs/cookieconsent-config.js";
+<!-- CookieConsent Config & Init -->
+<script type="module">
+  import { config } from "/libs/cookieconsent-config.js";
 
-      function initCookieBanner() {
-        if (!window.CookieConsent) {
-          setTimeout(initCookieBanner, 50);
-          return;
-        }
+  function initCookieBanner() {
+    if (!window.CookieConsent) {
+      setTimeout(initCookieBanner, 50);
+      return;
+    }
 
-        try {
-          window.CookieConsent.reset();
-          window.CookieConsent.run(config);
-        } catch (err) {
-          console.error("CookieConsent init failed:", err);
-        }
-      }
+    try {
+      window.CookieConsent.reset();
+      window.CookieConsent.run(config);
+    } catch (err) {
+      console.error("CookieConsent init failed:", err);
+    }
+  }
 
-      // Läuft bei normalem Load UND bei Astro View Transitions
-      document.addEventListener("DOMContentLoaded", initCookieBanner);
-      document.addEventListener("astro:page-load", initCookieBanner);
-    </script>
+  document.addEventListener("DOMContentLoaded", initCookieBanner);
+  document.addEventListener("astro:page-load", initCookieBanner);
+</script>
   </body>
 </html>
