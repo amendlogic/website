@@ -13,7 +13,6 @@ import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
 
-// View Transitions (Astro)
 import { ClientRouter } from 'astro:transitions';
 
 import type { MetaData as MetaDataType } from '~/types';
@@ -49,29 +48,39 @@ const { language, textDirection } = I18N;
 
     <BasicScripts />
 
-<!-- CookieConsent Library -->
-<script src="/libs/cookieconsent.umd.js" is:inline></script>
+    <!-- ========================== -->
+    <!-- Optimiertes CookieConsent -->
+    <!-- ========================== -->
+    <script type="module">
+      async function loadCookieConsent() {
+        // Wenn Consent bereits gesetzt → nicht neu laden
+        if (localStorage.getItem('cc_status')) return;
 
-<!-- CookieConsent Config & Init -->
-<script type="module">
-  import { config } from "/libs/cookieconsent-config.js";
+        // CookieConsent Library laden
+        const script = document.createElement('script');
+        script.src = '/libs/cookieconsent.umd.js';
+        script.isInline = true;
+        document.head.appendChild(script);
 
-  function initCookieBanner() {
-    if (!window.CookieConsent) {
-      setTimeout(initCookieBanner, 50);
-      return;
-    }
+        // Init nach Laden der Library
+        script.onload = async () => {
+          try {
+            const { config } = await import('/libs/cookieconsent-config.js');
+            if (!window.CookieConsent) return;
+            window.CookieConsent.reset();
+            window.CookieConsent.run({
+              ...config,
+              debug: false, // auf true setzen für Development
+            });
+          } catch (err) {
+            console.error('CookieConsent init failed:', err);
+          }
+        };
+      }
 
-    try {
-      window.CookieConsent.reset();
-      window.CookieConsent.run(config);
-    } catch (err) {
-      console.error("CookieConsent init failed:", err);
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", initCookieBanner);
-  document.addEventListener("astro:page-load", initCookieBanner);
-</script>
+      // Läuft bei normalem Load + Astro View Transitions
+      document.addEventListener('DOMContentLoaded', loadCookieConsent);
+      document.addEventListener('astro:page-load', loadCookieConsent);
+    </script>
   </body>
 </html>
