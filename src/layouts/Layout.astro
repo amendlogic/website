@@ -53,32 +53,44 @@ const { language, textDirection } = I18N;
     <!-- ========================== -->
     <script type="module">
       async function loadCookieConsent() {
-        // Wenn Consent bereits gesetzt → nicht neu laden
-        if (localStorage.getItem('cc_status')) return;
+        // Bereits initialisiert? Dann nichts tun
+        if (window.__CookieConsentInitialized) return;
 
-        // CookieConsent Library laden
-        const script = document.createElement('script');
-        script.src = '/libs/cookieconsent.umd.js';
-        script.isInline = true;
-        document.head.appendChild(script);
+        // Prüfen, ob Consent schon gesetzt
+        if (localStorage.getItem('cc_status')) {
+          window.__CookieConsentInitialized = true;
+          return;
+        }
 
-        // Init nach Laden der Library
-        script.onload = async () => {
+        // Library laden, falls noch nicht vorhanden
+        if (!window.CookieConsent) {
+          const script = document.createElement('script');
+          script.src = '/libs/cookieconsent.umd.js';
+          script.isInline = true;
+          document.head.appendChild(script);
+
+          script.onload = async () => {
+            try {
+              const { config } = await import('/libs/cookieconsent-config.js');
+              window.CookieConsent?.run({ ...config, debug: false });
+              window.__CookieConsentInitialized = true;
+            } catch (err) {
+              console.error('CookieConsent init failed:', err);
+            }
+          };
+        } else {
+          // Wenn Library schon da, einmal ausführen
           try {
             const { config } = await import('/libs/cookieconsent-config.js');
-            if (!window.CookieConsent) return;
-            window.CookieConsent.reset();
-            window.CookieConsent.run({
-              ...config,
-              debug: false, // auf true setzen für Development
-            });
+            window.CookieConsent?.run({ ...config, debug: false });
+            window.__CookieConsentInitialized = true;
           } catch (err) {
             console.error('CookieConsent init failed:', err);
           }
-        };
+        }
       }
 
-      // Läuft bei normalem Load + Astro View Transitions
+      // Init bei normalem Load + Astro View Transitions
       document.addEventListener('DOMContentLoaded', loadCookieConsent);
       document.addEventListener('astro:page-load', loadCookieConsent);
     </script>
