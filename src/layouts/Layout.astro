@@ -49,30 +49,30 @@ const { language, textDirection } = I18N;
 
     <BasicScripts />
 
-    <!-- ✅ Saubere CookieConsent Integration (KEINE Doppel-Dateien) -->
-    <script type="module">
-      import CookieConsent from "/assets/libs/cookieconsent.umd.js";
-      import { config } from "/assets/libs/cookieconsent-config.js";
+<!-- 1) Library als klassisches Browser-Script laden -->
+<script src="/assets/libs/cookieconsent.umd.js"></script>
 
-      function initCookieBanner() {
-        const CC = window.CookieConsent || CookieConsent;
+<!-- 2) Deine Config als Modul laden -->
+<script type="module">
+  import { config } from "/assets/libs/cookieconsent-config.js";
 
-        if (!CC) {
-          setTimeout(initCookieBanner, 50);
-          return;
-        }
+  function initCookieBanner() {
+    if (!window.CookieConsent) {
+      setTimeout(initCookieBanner, 50);
+      return;
+    }
 
-        try {
-          CC.reset();
-          CC.run(config);
-        } catch (err) {
-          console.error("CookieConsent init failed:", err);
-        }
-      }
+    try {
+      window.CookieConsent.reset();
+      window.CookieConsent.run(config);
+    } catch (err) {
+      console.error("CookieConsent init failed:", err);
+    }
+  }
 
-      // Wichtig für Astro mit View Transitions
-      document.addEventListener("astro:page-load", initCookieBanner);
-      document.addEventListener("DOMContentLoaded", initCookieBanner);
-    </script>
+  // Läuft bei normalem Load UND bei Astro View Transitions
+  document.addEventListener("DOMContentLoaded", initCookieBanner);
+  document.addEventListener("astro:page-load", initCookieBanner);
+</script>
   </body>
 </html>
