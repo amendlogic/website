@@ -1,56 +1,44 @@
 ---
 // src/components/common/CookieConsent.astro
+// Alles intern gekapselt, kein Layout-Div nötig
 ---
+
+<!-- Styles -->
 <link rel="stylesheet" href="/libs/cookieconsent.css" />
 <link rel="stylesheet" href="/libs/cookie-custom.css" />
 
+<!-- Persistent Banner Container innerhalb der Komponente -->
 <div id="cookie-consent-root"></div>
 
 <script type="module">
-  // Hilfsfunktion zum Laden externer Scripts
-  function loadScript(src) {
-    return new Promise((resolve, reject) => {
-      if (document.querySelector(`script[src="${src}"]`)) {
-        resolve(); // Bereits da
-        return;
-      }
-      const script = document.createElement('script');
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }
-
   async function initCookieBanner() {
     const root = document.getElementById('cookie-consent-root');
     if (!root) return;
 
-    try {
-      // 1. Lib laden, falls noch nicht da (wartet bis fertig)
-      if (!window.CookieConsent) {
-        await loadScript('/libs/cookieconsent.umd.js');
-      }
+    // CookieConsent Library laden, falls nicht vorhanden
+    if (!window.CookieConsent) {
+      const script = document.createElement('script');
+      script.src = '/libs/cookieconsent.umd.js';
+      script.isInline = true;
+      document.head.appendChild(script);
+      script.onload = initCookieBanner;
+      return;
+    }
 
-      // 2. Config dynamisch importieren
-      // Pfad muss exakt stimmen (public Ordner Pfad)
-      const { config } = await import('/libs/cookieconsent-config.js');
+    // Config laden
+    const { config } = await import('/libs/cookieconsent-config.js');
 
-      // 3. Init oder Reset
-      // Wir prüfen, ob die Lib "bereit" ist. Reset ist sicherer bei SPA-Nav.
-      if (window.CookieConsent.validCookie('cc_cookie')) {
-          // Optional: Logik, wenn Consent schon da ist
-      }
-      
-      window.CookieConsent.reset(true);
-      window.CookieConsent.run({ ...config, root: root }); // 'root' oder 'container' je nach Lib-Version
-
-    } catch (e) {
-      console.error("CookieConsent Init failed:", e);
+    // Wenn schon initialisiert -> reset + rerun (für SPA/astro:page-load)
+    if (window.__CookieConsentInitialized) {
+      window.CookieConsent.reset();
+      window.CookieConsent.run({ ...config, container: root });
+    } else {
+      window.CookieConsent.run({ ...config, container: root });
+      window.__CookieConsentInitialized = true;
     }
   }
 
-  // WICHTIG: Nur astro:page-load verwenden!
-  // Das feuert beim ersten Laden UND bei jeder Navigation.
+  // Init bei normalem DOMContentLoaded + SPA Navigation
+  document.addEventListener('DOMContentLoaded', initCookieBanner);
   document.addEventListener('astro:page-load', initCookieBanner);
 </script>
