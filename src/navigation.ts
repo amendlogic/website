@@ -4,11 +4,10 @@ export const headerData = {
   links: [
     {
       text: 'Product',
-      href: getPermalink('/'),
       links: [
         {
           text: 'Features',
-          href: getPermalink('/homes/saas'),
+          href: getPermalink('/#features'),
         },
         {
           text: 'How it Works',
@@ -19,7 +18,7 @@ export const headerData = {
           href: getPermalink('/homes/mobile-app'),
         },
         {
-          text: 'User Feedback',
+          text: 'Testimonials',
           href: getPermalink('/homes/personal'),
         },
         {
@@ -50,11 +49,11 @@ export const headerData = {
       ],
     },
     {
-      text: 'Plans',
+      text: 'Pricing',
       href: getPermalink('/terms'),
     },
   ],
-  actions: [{ text: 'Download', href: 'https://github.com/arthelokyo/astrowind', target: '_blank' }],
+  actions: [{ text: 'Get Access', href: 'https://github.com/arthelokyo/astrowind', target: '_blank' }],
 };
 
 export const footerData = {
@@ -63,59 +62,55 @@ export const footerData = {
       title: 'Product',
       links: [
         { text: 'Features', href: '#' },
-        { text: 'Security', href: '#' },
-        { text: 'Team', href: '#' },
-        { text: 'Enterprise', href: '#' },
-        { text: 'Customer stories', href: '#' },
+        { text: 'How it Works', href: '#' },
+        { text: 'Performance', href: '#' },
         { text: 'Pricing', href: '#' },
-        { text: 'Resources', href: '#' },
+        { text: 'Changelog', href: '#' },
       ],
     },
     {
-      title: 'Platform',
+      title: 'Resources',
       links: [
-        { text: 'Developer API', href: '#' },
-        { text: 'Partners', href: '#' },
-        { text: 'Atom', href: '#' },
-        { text: 'Electron', href: '#' },
-        { text: 'AstroWind Desktop', href: '#' },
-      ],
-    },
-    {
-      title: 'Support',
-      links: [
-        { text: 'Docs', href: '#' },
-        { text: 'Community Forum', href: '#' },
-        { text: 'Professional Services', href: '#' },
-        { text: 'Skills', href: '#' },
-        { text: 'Status', href: '#' },
+        { text: 'Documentation', href: '#' },
+        { text: 'Community (Discord)', href: '#' },
+        { text: 'GitHub', href: '#' },
+        { text: 'Help Center', href: '#' },
       ],
     },
     {
       title: 'Company',
       links: [
         { text: 'About', href: '#' },
+        { text: 'Team', href: '#' },
         { text: 'Blog', href: '#' },
-        { text: 'Careers', href: '#' },
-        { text: 'Press', href: '#' },
-        { text: 'Inclusion', href: '#' },
-        { text: 'Social Impact', href: '#' },
-        { text: 'Shop', href: '#' },
+        { text: 'Contact', href: '#' },
+      ],
+    },
+    {
+      title: 'Legal',
+      links: [
+        { text: 'Imprint', href: '#' },
+        { text: 'Terms of Service', href: '#' },
+        { text: 'Privacy Policy', href: '#' },
+        { text: 'Cookie Policy', href: '#' },
+        { text: 'Risk Disclosure', href: '#' },
       ],
     },
   ],
   secondaryLinks: [
-    { text: 'Terms', href: getPermalink('/terms') },
-    { text: 'Privacy Policy', href: getPermalink('/privacy') },
+    { text: 'We speak English', href: getPermalink('/terms') },
+    { text: 'Wir sprechen Deutsch', href: getPermalink('/privacy') },
   ],
   socialLinks: [
     { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
+    { ariaLabel: 'TikTok', icon: 'tabler:brand-tiktok', href: '#' },
     { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
     { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
     { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
+    { ariaLabel: 'Discord', icon: 'tabler:brand-discord', href: 'https://github.com/arthelokyo/astrowind' },
     { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
   ],
   footNote: `
-    Made by <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo"> Arthelokyo</a> · All rights reserved.
+    © ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">AmendLogic</a> · All rights reserved · <a href="#" data-cc="show-preferencesModal" class="text-blue-600 underline dark:text-muted">Cookie Settings</a>
   `,
 };

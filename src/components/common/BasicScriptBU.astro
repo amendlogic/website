@@ -53,7 +53,7 @@ import { UI } from 'astrowind:config';
 
       window.addEventListener('scroll', onScroll, { passive: true });
       
-      // Initial-Check
+      // Initial-Check gegen "Verschwinden beim Refresh"
       if (window.scrollY > 10) {
         stickyHeader.classList.add('scroll');
         lastState = true;
@@ -89,10 +89,16 @@ import { UI } from 'astrowind:config';
       menuBtn.onclick = toggleMenu;
       window.toggleMenuInstance = toggleMenu;
 
+      // OPTIMIERUNG: Event Delegation für Dropdowns
+      // Statt viele Listener zu erzeugen, nutzen wir nur einen am Parent (nav)
       const onNavClick = (e) => {
+        // Wir suchen, ob ein Dropdown-Trigger geklickt wurde
         const trigger = e.target.closest('.dropdown > button, .dropdown > a');
+        
+        // Abbruch wenn kein Trigger oder wenn wir nicht im Mobile-Mode sind
         if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
 
+        // Dropdown Logic
         e.preventDefault();
         const subMenu = trigger.nextElementSibling;
         if (subMenu) {
@@ -102,6 +108,8 @@ import { UI } from 'astrowind:config';
       };
 
       nav.addEventListener('click', onNavClick);
+      // Event Listener beim Cleanup entfernen nicht vergessen!
+      // Da 'nav' beim Seitenwechsel bestehen bleibt bis Swap, ist das sauber.
     };
 
     // --- 3. GLOBAL EVENTS (LINKS & SMOOTH SCROLL) ---
@@ -127,17 +135,12 @@ import { UI } from 'astrowind:config';
             if (document.getElementById('header')?.classList.contains('expanded') && window.toggleMenuInstance) {
               window.toggleMenuInstance();
             }
-            link.blur(); // Focus entfernen
-            
+            link.blur();
             const header = document.getElementById('header');
             const headerHeight = header ? header.getBoundingClientRect().height : 0;
             const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-            
             window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
-            
-            // WICHTIG: pushState aktualisiert URL, aber der Browser merkt sich Scrollposition
-            // für diesen State erst NACHDEM gescrollt wurde.
-            history.pushState(null, null, link.hash); 
+            history.pushState(null, null, link.hash);
           }
         }
       };
@@ -171,28 +174,6 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => observer.disconnect());
     };
 
-    // --- NEU: FIX FÜR SCROLL POSITION BEIM LADEN/REFRESH ---
-    const fixScrollPosition = () => {
-      // Prüfen ob ein Hash (#section) in der URL ist
-      if (window.location.hash) {
-        const target = document.querySelector(window.location.hash);
-        if (target) {
-          // Kleiner Timeout gibt dem Browser Zeit für das Layout
-          setTimeout(() => {
-            const header = document.getElementById('header');
-            const headerHeight = header ? header.getBoundingClientRect().height : 0;
-            const targetPos = target.getBoundingClientRect().top + window.scrollY;
-            
-            // 'instant' Scrollen, damit es beim Laden nicht visuell springt
-            window.scrollTo({ 
-              top: targetPos - headerHeight, 
-              behavior: 'instant' 
-            });
-          }, 10); 
-        }
-      }
-    };
-
     // --- MAIN LIFECYCLE ---
     const run = () => {
       cleanupFns.forEach(fn => fn());
@@ -200,13 +181,10 @@ import { UI } from 'astrowind:config';
 
       applyTheme(localStorage.getItem('theme') || 'system');
       
-      initHeader(); 
-      initMenu();   
+      initHeader(); // Robust & Sofort
+      initMenu();   // Memory Optimized
 
       setTimeout(initGlobalEvents, 0);
-
-      // Hier wird die Scroll-Position beim Laden korrigiert
-      fixScrollPosition();
 
       if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
       else setTimeout(initAnimations, 200);

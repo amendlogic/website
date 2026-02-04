@@ -1,4 +1,5 @@
 ---
+import Logo from '~/components/Logo2.astro';
 import { Icon } from 'astro-icon/components';
 import { SITE } from 'astrowind:config';
 import { getHomePermalink } from '~/utils/permalinks';
@@ -8,6 +9,7 @@ interface Link {
   href?: string;
   ariaLabel?: string;
   icon?: string;
+  attrs?: Record<string, string>; /* <--- ÄNDERUNG 1: Damit TS das Feld akzeptiert */
 }
 
 interface Links {
@@ -35,7 +37,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
     <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
       <div class="col-span-12 lg:col-span-4">
         <div class="mb-2">
-          <a class="inline-block font-bold text-xl" href={getHomePermalink()}>{SITE?.name}</a>
+          <a class="inline-block font-bold text-xl" href={getHomePermalink()}><Logo /></a>
         </div>
         <div class="text-sm text-muted flex gap-1">
           {
@@ -58,12 +60,14 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
             <div class="dark:text-gray-300 font-medium mb-2">{title}</div>
             {links && Array.isArray(links) && links.length > 0 && (
               <ul class="text-sm">
-                {links.map(({ text, href, ariaLabel }) => (
+                {/* <--- ÄNDERUNG 2: 'attrs' hier hinzufügen --> */}
+                {links.map(({ text, href, ariaLabel, attrs }) => (
                   <li class="mb-2">
                     <a
                       class="text-muted hover:text-gray-700 hover:underline dark:text-gray-400 transition duration-150 ease-in-out"
                       href={href}
                       aria-label={ariaLabel}
+                      {...attrs} /* <--- ÄNDERUNG 3: Attribute hier 'spreaden' */
                     >
                       <Fragment set:html={text} />
                     </a>
@@ -76,13 +80,13 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
       }
     </div>
 
-{disclaimer?.length ? (
-  <div class="text-xs text-muted dark:text-gray-500 space-y-2 leading-relaxed">
-    {disclaimer.map(({ text }) => (
-      <p set:html={text} />
-    ))}
-  </div>
-) : null}
+    {disclaimer?.length ? (
+      <div class="text-xs text-muted dark:text-gray-500 space-y-2 leading-relaxed">
+        {disclaimer.map(({ text }) => (
+          <p set:html={text} />
+        ))}
+      </div>
+    ) : null}
 
     <div class="md:flex md:items-center md:justify-between py-6 md:py-8">
       {
