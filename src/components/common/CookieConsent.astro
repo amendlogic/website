@@ -1,44 +1,62 @@
 ---
 // src/components/common/CookieConsent.astro
-// Alles intern gekapselt, kein Layout-Div nötig
 ---
 
-<!-- Styles -->
 <link rel="stylesheet" href="/libs/cookieconsent.css" />
 <link rel="stylesheet" href="/libs/cookie-custom.css" />
 
-<!-- Persistent Banner Container innerhalb der Komponente -->
 <div id="cookie-consent-root"></div>
 
 <script type="module">
+  // Hilfsfunktion: Lädt das externe Skript nur einmal
+  function loadLibrary(src) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) {
+        resolve(); // Skript ist schon da
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
   async function initCookieBanner() {
     const root = document.getElementById('cookie-consent-root');
+    // Wenn wir nicht im Browser sind oder kein Root da ist -> Abbruch
     if (!root) return;
 
-    // CookieConsent Library laden, falls nicht vorhanden
-    if (!window.CookieConsent) {
-      const script = document.createElement('script');
-      script.src = '/libs/cookieconsent.umd.js';
-      script.isInline = true;
-      document.head.appendChild(script);
-      script.onload = initCookieBanner;
-      return;
-    }
+    try {
+      // 1. Lib laden (falls noch nicht global vorhanden)
+      if (!window.CookieConsent) {
+        await loadLibrary('/libs/cookieconsent.umd.js');
+      }
 
-    // Config laden
-    const { config } = await import('/libs/cookieconsent-config.js');
+      // 2. Config importieren
+      // Wir nutzen einen dynamischen Import, damit der Code sauber bleibt
+      const { config } = await import('/libs/cookieconsent-config.js');
 
-    // Wenn schon initialisiert -> reset + rerun (für SPA/astro:page-load)
-    if (window.__CookieConsentInitialized) {
-      window.CookieConsent.reset();
-      window.CookieConsent.run({ ...config, container: root });
-    } else {
-      window.CookieConsent.run({ ...config, container: root });
-      window.__CookieConsentInitialized = true;
+      // 3. Initialisierung oder Reset
+      if (window.CookieConsent) {
+        // WICHTIG: reset(false) löscht nur das HTML-Overlay, aber BEHÄLT das Cookie!
+        // Das verhindert, dass der Banner bei Seitenwechsel (View Transition) wieder aufpoppt.
+        window.CookieConsent.reset(false);
+        
+        // Starten der Library
+        window.CookieConsent.run({ 
+          ...config, 
+          // Falls deine Lib-Version "container" oder "root" unterstützt:
+          root: root 
+        });
+      }
+
+    } catch (e) {
+      console.error("CookieConsent Fehler:", e);
     }
   }
 
-  // Init bei normalem DOMContentLoaded + SPA Navigation
-  document.addEventListener('DOMContentLoaded', initCookieBanner);
+  // Astro View Transitions Event: Feuert beim ersten Laden UND bei Navigation
   document.addEventListener('astro:page-load', initCookieBanner);
 </script>
