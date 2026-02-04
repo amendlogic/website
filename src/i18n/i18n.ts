@@ -7,18 +7,14 @@ import enHome from "./locales/en/home.json";
 
 export const translations = {
   de: {
-    common: deCommon,
+    
     home: deHome,
-    about: deAbout,
-    blog: deBlog,
-    footer: deFooter,
+    
   },
   en: {
-    common: enCommon,
+    
     home: enHome,
-    about: enAbout,
-    blog: enBlog,
-    footer: enFooter,
+    
   },
 };
 
