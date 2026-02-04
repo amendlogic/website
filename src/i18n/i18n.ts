@@ -1,14 +1,9 @@
-import deCommon from "./locales/de/common.json";
-import deHome from "./locales/de/home.json";
-import deAbout from "./locales/de/about.json";
-import deBlog from "./locales/de/blog.json";
-import deFooter from "./locales/de/footer.json";
 
-import enCommon from "./locales/en/common.json";
+import deHome from "./locales/de/home.json";
+
+
 import enHome from "./locales/en/home.json";
-import enAbout from "./locales/en/about.json";
-import enBlog from "./locales/en/blog.json";
-import enFooter from "./locales/en/footer.json";
+
 
 export const translations = {
   de: {
