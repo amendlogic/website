@@ -1,6 +1,5 @@
 ---
 import '~/assets/styles/tailwind.css';
-import '~/assets/styles/cookie-custom.css';
 
 import { I18N } from 'astrowind:config';
 
@@ -12,6 +11,7 @@ import Metadata from '~/components/common/Metadata.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
+import CookieConsent from '~/components/common/CookieConsent.astro';
 
 import { ClientRouter } from 'astro:transitions';
 
@@ -36,63 +36,16 @@ const { language, textDirection } = I18N;
     <SiteVerification />
     <Analytics />
 
-    <!-- CookieConsent Styles -->
-    <link rel="stylesheet" href="/libs/cookieconsent.css" />
-
     <!-- Astro View Transitions -->
     <ClientRouter fallback="swap" />
   </head>
 
   <body class="antialiased text-default bg-page tracking-tight">
-    <slot />
+    <slot /> <!-- Seiteninhalt -->
 
     <BasicScripts />
 
-    <!-- ========================== -->
-    <!-- Optimiertes CookieConsent -->
-    <!-- ========================== -->
-    <script type="module">
-      async function loadCookieConsent() {
-        // Bereits initialisiert? Dann nichts tun
-        if (window.__CookieConsentInitialized) return;
-
-        // Prüfen, ob Consent schon gesetzt
-        if (localStorage.getItem('cc_status')) {
-          window.__CookieConsentInitialized = true;
-          return;
-        }
-
-        // Library laden, falls noch nicht vorhanden
-        if (!window.CookieConsent) {
-          const script = document.createElement('script');
-          script.src = '/libs/cookieconsent.umd.js';
-          script.isInline = true;
-          document.head.appendChild(script);
-
-          script.onload = async () => {
-            try {
-              const { config } = await import('/libs/cookieconsent-config.js');
-              window.CookieConsent?.run({ ...config, debug: false });
-              window.__CookieConsentInitialized = true;
-            } catch (err) {
-              console.error('CookieConsent init failed:', err);
-            }
-          };
-        } else {
-          // Wenn Library schon da, einmal ausführen
-          try {
-            const { config } = await import('/libs/cookieconsent-config.js');
-            window.CookieConsent?.run({ ...config, debug: false });
-            window.__CookieConsentInitialized = true;
-          } catch (err) {
-            console.error('CookieConsent init failed:', err);
-          }
-        }
-      }
-
-      // Init bei normalem Load + Astro View Transitions
-      document.addEventListener('DOMContentLoaded', loadCookieConsent);
-      document.addEventListener('astro:page-load', loadCookieConsent);
-    </script>
+    <!-- CookieConsent Component -->
+    <CookieConsent />
   </body>
 </html>
