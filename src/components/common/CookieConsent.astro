@@ -1,0 +1,49 @@
+---
+import '~/assets/styles/cookie-custom.css'; // Tailwind / eigene Styles
+---
+
+<!-- Container für den CookieConsent-Banner -->
+<div id="cookie-consent-root"></div>
+
+<!-- Styles aus public/libs -->
+<link rel="stylesheet" href="/libs/cookieconsent.css" />
+
+<script type="module">
+  async function loadCookieConsent() {
+    // Bereits initialisiert? Dann nichts tun
+    if (window.__CookieConsentInitialized) return;
+
+    const root = document.getElementById('cookie-consent-root');
+    if (!root) return;
+
+    // Library laden, falls noch nicht vorhanden
+    if (!window.CookieConsent) {
+      const script = document.createElement('script');
+      script.src = '/libs/cookieconsent.umd.js';
+      script.isInline = true;
+      document.head.appendChild(script);
+
+      script.onload = async () => {
+        try {
+          const { config } = await import('/libs/cookieconsent-config.js');
+          window.CookieConsent?.run({ ...config, debug: false, container: root });
+          window.__CookieConsentInitialized = true;
+        } catch (err) {
+          console.error('CookieConsent init failed:', err);
+        }
+      };
+    } else {
+      // Library ist schon geladen
+      try {
+        const { config } = await import('/libs/cookieconsent-config.js');
+        window.CookieConsent?.run({ ...config, debug: false, container: root });
+        window.__CookieConsentInitialized = true;
+      } catch (err) {
+        console.error('CookieConsent init failed:', err);
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadCookieConsent);
+  document.addEventListener('astro:page-load', loadCookieConsent);
+</script>
