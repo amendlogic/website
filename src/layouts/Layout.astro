@@ -13,7 +13,7 @@ import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
 
-// Comment the line below to disable View Transitions
+// View Transitions (Astro)
 import { ClientRouter } from 'astro:transitions';
 
 import type { MetaData as MetaDataType } from '~/types';
@@ -37,9 +37,10 @@ const { language, textDirection } = I18N;
     <SiteVerification />
     <Analytics />
 
-    <link rel="stylesheet" href="~/assets/libs/cookieconsent.css">
+    <!-- CookieConsent Styles (korrekt aus src/assets) -->
+    <link rel="stylesheet" href="/assets/libs/cookieconsent.css" />
 
-    <!-- Comment the line below to disable View Transitions -->
+    <!-- Astro View Transitions -->
     <ClientRouter fallback="swap" />
   </head>
 
@@ -48,19 +49,30 @@ const { language, textDirection } = I18N;
 
     <BasicScripts />
 
-    <script is:inline src="~/assets/libs/cookieconsent.umd.js" defer></script>
-    <script>
-            import { config } from "~/assets/libs/cookieconsent-config.js";
-            function initCookieBanner() {
-                if (!window.CookieConsent) {
-                    setTimeout(initCookieBanner, 50);
-                    return;
-                }
-                window.CookieConsent.reset();
-                window.CookieConsent.run(config);
-            }
-            document.addEventListener('astro:page-load', initCookieBanner);
-		</script>
+    <!-- ✅ Saubere CookieConsent Integration (KEINE Doppel-Dateien) -->
+    <script type="module">
+      import CookieConsent from "/assets/libs/cookieconsent.umd.js";
+      import { config } from "/assets/libs/cookieconsent-config.js";
 
+      function initCookieBanner() {
+        const CC = window.CookieConsent || CookieConsent;
+
+        if (!CC) {
+          setTimeout(initCookieBanner, 50);
+          return;
+        }
+
+        try {
+          CC.reset();
+          CC.run(config);
+        } catch (err) {
+          console.error("CookieConsent init failed:", err);
+        }
+      }
+
+      // Wichtig für Astro mit View Transitions
+      document.addEventListener("astro:page-load", initCookieBanner);
+      document.addEventListener("DOMContentLoaded", initCookieBanner);
+    </script>
   </body>
 </html>
