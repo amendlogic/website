@@ -37,7 +37,7 @@ const { language, textDirection } = I18N;
     <SiteVerification />
     <Analytics />
 
-    <link rel="stylesheet" href="/libs/cookieconsent.css">
+    <link rel="stylesheet" href="~/assets/libs/cookieconsent.css">
 
     <!-- Comment the line below to disable View Transitions -->
     <ClientRouter fallback="swap" />
@@ -48,9 +48,9 @@ const { language, textDirection } = I18N;
 
     <BasicScripts />
 
-    <script is:inline src="/libs/cookieconsent.umd.js" defer></script>
+    <script is:inline src="~/assets/libs/cookieconsent.umd.js" defer></script>
     <script>
-            import { config } from "/libs/cookieconsent-config.js";
+            import { config } from "~/assets/libs/cookieconsent-config.js";
             function initCookieBanner() {
                 if (!window.CookieConsent) {
                     setTimeout(initCookieBanner, 50);
