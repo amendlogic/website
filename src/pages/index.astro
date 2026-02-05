@@ -1,6 +1,31 @@
 ---
-import { redirectToDefaultLocale } from "astro:i18n";
-export function get() {
-  return redirectToDefaultLocale();
-}
+import { getLocaleFromAcceptHeader } from "astro:i18n";
+
+// Browser-Sprache ermitteln
+const accept = Astro.request.headers.get("accept-language") ?? "";
+const preferred = getLocaleFromAcceptHeader(accept);
+
+// Fallback + erlaubte Sprachen
+const target =
+  preferred === "en"
+    ? "/en"
+    : "/de";        // Deutsch ist dein Default
 ---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <title>Redirecting…</title>
+
+  <!-- Sofortiger Redirect (ohne zusätzlichen Request) -->
+  <meta http-equiv="refresh" content={`0;url=${target}`} />
+
+  <script>
+    window.location.replace("{{target}}");
+  </script>
+</head>
+<body>
+  <p>Redirecting to {{target}} …</p>
+</body>
+</html>
