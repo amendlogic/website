@@ -98,8 +98,8 @@ export const footerData = {
     },
   ],
   secondaryLinks: [
-    { text: 'We speak English', href: getPermalink('/en') },
-    { text: 'Wir sprechen Deutsch', href: getPermalink('/de') },
+    { text: 'We speak English', href: getPermalink('/en'), attrs: { 'data-lang': 'en', 'data-cc': 'necessary' }, },
+    { text: 'Wir sprechen Deutsch', href: getPermalink('/de'), attrs: { 'data-lang': 'de', 'data-cc': 'necessary' }, },
   ],
   socialLinks: [
     { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
