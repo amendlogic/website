@@ -10,12 +10,12 @@
 <div id="cookie-consent-root"></div>
 
 <script is:inline>
-  // Funktion zum Starten des Banners
+  // --- A. Banner Initialisierung ---
   async function initCookieBanner() {
     const root = document.getElementById('cookie-consent-root');
     if (!root) return;
 
-    // Falls das externe Skript noch nicht geladen ist, kurz warten und nochmal versuchen
+    // Falls das externe Skript noch lädt, kurz warten und Retry
     if (!window.CookieConsent) {
       setTimeout(initCookieBanner, 100); 
       return;
@@ -23,11 +23,10 @@
 
     try {
       // Config dynamisch laden
-      // Der Pfad muss im Browser erreichbar sein (in public/libs/)
       const { config } = await import('/libs/cookieconsent-config.js');
 
-      // WICHTIG: 'false' bedeutet: DOM zurücksetzen, aber Cookie BEHALTEN.
-      // So wird der Banner nicht erneut angezeigt, wenn schon zugestimmt wurde.
+      // WICHTIG: 'false' behält den Cookie (Zustimmung).
+      // Nur das HTML-Element wird zurückgesetzt für View Transitions.
       window.CookieConsent.reset(false);
       
       window.CookieConsent.run({ 
@@ -43,17 +42,22 @@
     }
   }
 
-  // Funktion für Sprach-Umschalter
+  // --- B. Sprach-Links Logik ---
   function setupLanguageLinks() {
-    // Wir nutzen Event Delegation am Body (funktioniert auch nach Seitenwechseln)
+    // Event Delegation am Body (überlebt Astro View Transitions)
     document.body.addEventListener('click', (event) => {
-      // Prüfen, ob das geklickte Element (oder ein Elternteil) das Attribut data-lang hat
+      // Prüfen, ob ein Element mit data-lang geklickt wurde
       // @ts-ignore
       const link = event.target.closest('[data-lang]');
       
       if (link && link.dataset.lang) {
         const lang = link.dataset.lang;
         
+        // 1. WICHTIGSTE ZEILE: Cookie SOFORT manuell setzen.
+        // Das garantiert, dass dein Redirect-Script auf der Startseite den Wert findet.
+        document.cookie = "preferred_language=" + lang + "; path=/; max-age=" + (60*60*24*365) + "; SameSite=Lax";
+
+        // 2. Library benachrichtigen (falls geladen, für interne Konsistenz)
         if (window.CC && typeof window.CC.setCookie === 'function') {
           window.CC.setCookie('preferred_language', lang, {
             necessary: true,
@@ -62,21 +66,21 @@
           });
         }
         
-        // LocalStorage Fallback (optional)
+        // 3. LocalStorage Backup (optional)
         try { localStorage.setItem('lang', lang); } catch(e) {}
       }
     });
   }
 
-  // --- Initialisierung ---
+  // --- C. Events binden ---
 
-  // 1. Sprach-Links einmalig einrichten
+  // Sprach-Listener sofort aktivieren
   setupLanguageLinks();
 
-  // 2. Banner bei jedem Astro-Seitenwechsel starten (View Transitions)
+  // Banner bei Astro-Navigation starten
   document.addEventListener('astro:page-load', initCookieBanner);
   
-  // 3. Fallback für den allerersten Start (falls astro:page-load nicht feuert oder verzögert ist)
+  // Fallback für den ersten Seitenaufruf
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
      initCookieBanner();
   } else {
