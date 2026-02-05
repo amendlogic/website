@@ -63,16 +63,24 @@
 
 <script type="module">
   document.addEventListener('DOMContentLoaded', () => {
-    document
-      .querySelectorAll<HTMLAnchorElement>('[data-lang]')
-      .forEach((link) => {
-        link.addEventListener('click', () => {
-          const lang = link.dataset.lang;
-          if (!lang) return;
+    // Alle Language-Links finden
+    document.querySelectorAll<HTMLAnchorElement>('[data-lang]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        const lang = link.dataset.lang;
+        if (!lang) return;
 
-          document.cookie =
-            `preferred_language=${lang}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
-        });
+        // CookieConsent v3 kompatibel setzen
+        if (window.CC && CC.setCookie) {
+          CC.setCookie('preferred_language', lang, {
+            necessary: true, // markiert als notwendiger Cookie
+            path: '/',
+            maxAge: 60 * 60 * 24 * 365 // 1 Jahr
+          });
+        } else {
+          // Fallback: normales JS-Cookie
+          document.cookie = `preferred_language=${lang}; path=/; max-age=${60*60*24*365}; SameSite=Lax`;
+        }
       });
+    });
   });
 </script>
