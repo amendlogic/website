@@ -1,6 +1,6 @@
 ---
 import '~/assets/styles/tailwind.css';
-import '~/assets/styles/cookie-custom.css';
+
 
 import { I18N } from 'astrowind:config';
 
@@ -37,8 +37,7 @@ const { language, textDirection } = I18N;
     <SiteVerification />
     <Analytics />
 
-    <!-- CookieConsent Styles (korrekt aus src/assets) -->
-    <link rel="stylesheet" href="/assets/libs/cookieconsent.css" />
+
 
     <!-- Astro View Transitions -->
     <ClientRouter fallback="swap" />
@@ -49,30 +48,5 @@ const { language, textDirection } = I18N;
 
     <BasicScripts />
 
-<!-- 1) Library als klassisches Browser-Script laden -->
-<script src="/assets/libs/cookieconsent.umd.js"></script>
-
-<!-- 2) Deine Config als Modul laden -->
-<script type="module">
-  import { config } from "/assets/libs/cookieconsent-config.js";
-
-  function initCookieBanner() {
-    if (!window.CookieConsent) {
-      setTimeout(initCookieBanner, 50);
-      return;
-    }
-
-    try {
-      window.CookieConsent.reset();
-      window.CookieConsent.run(config);
-    } catch (err) {
-      console.error("CookieConsent init failed:", err);
-    }
-  }
-
-  // Läuft bei normalem Load UND bei Astro View Transitions
-  document.addEventListener("DOMContentLoaded", initCookieBanner);
-  document.addEventListener("astro:page-load", initCookieBanner);
-</script>
   </body>
 </html>
