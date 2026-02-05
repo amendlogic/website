@@ -7,6 +7,7 @@ export function getStaticPaths() {
 }
 
 const { lang } = Astro.params as { lang: Locale };
+import { SITE } from 'astrowind:config';
 
 import Layout from '~/layouts/PageLayout.astro';
 
@@ -74,7 +75,7 @@ const homeFooterData = {
 
     <Fragment slot="subtitle">
         <span class="block mb-1 font-bold text-blue-600">{t(lang, "home.hero.tagline")}</span>
-        <span class="font-semibold">AmendLogic</span> {t(lang, "home.hero.subtitle")}
+        <span class="font-semibold">{SITE?.name}</span> {t(lang, "home.hero.subtitle")}
     </Fragment>
   </Hero>
 
