@@ -1,6 +1,10 @@
 {
   "hero": {
-    "title_html": "Smart&nbsp;Trading. <span class=\"text-accent dark:text-white\">Clear&nbsp;Rules</span>. No&nbsp;Guesswork.",
+    "title": {
+      "start": "Smart\u00A0Trading.",
+      "accent": "Clear\u00A0Rules",
+      "end": "No\u00A0Guesswork."
+    }
     "tagline": "Automated trading built to simplify decisions and enforce discipline.",
     "subtitle": "is a TradingView strategy developed for systematic, automated trading. It follows predefined rules to analyze the market, execute trades, and manage risk consistently.",
     "primaryButton": "Get it for TradingView",
