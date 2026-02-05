@@ -1,9 +1,48 @@
-<!doctype html>
+---
+// src/pages/index.astro
+// Diese Datei funktioniert auf JEDEM Hosting (auch GitHub Pages).
+export const prerender = true; 
+---
+<!DOCTYPE html>
 <html lang="de">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Redirecting...</title>
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    
+    <meta http-equiv="refresh" content="0;url=/de/">
+
+    <script is:inline>
+        // Wir nutzen "var" und kurze Namen für minimale Dateigröße
+        try {
+            var target = "de"; // Standard
+
+            // A. Check: Hat der User schon mal gewählt? (Cookie oder LocalStorage)
+            // Prüfen wir localStorage (einfacher auf GH Pages)
+            var saved = localStorage.getItem("lang");
+            
+            // B. Check: Browsersprache
+            // navigator.language gibt z.B. "en-US" oder "de-DE" zurück
+            var browser = navigator.language || navigator.userLanguage; 
+
+            if (saved && (saved === "de" || saved === "en")) {
+                target = saved;
+            } else if (browser && browser.startsWith("en")) {
+                target = "en";
+            }
+
+            // C. Redirect
+            // location.replace() ist wichtig, damit der "Zurück"-Button funktioniert
+            // (User kommt nicht wieder auf die Redirect-Seite zurück)
+            window.location.replace("/" + target + "/");
+            
+        } catch (e) {
+            // Falls irgendwas schief geht (z.B. JS Fehler), greift der Meta-Refresh oben
+            window.location.replace("/de/");
+        }
+    </script>
+</head>
+<body>
     </body>
 </html>
+
