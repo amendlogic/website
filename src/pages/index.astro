@@ -1,0 +1,43 @@
+---
+/**
+ * Root-Indexseite für Astro-i18n
+ * Blitzschneller Redirect basierend auf:
+ * 1. gespeicherte Sprache (localStorage)
+ * 2. Browser-Sprache
+ * 3. Fallback = Deutsch
+ */
+
+// Für Astro-i18n Build muss diese Seite existieren
+export function getStaticPaths() {
+  return [{ params: {} }];
+}
+---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <title>Redirecting…</title>
+
+  <!-- Fallback Meta-Redirect -->
+  <meta http-equiv="refresh" content="0;url=/de" />
+
+  <!-- Schneller clientseitiger Redirect -->
+  <script>
+    // 1️⃣ Gespeicherte Sprache
+    const saved = localStorage.getItem("lang");
+
+    // 2️⃣ Browser-Sprache
+    const browserLang = navigator.language.startsWith("en") ? "en" : "de";
+
+    // 3️⃣ Endgültiges Ziel
+    const lang = saved || browserLang || "de";
+
+    // Redirect
+    window.location.replace("/" + lang);
+  </script>
+</head>
+<body>
+  <p>Redirecting…</p>
+</body>
+</html>
