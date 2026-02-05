@@ -8,7 +8,7 @@
 <div id="cookie-consent-root"></div>
 
 <script type="module">
-  // Hilfsfunktion: Externes Script nur einmal laden
+  // --- Hilfsfunktion: Externes Script nur einmal laden ---
   function loadLibrary(src) {
     return new Promise((resolve, reject) => {
       if (document.querySelector(`script[src="${src}"]`)) {
@@ -23,48 +23,46 @@
     });
   }
 
+  // --- CookieConsent Banner initialisieren ---
   async function initCookieBanner() {
     const root = document.getElementById('cookie-consent-root');
     if (!root) return;
 
     try {
-      // 1️⃣ Library laden, falls nicht vorhanden
       if (!window.CookieConsent) {
         await loadLibrary('/libs/cookieconsent.umd.js');
       }
 
-      // 2️⃣ Konfiguration importieren
       const { config } = await import('/libs/cookieconsent-config.js');
 
-      // 3️⃣ Library starten oder resetten
       if (window.CookieConsent) {
-        window.CookieConsent.reset(false);
+        window.CookieConsent.reset(false); // Banner neu, Cookies bleiben
         window.CookieConsent.run({ ...config, root });
-        // Alias für v3 API
-        window.CC = window.CC || window.CookieConsent;
+        window.CC = window.CC || window.CookieConsent; // Alias für v3 API
       }
     } catch (e) {
       console.error('CookieConsent Fehler:', e);
     }
   }
 
-  // Banner initialisieren bei Astro View Transitions
-  document.addEventListener('astro:page-load', initCookieBanner);
-</script>
-
-<script type="module">
-  document.addEventListener('DOMContentLoaded', () => {
-    // ✅ Alle Language-Links korrekt auswählen
+  // --- Language-Link-Bindung ---
+  function bindLanguageLinks() {
     const langLinks = document.querySelectorAll<HTMLAnchorElement>('[data-lang]');
+    if (!langLinks || langLinks.length === 0) return;
+
     langLinks.forEach((link) => {
+      // Doppeltes Binden vermeiden
+      if ((link as any)._bound) return;
+      (link as any)._bound = true;
+
       link.addEventListener('click', () => {
         const lang = link.dataset.lang;
         if (!lang) return;
 
-        // ✅ CookieConsent v3 kompatibel
+        // CookieConsent v3 kompatibel
         if (window.CC && typeof window.CC.setCookie === 'function') {
           window.CC.setCookie('preferred_language', lang, {
-            necessary: true, // immer erlaubt
+            necessary: true,
             path: '/',
             maxAge: 60 * 60 * 24 * 365 // 1 Jahr
           });
@@ -77,5 +75,17 @@
         try { localStorage.setItem('lang', lang); } catch(e) {}
       });
     });
+  }
+
+  // --- Events binden ---
+  document.addEventListener('DOMContentLoaded', () => {
+    initCookieBanner();
+    bindLanguageLinks();
+  });
+
+  // Astro View Transitions: Banner & Links erneut binden
+  document.addEventListener('astro:page-load', () => {
+    initCookieBanner();
+    bindLanguageLinks();
   });
 </script>
