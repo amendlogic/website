@@ -1,8 +1,10 @@
 {
   "hero": {
     "title_html": "Smart&nbsp;Trading. <span class=\"text-accent dark:text-white\">Clear&nbsp;Rules</span>. No&nbsp;Guesswork.",
-    "tagline": "Automatisierte Trading-Lösungen mit KI",
-    "primaryButton": "Get it for TradingView 2"
+    "tagline": "Automated trading built to simplify decisions and enforce discipline.",
+    "subtitle": "",
+    "primaryButton": "Get it for TradingView",
+    "secondaryButton": "Get it for TradingView"
   },
 
 
