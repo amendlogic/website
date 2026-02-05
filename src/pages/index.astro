@@ -1,7 +1,6 @@
 ---
 // src/pages/index.astro
-// Diese Datei funktioniert auf JEDEM Hosting (auch GitHub Pages).
-export const prerender = true; 
+export const prerender = true;
 ---
 <!DOCTYPE html>
 <html lang="de">
@@ -10,38 +9,51 @@ export const prerender = true;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
     
-    <meta http-equiv="refresh" content="0;url=/de/">
+    <link rel="canonical" href="https://deine-domain.com/de/" />
+    <meta name="robots" content="noindex" />
 
-<script is:inline>
-  try {
-    var target = "de"; // Standard
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=/de/">
+    </noscript>
 
-    // --- 1) NEU: ZUERST Cookie prüfen ---
-    var m = document.cookie.match(/preferred_language=(en|de)/);
-    if (m) {
-      target = m[1];
-    } 
-    // --- 2) Dann erst LocalStorage ---
-    else {
-      var saved = localStorage.getItem("lang");
+    <script is:inline>
+      try {
+        var target = "de"; // Standard-Fallback
 
-      var browser = navigator.language || navigator.userLanguage;
+        // 1. Cookie prüfen (höchste Priorität)
+        var m = document.cookie.match(/preferred_language=(en|de)/);
+        if (m) {
+          target = m[1];
+        } 
+        // 2. LocalStorage & Browser prüfen
+        else {
+          // LocalStorage lesen (falls vorhanden)
+          var saved = null;
+          try { saved = localStorage.getItem("lang"); } catch(e) {}
 
-      if (saved && (saved === "de" || saved === "en")) {
-        target = saved;
-      } 
-      else if (browser && browser.startsWith("en")) {
-        target = "en";
+          var browser = navigator.language || navigator.userLanguage;
+
+          if (saved && (saved === "de" || saved === "en")) {
+            target = saved;
+          } 
+          else if (browser && String(browser).startsWith("en")) {
+            target = "en";
+          }
+        }
+
+        // 3. OPTIMIERUNG: Parameter und Hash behalten!
+        // Wichtig für Marketing-Links (?utm_source=...) oder Anker (#section)
+        var query = window.location.search || "";
+        var hash = window.location.hash || "";
+
+        window.location.replace("/" + target + "/" + query + hash);
+
+      } catch (e) {
+        // Sicherer Fallback, falls irgendwas im JS crasht
+        window.location.replace("/de/");
       }
-    }
-
-    window.location.replace("/" + target + "/");
-  } catch (e) {
-    window.location.replace("/de/");
-  }
-</script>
+    </script>
 </head>
 <body>
-    </body>
+</body>
 </html>
-
