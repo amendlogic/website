@@ -12,35 +12,34 @@ export const prerender = true;
     
     <meta http-equiv="refresh" content="0;url=/de/">
 
-    <script is:inline>
-        // Wir nutzen "var" und kurze Namen für minimale Dateigröße
-        try {
-            var target = "de"; // Standard
+<script is:inline>
+  try {
+    var target = "de"; // Standard
 
-            // A. Check: Hat der User schon mal gewählt? (Cookie oder LocalStorage)
-            // Prüfen wir localStorage (einfacher auf GH Pages)
-            var saved = localStorage.getItem("lang");
-            
-            // B. Check: Browsersprache
-            // navigator.language gibt z.B. "en-US" oder "de-DE" zurück
-            var browser = navigator.language || navigator.userLanguage; 
+    // --- 1) NEU: ZUERST Cookie prüfen ---
+    var m = document.cookie.match(/preferred_language=(en|de)/);
+    if (m) {
+      target = m[1];
+    } 
+    // --- 2) Dann erst LocalStorage ---
+    else {
+      var saved = localStorage.getItem("lang");
 
-            if (saved && (saved === "de" || saved === "en")) {
-                target = saved;
-            } else if (browser && browser.startsWith("en")) {
-                target = "en";
-            }
+      var browser = navigator.language || navigator.userLanguage;
 
-            // C. Redirect
-            // location.replace() ist wichtig, damit der "Zurück"-Button funktioniert
-            // (User kommt nicht wieder auf die Redirect-Seite zurück)
-            window.location.replace("/" + target + "/");
-            
-        } catch (e) {
-            // Falls irgendwas schief geht (z.B. JS Fehler), greift der Meta-Refresh oben
-            window.location.replace("/de/");
-        }
-    </script>
+      if (saved && (saved === "de" || saved === "en")) {
+        target = saved;
+      } 
+      else if (browser && browser.startsWith("en")) {
+        target = "en";
+      }
+    }
+
+    window.location.replace("/" + target + "/");
+  } catch (e) {
+    window.location.replace("/de/");
+  }
+</script>
 </head>
 <body>
     </body>
