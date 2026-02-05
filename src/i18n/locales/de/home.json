@@ -1,9 +1,12 @@
 {
   "hero": {
-    "title": "Amend Trading",
+    "title_html": "Smart&nbsp;Trading. <span class=\"text-accent dark:text-white\">Clear&nbsp;Rules</span>. No&nbsp;Guesswork.",
     "tagline": "Automatisierte Trading-Lösungen mit KI",
     "primaryButton": "Get it for TradingView 2"
   },
+
+
+
   "nav": {
     "home": "Startseite",
     "about": "Über uns",
