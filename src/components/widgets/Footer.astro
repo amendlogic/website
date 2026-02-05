@@ -81,7 +81,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
     </div>
 
     {disclaimer?.length ? (
-      <div class="text-xs text-muted dark:text-gray-500 space-y-2 leading-relaxed">
+      <div class="text-xs text-muted dark:text-gray-500 space-y-2 leading-relaxed pb-2 md:pb-4">
         {disclaimer.map(({ text }) => (
           <p set:html={text} />
         ))}
