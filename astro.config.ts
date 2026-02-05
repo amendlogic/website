@@ -28,8 +28,8 @@ export default defineConfig({
     defaultLocale: "de",
     locales: ["de", "en"],
     routing: {
-      prefixDefaultLocale: true, // Erzwingt /de auch für Deutsch
-      redirectToDefaultLocale: true // Leitet / automatisch nach /de weiter
+      prefixDefaultLocale: true,
+      redirectToDefaultLocale: false,
     }
   },
   
