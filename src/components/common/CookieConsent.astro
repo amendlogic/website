@@ -1,5 +1,5 @@
 ---
-// src/components/common/CookieConsent.astro
+/* src/components/common/CookieConsent.astro */
 ---
 
 <link rel="stylesheet" href="/libs/cookieconsent.css" />
@@ -8,11 +8,11 @@
 <div id="cookie-consent-root"></div>
 
 <script type="module">
-  // Hilfsfunktion: Lädt das externe Skript nur einmal
+  // Hilfsfunktion: Externes Script nur einmal laden
   function loadLibrary(src) {
     return new Promise((resolve, reject) => {
       if (document.querySelector(`script[src="${src}"]`)) {
-        resolve(); // Skript ist schon da
+        resolve();
         return;
       }
       const script = document.createElement('script');
@@ -25,54 +25,46 @@
 
   async function initCookieBanner() {
     const root = document.getElementById('cookie-consent-root');
-    // Wenn wir nicht im Browser sind oder kein Root da ist -> Abbruch
     if (!root) return;
 
     try {
-      // 1. Lib laden (falls noch nicht global vorhanden)
+      // 1️⃣ Library laden, falls nicht vorhanden
       if (!window.CookieConsent) {
         await loadLibrary('/libs/cookieconsent.umd.js');
       }
 
-      // 2. Config importieren
-      // Wir nutzen einen dynamischen Import, damit der Code sauber bleibt
+      // 2️⃣ Konfiguration importieren
       const { config } = await import('/libs/cookieconsent-config.js');
 
-      // 3. Initialisierung oder Reset
+      // 3️⃣ Library starten oder resetten
       if (window.CookieConsent) {
-        // WICHTIG: reset(false) löscht nur das HTML-Overlay, aber BEHÄLT das Cookie!
-        // Das verhindert, dass der Banner bei Seitenwechsel (View Transition) wieder aufpoppt.
         window.CookieConsent.reset(false);
-        
-        // Starten der Library
-        window.CookieConsent.run({ 
-          ...config, 
-          // Falls deine Lib-Version "container" oder "root" unterstützt:
-          root: root 
-        });
+        window.CookieConsent.run({ ...config, root });
+        // Alias für v3 API
+        window.CC = window.CC || window.CookieConsent;
       }
-
     } catch (e) {
-      console.error("CookieConsent Fehler:", e);
+      console.error('CookieConsent Fehler:', e);
     }
   }
 
-  // Astro View Transitions Event: Feuert beim ersten Laden UND bei Navigation
+  // Banner initialisieren bei Astro View Transitions
   document.addEventListener('astro:page-load', initCookieBanner);
 </script>
 
 <script type="module">
   document.addEventListener('DOMContentLoaded', () => {
-    // Alle Language-Links finden
-    document.querySelectorAll<HTMLAnchorElement>('[data-lang]').forEach((link) => {
-      link.addEventListener('click', (e) => {
+    // ✅ Alle Language-Links korrekt auswählen
+    const langLinks = document.querySelectorAll<HTMLAnchorElement>('[data-lang]');
+    langLinks.forEach((link) => {
+      link.addEventListener('click', () => {
         const lang = link.dataset.lang;
         if (!lang) return;
 
-        // CookieConsent v3 kompatibel setzen
-        if (window.CC && CC.setCookie) {
-          CC.setCookie('preferred_language', lang, {
-            necessary: true, // markiert als notwendiger Cookie
+        // ✅ CookieConsent v3 kompatibel
+        if (window.CC && typeof window.CC.setCookie === 'function') {
+          window.CC.setCookie('preferred_language', lang, {
+            necessary: true, // immer erlaubt
             path: '/',
             maxAge: 60 * 60 * 24 * 365 // 1 Jahr
           });
@@ -80,6 +72,9 @@
           // Fallback: normales JS-Cookie
           document.cookie = `preferred_language=${lang}; path=/; max-age=${60*60*24*365}; SameSite=Lax`;
         }
+
+        // Optional: localStorage für bestehendes Redirect-Script
+        try { localStorage.setItem('lang', lang); } catch(e) {}
       });
     });
   });
