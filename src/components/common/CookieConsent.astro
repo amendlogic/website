@@ -63,17 +63,16 @@
 
 <script type="module">
   document.addEventListener('DOMContentLoaded', () => {
-    const links = document.querySelectorAll<HTMLAnchorElement>('[data-lang]');
+    document
+      .querySelectorAll<HTMLAnchorElement>('[data-lang]')
+      .forEach((link) => {
+        link.addEventListener('click', () => {
+          const lang = link.dataset.lang;
+          if (!lang) return;
 
-    links.forEach((link) => {
-      link.addEventListener('click', () => {
-        const lang = link.dataset.lang;
-
-        if (!lang) return;
-
-        document.cookie =
-          `preferred_language=${lang}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+          document.cookie =
+            `preferred_language=${lang}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+        });
       });
-    });
   });
 </script>
