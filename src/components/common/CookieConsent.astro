@@ -10,34 +10,32 @@
 <div id="cookie-consent-root"></div>
 
 <script is:inline>
-  // Wir importieren nur die Config dynamisch, da diese vermutlich Astro-spezifisch/modulär ist
-  // Falls die Config auch eine reine JS-Datei in /libs/ ist, könnte man sie auch oben mit is:inline laden.
-  // Wir gehen hier davon aus, dass sie ein ES-Modul ist.
-
+  // Funktion zum Starten des Banners
   async function initCookieBanner() {
     const root = document.getElementById('cookie-consent-root');
     if (!root) return;
 
-    // Sicherheits-Check: Warten bis die Library wirklich da ist (falls Netzwerk laggt)
+    // Falls das externe Skript noch nicht geladen ist, kurz warten und nochmal versuchen
     if (!window.CookieConsent) {
-      // Kleiner Retry-Mechanismus, falls das externe Skript noch eine Millisekunde braucht
       setTimeout(initCookieBanner, 100); 
       return;
     }
 
     try {
-      // Config laden
+      // Config dynamisch laden
+      // Der Pfad muss im Browser erreichbar sein (in public/libs/)
       const { config } = await import('/libs/cookieconsent-config.js');
 
-      // Reset ist wichtig für Astro View Transitions (verhindert doppelte Banner)
-      window.CookieConsent.reset(true);
+      // WICHTIG: 'false' bedeutet: DOM zurücksetzen, aber Cookie BEHALTEN.
+      // So wird der Banner nicht erneut angezeigt, wenn schon zugestimmt wurde.
+      window.CookieConsent.reset(false);
       
       window.CookieConsent.run({ 
         ...config, 
         root: root 
       });
       
-      // Alias setzen (falls nötig)
+      // Global verfügbar machen
       window.CC = window.CookieConsent;
 
     } catch (e) {
@@ -45,11 +43,11 @@
     }
   }
 
+  // Funktion für Sprach-Umschalter
   function setupLanguageLinks() {
-    // Event Delegation (Besser als Loop):
-    // Wir hören auf den Body und prüfen, ob ein Klick von einem data-lang Element kam.
-    // Das funktioniert auch bei Elementen, die dynamisch nachgeladen werden!
+    // Wir nutzen Event Delegation am Body (funktioniert auch nach Seitenwechseln)
     document.body.addEventListener('click', (event) => {
+      // Prüfen, ob das geklickte Element (oder ein Elternteil) das Attribut data-lang hat
       // @ts-ignore
       const link = event.target.closest('[data-lang]');
       
@@ -63,7 +61,8 @@
             maxAge: 60 * 60 * 24 * 365
           });
         }
-        // LocalStorage Fallback, rein kosmetisch
+        
+        // LocalStorage Fallback (optional)
         try { localStorage.setItem('lang', lang); } catch(e) {}
       }
     });
@@ -71,14 +70,13 @@
 
   // --- Initialisierung ---
 
-  // Einmaliges Setup der Listener (reicht dank Event Delegation am Body)
+  // 1. Sprach-Links einmalig einrichten
   setupLanguageLinks();
 
-  // Banner initialisieren bei jedem Seitenwechsel (wichtig für View Transitions)
+  // 2. Banner bei jedem Astro-Seitenwechsel starten (View Transitions)
   document.addEventListener('astro:page-load', initCookieBanner);
   
-  // Fallback: Falls 'astro:page-load' nicht feuert (z.B. keine ViewTransitions),
-  // starten wir es direkt, sobald dieses Skript läuft.
+  // 3. Fallback für den allerersten Start (falls astro:page-load nicht feuert oder verzögert ist)
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
      initCookieBanner();
   } else {
