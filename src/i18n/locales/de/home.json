@@ -1,0 +1,18 @@
+{
+  "hero": {
+    "title": "Amend Trading",
+    "tagline": "Automatisierte Trading-Lösungen mit KI",
+    "primaryButton": "Get it for TradingView 2"
+  },
+  "nav": {
+    "home": "Startseite",
+    "about": "Über uns",
+    "blog": "Blog",
+    "contact": "Kontakt"
+  },
+  "home": {
+    "headline": "Besser traden mit KI",
+    "subline": "Smarte Indikatoren für TradingView",
+    "cta": "Jetzt entdecken"
+  }
+}
