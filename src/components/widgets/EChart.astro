@@ -50,7 +50,7 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       try {
         // Library lazy laden
         if (!echartsLib) {
-          const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
+          const mod = await import("/libs/echarts.esm.min.js");
           echartsLib = mod.default || mod;
         }
 
