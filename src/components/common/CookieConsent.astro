@@ -1,5 +1,5 @@
 ---
-/* src/components/common/CookieConsent.astro */
+// src/components/common/CookieConsent.astro
 ---
 
 <link rel="stylesheet" href="/libs/cookieconsent.css" />
@@ -7,83 +7,52 @@
 
 <script is:inline src="/libs/cookieconsent.umd.js"></script>
 
-<div id="cookie-consent-root"></div>
-
 <script is:inline>
-  // --- A. Banner Initialisierung ---
-  async function initCookieBanner() {
-    const root = document.getElementById('cookie-consent-root');
-    if (!root) return;
+async function initCookieBanner() {
 
-    // Falls das externe Skript noch lädt, kurz warten und Retry
-    if (!window.CookieConsent) {
-      setTimeout(initCookieBanner, 100); 
-      return;
-    }
-
-    try {
-      // Config dynamisch laden
-      const { config } = await import('/libs/cookieconsent-config.js');
-
-      // WICHTIG: 'false' behält den Cookie (Zustimmung).
-      // Nur das HTML-Element wird zurückgesetzt für View Transitions.
-      window.CookieConsent.reset(false);
-      
-      window.CookieConsent.run({ 
-        ...config, 
-        root: root 
-      });
-      
-      // Global verfügbar machen
-      window.CC = window.CookieConsent;
-
-    } catch (e) {
-      console.error('CookieConsent Start-Fehler:', e);
-    }
+  if (!window.CookieConsent) {
+    setTimeout(initCookieBanner, 100);
+    return;
   }
 
-  // --- B. Sprach-Links Logik ---
-  function setupLanguageLinks() {
-    // Event Delegation am Body (überlebt Astro View Transitions)
-    document.body.addEventListener('click', (event) => {
-      // Prüfen, ob ein Element mit data-lang geklickt wurde
-      // @ts-ignore
-      const link = event.target.closest('[data-lang]');
-      
-      if (link && link.dataset.lang) {
-        const lang = link.dataset.lang;
-        
-        // 1. WICHTIGSTE ZEILE: Cookie SOFORT manuell setzen.
-        // Das garantiert, dass dein Redirect-Script auf der Startseite den Wert findet.
-        document.cookie = "preferred_language=" + lang + "; path=/; max-age=" + (60*60*24*365) + "; SameSite=Lax";
+  try {
+    const { config } = await import('/libs/cookieconsent-config.js');
 
-        // 2. Library benachrichtigen (falls geladen, für interne Konsistenz)
-        if (window.CC && typeof window.CC.setCookie === 'function') {
-          window.CC.setCookie('preferred_language', lang, {
-            necessary: true,
-            path: '/',
-            maxAge: 60 * 60 * 24 * 365
-          });
-        }
-        
-        // 3. LocalStorage Backup (optional)
-        try { localStorage.setItem('lang', lang); } catch(e) {}
-      }
+    // UI neu rendern, Zustimmung behalten
+    window.CookieConsent.reset(false);
+
+    // 👉 WICHTIG: KEIN root mehr übergeben
+    window.CookieConsent.run({
+      ...config
     });
+
+    window.CC = window.CookieConsent;
+
+  } catch (e) {
+    console.error('CookieConsent Start-Fehler:', e);
   }
+}
 
-  // --- C. Events binden ---
+// Sprache sofort als Cookie setzen (View-Transition-safe)
+document.body.addEventListener('click', (event) => {
+  const link = event.target.closest('[data-lang]');
+  if (!link || !link.dataset.lang) return;
 
-  // Sprach-Listener sofort aktivieren
-  setupLanguageLinks();
+  const lang = link.dataset.lang;
 
-  // Banner bei Astro-Navigation starten
-  document.addEventListener('astro:page-load', initCookieBanner);
-  
-  // Fallback für den ersten Seitenaufruf
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-     initCookieBanner();
-  } else {
-     document.addEventListener('DOMContentLoaded', initCookieBanner);
-  }
+  document.cookie =
+    "preferred_language=" + lang +
+    "; path=/; max-age=" + (60*60*24*365) +
+    "; SameSite=Lax";
+});
+
+// Astro Navigation
+document.addEventListener('astro:page-load', initCookieBanner);
+
+// Erster Seitenaufruf
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  initCookieBanner();
+} else {
+  document.addEventListener('DOMContentLoaded', initCookieBanner);
+}
 </script>
