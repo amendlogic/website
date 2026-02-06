@@ -33,7 +33,7 @@
       "item-3": {
         "title": "Automated Execution",
         "description": "Trades are executed instantly and consistently based on defined rules."
-      },
+      }
     },
     "content-2": {
       "title": "Risk Management & Protection",
@@ -49,7 +49,7 @@
       "item-3": {
         "title": "Configurable Parameters",
         "description": "Risk levels and strategy behavior can be adjusted to individual preferences."
-      },
+      }
     },
   },
   
