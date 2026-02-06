@@ -11,14 +11,11 @@
     "secondaryButton": "Explore the system"
   },
 
-
-
-  "nav": {
-    "home": "Startseite",
-    "about": "Über uns",
-    "blog": "Blog",
-    "contact": "Kontakt"
+  "note": {
+    "title": "Our philosophy:",
+    "description": "ensure disciplined trading and consistent execution, regardless of market conditions." 
   },
+  
   "home": {
     "headline": "Besser traden mit KI",
     "subline": "Smarte Indikatoren für TradingView",
