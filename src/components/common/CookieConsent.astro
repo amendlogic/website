@@ -8,6 +8,12 @@
 <script is:inline src="/libs/cookieconsent.umd.js"></script>
 
 <script is:inline>
+const COOKIE_NAME = "preferred_language";
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+
+// --------------------------------------------------
+// 1) CookieConsent starten (ohne eigenes Root-Element)
+// --------------------------------------------------
 async function initCookieBanner() {
 
   if (!window.CookieConsent) {
@@ -18,10 +24,10 @@ async function initCookieBanner() {
   try {
     const { config } = await import('/libs/cookieconsent-config.js');
 
-    // UI neu rendern, Zustimmung behalten
+    // UI neu zeichnen, Zustimmung behalten
     window.CookieConsent.reset(false);
 
-    // 👉 WICHTIG: KEIN root mehr übergeben
+    // 👉 Kein "root" mehr übergeben – Standard-Rendering in <body>
     window.CookieConsent.run({
       ...config
     });
@@ -29,27 +35,47 @@ async function initCookieBanner() {
     window.CC = window.CookieConsent;
 
   } catch (e) {
-    console.error('CookieConsent Start-Fehler:', e);
+    console.error('[CookieConsent] Init failed:', e);
   }
 }
 
-// Sprache sofort als Cookie setzen (View-Transition-safe)
+// --------------------------------------------------
+// 2) Sprache sauber als Cookie setzen
+// --------------------------------------------------
+function setPreferredLanguage(lang) {
+
+  document.cookie =
+    `${COOKIE_NAME}=${lang}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
+
+  // Optional: Library synchronisieren (nur wenn geladen)
+  if (window.CC && typeof window.CC.setCookie === 'function') {
+    window.CC.setCookie(COOKIE_NAME, lang, {
+      necessary: true,
+      path: '/',
+      maxAge: COOKIE_MAX_AGE
+    });
+  }
+
+  try {
+    localStorage.setItem('lang', lang);
+  } catch {}
+}
+
+// --------------------------------------------------
+// 3) Event Delegation für Sprachlinks
+// --------------------------------------------------
 document.body.addEventListener('click', (event) => {
   const link = event.target.closest('[data-lang]');
   if (!link || !link.dataset.lang) return;
 
-  const lang = link.dataset.lang;
-
-  document.cookie =
-    "preferred_language=" + lang +
-    "; path=/; max-age=" + (60*60*24*365) +
-    "; SameSite=Lax";
+  setPreferredLanguage(link.dataset.lang);
 });
 
-// Astro Navigation
+// --------------------------------------------------
+// 4) Astro Lifecycle Hooks
+// --------------------------------------------------
 document.addEventListener('astro:page-load', initCookieBanner);
 
-// Erster Seitenaufruf
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   initCookieBanner();
 } else {
