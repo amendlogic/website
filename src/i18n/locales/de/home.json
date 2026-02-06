@@ -50,11 +50,29 @@
         "title": "Configurable Parameters",
         "description": "Risk levels and strategy behavior can be adjusted to individual preferences."
       }
-    },
+    }
   },
   
+  "steps": {
+    "tagline": "HOW IT WORKS",
+    "title": "Simple by Design",
+    "subtitle": "The strategy runs directly on TradingView. It continuously analyzes price data, generates trade signals based on predefined rules, and executes positions automatically. Once set up, it operates independently — without manual intervention or constant monitoring.",
+    "item-1": {
+      "title": "Data",
+      "subtitle": "— Indicator Signal",
+      "description": "Market conditions are analyzed by our proprietary indicator. When predefined conditions are met, a trading signal is generated."
+    },
+    "item-2": {
+      "title": "Logic",
+      "subtitle": "— Signal to Trade",
+      "description": "Signals are transmitted via webhook and converted into structured trade instructions. Parameters such as direction, size, and risk settings are automatically validated."
+    },
+    "item-3": {
+      "title": "Execution",
+      "subtitle": "— Order Placement",
+      "description": "Validated trade instructions are executed automatically. Orders are placed instantly, following defined risk and execution parameters."
+    }
+  }
   
-  
-  
-  
+
 }
