@@ -54,7 +54,7 @@
   },
   
   "steps": {
-    "tagline": "HOW IT WORKS",
+    "tagline": "How It Works",
     "title": "Simple by Design",
     "subtitle": "The strategy runs directly on TradingView. It continuously analyzes price data, generates trade signals based on predefined rules, and executes positions automatically. Once set up, it operates independently — without manual intervention or constant monitoring.",
     "item-1": {
