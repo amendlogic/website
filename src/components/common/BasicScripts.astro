@@ -3,207 +3,194 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-if (window.basic_script_init) return;
-window.basic_script_init = true;
+  if (window.basic_script_init) return;
+  window.basic_script_init = true;
 
-(function() {
-  let cleanupFns = [];
+  (function() {
+    let cleanupFns = [];
 
-  // --- DOM CACHE ---
-  const docEl = document.documentElement;
-  const header = document.getElementById('header');
-  const body = document.body;
-  const stickyHeader = header?.querySelector('[data-aw-sticky-header]');
-  const menuBtn = header?.querySelector('[data-aw-toggle-menu]');
-  const nav = header?.querySelector('nav');
-
-  // --- HELPERS ---
-  const toggleClass = (el, className, condition) => {
-    if (!el) return;
-    el.classList.toggle(className, !!condition);
-  };
-
-  const applyTheme = (theme) => {
-    const resolved = theme === 'system'
-      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      : theme;
-
-    docEl.dataset.theme = resolved;
-    toggleClass(docEl, 'dark', resolved === 'dark');
-
-    // Nur zwei Icons toggeln (Hamburger / Close)
-    if (menuBtn) {
-      const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
-      if (icons.length > 1) {
-        icons[0].classList.toggle('hidden', resolved === 'dark'); // optional: nach Theme
-      }
-    }
-  };
-
-  // --- HEADER SCROLL ---
-  const initHeader = () => {
-    if (!stickyHeader) return;
-    let lastState = window.scrollY > 60;
-    toggleClass(stickyHeader, 'scroll', lastState);
-
-    const onScroll = () => {
-      const isScrolled = window.scrollY > 60;
-      if (isScrolled !== lastState) {
-        toggleClass(stickyHeader, 'scroll', isScrolled);
-        lastState = isScrolled;
-      }
+    // --- HELPER ---
+    const toggleClass = (el, className, condition) => {
+      if (condition) el.classList.add(className);
+      else el.classList.remove(className);
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
-  };
-
-  // --- MENU ---
-  const initMenu = () => {
-    if (!menuBtn || !nav) return;
-    menuBtn.setAttribute('aria-expanded', 'false');
-
-    const toggleIcons = (isExpanded) => {
-      const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
-      if (icons.length > 1) {
-        icons[0].classList.toggle('hidden', isExpanded);
-        icons[1].classList.toggle('hidden', !isExpanded);
-      }
-    };
-
-    const toggleMenu = () => {
-      const isExpanded = menuBtn.classList.toggle('expanded');
-      body.classList.toggle('overflow-hidden', isExpanded);
-      header.classList.toggle('h-screen', isExpanded);
-      header.classList.toggle('expanded', isExpanded);
-      header.classList.toggle('bg-page', isExpanded);
-
-      menuBtn.setAttribute('aria-expanded', isExpanded);
-      toggleIcons(isExpanded);
-      nav.classList.toggle('hidden');
-
-      const actions = header.querySelector('nav + div, div > div:last-child');
-      if (actions) actions.classList.toggle('hidden', !isExpanded);
-    };
-
-    window.closeMenuInstance = () => {
-      if (menuBtn.classList.contains('expanded')) toggleMenu();
-    };
-
-    menuBtn.addEventListener('click', toggleMenu);
-    cleanupFns.push(() => menuBtn.removeEventListener('click', toggleMenu));
-
-    // Dropdown
-    const onNavClick = (e) => {
-      const trigger = e.target.closest('.dropdown > button, .dropdown > a');
-      if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
-
-      e.preventDefault();
-      const subMenu = trigger.nextElementSibling;
-      if (subMenu) {
-        const expanded = subMenu.classList.toggle('hidden') === false;
-        trigger.classList.toggle('expanded', expanded);
-        trigger.setAttribute('aria-expanded', expanded);
-      }
-    };
-
-    nav.addEventListener('click', onNavClick);
-    cleanupFns.push(() => nav.removeEventListener('click', onNavClick));
-  };
-
-  // --- GLOBAL EVENTS ---
-  const initGlobalEvents = () => {
-    const onClick = (e) => {
-      const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
-      if (themeBtn) {
-        const themes = ['system', 'light', 'dark'];
-        const current = localStorage.getItem('theme') || 'system';
-        const next = themes[(themes.indexOf(current) + 1) % 3];
-        localStorage.setItem('theme', next);
-        applyTheme(next);
-        return;
-      }
-
-      const link = e.target.closest('a');
-      if (!link || !link.hash || link.origin !== location.origin || link.pathname !== location.pathname) return;
-
-      const decodedHash = decodeURIComponent(link.hash);
-      const targetEl = decodedHash === '#' ? null : document.querySelector(decodedHash);
-      if (!targetEl) return;
-
-      e.preventDefault();
-      link.blur();
-
-      if (header?.classList.contains('expanded') && window.closeMenuInstance) {
-        window.closeMenuInstance();
-      }
-
-      setTimeout(() => {
-        const headerHeight = header?.getBoundingClientRect().height || 0;
-        const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
-        history.pushState(null, null, link.hash);
-      }, 10);
-    };
-
-    document.addEventListener('click', onClick, { capture: true, passive: false });
-    cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
-  };
-
-  // --- ANIMATIONS ---
-  const initAnimations = () => {
-    const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
-    const elements = document.querySelectorAll(selectors.join(','));
-    if (!elements.length) return;
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          el.setAttribute('data-aw-animated', 'true');
-          el.removeAttribute('no-intersect');
-          if (el.classList.contains('intersect-once')) observer.unobserve(el);
-        }
+    const applyTheme = (theme) => {
+      const resolvedTheme = (theme === 'system') 
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
+        : theme;
+      
+      requestAnimationFrame(() => {
+        toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
+        document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
+          toggleClass(icon, 'hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
+        });
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
+    };
 
-    elements.forEach(el => {
-      el.setAttribute('no-intersect', '');
-      observer.observe(el);
-    });
+    // --- 1. HEADER LOGIK (ROBUST VERSION) ---
+    const initHeader = () => {
+      const header = document.getElementById('header');
+      const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
+      if (!stickyHeader) return;
 
-    cleanupFns.push(() => observer.disconnect());
-  };
+      let isTicking = false;
+      let lastState = false;
 
-  // --- SCROLL FIX ---
-  const fixScrollPosition = () => {
-    if (!location.hash) return;
-    const decodedHash = decodeURIComponent(location.hash);
-    const target = decodedHash === '#' ? null : document.querySelector(decodedHash);
-    if (!target) return;
+      const onScroll = () => {
+        if (!isTicking) {
+          window.requestAnimationFrame(() => {
+            const isScrolled = window.scrollY > 10;
+            if (isScrolled !== lastState) {
+              stickyHeader.classList.toggle('scroll', isScrolled);
+              lastState = isScrolled;
+            }
+            isTicking = false;
+          });
+          isTicking = true;
+        }
+      };
 
-    setTimeout(() => {
-      const headerHeight = header?.getBoundingClientRect().height || 0;
-      const targetPos = target.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: targetPos - headerHeight, behavior: 'instant' });
-    }, 50);
-  };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      
+      // Initial-Check gegen "Verschwinden beim Refresh"
+      if (window.scrollY > 10) {
+        stickyHeader.classList.add('scroll');
+        lastState = true;
+      }
 
-  // --- MAIN RUN ---
-  const run = () => {
-    cleanupFns.forEach(fn => fn());
-    cleanupFns = [];
+      cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
+    };
 
-    applyTheme(localStorage.getItem('theme') || 'system');
-    initHeader();
-    initMenu();
-    setTimeout(initGlobalEvents, 0);
-    fixScrollPosition();
-    if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
-    else setTimeout(initAnimations, 200);
-  };
+    // --- 2. MENU LOGIK (MEMORY OPTIMIZED) ---
+    const initMenu = () => {
+      const header = document.getElementById('header');
+      const menuBtn = document.querySelector('[data-aw-toggle-menu]');
+      const nav = header?.querySelector('nav');
+      
+      if (!menuBtn || !header || !nav) return;
 
-  run();
-  document.addEventListener('astro:after-swap', run);
-})();
+      const toggleMenu = () => {
+        menuBtn.classList.toggle('expanded');
+        document.body.classList.toggle('overflow-hidden');
+        header.classList.toggle('h-screen');
+        header.classList.toggle('expanded');
+        header.classList.toggle('bg-page');
+
+        const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
+        if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
+
+        nav.classList.toggle('hidden');
+
+        const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
+        if (actions) actions.classList.toggle('hidden');
+      };
+
+      menuBtn.onclick = toggleMenu;
+      window.toggleMenuInstance = toggleMenu;
+
+      // OPTIMIERUNG: Event Delegation für Dropdowns
+      // Statt viele Listener zu erzeugen, nutzen wir nur einen am Parent (nav)
+      const onNavClick = (e) => {
+        // Wir suchen, ob ein Dropdown-Trigger geklickt wurde
+        const trigger = e.target.closest('.dropdown > button, .dropdown > a');
+        
+        // Abbruch wenn kein Trigger oder wenn wir nicht im Mobile-Mode sind
+        if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
+
+        // Dropdown Logic
+        e.preventDefault();
+        const subMenu = trigger.nextElementSibling;
+        if (subMenu) {
+            subMenu.classList.toggle('hidden');
+            trigger.classList.toggle('expanded');
+        }
+      };
+
+      nav.addEventListener('click', onNavClick);
+      // Event Listener beim Cleanup entfernen nicht vergessen!
+      // Da 'nav' beim Seitenwechsel bestehen bleibt bis Swap, ist das sauber.
+    };
+
+    // --- 3. GLOBAL EVENTS (LINKS & SMOOTH SCROLL) ---
+    const initGlobalEvents = () => {
+      const onClick = (e) => {
+        // Theme Toggle
+        const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
+        if (themeBtn) {
+          const themes = ['system', 'light', 'dark'];
+          const current = localStorage.getItem('theme') || 'system';
+          const next = themes[(themes.indexOf(current) + 1) % 3];
+          localStorage.setItem('theme', next);
+          applyTheme(next);
+          return;
+        }
+
+        // Smooth Scroll
+        const link = e.target.closest('a');
+        if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
+          const targetEl = document.querySelector(link.hash);
+          if (targetEl) {
+            e.preventDefault();
+            if (document.getElementById('header')?.classList.contains('expanded') && window.toggleMenuInstance) {
+              window.toggleMenuInstance();
+            }
+            link.blur();
+            const header = document.getElementById('header');
+            const headerHeight = header ? header.getBoundingClientRect().height : 0;
+            const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
+            history.pushState(null, null, link.hash);
+          }
+        }
+      };
+
+      document.addEventListener('click', onClick, { capture: true, passive: false });
+      cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
+    };
+
+    // --- 4. ANIMATIONS (LAZY) ---
+    const initAnimations = () => {
+      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
+      const elements = document.querySelectorAll(selectors.join(','));
+      if (elements.length === 0) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            el.setAttribute('data-aw-animated', 'true');
+            el.removeAttribute('no-intersect');
+            if (el.classList.contains('intersect-once')) observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      elements.forEach(el => {
+        el.setAttribute('no-intersect', '');
+        observer.observe(el);
+      });
+
+      cleanupFns.push(() => observer.disconnect());
+    };
+
+    // --- MAIN LIFECYCLE ---
+    const run = () => {
+      cleanupFns.forEach(fn => fn());
+      cleanupFns = [];
+
+      applyTheme(localStorage.getItem('theme') || 'system');
+      
+      initHeader(); // Robust & Sofort
+      initMenu();   // Memory Optimized
+
+      setTimeout(initGlobalEvents, 0);
+
+      if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
+      else setTimeout(initAnimations, 200);
+    };
+
+    run();
+    document.addEventListener('astro:after-swap', run);
+  })();
 </script>
