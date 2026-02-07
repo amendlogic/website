@@ -36,3 +36,27 @@ async function initCookieBanner() {
 
 document.addEventListener('astro:page-load', initCookieBanner);
 </script>
+
+<script is:inline>
+document.addEventListener("click", function (event) {
+  const link = event.target.closest("[data-lang]");
+  if (!link) return;
+
+  event.preventDefault();
+
+  const lang = link.dataset.lang;
+  if (lang !== "de" && lang !== "en") return;
+
+  const isProd = location.protocol === "https:";
+
+  document.cookie =
+    "preferred_language=" + lang +
+    "; path=/; max-age=31536000; SameSite=Lax" +
+    (isProd ? "; Secure" : "");
+
+  const query = window.location.search || "";
+  const hash = window.location.hash || "";
+
+  window.location.href = "/" + lang + "/" + query + hash;
+});
+</script>
