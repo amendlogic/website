@@ -1,218 +1,209 @@
----
-import { UI } from 'astrowind:config';
----
-
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  if (window.basic_script_init) return;
-  window.basic_script_init = true;
+if (window.basic_script_init) return;
+window.basic_script_init = true;
 
-  (function() {
-    let cleanupFns = [];
+(function() {
+  let cleanupFns = [];
 
-    // --- HELPER ---
-    const toggleClass = (el, className, condition) => {
-      if (condition) el.classList.add(className);
-      else el.classList.remove(className);
-    };
+  // --- HELPERS ---
+  const toggleClass = (el, className, condition) => {
+    if (el) el.classList.toggle(className, !!condition);
+  };
 
-    const applyTheme = (theme) => {
-      const resolvedTheme = (theme === 'system') 
-        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
-        : theme;
-      
-      requestAnimationFrame(() => {
-        toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
-        document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
-          toggleClass(icon, 'hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
-        });
+  const applyTheme = (theme) => {
+    const resolved = theme === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : theme;
+
+    document.documentElement.dataset.theme = resolved;
+
+    requestAnimationFrame(() => {
+      toggleClass(document.documentElement, 'dark', resolved === 'dark');
+      document.querySelectorAll('[data-aw-theme-icon]').forEach(icon => {
+        const iconTheme = icon.getAttribute('data-aw-theme-icon');
+        icon.classList.toggle('hidden', iconTheme !== resolved);
       });
+    });
+  };
+
+  // --- HEADER SCROLL ---
+  const initHeader = () => {
+    const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
+    if (!stickyHeader) return;
+
+    let lastState = window.scrollY > 10;
+    toggleClass(stickyHeader, 'scroll', lastState);
+
+    const onScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== lastState) {
+        toggleClass(stickyHeader, 'scroll', isScrolled);
+        lastState = isScrolled;
+      }
     };
 
-    // --- 1. HEADER LOGIK (ROBUST VERSION) ---
-    const initHeader = () => {
-      const header = document.getElementById('header');
-      const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
-      if (!stickyHeader) return;
+    window.addEventListener('scroll', onScroll, { passive: true });
+    cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
+  };
 
-      let isTicking = false;
-      let lastState = false;
+  // --- MENU LOGIC ---
+  const initMenu = () => {
+    const header = document.getElementById('header');
+    const menuBtn = header?.querySelector('[data-aw-toggle-menu]');
+    const nav = header?.querySelector('nav');
+    if (!menuBtn || !nav) return;
 
-      const onScroll = () => {
-        if (!isTicking) {
-          window.requestAnimationFrame(() => {
-            const isScrolled = window.scrollY > 10;
-            if (isScrolled !== lastState) {
-              stickyHeader.classList.toggle('scroll', isScrolled);
-              lastState = isScrolled;
-            }
-            isTicking = false;
-          });
-          isTicking = true;
-        }
-      };
+    menuBtn.setAttribute('aria-expanded', 'false');
 
-      window.addEventListener('scroll', onScroll, { passive: true });
-      
-      // Initial-Check
-      if (window.scrollY > 10) {
-        stickyHeader.classList.add('scroll');
-        lastState = true;
+    const toggleMenu = () => {
+      const isExpanded = menuBtn.classList.toggle('expanded');
+      document.body.classList.toggle('overflow-hidden', isExpanded);
+      header.classList.toggle('h-screen', isExpanded);
+      header.classList.toggle('expanded', isExpanded);
+      header.classList.toggle('bg-page', isExpanded);
+
+      menuBtn.setAttribute('aria-expanded', isExpanded);
+
+      const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
+      if (icons.length > 1) {
+        icons.forEach(icon => icon.classList.toggle('hidden'));
       }
 
-      cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
+      nav.classList.toggle('hidden');
+
+      const actions = header.querySelector('nav + div, div > div:last-child');
+      if (actions) actions.classList.toggle('hidden', !isExpanded);
     };
 
-    // --- 2. MENU LOGIK (MEMORY OPTIMIZED) ---
-    const initMenu = () => {
-      const header = document.getElementById('header');
-      const menuBtn = document.querySelector('[data-aw-toggle-menu]');
-      const nav = header?.querySelector('nav');
-      
-      if (!menuBtn || !header || !nav) return;
+    menuBtn.addEventListener('click', toggleMenu);
+    cleanupFns.push(() => menuBtn.removeEventListener('click', toggleMenu));
 
-      const toggleMenu = () => {
-        menuBtn.classList.toggle('expanded');
-        document.body.classList.toggle('overflow-hidden');
-        header.classList.toggle('h-screen');
-        header.classList.toggle('expanded');
-        header.classList.toggle('bg-page');
+    window.toggleMenuInstance = toggleMenu;
 
-        const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
-        if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
+    const onNavClick = (e) => {
+      const trigger = e.target.closest('.dropdown > button, .dropdown > a');
+      if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
 
-        nav.classList.toggle('hidden');
-
-        const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
-        if (actions) actions.classList.toggle('hidden');
-      };
-
-      menuBtn.onclick = toggleMenu;
-      window.toggleMenuInstance = toggleMenu;
-
-      const onNavClick = (e) => {
-        const trigger = e.target.closest('.dropdown > button, .dropdown > a');
-        if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
-
-        e.preventDefault();
-        const subMenu = trigger.nextElementSibling;
-        if (subMenu) {
-            subMenu.classList.toggle('hidden');
-            trigger.classList.toggle('expanded');
-        }
-      };
-
-      nav.addEventListener('click', onNavClick);
+      e.preventDefault();
+      const subMenu = trigger.nextElementSibling;
+      if (subMenu) {
+        const expanded = subMenu.classList.toggle('hidden') === false;
+        trigger.classList.toggle('expanded', expanded);
+        trigger.setAttribute('aria-expanded', expanded);
+      }
     };
 
-    // --- 3. GLOBAL EVENTS (LINKS & SMOOTH SCROLL) ---
-    const initGlobalEvents = () => {
-      const onClick = (e) => {
-        // Theme Toggle
-        const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
-        if (themeBtn) {
-          const themes = ['system', 'light', 'dark'];
-          const current = localStorage.getItem('theme') || 'system';
-          const next = themes[(themes.indexOf(current) + 1) % 3];
-          localStorage.setItem('theme', next);
-          applyTheme(next);
-          return;
+    nav.addEventListener('click', onNavClick);
+    cleanupFns.push(() => nav.removeEventListener('click', onNavClick));
+  };
+
+  // --- GLOBAL EVENTS ---
+  const initGlobalEvents = () => {
+    const onClick = (e) => {
+      const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
+      if (themeBtn) {
+        const themes = ['system', 'light', 'dark'];
+        const current = localStorage.getItem('theme') || 'system';
+        const next = themes[(themes.indexOf(current) + 1) % 3];
+        localStorage.setItem('theme', next);
+        applyTheme(next);
+        return;
+      }
+
+      const link = e.target.closest('a');
+      // Prüfen ob es ein Anker-Link auf derselben Seite ist
+      if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
+        const decodedHash = decodeURIComponent(link.hash);
+        let targetEl = null;
+
+        // SAFE GUARD: Verhindert Absturz bei invaliden Selektoren (z.B. href="#")
+        try {
+          targetEl = decodedHash === '#' ? null : document.querySelector(decodedHash);
+        } catch (error) {
+          console.warn('Invalid hash selector:', decodedHash);
         }
 
-        // Smooth Scroll
-        const link = e.target.closest('a');
-        if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-          const targetEl = document.querySelector(link.hash);
-          if (targetEl) {
-            e.preventDefault();
-            if (document.getElementById('header')?.classList.contains('expanded') && window.toggleMenuInstance) {
-              window.toggleMenuInstance();
-            }
-            link.blur(); // Focus entfernen
-            
-            const header = document.getElementById('header');
-            const headerHeight = header ? header.getBoundingClientRect().height : 0;
-            const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-            
-            window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
-            
-            // WICHTIG: pushState aktualisiert URL, aber der Browser merkt sich Scrollposition
-            // für diesen State erst NACHDEM gescrollt wurde.
-            history.pushState(null, null, link.hash); 
+        if (targetEl) {
+          e.preventDefault();
+          if (window.toggleMenuInstance && document.getElementById('header')?.classList.contains('expanded')) {
+            window.toggleMenuInstance();
           }
-        }
-      };
 
-      document.addEventListener('click', onClick, { capture: true, passive: false });
-      cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
-    };
+          link.blur();
+          const headerHeight = document.getElementById('header')?.getBoundingClientRect().height || 0;
+          const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
 
-    // --- 4. ANIMATIONS (LAZY) ---
-    const initAnimations = () => {
-      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
-      const elements = document.querySelectorAll(selectors.join(','));
-      if (elements.length === 0) return;
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const el = entry.target;
-            el.setAttribute('data-aw-animated', 'true');
-            el.removeAttribute('no-intersect');
-            if (el.classList.contains('intersect-once')) observer.unobserve(el);
-          }
-        });
-      }, { threshold: 0.1 });
-
-      elements.forEach(el => {
-        el.setAttribute('no-intersect', '');
-        observer.observe(el);
-      });
-
-      cleanupFns.push(() => observer.disconnect());
-    };
-
-    // --- NEU: FIX FÜR SCROLL POSITION BEIM LADEN/REFRESH ---
-    const fixScrollPosition = () => {
-      // Prüfen ob ein Hash (#section) in der URL ist
-      if (window.location.hash) {
-        const target = document.querySelector(window.location.hash);
-        if (target) {
-          // Kleiner Timeout gibt dem Browser Zeit für das Layout
-          setTimeout(() => {
-            const header = document.getElementById('header');
-            const headerHeight = header ? header.getBoundingClientRect().height : 0;
-            const targetPos = target.getBoundingClientRect().top + window.scrollY;
-            
-            // 'instant' Scrollen, damit es beim Laden nicht visuell springt
-            window.scrollTo({ 
-              top: targetPos - headerHeight, 
-              behavior: 'instant' 
-            });
-          }, 10); 
+          window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
+          history.pushState(null, null, link.hash);
         }
       }
     };
 
-    // --- MAIN LIFECYCLE ---
-    const run = () => {
-      cleanupFns.forEach(fn => fn());
-      cleanupFns = [];
+    document.addEventListener('click', onClick, { capture: true, passive: false });
+    cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
+  };
 
-      applyTheme(localStorage.getItem('theme') || 'system');
-      
-      initHeader(); 
-      initMenu();   
+  // --- ANIMATIONS ---
+  const initAnimations = () => {
+    const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
+    const elements = document.querySelectorAll(selectors.join(','));
+    if (!elements.length) return;
 
-      setTimeout(initGlobalEvents, 0);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          el.setAttribute('data-aw-animated', 'true');
+          el.removeAttribute('no-intersect');
+          if (el.classList.contains('intersect-once')) observer.unobserve(el);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
 
-      // Hier wird die Scroll-Position beim Laden korrigiert
-      fixScrollPosition();
+    elements.forEach(el => {
+      el.setAttribute('no-intersect', '');
+      observer.observe(el);
+    });
 
-      if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
-      else setTimeout(initAnimations, 200);
-    };
+    cleanupFns.push(() => observer.disconnect());
+  };
 
-    run();
-    document.addEventListener('astro:after-swap', run);
-  })();
+  // --- SCROLL FIX ---
+  const fixScrollPosition = () => {
+    if (!window.location.hash) return;
+
+    const decodedHash = decodeURIComponent(window.location.hash);
+    
+    // Auch hier Safety Check
+    try {
+      const target = decodedHash === '#' ? null : document.querySelector(decodedHash);
+      if (!target) return;
+
+      setTimeout(() => {
+        const headerHeight = document.getElementById('header')?.getBoundingClientRect().height || 0;
+        const targetPos = target.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: targetPos - headerHeight, behavior: 'instant' });
+      }, 10);
+    } catch (e) { /* ignore invalid hash */ }
+  };
+
+  // --- MAIN RUN ---
+  const run = () => {
+    cleanupFns.forEach(fn => fn());
+    cleanupFns = [];
+
+    applyTheme(localStorage.getItem('theme') || 'system');
+
+    initHeader();
+    initMenu();
+    setTimeout(initGlobalEvents, 0);
+    fixScrollPosition();
+
+    if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
+    else setTimeout(initAnimations, 200);
+  };
+
+  run();
+  document.addEventListener('astro:after-swap', run);
+})();
 </script>
