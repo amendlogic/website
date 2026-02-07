@@ -1,7 +1,6 @@
 ---
 // src/pages/index.astro
-// Diese Datei funktioniert auf JEDEM Hosting (auch GitHub Pages).
-export const prerender = true; 
+export const prerender = true;
 ---
 <!DOCTYPE html>
 <html lang="de">
@@ -10,38 +9,51 @@ export const prerender = true;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
     
-    <meta http-equiv="refresh" content="0;url=/de/">
+    <link rel="canonical" href="https://deine-domain.com/de/" />
+    <meta name="robots" content="noindex" />
+
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=/de/">
+    </noscript>
 
     <script is:inline>
-        // Wir nutzen "var" und kurze Namen für minimale Dateigröße
-        try {
-            var target = "de"; // Standard
+      try {
+        var target = "de"; // Standard-Fallback
 
-            // A. Check: Hat der User schon mal gewählt? (Cookie oder LocalStorage)
-            // Prüfen wir localStorage (einfacher auf GH Pages)
-            var saved = localStorage.getItem("lang");
-            
-            // B. Check: Browsersprache
-            // navigator.language gibt z.B. "en-US" oder "de-DE" zurück
-            var browser = navigator.language || navigator.userLanguage; 
+        // 1. Cookie prüfen (höchste Priorität)
+        var m = document.cookie.match(/preferred_language=(en|de)/);
+        if (m) {
+          target = m[1];
+        } 
+        // 2. LocalStorage & Browser prüfen
+        else {
+          // LocalStorage lesen (falls vorhanden)
+          var saved = null;
+          try { saved = localStorage.getItem("lang"); } catch(e) {}
 
-            if (saved && (saved === "de" || saved === "en")) {
-                target = saved;
-            } else if (browser && browser.startsWith("en")) {
-                target = "en";
-            }
+          var browser = navigator.language || navigator.userLanguage;
 
-            // C. Redirect
-            // location.replace() ist wichtig, damit der "Zurück"-Button funktioniert
-            // (User kommt nicht wieder auf die Redirect-Seite zurück)
-            window.location.replace("/" + target + "/");
-            
-        } catch (e) {
-            // Falls irgendwas schief geht (z.B. JS Fehler), greift der Meta-Refresh oben
-            window.location.replace("/de/");
+          if (saved && (saved === "de" || saved === "en")) {
+            target = saved;
+          } 
+          else if (browser && String(browser).startsWith("en")) {
+            target = "en";
+          }
         }
+
+        // 3. OPTIMIERUNG: Parameter und Hash behalten!
+        // Wichtig für Marketing-Links (?utm_source=...) oder Anker (#section)
+        var query = window.location.search || "";
+        var hash = window.location.hash || "";
+
+        window.location.replace("/" + target + "/" + query + hash);
+
+      } catch (e) {
+        // Sicherer Fallback, falls irgendwas im JS crasht
+        window.location.replace("/de/");
+      }
     </script>
 </head>
 <body>
-    </body>
+</body>
 </html>
