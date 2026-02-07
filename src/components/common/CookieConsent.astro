@@ -8,70 +8,31 @@
 <script is:inline src="/libs/cookieconsent.umd.js"></script>
 
 <script is:inline>
-  // ==============================
-  // SPRACH-LOGIK (robust & konsistent)
-  // ==============================
-  function getCurrentLang() {
-    const htmlLang = document.documentElement.lang;
-    const pageLang = htmlLang
-      ? htmlLang.split('-')[0].toLowerCase()
-      : null;
-
-    // 👉 Auf Sprachseiten entscheidet DIE SEITE
-    if (pageLang === "en" || pageLang === "de") {
-      return pageLang;
-    }
-
-    // 👉 Nur sonst (z.B. auf /) zählt der Cookie
-    const m = document.cookie.match(/preferred_language=([^;]+)/);
-    if (m && (m[1] === "de" || m[1] === "en")) {
-      return m[1];
-    }
-
-    // Internationaler Fallback
-    return "en";
+async function initCookieBanner() {
+  if (!window.CookieConsent) {
+    setTimeout(initCookieBanner, 100);
+    return;
   }
 
-  // ==============================
-  // COOKIECONSENT INITIALISIEREN
-  // ==============================
-  async function initCookieBanner() {
-    if (!window.CookieConsent) {
-      setTimeout(initCookieBanner, 100);
-      return;
-    }
+  try {
+    const { config } = await import('/libs/cookieconsent-config.js');
 
-    try {
-      const { config } = await import('/libs/cookieconsent-config.js');
-      const lang = getCurrentLang();
+    // 👉 Sprache kommt NUR aus <html lang="...">
+    const currentLang =
+      document.documentElement.lang?.split('-')[0] || 'de';
 
-      // Vorherige UI nur zurücksetzen (Cookie bleibt!)
-      window.CookieConsent.reset(false);
+    window.CookieConsent.run({
+      ...config,
+      language: {
+        ...config.language,
+        current: currentLang
+      }
+    });
 
-      window.CookieConsent.run({
-        ...config,
-        language: {
-          ...config.language,
-          current: lang
-        }
-      });
-
-      // Optional global verfügbar machen
-      window.CC = window.CookieConsent;
-
-    } catch (e) {
-      console.error("CookieConsent Fehler:", e);
-    }
+  } catch (e) {
+    console.error("CookieConsent Fehler:", e);
   }
+}
 
-  // ==============================
-  // ASTRO VIEW TRANSITIONS SAFE
-  // ==============================
-  document.addEventListener('astro:page-load', initCookieBanner);
-
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    initCookieBanner();
-  } else {
-    document.addEventListener('DOMContentLoaded', initCookieBanner);
-  }
+document.addEventListener('astro:page-load', initCookieBanner);
 </script>
