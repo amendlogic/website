@@ -1,5 +1,4 @@
 ---
-// src/pages/index.astro
 export const prerender = true;
 ---
 
@@ -16,38 +15,37 @@ export const prerender = true;
   </noscript>
 
   <script is:inline>
-    (function () {
-      var supported = ['de', 'en'];
-      var defaultLang = 'en';
-      var target = defaultLang;
+  (function () {
+    var supported = ['de', 'en'];
+    var defaultLang = 'en';
+    var target = defaultLang;
 
-      function isSupported(lang) {
-        return supported.indexOf(lang) !== -1;
-      }
+    function isSupported(lang) {
+      return supported.indexOf(lang) !== -1;
+    }
 
-      try {
-        // 1) PRIORITÄT: Dein eigener Sprach-Cookie
-        var match = document.cookie.match(/preferred_language=([^;]+)/);
-        if (match && match[1] && isSupported(match[1])) {
-          target = match[1];
-        } else {
-          // 2) Fallback: Browser-Sprache NUR als GROBER Hinweis
-          var browser = (navigator.language || "").split('-')[0].toLowerCase();
-          if (isSupported(browser)) {
-            target = browser;
-          }
+    try {
+      // 1) PRIORITÄT: Dein eigener Sprach-Cookie
+      var match = document.cookie.match(/preferred_language=([^;]+)/);
+      if (match && match[1] && isSupported(match[1])) {
+        target = match[1];
+      } else {
+        // 2) Fallback: Browser nur als grober Hinweis
+        var browser = (navigator.language || "").split('-')[0].toLowerCase();
+        if (isSupported(browser)) {
+          target = browser;
         }
-
-        // Query + Hash behalten (wichtig für UTM-Links)
-        var query = window.location.search || "";
-        var hash = window.location.hash || "";
-
-        window.location.replace("/" + target + "/" + query + hash);
-
-      } catch (e) {
-        window.location.replace("/" + defaultLang + "/");
       }
-    })();
+
+      var query = window.location.search || "";
+      var hash = window.location.hash || "";
+
+      window.location.replace("/" + target + "/" + query + hash);
+
+    } catch (e) {
+      window.location.replace("/" + defaultLang + "/");
+    }
+  })();
   </script>
 </head>
 <body></body>
