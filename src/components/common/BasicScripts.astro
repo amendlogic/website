@@ -35,11 +35,11 @@ window.basic_script_init = true;
     const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
     if (!stickyHeader) return;
 
-    let lastState = window.scrollY > 10;
+    let lastState = window.scrollY > 60;
     toggleClass(stickyHeader, 'scroll', lastState);
 
     const onScroll = () => {
-      const isScrolled = window.scrollY > 10;
+      const isScrolled = window.scrollY > 60;
       if (isScrolled !== lastState) {
         toggleClass(stickyHeader, 'scroll', isScrolled);
         lastState = isScrolled;
@@ -59,6 +59,19 @@ window.basic_script_init = true;
 
     menuBtn.setAttribute('aria-expanded', 'false');
 
+    // Funktion zum sauberen Umschalten der Icons
+    const toggleIcons = (isExpanded) => {
+        const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
+        // Annahme: Icon 0 = Hamburger, Icon 1 = Close (X)
+        if (icons.length > 1) {
+            icons[0].classList.toggle('hidden', isExpanded); // Hamburger weg wenn offen
+            icons[1].classList.toggle('hidden', !isExpanded); // X weg wenn zu
+        } else if (icons.length === 1) {
+            // Fallback falls nur ein Icon da ist
+            icons[0].classList.toggle('hidden', isExpanded);
+        }
+    };
+
     const toggleMenu = () => {
       const isExpanded = menuBtn.classList.toggle('expanded');
       document.body.classList.toggle('overflow-hidden', isExpanded);
@@ -67,11 +80,7 @@ window.basic_script_init = true;
       header.classList.toggle('bg-page', isExpanded);
 
       menuBtn.setAttribute('aria-expanded', isExpanded);
-
-      const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
-      if (icons.length > 1) {
-        icons.forEach(icon => icon.classList.toggle('hidden'));
-      }
+      toggleIcons(isExpanded);
 
       nav.classList.toggle('hidden');
 
@@ -79,11 +88,17 @@ window.basic_script_init = true;
       if (actions) actions.classList.toggle('hidden', !isExpanded);
     };
 
+    // Externe Schließ-Funktion für Links
+    window.closeMenuInstance = () => {
+        if (menuBtn.classList.contains('expanded')) {
+            toggleMenu(); // Nutzt die gleiche Logik, setzt alles sauber zurück
+        }
+    };
+
     menuBtn.addEventListener('click', toggleMenu);
     cleanupFns.push(() => menuBtn.removeEventListener('click', toggleMenu));
 
-    window.toggleMenuInstance = toggleMenu;
-
+    // Dropdown Logic
     const onNavClick = (e) => {
       const trigger = e.target.closest('.dropdown > button, .dropdown > a');
       if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
@@ -101,9 +116,10 @@ window.basic_script_init = true;
     cleanupFns.push(() => nav.removeEventListener('click', onNavClick));
   };
 
-  // --- GLOBAL EVENTS ---
+  // --- GLOBAL EVENTS (Links & Smooth Scroll) ---
   const initGlobalEvents = () => {
     const onClick = (e) => {
+      // Theme Toggle
       const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
       if (themeBtn) {
         const themes = ['system', 'light', 'dark'];
@@ -114,13 +130,12 @@ window.basic_script_init = true;
         return;
       }
 
+      // Link Handling
       const link = e.target.closest('a');
-      // Prüfen ob es ein Anker-Link auf derselben Seite ist
       if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
         const decodedHash = decodeURIComponent(link.hash);
         let targetEl = null;
 
-        // SAFE GUARD: Verhindert Absturz bei invaliden Selektoren (z.B. href="#")
         try {
           targetEl = decodedHash === '#' ? null : document.querySelector(decodedHash);
         } catch (error) {
@@ -129,16 +144,26 @@ window.basic_script_init = true;
 
         if (targetEl) {
           e.preventDefault();
-          if (window.toggleMenuInstance && document.getElementById('header')?.classList.contains('expanded')) {
-            window.toggleMenuInstance();
+          link.blur();
+
+          // FIX: Prüfen ob Menü offen ist
+          const isMenuOpen = document.getElementById('header')?.classList.contains('expanded');
+
+          // Schritt 1: Menü schließen falls offen
+          if (isMenuOpen && window.closeMenuInstance) {
+            window.closeMenuInstance();
           }
 
-          link.blur();
-          const headerHeight = document.getElementById('header')?.getBoundingClientRect().height || 0;
-          const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-
-          window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
-          history.pushState(null, null, link.hash);
+          // Schritt 2: Scrollen (Mit Verzögerung für Mobile Layout Reflow)
+          // Wir warten 10ms, damit 'overflow-hidden' sicher vom Body entfernt ist
+          setTimeout(() => {
+             const header = document.getElementById('header');
+             const headerHeight = header ? header.getBoundingClientRect().height : 0;
+             const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
+             
+             window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
+             history.pushState(null, null, link.hash);
+          }, isMenuOpen ? 10 : 0); 
         }
       }
     };
@@ -172,13 +197,11 @@ window.basic_script_init = true;
     cleanupFns.push(() => observer.disconnect());
   };
 
-  // --- SCROLL FIX ---
+  // --- SCROLL FIX ON LOAD ---
   const fixScrollPosition = () => {
     if (!window.location.hash) return;
-
     const decodedHash = decodeURIComponent(window.location.hash);
     
-    // Auch hier Safety Check
     try {
       const target = decodedHash === '#' ? null : document.querySelector(decodedHash);
       if (!target) return;
@@ -187,8 +210,8 @@ window.basic_script_init = true;
         const headerHeight = document.getElementById('header')?.getBoundingClientRect().height || 0;
         const targetPos = target.getBoundingClientRect().top + window.scrollY;
         window.scrollTo({ top: targetPos - headerHeight, behavior: 'instant' });
-      }, 10);
-    } catch (e) { /* ignore invalid hash */ }
+      }, 50); // Leicht erhöhtes Timeout für sichereres Laden
+    } catch (e) {}
   };
 
   // --- MAIN RUN ---
