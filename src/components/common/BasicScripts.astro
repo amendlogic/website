@@ -9,9 +9,18 @@ window.basic_script_init = true;
 (function() {
   let cleanupFns = [];
 
+  // --- DOM CACHE ---
+  const docEl = document.documentElement;
+  const header = document.getElementById('header');
+  const body = document.body;
+  const stickyHeader = header?.querySelector('[data-aw-sticky-header]');
+  const menuBtn = header?.querySelector('[data-aw-toggle-menu]');
+  const nav = header?.querySelector('nav');
+
   // --- HELPERS ---
   const toggleClass = (el, className, condition) => {
-    if (el) el.classList.toggle(className, !!condition);
+    if (!el) return;
+    el.classList.toggle(className, !!condition);
   };
 
   const applyTheme = (theme) => {
@@ -19,22 +28,21 @@ window.basic_script_init = true;
       ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
       : theme;
 
-    document.documentElement.dataset.theme = resolved;
+    docEl.dataset.theme = resolved;
+    toggleClass(docEl, 'dark', resolved === 'dark');
 
-    requestAnimationFrame(() => {
-      toggleClass(document.documentElement, 'dark', resolved === 'dark');
-      document.querySelectorAll('[data-aw-theme-icon]').forEach(icon => {
-        const iconTheme = icon.getAttribute('data-aw-theme-icon');
-        icon.classList.toggle('hidden', iconTheme !== resolved);
-      });
-    });
+    // Nur zwei Icons toggeln (Hamburger / Close)
+    if (menuBtn) {
+      const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
+      if (icons.length > 1) {
+        icons[0].classList.toggle('hidden', resolved === 'dark'); // optional: nach Theme
+      }
+    }
   };
 
   // --- HEADER SCROLL ---
   const initHeader = () => {
-    const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
     if (!stickyHeader) return;
-
     let lastState = window.scrollY > 60;
     toggleClass(stickyHeader, 'scroll', lastState);
 
@@ -50,55 +58,42 @@ window.basic_script_init = true;
     cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
   };
 
-  // --- MENU LOGIC ---
+  // --- MENU ---
   const initMenu = () => {
-    const header = document.getElementById('header');
-    const menuBtn = header?.querySelector('[data-aw-toggle-menu]');
-    const nav = header?.querySelector('nav');
     if (!menuBtn || !nav) return;
-
     menuBtn.setAttribute('aria-expanded', 'false');
 
-    // Funktion zum sauberen Umschalten der Icons
     const toggleIcons = (isExpanded) => {
-        const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
-        // Annahme: Icon 0 = Hamburger, Icon 1 = Close (X)
-        if (icons.length > 1) {
-            icons[0].classList.toggle('hidden', isExpanded); // Hamburger weg wenn offen
-            icons[1].classList.toggle('hidden', !isExpanded); // X weg wenn zu
-        } else if (icons.length === 1) {
-            // Fallback falls nur ein Icon da ist
-            icons[0].classList.toggle('hidden', isExpanded);
-        }
+      const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
+      if (icons.length > 1) {
+        icons[0].classList.toggle('hidden', isExpanded);
+        icons[1].classList.toggle('hidden', !isExpanded);
+      }
     };
 
     const toggleMenu = () => {
       const isExpanded = menuBtn.classList.toggle('expanded');
-      document.body.classList.toggle('overflow-hidden', isExpanded);
+      body.classList.toggle('overflow-hidden', isExpanded);
       header.classList.toggle('h-screen', isExpanded);
       header.classList.toggle('expanded', isExpanded);
       header.classList.toggle('bg-page', isExpanded);
 
       menuBtn.setAttribute('aria-expanded', isExpanded);
       toggleIcons(isExpanded);
-
       nav.classList.toggle('hidden');
 
       const actions = header.querySelector('nav + div, div > div:last-child');
       if (actions) actions.classList.toggle('hidden', !isExpanded);
     };
 
-    // Externe Schließ-Funktion für Links
     window.closeMenuInstance = () => {
-        if (menuBtn.classList.contains('expanded')) {
-            toggleMenu(); // Nutzt die gleiche Logik, setzt alles sauber zurück
-        }
+      if (menuBtn.classList.contains('expanded')) toggleMenu();
     };
 
     menuBtn.addEventListener('click', toggleMenu);
     cleanupFns.push(() => menuBtn.removeEventListener('click', toggleMenu));
 
-    // Dropdown Logic
+    // Dropdown
     const onNavClick = (e) => {
       const trigger = e.target.closest('.dropdown > button, .dropdown > a');
       if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
@@ -116,10 +111,9 @@ window.basic_script_init = true;
     cleanupFns.push(() => nav.removeEventListener('click', onNavClick));
   };
 
-  // --- GLOBAL EVENTS (Links & Smooth Scroll) ---
+  // --- GLOBAL EVENTS ---
   const initGlobalEvents = () => {
     const onClick = (e) => {
-      // Theme Toggle
       const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
       if (themeBtn) {
         const themes = ['system', 'light', 'dark'];
@@ -130,42 +124,26 @@ window.basic_script_init = true;
         return;
       }
 
-      // Link Handling
       const link = e.target.closest('a');
-      if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-        const decodedHash = decodeURIComponent(link.hash);
-        let targetEl = null;
+      if (!link || !link.hash || link.origin !== location.origin || link.pathname !== location.pathname) return;
 
-        try {
-          targetEl = decodedHash === '#' ? null : document.querySelector(decodedHash);
-        } catch (error) {
-          console.warn('Invalid hash selector:', decodedHash);
-        }
+      const decodedHash = decodeURIComponent(link.hash);
+      const targetEl = decodedHash === '#' ? null : document.querySelector(decodedHash);
+      if (!targetEl) return;
 
-        if (targetEl) {
-          e.preventDefault();
-          link.blur();
+      e.preventDefault();
+      link.blur();
 
-          // FIX: Prüfen ob Menü offen ist
-          const isMenuOpen = document.getElementById('header')?.classList.contains('expanded');
-
-          // Schritt 1: Menü schließen falls offen
-          if (isMenuOpen && window.closeMenuInstance) {
-            window.closeMenuInstance();
-          }
-
-          // Schritt 2: Scrollen (Mit Verzögerung für Mobile Layout Reflow)
-          // Wir warten 10ms, damit 'overflow-hidden' sicher vom Body entfernt ist
-          setTimeout(() => {
-             const header = document.getElementById('header');
-             const headerHeight = header ? header.getBoundingClientRect().height : 0;
-             const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-             
-             window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
-             history.pushState(null, null, link.hash);
-          }, isMenuOpen ? 10 : 0); 
-        }
+      if (header?.classList.contains('expanded') && window.closeMenuInstance) {
+        window.closeMenuInstance();
       }
+
+      setTimeout(() => {
+        const headerHeight = header?.getBoundingClientRect().height || 0;
+        const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
+        history.pushState(null, null, link.hash);
+      }, 10);
     };
 
     document.addEventListener('click', onClick, { capture: true, passive: false });
@@ -197,21 +175,18 @@ window.basic_script_init = true;
     cleanupFns.push(() => observer.disconnect());
   };
 
-  // --- SCROLL FIX ON LOAD ---
+  // --- SCROLL FIX ---
   const fixScrollPosition = () => {
-    if (!window.location.hash) return;
-    const decodedHash = decodeURIComponent(window.location.hash);
-    
-    try {
-      const target = decodedHash === '#' ? null : document.querySelector(decodedHash);
-      if (!target) return;
+    if (!location.hash) return;
+    const decodedHash = decodeURIComponent(location.hash);
+    const target = decodedHash === '#' ? null : document.querySelector(decodedHash);
+    if (!target) return;
 
-      setTimeout(() => {
-        const headerHeight = document.getElementById('header')?.getBoundingClientRect().height || 0;
-        const targetPos = target.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({ top: targetPos - headerHeight, behavior: 'instant' });
-      }, 50); // Leicht erhöhtes Timeout für sichereres Laden
-    } catch (e) {}
+    setTimeout(() => {
+      const headerHeight = header?.getBoundingClientRect().height || 0;
+      const targetPos = target.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: targetPos - headerHeight, behavior: 'instant' });
+    }, 50);
   };
 
   // --- MAIN RUN ---
@@ -220,12 +195,10 @@ window.basic_script_init = true;
     cleanupFns = [];
 
     applyTheme(localStorage.getItem('theme') || 'system');
-
     initHeader();
     initMenu();
     setTimeout(initGlobalEvents, 0);
     fixScrollPosition();
-
     if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
     else setTimeout(initAnimations, 200);
   };
