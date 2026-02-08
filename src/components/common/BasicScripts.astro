@@ -1,194 +1,278 @@
----
 import { UI } from 'astrowind:config';
 ---
 
-<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-if (window.basic_script_init) return;
-window.basic_script_init = true;
+<script is:inline define:vars={{ defaultTheme: UI.theme }}>
+  if (window.basic_script) {
+    return;
+  }
 
-(function() {
-  let cleanupFns: (() => void)[] = [];
+  window.basic_script = true;
 
-  const toggleClass = (el: HTMLElement, className: string, condition: boolean) => {
-    if (condition) el.classList.add(className);
-    else el.classList.remove(className);
-  };
-
-  const applyTheme = (theme: string) => {
-    const resolvedTheme = theme === 'system'
-      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      : theme;
-
-    requestAnimationFrame(() => {
-      toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
-      document.querySelectorAll('[data-aw-theme-icon]').forEach(icon => {
-        toggleClass(icon as HTMLElement, 'hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
-      });
-    });
-  };
-
-  // --- HEADER LOGIK ---
-  const initHeader = () => {
-    const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
-    if (!stickyHeader) return;
-
-    let isTicking = false;
-    let lastState = false;
-
-    const onScroll = () => {
-      if (!isTicking) {
-        window.requestAnimationFrame(() => {
-          const isScrolled = window.scrollY > 10;
-          if (isScrolled !== lastState) {
-            stickyHeader.classList.toggle('scroll', isScrolled);
-            lastState = isScrolled;
-          }
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    if (window.scrollY > 10) {
-      stickyHeader.classList.add('scroll');
-      lastState = true;
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
+  }
 
-    cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
+  const initTheme = function () {
+    if ((defaultTheme && defaultTheme.endsWith(':only')) || (!localStorage.theme && defaultTheme !== 'system')) {
+      applyTheme(defaultTheme.replace(':only', ''));
+    } else if (
+      localStorage.theme === 'dark' ||
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      applyTheme('dark');
+    } else {
+      applyTheme('light');
+    }
   };
+  initTheme();
 
-  // --- MENÜ LOGIK MIT SMOOTH SCROLL ---
-  const initMenu = () => {
-    const header = document.getElementById('header');
-    const menuBtn = document.querySelector('[data-aw-toggle-menu]');
-    const nav = header?.querySelector('nav');
-    if (!header || !menuBtn || !nav) return;
+  function attachEvent(selector, event, fn) {
+    const matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
+    if (matches && matches.length) {
+      matches.forEach((elem) => {
+        elem.addEventListener(event, (e) => fn(e, elem), false);
+      });
+    }
+  }
 
-    // --- Menü Toggle ---
-    const toggleMenu = () => {
-      menuBtn.classList.toggle('expanded');
-      document.body.classList.toggle('overflow-hidden');
-      header.classList.toggle('h-screen');
-      header.classList.toggle('expanded');
-      header.classList.toggle('bg-page');
+  const onLoad = function () {
+    let lastKnownScrollPosition = window.scrollY;
+    let ticking = true;
 
-      const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
-      if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
-
-      nav.classList.toggle('hidden');
-
-      const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
-      if (actions) actions.classList.toggle('hidden');
-    };
-
-    menuBtn.onclick = toggleMenu;
-
-    // --- Untermenüs ---
-    nav.addEventListener('click', (e) => {
-      const trigger = (e.target as HTMLElement).closest('.dropdown > button, .dropdown > a');
-      if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
-
-      e.preventDefault();
-      const subMenu = trigger.nextElementSibling;
-      if (subMenu) {
-        subMenu.classList.toggle('hidden');
-        trigger.classList.toggle('expanded');
-      }
-    });
-
-    // --- Menü sofort schließen bei Klick auf interne Links ---
-    const closeMenuImmediately = () => {
-      menuBtn.classList.remove('expanded');
+    // --- NEU: Zentrale Funktion zum Schließen des Menüs (DRY Prinzip) ---
+    const closeMenu = () => {
+      document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
       document.body.classList.remove('overflow-hidden');
-      header.classList.remove('h-screen', 'expanded', 'bg-page');
-      nav.classList.add('hidden');
-
-      // Alle offenen Untermenüs schließen
-      const openSubs = header.querySelectorAll('.dropdown > button.expanded, .dropdown > a.expanded');
-      openSubs.forEach(btn => {
-        btn.classList.remove('expanded');
-        const sub = btn.nextElementSibling;
-        if (sub) sub.classList.add('hidden');
-      });
-
-      const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
-      if (actions) actions.classList.add('hidden');
+      document.getElementById('header')?.classList.remove('h-screen');
+      document.getElementById('header')?.classList.remove('expanded');
+      document.getElementById('header')?.classList.remove('bg-page');
+      document.querySelector('#header nav')?.classList.add('hidden');
+      document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
     };
 
-    const onGlobalClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const link = target.closest('a');
-      if (!link) return;
-
-      if (link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-        if (header.classList.contains('expanded')) {
-          closeMenuImmediately();
-        }
-      }
-    };
-
-    document.addEventListener('click', onGlobalClick, { capture: true, passive: false });
-    cleanupFns.push(() => document.removeEventListener('click', onGlobalClick, { capture: true }));
-  };
-
-  // --- GLOBAL EVENTS ---
-  const initGlobalEvents = () => {
+    // --- NEU: Ersetzt das alte 'attachEvent(#header nav...)' ---
+    // Wir nutzen hier direkt addEventListener mit { capture: true }, 
+    // um den Klick abzufangen, BEVOR der Scroll startet.
     document.addEventListener('click', (e) => {
-      const themeBtn = (e.target as HTMLElement).closest('[data-aw-toggle-color-scheme]');
-      if (!themeBtn) return;
+        const link = e.target.closest('a');
+        // Prüfen, ob es ein Anker-Link auf der gleichen Seite ist
+        if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
+             // Wenn Menü offen ist, sofort schließen
+             if (document.getElementById('header')?.classList.contains('expanded')) {
+                 closeMenu();
+             }
+        }
+    }, { capture: true, passive: false });
 
-      const themes = ['system', 'light', 'dark'];
-      const current = localStorage.getItem('theme') || 'system';
-      const next = themes[(themes.indexOf(current) + 1) % 3];
-      localStorage.setItem('theme', next);
-      applyTheme(next);
+
+    attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
+      elem.classList.toggle('expanded');
+      document.body.classList.toggle('overflow-hidden');
+      document.getElementById('header')?.classList.toggle('h-screen');
+      document.getElementById('header')?.classList.toggle('expanded');
+      document.getElementById('header')?.classList.toggle('bg-page');
+      document.querySelector('#header nav')?.classList.toggle('hidden');
+      document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
+    });
+
+    attachEvent('[data-aw-toggle-color-scheme]', 'click', function () {
+      if (defaultTheme.endsWith(':only')) {
+        return;
+      }
+
+      Observer.removeAnimationDelay();
+
+      document.documentElement.classList.toggle('dark');
+      localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    });
+
+    attachEvent('[data-aw-social-share]', 'click', function (_, elem) {
+      const network = elem.getAttribute('data-aw-social-share');
+      const url = encodeURIComponent(elem.getAttribute('data-aw-url'));
+      const text = encodeURIComponent(elem.getAttribute('data-aw-text'));
+
+      let href;
+      switch (network) {
+        case 'facebook':
+          href = `https://www.facebook.com/sharer.php?u=${url}`;
+          break;
+        case 'twitter':
+          href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+          break;
+        case 'linkedin':
+          href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
+          break;
+        case 'whatsapp':
+          href = `https://wa.me/?text=${text}%20${url}`;
+          break;
+        case 'mail':
+          href = `mailto:?subject=%22${text}%22&body=${text}%20${url}`;
+          break;
+
+        default:
+          return;
+      }
+
+      const newlink = document.createElement('a');
+      newlink.target = '_blank';
+      newlink.href = href;
+      newlink.click();
+    });
+
+    const screenSize = window.matchMedia('(max-width: 767px)');
+    screenSize.addEventListener('change', function () {
+      closeMenu(); // Nutzung der neuen Helper-Funktion
+    });
+
+    function applyHeaderStylesOnScroll() {
+      const header = document.querySelector('#header[data-aw-sticky-header]');
+      if (!header) return;
+      if (lastKnownScrollPosition > 60 && !header.classList.contains('scroll')) {
+        header.classList.add('scroll');
+      } else if (lastKnownScrollPosition <= 60 && header.classList.contains('scroll')) {
+        header.classList.remove('scroll');
+      }
+      ticking = false;
+    }
+    applyHeaderStylesOnScroll();
+
+    attachEvent([document], 'scroll', function () {
+      lastKnownScrollPosition = window.scrollY;
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          applyHeaderStylesOnScroll();
+        });
+        ticking = true;
+      }
     });
   };
+  const onPageShow = function () {
+    document.documentElement.classList.add('motion-safe:scroll-smooth');
+    const elem = document.querySelector('[data-aw-toggle-menu]');
+    if (elem) {
+      elem.classList.remove('expanded');
+    }
+    document.body.classList.remove('overflow-hidden');
+    document.getElementById('header')?.classList.remove('h-screen');
+    document.getElementById('header')?.classList.remove('expanded');
+    document.querySelector('#header nav')?.classList.add('hidden');
+  };
 
-  // --- ANIMATION ---
-  const initAnimations = () => {
-    const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
-    const elements = document.querySelectorAll(selectors.join(','));
-    if (elements.length === 0) return;
+  window.onload = onLoad;
+  window.onpageshow = onPageShow;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target as HTMLElement;
-          el.setAttribute('data-aw-animated', 'true');
-          el.removeAttribute('no-intersect');
-          if (el.classList.contains('intersect-once')) observer.unobserve(el);
+  document.addEventListener('astro:after-swap', () => {
+    initTheme();
+    onLoad();
+    onPageShow();
+  });
+</script>
+
+<script is:inline>
+  /* Observer Script bleibt identisch wie in deiner Vorlage */
+  /* Inspired by: https://github.com/heidkaemper/tailwindcss-intersect */
+  const Observer = {
+    observer: null,
+    delayBetweenAnimations: 100,
+    animationCounter: 0,
+    elements: null,
+
+    start() {
+      const selectors = [
+        '[class*=" intersect:"]',
+        '[class*=":intersect:"]',
+        '[class^="intersect:"]',
+        '[class="intersect"]',
+        '[class*=" intersect "]',
+        '[class^="intersect "]',
+        '[class$=" intersect"]',
+      ];
+
+      this.elements = Array.from(document.querySelectorAll(selectors.join(',')));
+
+      const getThreshold = (element) => {
+        if (element.classList.contains('intersect-full')) return 0.99;
+        if (element.classList.contains('intersect-half')) return 0.5;
+        if (element.classList.contains('intersect-quarter')) return 0.25;
+        return 0;
+      };
+
+      this.elements.forEach((el) => {
+        el.setAttribute('no-intersect', '');
+        el._intersectionThreshold = getThreshold(el);
+      });
+
+      const callback = (entries) => {
+        entries.forEach((entry) => {
+          requestAnimationFrame(() => {
+            const target = entry.target;
+            const intersectionRatio = entry.intersectionRatio;
+            const threshold = target._intersectionThreshold;
+
+            if (target.classList.contains('intersect-no-queue')) {
+              if (entry.isIntersecting) {
+                target.removeAttribute('no-intersect');
+                if (target.classList.contains('intersect-once')) {
+                  this.observer.unobserve(target);
+                }
+              } else {
+                target.setAttribute('no-intersect', '');
+              }
+              return;
+            }
+
+            if (intersectionRatio >= threshold) {
+              if (!target.hasAttribute('data-animated')) {
+                target.removeAttribute('no-intersect');
+                target.setAttribute('data-animated', 'true');
+
+                const delay = this.animationCounter * this.delayBetweenAnimations;
+                this.animationCounter++;
+
+                target.style.transitionDelay = `${delay}ms`;
+                target.style.animationDelay = `${delay}ms`;
+
+                if (target.classList.contains('intersect-once')) {
+                  this.observer.unobserve(target);
+                }
+              }
+            } else {
+              target.setAttribute('no-intersect', '');
+              target.removeAttribute('data-animated');
+              target.style.transitionDelay = '';
+              target.style.animationDelay = '';
+
+              this.animationCounter = 0;
+            }
+          });
+        });
+      };
+
+      this.observer = new IntersectionObserver(callback.bind(this), { threshold: [0, 0.25, 0.5, 0.99] });
+
+      this.elements.forEach((el) => {
+        this.observer.observe(el);
+      });
+    },
+
+    removeAnimationDelay() {
+      this.elements.forEach((el) => {
+        if (el.getAttribute('data-animated') === 'true') {
+          el.style.transitionDelay = '';
+          el.style.animationDelay = '';
         }
       });
-    }, { threshold: 0.1 });
-
-    elements.forEach(el => {
-      el.setAttribute('no-intersect', '');
-      observer.observe(el);
-    });
-
-    cleanupFns.push(() => observer.disconnect());
+    },
   };
 
-  // --- LIFECYCLE ---
-  const run = () => {
-    cleanupFns.forEach(fn => fn());
-    cleanupFns = [];
+  Observer.start();
 
-    document.documentElement.classList.add('motion-safe:scroll-smooth');
-    applyTheme(localStorage.getItem('theme') || 'system');
-
-    initHeader();
-    initMenu();
-    setTimeout(initGlobalEvents, 0);
-
-    if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
-    else setTimeout(initAnimations, 200);
-  };
-
-  run();
-  document.addEventListener('astro:after-swap', run);
-})();
+  document.addEventListener('astro:after-swap', () => {
+    Observer.start();
+  });
 </script>
