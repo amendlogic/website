@@ -1,62 +1,91 @@
 ---
-// src/components/common/CookieConsent.astro
+/* src/components/common/CookieConsent.astro */
 ---
 
 <link rel="stylesheet" href="/libs/cookieconsent.css" />
 <link rel="stylesheet" href="/libs/cookie-custom.css" />
 
-<div id="cookie-consent-root"></div>
+<script is:inline src="/libs/cookieconsent.umd.js"></script>
 
-<script type="module">
-  // Hilfsfunktion: Lädt das externe Skript nur einmal
-  function loadLibrary(src) {
-    return new Promise((resolve, reject) => {
-      if (document.querySelector(`script[src="${src}"]`)) {
-        resolve(); // Skript ist schon da
-        return;
-      }
-      const script = document.createElement('script');
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }
-
-  async function initCookieBanner() {
-    const root = document.getElementById('cookie-consent-root');
-    // Wenn wir nicht im Browser sind oder kein Root da ist -> Abbruch
-    if (!root) return;
-
-    try {
-      // 1. Lib laden (falls noch nicht global vorhanden)
-      if (!window.CookieConsent) {
-        await loadLibrary('/libs/cookieconsent.umd.js');
-      }
-
-      // 2. Config importieren
-      // Wir nutzen einen dynamischen Import, damit der Code sauber bleibt
-      const { config } = await import('/libs/cookieconsent-config.js');
-
-      // 3. Initialisierung oder Reset
-      if (window.CookieConsent) {
-        // WICHTIG: reset(false) löscht nur das HTML-Overlay, aber BEHÄLT das Cookie!
-        // Das verhindert, dass der Banner bei Seitenwechsel (View Transition) wieder aufpoppt.
-        window.CookieConsent.reset(false);
-        
-        // Starten der Library
-        window.CookieConsent.run({ 
-          ...config, 
-          // Falls deine Lib-Version "container" oder "root" unterstützt:
-          root: root 
-        });
-      }
-
-    } catch (e) {
-      console.error("CookieConsent Fehler:", e);
+<script is:inline>
+// 1. Der Klick-Handler (Event Delegation)
+// Dieser kümmert sich um das Abfangen des Klicks
+function handleCookieClick(e) {
+  const trigger = e.target.closest('[data-cc="show-preferencesModal"]');
+  
+  if (trigger) {
+    e.preventDefault(); // Stoppt das "Springen"
+    
+    // Sicherheitscheck: Existiert das Modal im DOM?
+    if (window.CookieConsent && document.getElementById('cc-main')) {
+        window.CookieConsent.showPreferences();
+    } else {
+        console.warn("CookieConsent noch nicht bereit oder GUI fehlt.");
+        // Fallback: Versuchen wir es in 100ms nochmal, falls das Skript noch lädt
+        setTimeout(() => window.CookieConsent?.showPreferences(), 100);
     }
   }
+}
 
-  // Astro View Transitions Event: Feuert beim ersten Laden UND bei Navigation
-  document.addEventListener('astro:page-load', initCookieBanner);
+// Listener nur einmal global registrieren
+if (!window.cookieListenerAttached) {
+  document.addEventListener('click', handleCookieClick);
+  window.cookieListenerAttached = true;
+}
+
+// 2. Die Initialisierung (Muss bei JEDEM Seitenwechsel laufen)
+async function initCookieBanner() {
+  if (!window.CookieConsent) {
+    setTimeout(initCookieBanner, 100);
+    return;
+  }
+
+  try {
+    const { config } = await import('/libs/cookieconsent-config.js');
+    const currentLang = document.documentElement.lang?.split('-')[0] || 'de';
+
+    // --- WICHTIG: Reset für Astro View Transitions ---
+    // Wir resetten den internen State, damit das Skript merkt, 
+    // dass das HTML neu gebaut werden muss.
+    // KEIN "true" übergeben, sonst sind die User-Cookies weg!
+    window.CookieConsent.reset(); 
+
+    window.CookieConsent.run({
+      ...config,
+      language: {
+        ...config.language,
+        current: currentLang
+      }
+    });
+
+  } catch (e) {
+    console.error("CookieConsent Fehler:", e);
+  }
+}
+
+document.addEventListener('astro:page-load', initCookieBanner);
+</script>
+
+<script is:inline>
+document.addEventListener("click", function (event) {
+  const link = event.target.closest("[data-lang]");
+  if (!link) return;
+
+  event.preventDefault();
+
+  const lang = link.dataset.lang;
+  if (lang !== "de" && lang !== "en") return;
+
+  const isProd = location.protocol === "https:";
+
+  document.cookie =
+    "preferred_language=" + lang +
+    "; path=/; max-age=31536000; SameSite=Lax" +
+    (isProd ? "; Secure" : "");
+
+  const query = window.location.search || "";
+  const hash = window.location.hash || "";
+
+  window.location.href = "/" + lang + "/" + query + hash;
+});
 </script>

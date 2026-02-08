@@ -53,7 +53,6 @@ import { UI } from 'astrowind:config';
 
       window.addEventListener('scroll', onScroll, { passive: true });
       
-      // Initial-Check
       if (window.scrollY > 10) {
         stickyHeader.classList.add('scroll');
         lastState = true;
@@ -62,7 +61,7 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- 2. MENU LOGIK (MEMORY OPTIMIZED) ---
+    // --- 2. MENU LOGIK ---
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
@@ -104,7 +103,7 @@ import { UI } from 'astrowind:config';
       nav.addEventListener('click', onNavClick);
     };
 
-    // --- 3. GLOBAL EVENTS (LINKS & SMOOTH SCROLL) ---
+    // --- 3. GLOBAL EVENTS (NATIVE SMOOTH SCROLL) ---
     const initGlobalEvents = () => {
       const onClick = (e) => {
         // Theme Toggle
@@ -118,27 +117,17 @@ import { UI } from 'astrowind:config';
           return;
         }
 
-        // Smooth Scroll
+        // --- NATIVE SCROLL BEHAVIOR ---
+        // Wir lassen den Browser die Arbeit machen (via CSS scroll-smooth).
+        // Wir müssen nur sicherstellen, dass das Menü zugeht.
         const link = e.target.closest('a');
         if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-          const targetEl = document.querySelector(link.hash);
-          if (targetEl) {
-            e.preventDefault();
+            // WICHTIG: Kein e.preventDefault() hier!
+            
+            // Nur Menü schließen, falls offen
             if (document.getElementById('header')?.classList.contains('expanded') && window.toggleMenuInstance) {
               window.toggleMenuInstance();
             }
-            link.blur(); // Focus entfernen
-            
-            const header = document.getElementById('header');
-            const headerHeight = header ? header.getBoundingClientRect().height : 0;
-            const targetPos = targetEl.getBoundingClientRect().top + window.scrollY;
-            
-            window.scrollTo({ top: targetPos - headerHeight, behavior: 'smooth' });
-            
-            // WICHTIG: pushState aktualisiert URL, aber der Browser merkt sich Scrollposition
-            // für diesen State erst NACHDEM gescrollt wurde.
-            history.pushState(null, null, link.hash); 
-          }
         }
       };
 
@@ -146,7 +135,7 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
     };
 
-    // --- 4. ANIMATIONS (LAZY) ---
+    // --- 4. ANIMATIONS ---
     const initAnimations = () => {
       const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
       const elements = document.querySelectorAll(selectors.join(','));
@@ -171,32 +160,13 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => observer.disconnect());
     };
 
-    // --- NEU: FIX FÜR SCROLL POSITION BEIM LADEN/REFRESH ---
-    const fixScrollPosition = () => {
-      // Prüfen ob ein Hash (#section) in der URL ist
-      if (window.location.hash) {
-        const target = document.querySelector(window.location.hash);
-        if (target) {
-          // Kleiner Timeout gibt dem Browser Zeit für das Layout
-          setTimeout(() => {
-            const header = document.getElementById('header');
-            const headerHeight = header ? header.getBoundingClientRect().height : 0;
-            const targetPos = target.getBoundingClientRect().top + window.scrollY;
-            
-            // 'instant' Scrollen, damit es beim Laden nicht visuell springt
-            window.scrollTo({ 
-              top: targetPos - headerHeight, 
-              behavior: 'instant' 
-            });
-          }, 10); 
-        }
-      }
-    };
-
     // --- MAIN LIFECYCLE ---
     const run = () => {
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
+
+      // CSS Smooth Scroll aktivieren (Wichtig für die "andere" Methode)
+      document.documentElement.classList.add('motion-safe:scroll-smooth');
 
       applyTheme(localStorage.getItem('theme') || 'system');
       
@@ -204,9 +174,6 @@ import { UI } from 'astrowind:config';
       initMenu();   
 
       setTimeout(initGlobalEvents, 0);
-
-      // Hier wird die Scroll-Position beim Laden korrigiert
-      fixScrollPosition();
 
       if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
       else setTimeout(initAnimations, 200);

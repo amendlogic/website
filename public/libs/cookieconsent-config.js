@@ -34,7 +34,7 @@ export const config = {
       },
       language: {
           default: "en",
-          autoDetect: "browser",
+          autoDetect: "document",
           translations: {
               de: {
                   consentModal: {

@@ -1,18 +1,78 @@
 {
   "hero": {
-    "title": "Amend Trading",
-    "tagline": "Automatisierte Trading-Lösungen mit KI",
-    "primaryButton": "Get it for TradingView 2"
+    "title": {
+      "start": "Smart\u00A0Trading.",
+      "accent": "Clear\u00A0Rules",
+      "end": "No\u00A0Guesswork."
+    },
+    "tagline": "Automated trading built to simplify decisions and enforce discipline.",
+    "subtitle": "is a TradingView strategy developed for systematic, automated trading. It follows predefined rules to analyze the market, execute trades, and manage risk consistently.",
+    "primaryButton": "Get it for TradingView",
+    "secondaryButton": "Explore the system"
   },
-  "nav": {
-    "home": "Startseite",
-    "about": "Über uns",
-    "blog": "Blog",
-    "contact": "Kontakt"
+
+  "note": {
+    "title": "Our philosophy:",
+    "description": "ensure disciplined trading and consistent execution, regardless of market conditions." 
   },
-  "home": {
-    "headline": "Besser traden mit KI",
-    "subline": "Smarte Indikatoren für TradingView",
-    "cta": "Jetzt entdecken"
+  
+  "features": {
+    "tagline": "Features",
+    "title": "What You Get",
+    "content-1": {
+      "title": "Market Structure & Trend Detection",
+      "subtitle": "Focused on identifying meaningful opportunities — not constant activity.",
+      "item-1": {
+        "title": "Market Analysis",
+        "description": "Detects trends and structural market shifts using objective price data."
+      },
+      "item-2": {
+        "title": "Adaptive Behavior",
+        "description": "Adjusts its logic as market dynamics change over time."
+      },
+      "item-3": {
+        "title": "Automated Execution",
+        "description": "Trades are executed instantly and consistently based on defined rules."
+      }
+    },
+    "content-2": {
+      "title": "Risk Management & Protection",
+      "subtitle": "Built to protect capital and enforce consistency.",
+      "item-1": {
+        "title": "Risk Controls",
+        "description": "Integrated safeguards help limit drawdowns and control exposure."
+      },
+      "item-2": {
+        "title": "Overtrading Protection",
+        "description": "Reduces trading activity during low-quality or unclear market phases."
+      },
+      "item-3": {
+        "title": "Configurable Parameters",
+        "description": "Risk levels and strategy behavior can be adjusted to individual preferences."
+      }
+    }
+  },
+  
+  "steps": {
+    "tagline": "How It Works",
+    "title": "Simple by Design",
+    "subtitle": "The strategy runs directly on TradingView. It continuously analyzes price data, generates trade signals based on predefined rules, and executes positions automatically. Once set up, it operates independently — without manual intervention or constant monitoring.",
+    "item-1": {
+      "title": "Data",
+      "subtitle": "— Indicator Signal",
+      "description": "Market conditions are analyzed by our proprietary indicator. When predefined conditions are met, a trading signal is generated."
+    },
+    "item-2": {
+      "title": "Logic",
+      "subtitle": "— Signal to Trade",
+      "description": "Signals are transmitted via webhook and converted into structured trade instructions. Parameters such as direction, size, and risk settings are automatically validated."
+    },
+    "item-3": {
+      "title": "Execution",
+      "subtitle": "— Order Placement",
+      "description": "Validated trade instructions are executed automatically. Orders are placed instantly, following defined risk and execution parameters."
+    }
   }
+  
+
 }

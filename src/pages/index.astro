@@ -1,9 +1,52 @@
-<!doctype html>
-<html lang="de">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Redirecting...</title>
-    </head>
-    <body>
-    </body>
+---
+export const prerender = true;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirecting…</title>
+  <meta name="robots" content="noindex" />
+
+  <noscript>
+    <meta http-equiv="refresh" content="0;url=/en/" />
+  </noscript>
+
+  <script is:inline>
+  (function () {
+    var supported = ['de', 'en'];
+    var defaultLang = 'en';
+    var target = defaultLang;
+
+    function isSupported(lang) {
+      return supported.indexOf(lang) !== -1;
+    }
+
+    try {
+      // 1) PRIORITÄT: Dein eigener Sprach-Cookie
+      var match = document.cookie.match(/preferred_language=([^;]+)/);
+      if (match && match[1] && isSupported(match[1])) {
+        target = match[1];
+      } else {
+        // 2) Fallback: Browser nur als grober Hinweis
+        var browser = (navigator.language || "").split('-')[0].toLowerCase();
+        if (isSupported(browser)) {
+          target = browser;
+        }
+      }
+
+      var query = window.location.search || "";
+      var hash = window.location.hash || "";
+
+      window.location.replace("/" + target + "/" + query + hash);
+
+    } catch (e) {
+      window.location.replace("/" + defaultLang + "/");
+    }
+  })();
+  </script>
+</head>
+<body></body>
 </html>
