@@ -3,188 +3,160 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline>
-  // Wir nutzen ein IIFE (Immediately Invoked Function Expression) zur Kapselung
   (function() {
+    // Verhindert doppelte Initialisierung bei Astro-Transitions
     if (window.basic_script_init) return;
     window.basic_script_init = true;
 
     let _cleanupFns = [];
-    
-    // Zentraler State & Cache
-    const STATE = {
-      header: null,
-      menuBtn: null,
-      nav: null,
-      isMenuOpen: false,
-    };
 
-    const utils = {
-      // Throttling für Performance
-      throttle: (fn) => {
-        let frame;
-        return (...args) => {
-          if (frame) return;
-          frame = requestAnimationFrame(() => {
-            fn(...args);
-            frame = null;
-          });
-        };
-      },
-      // Theme Logik
-      applyTheme: (theme) => {
-        const resolvedTheme = (theme === 'system') 
-          ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
-          : theme;
-        document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
-        document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
-          icon.classList.toggle('hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
-        });
-      }
-    };
+    const init = () => {
+      const html = document.documentElement;
+      const header = document.getElementById('header');
+      const menuBtn = document.querySelector('[data-aw-toggle-menu]');
+      const nav = header?.querySelector('nav');
 
-    const initHeader = () => {
-      STATE.header = document.getElementById('header');
-      STATE.menuBtn = document.querySelector('[data-aw-toggle-menu]');
-      STATE.nav = STATE.header?.querySelector('nav');
-      const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
-
-      if (!STATE.header) return;
-
-      // Optimierter Scroll-Handler für Sticky Header
-      const onScroll = utils.throttle(() => {
-        const isScrolled = window.scrollY > 10;
-        stickyHeader?.classList.toggle('scroll', isScrolled);
-      });
-
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
-      _cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
-    };
-
-    const menuLogic = {
-      toggle: (forceState) => {
-        const open = typeof forceState === 'boolean' ? forceState : !STATE.isMenuOpen;
-        if (open === STATE.isMenuOpen) return;
-
-        STATE.isMenuOpen = open;
-        
-        // UI Updates
-        STATE.menuBtn?.classList.toggle('expanded', open);
-        document.body.classList.toggle('overflow-hidden', open);
-        STATE.header?.classList.toggle('expanded', open);
-        STATE.header?.classList.toggle('h-screen', open);
-        
-        // Icons tauschen
-        const icons = STATE.menuBtn?.querySelectorAll('svg, [data-aw-icon]');
-        if (icons?.length > 1) {
-          icons[0].classList.toggle('hidden', open);
-          icons[1].classList.toggle('hidden', !open);
+      // 1. INITIALER HASH-JUMP (FIX FÜR REFRESH)
+      // Wir starten mit "auto", damit der Browser beim Laden nicht animiert
+      html.style.scrollBehavior = 'auto';
+      
+      if (window.location.hash) {
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+          // Kleiner Delay, damit Astro das Layout fertig rendern kann
+          setTimeout(() => {
+            target.scrollIntoView();
+            html.style.scrollBehavior = 'smooth';
+          }, 10);
         }
-
-        // Sichtbarkeit der Navigation
-        STATE.nav?.classList.toggle('hidden', !open);
-        const actions = STATE.header?.querySelector('nav + div') || STATE.header?.querySelector('div > div:last-child');
-        if (actions) actions.classList.toggle('hidden', !open);
-      },
-
-      closeInstant: () => {
-        if (STATE.isMenuOpen) menuLogic.toggle(false);
-      }
-    };
-
-    const setupEvents = () => {
-      // Menü Button Klick
-      if (STATE.menuBtn) {
-        STATE.menuBtn.onclick = (e) => {
-          e.stopPropagation();
-          menuLogic.toggle();
-        };
+      } else {
+        // Wenn kein Hash da ist, direkt auf smooth für spätere Klicks
+        setTimeout(() => { html.style.scrollBehavior = 'smooth'; }, 100);
       }
 
-      // Global Click Handler (Delegation)
+      // 2. MENÜ LOGIK
+      const toggleMenu = (forceClose = false) => {
+        const isExpanded = header?.classList.contains('expanded');
+        if (forceClose && !isExpanded) return;
+
+        const shouldOpen = forceClose ? false : !isExpanded;
+
+        // UI Updates
+        header?.classList.toggle('expanded', shouldOpen);
+        header?.classList.toggle('h-screen', shouldOpen);
+        document.body.classList.toggle('overflow-hidden', shouldOpen);
+        menuBtn?.classList.toggle('expanded', shouldOpen);
+        nav?.classList.toggle('hidden', !shouldOpen);
+
+        // Icon Swap (AstroWind spezifisch)
+        const icons = menuBtn?.querySelectorAll('svg, [data-aw-icon]');
+        if (icons?.length > 1) {
+          icons[0].classList.toggle('hidden', shouldOpen);
+          icons[1].classList.toggle('hidden', !shouldOpen);
+        }
+      };
+
+      // 3. GLOBAL CLICK HANDLER (SMART DELEGATION)
       const onGlobalClick = (e) => {
         const link = e.target.closest('a');
-        const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
-
-        // 1. Theme Toggle
-        if (themeBtn) {
+        
+        // Theme Toggle
+        if (e.target.closest('[data-aw-toggle-color-scheme]')) {
           const themes = ['system', 'light', 'dark'];
-          const next = themes[(themes.indexOf(localStorage.getItem('theme') || 'system') + 1) % 3];
+          const current = localStorage.getItem('theme') || 'system';
+          const next = themes[(themes.indexOf(current) + 1) % 3];
           localStorage.setItem('theme', next);
-          utils.applyTheme(next);
+          
+          const resolved = next === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : next;
+          html.classList.toggle('dark', resolved === 'dark');
           return;
         }
 
-        // 2. Anker-Link Logik (Smooth Scroll & Menu Close)
+        // Anker-Link Logik
         if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-          // Menü sofort einklappen ohne Verzögerung
-          menuLogic.closeInstant();
+          // WICHTIG: Erst das Menü schließen, um overflow-hidden zu entfernen
+          if (header?.classList.contains('expanded')) {
+            toggleMenu(true);
+          }
 
-          // Native Smooth Scroll Handling
+          // Wenn der Browser smooth scroll nativ unterstützt, lassen wir ihn machen.
+          // Wir nutzen scrollIntoView nur als Backup oder für exaktes Timing.
           const target = document.querySelector(link.hash);
           if (target) {
+            // Wir lassen einen winzigen Moment Zeit, damit 'overflow-hidden' 
+            // vom Body verschwindet, bevor der Scroll startet.
             e.preventDefault();
-            // Wir lassen den Browser scrollen, nutzen aber history für saubere URLs
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            history.pushState(null, null, link.hash);
+            requestAnimationFrame(() => {
+              target.scrollIntoView({ behavior: 'smooth' });
+              history.pushState(null, null, link.hash);
+            });
           }
         }
       };
 
+      // Event Listener
+      menuBtn && (menuBtn.onclick = () => toggleMenu());
       document.addEventListener('click', onGlobalClick, { capture: true });
-      _cleanupFns.push(() => document.removeEventListener('click', onGlobalClick));
+      
+      _cleanupFns.push(() => {
+        document.removeEventListener('click', onGlobalClick);
+        if (menuBtn) menuBtn.onclick = null;
+      });
     };
 
-    // Verhindert das Scroll-Zucken beim Refresh
-    const handleInitialHash = () => {
-      if (window.location.hash) {
-        const target = document.querySelector(window.location.hash);
-        if (target) {
-          // Kurzzeitig Smooth Scroll deaktivieren für Instant Jump
-          document.documentElement.style.scrollBehavior = 'auto';
-          // Kleiner Timeout damit Layout fertig berechnet ist
-          setTimeout(() => {
-            target.scrollIntoView();
-            document.documentElement.style.scrollBehavior = 'smooth';
-          }, 10);
-        }
-      } else {
-        document.documentElement.style.scrollBehavior = 'smooth';
-      }
-    };
-
+    // Animationen (Intersection Observer)
     const initAnimations = () => {
       const elements = document.querySelectorAll('[class*="intersect:"]');
-      if (!elements.length) return;
-
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.setAttribute('data-aw-animated', 'true');
-            if (entry.target.classList.contains('intersect-once')) observer.unobserve(entry.target);
           }
         });
       }, { threshold: 0.15 });
-
       elements.forEach(el => observer.observe(el));
       _cleanupFns.push(() => observer.disconnect());
     };
 
+    // Initialisierung & Astro Lifecycle
     const run = () => {
       _cleanupFns.forEach(fn => fn());
       _cleanupFns = [];
-      
-      utils.applyTheme(localStorage.getItem('theme') || 'system');
-      initHeader();
-      setupEvents();
-      handleInitialHash();
-      
+      init();
       if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
       else setTimeout(initAnimations, 200);
     };
 
-    // Start
     run();
     document.addEventListener('astro:after-swap', run);
   })();
 </script>
+
+<style is:global>
+  /* Verhindert das Scrollen beim Laden, falls das JS noch nicht gefeuert hat */
+  :root {
+    scroll-behavior: auto;
+  }
+
+  /* Wenn das Menü offen ist, darf NICHT gescrollt werden */
+  body.overflow-hidden {
+    overflow: hidden !important;
+  }
+
+  /* Sobald JS bereit ist, wird Smooth Scroll über das Style-Attribut 
+     oder diese Klasse gesteuert */
+  .smooth-ready {
+    scroll-behavior: smooth;
+  }
+
+  /* Dein bereits eingefügtes Scroll-Margin-Top wirkt hier perfekt mit scrollIntoView() */
+  [id] {
+    scroll-margin-top: 5rem; /* ca. 80px Offset */
+  }
+
+  /* Performance: Header-Animationen ausschalten, wenn er 'expanded' ist, 
+     damit der Scrollvorgang sofort CPU-Priorität bekommt */
+  #header.expanded {
+    transition: none !important;
+  }
+</style>
