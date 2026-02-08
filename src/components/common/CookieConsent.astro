@@ -16,17 +16,32 @@ async function initCookieBanner() {
 
   try {
     const { config } = await import('/libs/cookieconsent-config.js');
+    const currentLang = document.documentElement.lang?.split('-')[0] || 'de';
 
-    // 👉 Sprache kommt NUR aus <html lang="...">
-    const currentLang =
-      document.documentElement.lang?.split('-')[0] || 'de';
-
+    // 1. Consent Banner starten
     window.CookieConsent.run({
       ...config,
       language: {
         ...config.language,
         current: currentLang
       }
+    });
+
+    // 2. Button manuell neu verknüpfen (Fix für Astro View Transitions)
+    // Wir suchen nach allen Elementen mit deinem spezifischen Data-Attribut
+    const settingsTriggers = document.querySelectorAll('[data-cc="show-preferencesModal"]');
+
+    settingsTriggers.forEach(trigger => {
+      // WICHTIG: Klonen entfernt eventuelle alte Event-Listener, die stören könnten
+      // und sorgt für ein sauberes Element.
+      const newTrigger = trigger.cloneNode(true);
+      trigger.parentNode.replaceChild(newTrigger, trigger);
+
+      // Neuen Click-Listener hinzufügen
+      newTrigger.addEventListener('click', (e) => {
+        e.preventDefault(); // Verhindert das "Scroll to Top" (href="#")
+        window.CookieConsent.showPreferences(); // Öffnet das Modal
+      });
     });
 
   } catch (e) {
