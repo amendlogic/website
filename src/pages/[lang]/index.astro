@@ -1,12 +1,13 @@
 ---
-import { t, type Locale } from "~/i18n/i18n.ts";
+import { locales, t, type Locale } from "~/i18n/i18n.ts";
 
 export function getStaticPaths() {
-  const locales: Locale[] = ["de", "en"];
+  // Holt sich automatisch ["de", "en"] aus der i18n.ts
   return locales.map(lang => ({ params: { lang } }));
 }
 
 const { lang } = Astro.params as { lang: Locale };
+
 import { SITE } from 'astrowind:config';
 
 import Layout from '~/layouts/PageLayout.astro';
