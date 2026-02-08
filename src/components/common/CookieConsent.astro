@@ -9,27 +9,31 @@
 
 <script is:inline>
 // 1. Der Klick-Handler (Event Delegation)
-// Wir definieren diese Funktion einmalig ausserhalb
+// Dieser kümmert sich um das Abfangen des Klicks
 function handleCookieClick(e) {
-  // Prüfen: Wurde ein Element mit dem passenden Attribut geklickt?
-  // .closest() ist wichtig, falls im Button noch ein <span> oder Icon ist
   const trigger = e.target.closest('[data-cc="show-preferencesModal"]');
   
   if (trigger) {
-    e.preventDefault(); // Verhindert das Springen (Scroll-to-top)
-    if (window.CookieConsent) {
+    e.preventDefault(); // Stoppt das "Springen"
+    
+    // Sicherheitscheck: Existiert das Modal im DOM?
+    if (window.CookieConsent && document.getElementById('cc-main')) {
         window.CookieConsent.showPreferences();
+    } else {
+        console.warn("CookieConsent noch nicht bereit oder GUI fehlt.");
+        // Fallback: Versuchen wir es in 100ms nochmal, falls das Skript noch lädt
+        setTimeout(() => window.CookieConsent?.showPreferences(), 100);
     }
   }
 }
 
-// Wir hängen den Listener nur EINMAL an das Dokument, nicht bei jedem Page-Load
+// Listener nur einmal global registrieren
 if (!window.cookieListenerAttached) {
   document.addEventListener('click', handleCookieClick);
-  window.cookieListenerAttached = true; // Markierung, damit wir es nicht doppelt machen
+  window.cookieListenerAttached = true;
 }
 
-// 2. Die Initialisierung (Muss bei jedem Page-Load laufen, da das Modal-HTML evtl. weg ist)
+// 2. Die Initialisierung (Muss bei JEDEM Seitenwechsel laufen)
 async function initCookieBanner() {
   if (!window.CookieConsent) {
     setTimeout(initCookieBanner, 100);
@@ -40,6 +44,12 @@ async function initCookieBanner() {
     const { config } = await import('/libs/cookieconsent-config.js');
     const currentLang = document.documentElement.lang?.split('-')[0] || 'de';
 
+    // --- WICHTIG: Reset für Astro View Transitions ---
+    // Wir resetten den internen State, damit das Skript merkt, 
+    // dass das HTML neu gebaut werden muss.
+    // KEIN "true" übergeben, sonst sind die User-Cookies weg!
+    window.CookieConsent.reset(); 
+
     window.CookieConsent.run({
       ...config,
       language: {
@@ -47,8 +57,6 @@ async function initCookieBanner() {
         current: currentLang
       }
     });
-    
-    // HIER NICHTS MEHR TUN! Der globale Listener oben regelt das jetzt.
 
   } catch (e) {
     console.error("CookieConsent Fehler:", e);
