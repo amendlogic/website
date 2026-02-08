@@ -6,12 +6,18 @@ export const translations = {
   en: { home: enHome },
 } as const;
 
+/**
+ * 🔹 Exportiert die verfügbaren Sprachen als Array.
+ * Wichtig für Astro's getStaticPaths(), damit wir sie nicht doppelt pflegen müssen.
+ */
+export const locales = Object.keys(translations) as Locale[];
+
 export type Locale = keyof typeof translations;
-type Schema = typeof translations.en;
+type Schema = typeof translations.en; // Wir nutzen Englisch als Schema-Referenz
 
 /**
  * 🔹 Rekursiver Hilfstyp:
- * Erzeugt Union aller Pfade zu Blattknoten (z.B. "home.title"),
+ * Erzeugt eine Union aller Pfade zu Blattknoten (z.B. "home.title"),
  * ignoriert Zwischenobjekte (z.B. "home").
  */
 type NestedKeyOf<T> = {
@@ -20,8 +26,14 @@ type NestedKeyOf<T> = {
     : `${K}`;
 }[keyof T & (string | number)];
 
+/**
+ * 🔹 Der öffentliche Typ für Keys (mit Autocomplete)
+ */
 export type TranslationKey = NestedKeyOf<Schema>;
 
+/**
+ * 🔹 Interne Funktion zum Holen des Wertes
+ */
 function getValue(lang: Locale, key: TranslationKey) {
   const parts = key.split(".");
   let result: any = translations[lang];
@@ -33,6 +45,9 @@ function getValue(lang: Locale, key: TranslationKey) {
   return result;
 }
 
+/**
+ * 🔹 Hauptfunktion für Übersetzungen
+ */
 export function t(
   lang: Locale,
   key: TranslationKey,
@@ -53,7 +68,7 @@ export function t(
   let str = String(val);
 
   if (vars) {
-    // replaceAll benötigt ES2021+
+    // replaceAll ist verfügbar ab ES2021 / Node 15+
     Object.entries(vars).forEach(([k, v]) => {
       str = str.replaceAll(`{{${k}}}`, String(v));
     });
