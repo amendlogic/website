@@ -3,202 +3,238 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  // Verhindert doppelte Ausführung, aber erlaubt Re-Init bei View Transitions
-  if (!window.basic_script_init) {
-    window.basic_script_init = true;
+if (window.basic_script_init) return;
+window.basic_script_init = true;
 
-    (() => {
-      // Speichert Cleanup-Funktionen für View Transitions
-      let cleanupFns = [];
+(() => {
+  const cleanupFns = new Set();
 
-      // --- UTILS ---
-      // Optimierte DOM-Operationen
-      const toggleClass = (el, className, condition) => {
-        if (!el) return;
-        el.classList.toggle(className, condition);
-      };
+  // ========== HELPERS ==========
+  const addCleanup = (fn) => cleanupFns.add(fn);
 
-      // --- 1. THEME MANAGER ---
-      const initTheme = () => {
-        const updateTheme = () => {
-          const stored = localStorage.getItem('theme') || defaultTheme;
-          const isDark = stored === 'dark' || (stored === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-          
-          toggleClass(document.documentElement, 'dark', isDark);
-          
-          // Icon Updates batching
-          requestAnimationFrame(() => {
-            document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
-              const iconTheme = icon.dataset.awThemeIcon;
-              toggleClass(icon, 'hidden', iconTheme !== stored);
-            });
-          });
-        };
+  const toggleClass = (el, cls, condition) =>
+    el?.classList.toggle(cls, !!condition);
 
-        // Initiale Anwendung
-        updateTheme();
+  const getSystemTheme = () =>
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
 
-        // Listener für Systemänderungen (Live-Update)
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const onMediaChange = () => {
-          if ((localStorage.getItem('theme') || defaultTheme) === 'system') updateTheme();
-        };
-        
-        mediaQuery.addEventListener('change', onMediaChange);
-        cleanupFns.push(() => mediaQuery.removeEventListener('change', onMediaChange));
+  const applyTheme = (theme = 'system') => {
+    const resolved =
+      theme === 'system' ? getSystemTheme() : theme;
 
-        // Event Delegation für Theme-Toggle Button
-        const onThemeToggle = (e) => {
-          const btn = e.target.closest('[data-aw-toggle-color-scheme]');
-          if (!btn) return;
+    requestAnimationFrame(() => {
+      toggleClass(document.documentElement, 'dark', resolved === 'dark');
 
-          const current = localStorage.getItem('theme') || defaultTheme;
-          const themes = ['system', 'light', 'dark'];
-          const next = themes[(themes.indexOf(current) + 1) % themes.length];
-          
-          localStorage.setItem('theme', next);
-          updateTheme();
-        };
+      document
+        .querySelectorAll('[data-aw-theme-icon]')
+        .forEach((icon) =>
+          toggleClass(
+            icon,
+            'hidden',
+            icon.dataset.awThemeIcon !== theme
+          )
+        );
+    });
+  };
 
-        document.addEventListener('click', onThemeToggle);
-        cleanupFns.push(() => document.removeEventListener('click', onThemeToggle));
-      };
+  // ========== 1) HEADER (scroll-optimiert) ==========
+  const initHeader = () => {
+    const stickyHeader = document.querySelector(
+      '#header[data-aw-sticky-header]'
+    );
+    if (!stickyHeader) return;
 
-      // --- 2. HEADER LOGIK (PERFORMANCE OPTIMIZED) ---
-      const initHeader = () => {
-        const header = document.querySelector('#header[data-aw-sticky-header]');
-        if (!header) return;
+    let lastState = window.scrollY > 10;
+    toggleClass(stickyHeader, 'scroll', lastState);
 
-        // IntersectionObserver ist performanter als ein Scroll-Listener
-        // Wir erstellen einen unsichtbaren Pixel oben, um zu prüfen, ob gescrollt wurde.
-        const sentinel = document.createElement('div');
-        sentinel.setAttribute('data-scroll-watcher', '');
-        header.before(sentinel);
+    const onScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== lastState) {
+        toggleClass(stickyHeader, 'scroll', isScrolled);
+        lastState = isScrolled;
+      }
+    };
 
-        const observer = new IntersectionObserver((entries) => {
-          // Wenn Sentinel NICHT sichtbar ist, sind wir gescrollt
-          header.classList.toggle('scroll', !entries[0].isIntersecting);
-        }, { rootMargin: '10px 0px 0px 0px' }); // Puffer von 10px wie im Original
+    window.addEventListener('scroll', onScroll, { passive: true });
+    addCleanup(() =>
+      window.removeEventListener('scroll', onScroll)
+    );
+  };
 
-        observer.observe(sentinel);
-        cleanupFns.push(() => {
-          observer.disconnect();
-          sentinel.remove();
-        });
-      };
+  // ========== 2) MENU (stabil + sauberer) ==========
+  const initMenu = () => {
+    const header = document.getElementById('header');
+    const menuBtn = document.querySelector('[data-aw-toggle-menu]');
+    const nav = header?.querySelector('nav');
 
-      // --- 3. MENU LOGIK (ACCESSIBILITY UPDATED) ---
-      const initMenu = () => {
-        const header = document.getElementById('header');
-        const menuBtn = document.querySelector('[data-aw-toggle-menu]');
-        const nav = header?.querySelector('nav');
-        
-        if (!menuBtn || !header || !nav) return;
+    if (!menuBtn || !header || !nav) return;
 
-        const toggleMenu = (forceState) => {
-          const isExpanded = typeof forceState === 'boolean' ? forceState : !menuBtn.classList.contains('expanded');
-          
-          menuBtn.classList.toggle('expanded', isExpanded);
-          menuBtn.setAttribute('aria-expanded', isExpanded); // A11y
-          document.body.classList.toggle('overflow-hidden', isExpanded);
-          
-          header.classList.toggle('h-screen', isExpanded);
-          header.classList.toggle('expanded', isExpanded);
-          header.classList.toggle('bg-page', isExpanded);
+    const toggleMenu = () => {
+      const isOpen = header.classList.toggle('expanded');
 
-          nav.classList.toggle('hidden', !isExpanded);
-          nav.setAttribute('aria-hidden', !isExpanded); // A11y
+      menuBtn.classList.toggle('expanded', isOpen);
+      document.body.classList.toggle('overflow-hidden', isOpen);
+      header.classList.toggle('h-screen', isOpen);
+      header.classList.toggle('bg-page', isOpen);
+      nav.classList.toggle('hidden', !isOpen);
 
-          // Toggle Icons (Hamburger vs Close)
-          const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
-          if (icons.length > 1) {
-             icons.forEach(icon => icon.classList.toggle('hidden'));
-          }
-        };
+      // Icons flippen
+      menuBtn
+        .querySelectorAll('svg, [data-aw-icon]')
+        .forEach((icon) => icon.classList.toggle('hidden'));
 
-        menuBtn.onclick = () => toggleMenu();
+      const actions =
+        header.querySelector('nav + div') ||
+        header.querySelector('div > div:last-child');
 
-        // Dropdowns via Event Delegation
-        const onNavClick = (e) => {
-          const trigger = e.target.closest('.dropdown > button, .dropdown > a');
-          if (trigger && window.getComputedStyle(menuBtn).display !== 'none') {
-            e.preventDefault();
-            const subMenu = trigger.nextElementSibling;
-            const isExpanded = !subMenu.classList.contains('hidden');
-            
-            trigger.classList.toggle('expanded', !isExpanded);
-            trigger.setAttribute('aria-expanded', !isExpanded);
-            subMenu.classList.toggle('hidden', isExpanded);
-          }
-        };
+      actions?.classList.toggle('hidden', !isOpen);
+    };
 
-        nav.addEventListener('click', onNavClick);
-        cleanupFns.push(() => nav.removeEventListener('click', onNavClick));
+    menuBtn.addEventListener('click', toggleMenu);
+    window.toggleMenuInstance = toggleMenu;
 
-        // Expose für Global Click Handler
-        window.closeMenuIfOpen = () => {
-          if (menuBtn.classList.contains('expanded')) toggleMenu(false);
-        };
-      };
+    const onNavClick = (e) => {
+      const trigger = e.target.closest(
+        '.dropdown > button, .dropdown > a'
+      );
 
-      // --- 4. SCROLL & ANIMATIONS ---
-      const initUX = () => {
-        // Smooth Scroll für Anchor Links + Menü schließen
-        const onLinkClick = (e) => {
-          const link = e.target.closest('a');
-          if (link && link.hash && link.origin === location.origin && link.pathname === location.pathname) {
-            if (window.closeMenuIfOpen) window.closeMenuIfOpen();
-          }
-        };
-        
-        document.addEventListener('click', onLinkClick, { capture: true });
-        cleanupFns.push(() => document.removeEventListener('click', onLinkClick, { capture: true }));
+      if (
+        !trigger ||
+        getComputedStyle(menuBtn).display === 'none'
+      )
+        return;
 
-        // Animations via IntersectionObserver
-        const animateElements = document.querySelectorAll('.intersect, [class*="intersect:"]');
-        if (animateElements.length) {
-          const obs = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                entry.target.setAttribute('data-aw-animated', 'true');
-                if (entry.target.classList.contains('intersect-once')) obs.unobserve(entry.target);
-              }
-            });
-          }, { threshold: 0.1 });
+      e.preventDefault();
 
-          animateElements.forEach(el => obs.observe(el));
-          cleanupFns.push(() => obs.disconnect());
-        }
-      };
+      const subMenu = trigger.nextElementSibling;
+      subMenu?.classList.toggle('hidden');
+      trigger.classList.toggle('expanded');
+    };
 
-      // --- LIFECYCLE CONTROLLER ---
-      const setup = () => {
-        // Cleanup alter Listener (wichtig für SPA/View Transitions)
-        cleanupFns.forEach(fn => fn());
-        cleanupFns = [];
+    nav.addEventListener('click', onNavClick);
+    addCleanup(() =>
+      nav.removeEventListener('click', onNavClick)
+    );
+  };
 
-        initTheme();
-        initHeader();
-        initMenu();
-        
-        // Defer UX logic slightly to prioritize LCP
-        if (window.requestIdleCallback) {
-          window.requestIdleCallback(initUX);
-        } else {
-          setTimeout(initUX, 100);
-        }
-      };
+  // ========== 3) GLOBAL EVENTS (sauber + sicher) ==========
+  const initGlobalEvents = () => {
+    const onClick = (e) => {
+      // Theme Toggle
+      const themeBtn = e.target.closest(
+        '[data-aw-toggle-color-scheme]'
+      );
 
-      // Nutze den modernen 'astro:page-load' Event (deckt init und swap ab)
-      document.addEventListener('astro:page-load', setup);
-      
-      // Fallback, falls keine View Transitions genutzt werden
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setup);
-      } else {
-        setup();
+      if (themeBtn) {
+        const themes = ['system', 'light', 'dark'];
+        const current =
+          localStorage.getItem('theme') || 'system';
+        const next =
+          themes[(themes.indexOf(current) + 1) % 3];
+
+        localStorage.setItem('theme', next);
+        applyTheme(next);
+        return;
       }
 
-    })();
-  }
+      // Native Smooth Scroll + Menü schließen
+      const link = e.target.closest('a');
+
+      if (
+        link &&
+        link.hash &&
+        link.origin === location.origin &&
+        link.pathname === location.pathname
+      ) {
+        const header = document.getElementById('header');
+
+        if (
+          header?.classList.contains('expanded') &&
+          window.toggleMenuInstance
+        ) {
+          window.toggleMenuInstance();
+        }
+      }
+    };
+
+    document.addEventListener('click', onClick, {
+      capture: true,
+      passive: false,
+    });
+
+    addCleanup(() =>
+      document.removeEventListener('click', onClick, {
+        capture: true,
+      })
+    );
+  };
+
+  // ========== 4) ANIMATIONS (effizienter) ==========
+  const initAnimations = () => {
+    const elements = document.querySelectorAll(
+      [
+        '[class*=" intersect:"]',
+        '[class*=":intersect:"]',
+        '[class^="intersect:"]',
+        '[class="intersect"]',
+        '.intersect-once',
+        '.intersect-quarter',
+      ].join(',')
+    );
+
+    if (!elements.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+
+          const el = entry.target;
+          el.dataset.awAnimated = 'true';
+          el.removeAttribute('no-intersect');
+
+          if (el.classList.contains('intersect-once')) {
+            obs.unobserve(el);
+          }
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    elements.forEach((el) => {
+      el.setAttribute('no-intersect', '');
+      observer.observe(el);
+    });
+
+    addCleanup(() => observer.disconnect());
+  };
+
+  // ========== MAIN RUNNER ==========
+  const run = () => {
+    cleanupFns.forEach((fn) => fn());
+    cleanupFns.clear();
+
+    document.documentElement.classList.add(
+      'motion-safe:scroll-smooth'
+    );
+
+    applyTheme(localStorage.getItem('theme') || 'system');
+
+    initHeader();
+    initMenu();
+
+    queueMicrotask(initGlobalEvents);
+
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(initAnimations);
+    } else {
+      setTimeout(initAnimations, 150);
+    }
+  };
+
+  run();
+  document.addEventListener('astro:after-swap', run);
+})();
 </script>
