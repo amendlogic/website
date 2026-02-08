@@ -44,10 +44,10 @@ import { UI } from 'astrowind:config';
     let lastKnownScrollPosition = window.scrollY;
     let ticking = true;
 
-    // --- HELPER: Menü schließen ---
+    // --- NEU: Zentrale Funktion zum Schließen des Menüs (DRY Prinzip) ---
     const closeMenu = () => {
       document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
-      document.body.classList.remove('overflow-hidden'); // WICHTIG: Damit Scrollen wieder geht
+      document.body.classList.remove('overflow-hidden');
       document.getElementById('header')?.classList.remove('h-screen');
       document.getElementById('header')?.classList.remove('expanded');
       document.getElementById('header')?.classList.remove('bg-page');
@@ -55,25 +55,20 @@ import { UI } from 'astrowind:config';
       document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
     };
 
-    // --- ÄNDERUNG: Globaler Listener statt "attachEvent('#header nav'...)" ---
-    // Das imitiert exakt das Verhalten aus Script 1
+    // --- NEU: Ersetzt das alte 'attachEvent(#header nav...)' ---
+    // Wir nutzen hier direkt addEventListener mit { capture: true }, 
+    // um den Klick abzufangen, BEVOR der Scroll startet.
     document.addEventListener('click', (e) => {
-        // 1. Theme Toggle Logik (optional hier integriert oder separat lassen)
-        
-        // 2. Link Klick Logik (Native Smooth Scroll Support)
         const link = e.target.closest('a');
-        
-        // Prüfen ob es ein Link ist, der auf der gleichen Seite zu einem Anker führt
+        // Prüfen, ob es ein Anker-Link auf der gleichen Seite ist
         if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-            // Wenn das Menü offen ist (Header hat 'expanded'), schließen wir es SOFORT.
-            // Durch 'capture: true' passiert das, bevor der Browser scrollt.
-            if (document.getElementById('header')?.classList.contains('expanded')) {
-                closeMenu();
-            }
+             // Wenn Menü offen ist, sofort schließen
+             if (document.getElementById('header')?.classList.contains('expanded')) {
+                 closeMenu();
+             }
         }
     }, { capture: true, passive: false });
 
-    // --- Hier den alten Block "attachEvent('#header nav', 'click'...)" LÖSCHEN ---
 
     attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
       elem.classList.toggle('expanded');
@@ -131,7 +126,7 @@ import { UI } from 'astrowind:config';
 
     const screenSize = window.matchMedia('(max-width: 767px)');
     screenSize.addEventListener('change', function () {
-      closeMenu();
+      closeMenu(); // Nutzung der neuen Helper-Funktion
     });
 
     function applyHeaderStylesOnScroll() {
@@ -180,7 +175,7 @@ import { UI } from 'astrowind:config';
 </script>
 
 <script is:inline>
-  /* Observer Teil bleibt unverändert */
+  /* Observer Script bleibt identisch wie in deiner Vorlage */
   /* Inspired by: https://github.com/heidkaemper/tailwindcss-intersect */
   const Observer = {
     observer: null,
