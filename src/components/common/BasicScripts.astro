@@ -2,161 +2,203 @@
 import { UI } from 'astrowind:config';
 ---
 
-<script is:inline>
-  (function() {
-    // Verhindert doppelte Initialisierung bei Astro-Transitions
-    if (window.basic_script_init) return;
+<script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
+  // Verhindert doppelte Ausführung, aber erlaubt Re-Init bei View Transitions
+  if (!window.basic_script_init) {
     window.basic_script_init = true;
 
-    let _cleanupFns = [];
+    (() => {
+      // Speichert Cleanup-Funktionen für View Transitions
+      let cleanupFns = [];
 
-    const init = () => {
-      const html = document.documentElement;
-      const header = document.getElementById('header');
-      const menuBtn = document.querySelector('[data-aw-toggle-menu]');
-      const nav = header?.querySelector('nav');
+      // --- UTILS ---
+      // Optimierte DOM-Operationen
+      const toggleClass = (el, className, condition) => {
+        if (!el) return;
+        el.classList.toggle(className, condition);
+      };
 
-      // 1. INITIALER HASH-JUMP (FIX FÜR REFRESH)
-      // Wir starten mit "auto", damit der Browser beim Laden nicht animiert
-      html.style.scrollBehavior = 'auto';
-      
-      if (window.location.hash) {
-        const target = document.querySelector(window.location.hash);
-        if (target) {
-          // Kleiner Delay, damit Astro das Layout fertig rendern kann
-          setTimeout(() => {
-            target.scrollIntoView();
-            html.style.scrollBehavior = 'smooth';
-          }, 10);
+      // --- 1. THEME MANAGER ---
+      const initTheme = () => {
+        const updateTheme = () => {
+          const stored = localStorage.getItem('theme') || defaultTheme;
+          const isDark = stored === 'dark' || (stored === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          
+          toggleClass(document.documentElement, 'dark', isDark);
+          
+          // Icon Updates batching
+          requestAnimationFrame(() => {
+            document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
+              const iconTheme = icon.dataset.awThemeIcon;
+              toggleClass(icon, 'hidden', iconTheme !== stored);
+            });
+          });
+        };
+
+        // Initiale Anwendung
+        updateTheme();
+
+        // Listener für Systemänderungen (Live-Update)
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const onMediaChange = () => {
+          if ((localStorage.getItem('theme') || defaultTheme) === 'system') updateTheme();
+        };
+        
+        mediaQuery.addEventListener('change', onMediaChange);
+        cleanupFns.push(() => mediaQuery.removeEventListener('change', onMediaChange));
+
+        // Event Delegation für Theme-Toggle Button
+        const onThemeToggle = (e) => {
+          const btn = e.target.closest('[data-aw-toggle-color-scheme]');
+          if (!btn) return;
+
+          const current = localStorage.getItem('theme') || defaultTheme;
+          const themes = ['system', 'light', 'dark'];
+          const next = themes[(themes.indexOf(current) + 1) % themes.length];
+          
+          localStorage.setItem('theme', next);
+          updateTheme();
+        };
+
+        document.addEventListener('click', onThemeToggle);
+        cleanupFns.push(() => document.removeEventListener('click', onThemeToggle));
+      };
+
+      // --- 2. HEADER LOGIK (PERFORMANCE OPTIMIZED) ---
+      const initHeader = () => {
+        const header = document.querySelector('#header[data-aw-sticky-header]');
+        if (!header) return;
+
+        // IntersectionObserver ist performanter als ein Scroll-Listener
+        // Wir erstellen einen unsichtbaren Pixel oben, um zu prüfen, ob gescrollt wurde.
+        const sentinel = document.createElement('div');
+        sentinel.setAttribute('data-scroll-watcher', '');
+        header.before(sentinel);
+
+        const observer = new IntersectionObserver((entries) => {
+          // Wenn Sentinel NICHT sichtbar ist, sind wir gescrollt
+          header.classList.toggle('scroll', !entries[0].isIntersecting);
+        }, { rootMargin: '10px 0px 0px 0px' }); // Puffer von 10px wie im Original
+
+        observer.observe(sentinel);
+        cleanupFns.push(() => {
+          observer.disconnect();
+          sentinel.remove();
+        });
+      };
+
+      // --- 3. MENU LOGIK (ACCESSIBILITY UPDATED) ---
+      const initMenu = () => {
+        const header = document.getElementById('header');
+        const menuBtn = document.querySelector('[data-aw-toggle-menu]');
+        const nav = header?.querySelector('nav');
+        
+        if (!menuBtn || !header || !nav) return;
+
+        const toggleMenu = (forceState) => {
+          const isExpanded = typeof forceState === 'boolean' ? forceState : !menuBtn.classList.contains('expanded');
+          
+          menuBtn.classList.toggle('expanded', isExpanded);
+          menuBtn.setAttribute('aria-expanded', isExpanded); // A11y
+          document.body.classList.toggle('overflow-hidden', isExpanded);
+          
+          header.classList.toggle('h-screen', isExpanded);
+          header.classList.toggle('expanded', isExpanded);
+          header.classList.toggle('bg-page', isExpanded);
+
+          nav.classList.toggle('hidden', !isExpanded);
+          nav.setAttribute('aria-hidden', !isExpanded); // A11y
+
+          // Toggle Icons (Hamburger vs Close)
+          const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
+          if (icons.length > 1) {
+             icons.forEach(icon => icon.classList.toggle('hidden'));
+          }
+        };
+
+        menuBtn.onclick = () => toggleMenu();
+
+        // Dropdowns via Event Delegation
+        const onNavClick = (e) => {
+          const trigger = e.target.closest('.dropdown > button, .dropdown > a');
+          if (trigger && window.getComputedStyle(menuBtn).display !== 'none') {
+            e.preventDefault();
+            const subMenu = trigger.nextElementSibling;
+            const isExpanded = !subMenu.classList.contains('hidden');
+            
+            trigger.classList.toggle('expanded', !isExpanded);
+            trigger.setAttribute('aria-expanded', !isExpanded);
+            subMenu.classList.toggle('hidden', isExpanded);
+          }
+        };
+
+        nav.addEventListener('click', onNavClick);
+        cleanupFns.push(() => nav.removeEventListener('click', onNavClick));
+
+        // Expose für Global Click Handler
+        window.closeMenuIfOpen = () => {
+          if (menuBtn.classList.contains('expanded')) toggleMenu(false);
+        };
+      };
+
+      // --- 4. SCROLL & ANIMATIONS ---
+      const initUX = () => {
+        // Smooth Scroll für Anchor Links + Menü schließen
+        const onLinkClick = (e) => {
+          const link = e.target.closest('a');
+          if (link && link.hash && link.origin === location.origin && link.pathname === location.pathname) {
+            if (window.closeMenuIfOpen) window.closeMenuIfOpen();
+          }
+        };
+        
+        document.addEventListener('click', onLinkClick, { capture: true });
+        cleanupFns.push(() => document.removeEventListener('click', onLinkClick, { capture: true }));
+
+        // Animations via IntersectionObserver
+        const animateElements = document.querySelectorAll('.intersect, [class*="intersect:"]');
+        if (animateElements.length) {
+          const obs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.setAttribute('data-aw-animated', 'true');
+                if (entry.target.classList.contains('intersect-once')) obs.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.1 });
+
+          animateElements.forEach(el => obs.observe(el));
+          cleanupFns.push(() => obs.disconnect());
         }
+      };
+
+      // --- LIFECYCLE CONTROLLER ---
+      const setup = () => {
+        // Cleanup alter Listener (wichtig für SPA/View Transitions)
+        cleanupFns.forEach(fn => fn());
+        cleanupFns = [];
+
+        initTheme();
+        initHeader();
+        initMenu();
+        
+        // Defer UX logic slightly to prioritize LCP
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(initUX);
+        } else {
+          setTimeout(initUX, 100);
+        }
+      };
+
+      // Nutze den modernen 'astro:page-load' Event (deckt init und swap ab)
+      document.addEventListener('astro:page-load', setup);
+      
+      // Fallback, falls keine View Transitions genutzt werden
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setup);
       } else {
-        // Wenn kein Hash da ist, direkt auf smooth für spätere Klicks
-        setTimeout(() => { html.style.scrollBehavior = 'smooth'; }, 100);
+        setup();
       }
 
-      // 2. MENÜ LOGIK
-      const toggleMenu = (forceClose = false) => {
-        const isExpanded = header?.classList.contains('expanded');
-        if (forceClose && !isExpanded) return;
-
-        const shouldOpen = forceClose ? false : !isExpanded;
-
-        // UI Updates
-        header?.classList.toggle('expanded', shouldOpen);
-        header?.classList.toggle('h-screen', shouldOpen);
-        document.body.classList.toggle('overflow-hidden', shouldOpen);
-        menuBtn?.classList.toggle('expanded', shouldOpen);
-        nav?.classList.toggle('hidden', !shouldOpen);
-
-        // Icon Swap (AstroWind spezifisch)
-        const icons = menuBtn?.querySelectorAll('svg, [data-aw-icon]');
-        if (icons?.length > 1) {
-          icons[0].classList.toggle('hidden', shouldOpen);
-          icons[1].classList.toggle('hidden', !shouldOpen);
-        }
-      };
-
-      // 3. GLOBAL CLICK HANDLER (SMART DELEGATION)
-      const onGlobalClick = (e) => {
-        const link = e.target.closest('a');
-        
-        // Theme Toggle
-        if (e.target.closest('[data-aw-toggle-color-scheme]')) {
-          const themes = ['system', 'light', 'dark'];
-          const current = localStorage.getItem('theme') || 'system';
-          const next = themes[(themes.indexOf(current) + 1) % 3];
-          localStorage.setItem('theme', next);
-          
-          const resolved = next === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : next;
-          html.classList.toggle('dark', resolved === 'dark');
-          return;
-        }
-
-        // Anker-Link Logik
-        if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-          // WICHTIG: Erst das Menü schließen, um overflow-hidden zu entfernen
-          if (header?.classList.contains('expanded')) {
-            toggleMenu(true);
-          }
-
-          // Wenn der Browser smooth scroll nativ unterstützt, lassen wir ihn machen.
-          // Wir nutzen scrollIntoView nur als Backup oder für exaktes Timing.
-          const target = document.querySelector(link.hash);
-          if (target) {
-            // Wir lassen einen winzigen Moment Zeit, damit 'overflow-hidden' 
-            // vom Body verschwindet, bevor der Scroll startet.
-            e.preventDefault();
-            requestAnimationFrame(() => {
-              target.scrollIntoView({ behavior: 'smooth' });
-              history.pushState(null, null, link.hash);
-            });
-          }
-        }
-      };
-
-      // Event Listener
-      menuBtn && (menuBtn.onclick = () => toggleMenu());
-      document.addEventListener('click', onGlobalClick, { capture: true });
-      
-      _cleanupFns.push(() => {
-        document.removeEventListener('click', onGlobalClick);
-        if (menuBtn) menuBtn.onclick = null;
-      });
-    };
-
-    // Animationen (Intersection Observer)
-    const initAnimations = () => {
-      const elements = document.querySelectorAll('[class*="intersect:"]');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.setAttribute('data-aw-animated', 'true');
-          }
-        });
-      }, { threshold: 0.15 });
-      elements.forEach(el => observer.observe(el));
-      _cleanupFns.push(() => observer.disconnect());
-    };
-
-    // Initialisierung & Astro Lifecycle
-    const run = () => {
-      _cleanupFns.forEach(fn => fn());
-      _cleanupFns = [];
-      init();
-      if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
-      else setTimeout(initAnimations, 200);
-    };
-
-    run();
-    document.addEventListener('astro:after-swap', run);
-  })();
+    })();
+  }
 </script>
-
-<style is:global>
-  /* Verhindert das Scrollen beim Laden, falls das JS noch nicht gefeuert hat */
-  :root {
-    scroll-behavior: auto;
-  }
-
-  /* Wenn das Menü offen ist, darf NICHT gescrollt werden */
-  body.overflow-hidden {
-    overflow: hidden !important;
-  }
-
-  /* Sobald JS bereit ist, wird Smooth Scroll über das Style-Attribut 
-     oder diese Klasse gesteuert */
-  .smooth-ready {
-    scroll-behavior: smooth;
-  }
-
-  /* Dein bereits eingefügtes Scroll-Margin-Top wirkt hier perfekt mit scrollIntoView() */
-  [id] {
-    scroll-margin-top: 5rem; /* ca. 80px Offset */
-  }
-
-  /* Performance: Header-Animationen ausschalten, wenn er 'expanded' ist, 
-     damit der Scrollvorgang sofort CPU-Priorität bekommt */
-  #header.expanded {
-    transition: none !important;
-  }
-</style>
