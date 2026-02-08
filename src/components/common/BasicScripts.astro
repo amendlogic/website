@@ -21,29 +21,31 @@ window.basic_script_init = true;
       : 'light';
 
   const applyTheme = (theme = 'system') => {
-    const resolved =
-      theme === 'system' ? getSystemTheme() : theme;
+    const resolved = theme === 'system' ? getSystemTheme() : theme;
 
     requestAnimationFrame(() => {
       toggleClass(document.documentElement, 'dark', resolved === 'dark');
-
-      document
-        .querySelectorAll('[data-aw-theme-icon]')
-        .forEach((icon) =>
-          toggleClass(
-            icon,
-            'hidden',
-            icon.dataset.awThemeIcon !== theme
-          )
-        );
+      document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) =>
+          toggleClass(icon, 'hidden', icon.dataset.awThemeIcon !== theme)
+      );
     });
+  };
+
+  // +++ NEU: Live System Theme Listener +++
+  const initThemeListener = () => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const onChange = () => {
+        if ((localStorage.getItem('theme') || 'system') === 'system') {
+            applyTheme('system');
+        }
+    };
+    mediaQuery.addEventListener('change', onChange);
+    addCleanup(() => mediaQuery.removeEventListener('change', onChange));
   };
 
   // ========== 1) HEADER (scroll-optimiert) ==========
   const initHeader = () => {
-    const stickyHeader = document.querySelector(
-      '#header[data-aw-sticky-header]'
-    );
+    const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
     if (!stickyHeader) return;
 
     let lastState = window.scrollY > 10;
@@ -58,12 +60,10 @@ window.basic_script_init = true;
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    addCleanup(() =>
-      window.removeEventListener('scroll', onScroll)
-    );
+    addCleanup(() => window.removeEventListener('scroll', onScroll));
   };
 
-  // ========== 2) MENU (stabil + sauberer) ==========
+  // ========== 2) MENU (stabil + a11y) ==========
   const initMenu = () => {
     const header = document.getElementById('header');
     const menuBtn = document.querySelector('[data-aw-toggle-menu]');
@@ -73,6 +73,10 @@ window.basic_script_init = true;
 
     const toggleMenu = () => {
       const isOpen = header.classList.toggle('expanded');
+      
+      // +++ NEU: Accessibility +++
+      menuBtn.setAttribute('aria-expanded', isOpen);
+      nav.setAttribute('aria-hidden', !isOpen);
 
       menuBtn.classList.toggle('expanded', isOpen);
       document.body.classList.toggle('overflow-hidden', isOpen);
@@ -80,60 +84,44 @@ window.basic_script_init = true;
       header.classList.toggle('bg-page', isOpen);
       nav.classList.toggle('hidden', !isOpen);
 
-      // Icons flippen
-      menuBtn
-        .querySelectorAll('svg, [data-aw-icon]')
-        .forEach((icon) => icon.classList.toggle('hidden'));
+      menuBtn.querySelectorAll('svg, [data-aw-icon]').forEach((icon) => 
+        icon.classList.toggle('hidden')
+      );
 
-      const actions =
-        header.querySelector('nav + div') ||
-        header.querySelector('div > div:last-child');
-
+      const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
       actions?.classList.toggle('hidden', !isOpen);
     };
 
     menuBtn.addEventListener('click', toggleMenu);
-    window.toggleMenuInstance = toggleMenu;
+    window.toggleMenuInstance = toggleMenu; // Expose für Global Events
 
     const onNavClick = (e) => {
-      const trigger = e.target.closest(
-        '.dropdown > button, .dropdown > a'
-      );
-
-      if (
-        !trigger ||
-        getComputedStyle(menuBtn).display === 'none'
-      )
-        return;
+      const trigger = e.target.closest('.dropdown > button, .dropdown > a');
+      // Sicherheitscheck: Nur feuern, wenn Hamburger-Menu sichtbar ist
+      if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
 
       e.preventDefault();
-
       const subMenu = trigger.nextElementSibling;
+      const isExpanded = !subMenu?.classList.contains('hidden');
+      
       subMenu?.classList.toggle('hidden');
-      trigger.classList.toggle('expanded');
+      trigger.classList.toggle('expanded', !isExpanded);
+      trigger.setAttribute('aria-expanded', !isExpanded); // +++ A11y +++
     };
 
     nav.addEventListener('click', onNavClick);
-    addCleanup(() =>
-      nav.removeEventListener('click', onNavClick)
-    );
+    addCleanup(() => nav.removeEventListener('click', onNavClick));
   };
 
-  // ========== 3) GLOBAL EVENTS (sauber + sicher) ==========
+  // ========== 3) GLOBAL EVENTS ==========
   const initGlobalEvents = () => {
     const onClick = (e) => {
       // Theme Toggle
-      const themeBtn = e.target.closest(
-        '[data-aw-toggle-color-scheme]'
-      );
-
+      const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
       if (themeBtn) {
         const themes = ['system', 'light', 'dark'];
-        const current =
-          localStorage.getItem('theme') || 'system';
-        const next =
-          themes[(themes.indexOf(current) + 1) % 3];
-
+        const current = localStorage.getItem('theme') || 'system';
+        const next = themes[(themes.indexOf(current) + 1) % 3];
         localStorage.setItem('theme', next);
         applyTheme(next);
         return;
@@ -141,67 +129,36 @@ window.basic_script_init = true;
 
       // Native Smooth Scroll + Menü schließen
       const link = e.target.closest('a');
-
-      if (
-        link &&
-        link.hash &&
-        link.origin === location.origin &&
-        link.pathname === location.pathname
-      ) {
+      if (link && link.hash && link.origin === location.origin && link.pathname === location.pathname) {
         const header = document.getElementById('header');
-
-        if (
-          header?.classList.contains('expanded') &&
-          window.toggleMenuInstance
-        ) {
+        if (header?.classList.contains('expanded') && window.toggleMenuInstance) {
           window.toggleMenuInstance();
         }
       }
     };
 
-    document.addEventListener('click', onClick, {
-      capture: true,
-      passive: false,
-    });
-
-    addCleanup(() =>
-      document.removeEventListener('click', onClick, {
-        capture: true,
-      })
-    );
+    document.addEventListener('click', onClick, { capture: true, passive: false });
+    addCleanup(() => document.removeEventListener('click', onClick, { capture: true }));
   };
 
   // ========== 4) ANIMATIONS (effizienter) ==========
   const initAnimations = () => {
-    const elements = document.querySelectorAll(
-      [
-        '[class*=" intersect:"]',
-        '[class*=":intersect:"]',
-        '[class^="intersect:"]',
-        '[class="intersect"]',
-        '.intersect-once',
-        '.intersect-quarter',
-      ].join(',')
-    );
+    // Selektoren optimiert
+    const elements = document.querySelectorAll('.intersect, [class*="intersect:"]');
 
     if (!elements.length) return;
 
-    const observer = new IntersectionObserver(
-      (entries, obs) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-
-          const el = entry.target;
-          el.dataset.awAnimated = 'true';
-          el.removeAttribute('no-intersect');
-
-          if (el.classList.contains('intersect-once')) {
-            obs.unobserve(el);
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.dataset.awAnimated = 'true';
+            entry.target.removeAttribute('no-intersect');
+            if (entry.target.classList.contains('intersect-once')) {
+                obs.unobserve(entry.target);
+            }
           }
-        }
-      },
-      { threshold: 0.1 }
-    );
+        });
+      }, { threshold: 0.1 });
 
     elements.forEach((el) => {
       el.setAttribute('no-intersect', '');
@@ -216,12 +173,11 @@ window.basic_script_init = true;
     cleanupFns.forEach((fn) => fn());
     cleanupFns.clear();
 
-    document.documentElement.classList.add(
-      'motion-safe:scroll-smooth'
-    );
+    document.documentElement.classList.add('motion-safe:scroll-smooth');
 
     applyTheme(localStorage.getItem('theme') || 'system');
-
+    
+    initThemeListener(); // +++ Gestartet +++
     initHeader();
     initMenu();
 
