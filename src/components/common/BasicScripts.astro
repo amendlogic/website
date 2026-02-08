@@ -9,153 +9,169 @@ import { UI } from 'astrowind:config';
   (function() {
     let cleanupFns = [];
 
-    const toggleClass = (el, className, condition) => {
-      if (condition) el.classList.add(className);
-      else el.classList.remove(className);
-    };
-
+    // --- 1. THEME LOGIK ---
     const applyTheme = (theme) => {
       const resolvedTheme = (theme === 'system') 
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
         : theme;
       
-      requestAnimationFrame(() => {
-        toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
-        document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
-          toggleClass(icon, 'hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
-        });
+      document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
+      document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
+        icon.classList.toggle('hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
       });
     };
 
-    const initHeader = () => {
+    // --- 2. HEADER & MENU ---
+    const initHeaderAndMenu = () => {
+      const header = document.getElementById('header');
+      const menuBtn = document.querySelector('[data-aw-toggle-menu]');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
-      if (!stickyHeader) return;
+      const nav = header?.querySelector('nav');
 
-      let isTicking = false;
-      let lastState = false;
+      if (!header) return;
 
+      // Sticky Header Scroll Logik
       const onScroll = () => {
-        if (!isTicking) {
-          window.requestAnimationFrame(() => {
-            const isScrolled = window.scrollY > 10;
-            if (isScrolled !== lastState) {
-              stickyHeader.classList.toggle('scroll', isScrolled);
-              lastState = isScrolled;
-            }
-            isTicking = false;
-          });
-          isTicking = true;
+        const isScrolled = window.scrollY > 10;
+        if (stickyHeader) stickyHeader.classList.toggle('scroll', isScrolled);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      // Menü Toggle Funktion
+      const toggleMenu = (forceClose = false) => {
+        const isExpanded = header.classList.contains('expanded');
+        if (forceClose && !isExpanded) return;
+
+        menuBtn?.classList.toggle('expanded', !forceClose && !isExpanded);
+        document.body.classList.toggle('overflow-hidden', !forceClose && !isExpanded);
+        header.classList.toggle('expanded', !forceClose && !isExpanded);
+        header.classList.toggle('h-screen', !forceClose && !isExpanded);
+        header.classList.toggle('bg-page', !forceClose && !isExpanded);
+        nav?.classList.toggle('hidden', forceClose || isExpanded);
+        
+        const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
+        if (actions) actions.classList.toggle('hidden', forceClose || isExpanded);
+        
+        const icons = menuBtn?.querySelectorAll('svg, [data-aw-icon]');
+        if (icons?.length > 1) {
+          icons[0].classList.toggle('hidden', !forceClose && !isExpanded);
+          icons[1].classList.toggle('hidden', forceClose || isExpanded);
         }
       };
 
-      window.addEventListener('scroll', onScroll, { passive: true });
-      if (window.scrollY > 10) stickyHeader.classList.add('scroll');
-      cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
-    };
+      if (menuBtn) menuBtn.onclick = () => toggleMenu();
 
-    const initMenu = () => {
-      const header = document.getElementById('header');
-      const menuBtn = document.querySelector('[data-aw-toggle-menu]');
-      const nav = header?.querySelector('nav');
-      
-      if (!menuBtn || !header || !nav) return;
-
-      const toggleMenu = () => {
-        menuBtn.classList.toggle('expanded');
-        document.body.classList.toggle('overflow-hidden');
-        header.classList.toggle('h-screen');
-        header.classList.toggle('expanded');
-        header.classList.toggle('bg-page');
-
-        const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
-        if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
-
-        nav.classList.toggle('hidden');
-        const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
-        if (actions) actions.classList.toggle('hidden');
-      };
-
-      menuBtn.onclick = toggleMenu;
-      window.toggleMenuInstance = toggleMenu;
-
+      // Dropdown Logik im Menü (Mobile)
       const onNavClick = (e) => {
         const trigger = e.target.closest('.dropdown > button, .dropdown > a');
         if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
-        e.preventDefault();
         const subMenu = trigger.nextElementSibling;
         if (subMenu) {
+            e.preventDefault();
             subMenu.classList.toggle('hidden');
             trigger.classList.toggle('expanded');
         }
       };
+      nav?.addEventListener('click', onNavClick);
 
-      nav.addEventListener('click', onNavClick);
+      // Exponieren für Global Click
+      window.forceCloseMenuInstance = () => toggleMenu(true);
+
+      cleanupFns.push(() => {
+        window.removeEventListener('scroll', onScroll);
+        nav?.removeEventListener('click', onNavClick);
+      });
     };
 
-    // --- OPTIMIERTE GLOBAL EVENTS ---
-    const initGlobalEvents = () => {
-      const onClick = (e) => {
-        const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
+    // --- 3. SCROLL & HASH MANAGEMENT (THE CORE) ---
+    const setupScrollBehavior = () => {
+      const html = document.documentElement;
+
+      // A. Initialer Jump (verhindert Scrollen beim Refresh)
+      const handleInitialHash = () => {
+        if (window.location.hash) {
+          const target = document.querySelector(window.location.hash);
+          if (target) {
+            // Smooth Scroll temporär deaktivieren
+            html.style.scrollBehavior = 'auto';
+            window.scrollTo(0, target.offsetTop - 80); // 80px Offset für Header
+            
+            // Erst danach Smooth Scroll für User-Aktionen aktivieren
+            setTimeout(() => {
+              html.style.scrollBehavior = 'smooth';
+            }, 100);
+          }
+        } else {
+          html.style.scrollBehavior = 'smooth';
+        }
+      };
+
+      // B. Klick-Interception
+      const handleGlobalClick = (e) => {
+        const target = e.target.closest('a');
+        if (!target) return;
+
+        const themeBtn = target.closest('[data-aw-toggle-color-scheme]');
         if (themeBtn) {
           const themes = ['system', 'light', 'dark'];
-          const current = localStorage.getItem('theme') || 'system';
-          const next = themes[(themes.indexOf(current) + 1) % 3];
+          const next = themes[(themes.indexOf(localStorage.getItem('theme') || 'system') + 1) % 3];
           localStorage.setItem('theme', next);
           applyTheme(next);
           return;
         }
 
-        const link = e.target.closest('a');
-        if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-          const header = document.getElementById('header');
-          
-          // Prüfen, ob das Menü offen ist (expanded)
-          if (header && header.classList.contains('expanded')) {
-            // Wir schließen das Menü SOFORT, bevor der Browser den Scroll-Target berechnet
-            if (window.toggleMenuInstance) {
-              window.toggleMenuInstance();
-            }
+        // Anker-Link Logik
+        if (target.hash && target.origin === window.location.origin && target.pathname === window.location.pathname) {
+          // 1. Menü SOFORT schließen (Wichtig für Layout-Stabilität)
+          if (window.forceCloseMenuInstance) {
+            window.forceCloseMenuInstance();
+          }
+
+          // 2. Falls wir schon auf dem Hash sind, scrollen wir manuell (Browser macht das sonst oft nicht)
+          const element = document.querySelector(target.hash);
+          if (element) {
+            e.preventDefault();
+            const offset = 80; // Dein Header-Offset
+            const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo({
+              top: elementPosition - offset,
+              behavior: 'smooth'
+            });
+            // Hash in URL aktualisieren ohne Sprung
+            history.pushState(null, null, target.hash);
           }
         }
       };
 
-      // Wir nutzen ein Capture-Event, um schneller als andere Scripte zu reagieren
-      document.addEventListener('click', onClick, { capture: true });
-      cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
+      document.addEventListener('click', handleGlobalClick);
+      handleInitialHash();
+
+      cleanupFns.push(() => document.removeEventListener('click', handleGlobalClick));
     };
 
-    const initAnimations = () => {
-      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once'];
-      const elements = document.querySelectorAll(selectors.join(','));
-      if (elements.length === 0) return;
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.setAttribute('data-aw-animated', 'true');
-            if (entry.target.classList.contains('intersect-once')) observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1 });
-
-      elements.forEach(el => observer.observe(el));
-      cleanupFns.push(() => observer.disconnect());
-    };
-
+    // --- 4. RUN & LIFECYCLE ---
     const run = () => {
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
-      // CSS smooth scroll aktivieren
-      document.documentElement.style.scrollBehavior = 'smooth';
-
       applyTheme(localStorage.getItem('theme') || 'system');
-      initHeader(); 
-      initMenu();   
-      initGlobalEvents();
+      initHeaderAndMenu();
+      setupScrollBehavior();
 
-      if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
-      else setTimeout(initAnimations, 200);
+      // Intersection Observer für Animationen
+      const elements = document.querySelectorAll('[class*="intersect:"]');
+      if (elements.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.setAttribute('data-aw-animated', 'true');
+            }
+          });
+        }, { threshold: 0.1 });
+        elements.forEach(el => observer.observe(el));
+        cleanupFns.push(() => observer.disconnect());
+      }
     };
 
     run();
