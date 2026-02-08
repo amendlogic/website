@@ -3,242 +3,192 @@ import { UI } from 'astrowind:config';
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme || 'system' }}>
-  if (window.basic_script_init) return;
-  window.basic_script_init = true;
+if (window.basic_script_init) return;
+window.basic_script_init = true;
 
-  (function() {
-    let cleanupFns = [];
+(function() {
+  let cleanupFns: (() => void)[] = [];
 
-    // =======================
-    // HELPER
-    // =======================
-    const toggleClass = (el, className, condition) => {
-      if (condition) el.classList.add(className);
-      else el.classList.remove(className);
-    };
+  const toggleClass = (el: HTMLElement, className: string, condition: boolean) => {
+    if (condition) el.classList.add(className);
+    else el.classList.remove(className);
+  };
 
-    const applyTheme = (theme) => {
-      const resolvedTheme = (theme === 'system') 
-        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
-        : theme;
-      
-      requestAnimationFrame(() => {
-        toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
-        document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) => {
-          toggleClass(icon, 'hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
-        });
+  const applyTheme = (theme: string) => {
+    const resolvedTheme = theme === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : theme;
+
+    requestAnimationFrame(() => {
+      toggleClass(document.documentElement, 'dark', resolvedTheme === 'dark');
+      document.querySelectorAll('[data-aw-theme-icon]').forEach(icon => {
+        toggleClass(icon as HTMLElement, 'hidden', icon.getAttribute('data-aw-theme-icon') !== theme);
       });
-    };
+    });
+  };
 
-    // =======================
-    // HEADER LOGIK
-    // =======================
-    const initHeader = () => {
-      const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
-      if (!stickyHeader) return;
+  // --- HEADER LOGIK ---
+  const initHeader = () => {
+    const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
+    if (!stickyHeader) return;
 
-      let isTicking = false;
-      let lastState = false;
+    let isTicking = false;
+    let lastState = false;
 
-      const onScroll = () => {
-        if (!isTicking) {
-          window.requestAnimationFrame(() => {
-            const isScrolled = window.scrollY > 10;
-            if (isScrolled !== lastState) {
-              stickyHeader.classList.toggle('scroll', isScrolled);
-              lastState = isScrolled;
-            }
-            isTicking = false;
-          });
-          isTicking = true;
-        }
-      };
-
-      window.addEventListener('scroll', onScroll, { passive: true });
-
-      if (window.scrollY > 10) {
-        stickyHeader.classList.add('scroll');
-        lastState = true;
-      }
-
-      cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
-    };
-
-    // =======================
-    // MENU LOGIK
-    // =======================
-    const initMenu = () => {
-      const header = document.getElementById('header');
-      const menuBtn = document.querySelector('[data-aw-toggle-menu]');
-      const nav = header?.querySelector('nav');
-      
-      if (!menuBtn || !header || !nav) return;
-
-      const toggleMenu = () => {
-        menuBtn.classList.toggle('expanded');
-        document.body.classList.toggle('overflow-hidden');
-        header.classList.toggle('h-screen');
-        header.classList.toggle('expanded');
-        header.classList.toggle('bg-page');
-
-        const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
-        if (icons.length > 1) {
-          icons.forEach(icon => icon.classList.toggle('hidden'));
-        }
-
-        nav.classList.toggle('hidden');
-
-        const actions = header.querySelector('nav + div') ||
-                        header.querySelector('div > div:last-child');
-
-        if (actions) actions.classList.toggle('hidden');
-      };
-
-      menuBtn.onclick = toggleMenu;
-      window.toggleMenuInstance = toggleMenu;
-
-      const onNavClick = (e) => {
-        const trigger = e.target.closest('.dropdown > button, .dropdown > a');
-        if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
-
-        e.preventDefault();
-        const subMenu = trigger.nextElementSibling;
-        if (subMenu) {
-          subMenu.classList.toggle('hidden');
-          trigger.classList.toggle('expanded');
-        }
-      };
-
-      nav.addEventListener('click', onNavClick);
-    };
-
-    // =====================================================
-    // 🔥 NEU: Menü SOFORT schließen (VOR Smooth-Scroll)
-    // =====================================================
-    const initImmediateMenuClose = () => {
-      const handler = (e) => {
-        const link = e.target.closest('a');
-
-        if (
-          link &&
-          link.hash &&
-          link.origin === window.location.origin &&
-          link.pathname === window.location.pathname
-        ) {
-          const header = document.getElementById('header');
-
-          if (
-            header?.classList.contains('expanded') &&
-            window.toggleMenuInstance
-          ) {
-            window.toggleMenuInstance();
+    const onScroll = () => {
+      if (!isTicking) {
+        window.requestAnimationFrame(() => {
+          const isScrolled = window.scrollY > 10;
+          if (isScrolled !== lastState) {
+            stickyHeader.classList.toggle('scroll', isScrolled);
+            lastState = isScrolled;
           }
-        }
-      };
-
-      document.addEventListener('mousedown', handler);
-      cleanupFns.push(() => document.removeEventListener('mousedown', handler));
-    };
-
-    // =======================
-    // GLOBAL EVENTS
-    // =======================
-    const initGlobalEvents = () => {
-      const onClick = (e) => {
-        // Theme Toggle
-        const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
-        if (themeBtn) {
-          const themes = ['system', 'light', 'dark'];
-          const current = localStorage.getItem('theme') || 'system';
-          const next = themes[(themes.indexOf(current) + 1) % 3];
-          localStorage.setItem('theme', next);
-          applyTheme(next);
-          return;
-        }
-
-        // Native Smooth Scroll – KEIN preventDefault
-        const link = e.target.closest('a');
-        if (
-          link &&
-          link.hash &&
-          link.origin === window.location.origin &&
-          link.pathname === window.location.pathname
-        ) {
-          // Hier NICHTS mehr tun – Menü wurde bereits per mousedown geschlossen ✅
-        }
-      };
-
-      document.addEventListener('click', onClick, {
-        capture: true,
-        passive: false
-      });
-
-      cleanupFns.push(() =>
-        document.removeEventListener('click', onClick, { capture: true })
-      );
-    };
-
-    // =======================
-    // ANIMATIONS
-    // =======================
-    const initAnimations = () => {
-      const selectors = [
-        '[class*=" intersect:"]',
-        '[class*=":intersect:"]',
-        '[class^="intersect:"]',
-        '[class="intersect"]',
-        '.intersect-once',
-        '.intersect-quarter'
-      ];
-
-      const elements = document.querySelectorAll(selectors.join(','));
-      if (elements.length === 0) return;
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const el = entry.target;
-            el.setAttribute('data-aw-animated', 'true');
-            el.removeAttribute('no-intersect');
-            if (el.classList.contains('intersect-once')) {
-              observer.unobserve(el);
-            }
-          }
+          isTicking = false;
         });
-      }, { threshold: 0.1 });
-
-      elements.forEach(el => {
-        el.setAttribute('no-intersect', '');
-        observer.observe(el);
-      });
-
-      cleanupFns.push(() => observer.disconnect());
-    };
-
-    // =======================
-    // MAIN
-    // =======================
-    const run = () => {
-      cleanupFns.forEach(fn => fn());
-      cleanupFns = [];
-
-      document.documentElement.classList.add('motion-safe:scroll-smooth');
-
-      applyTheme(localStorage.getItem('theme') || 'system');
-      
-      initHeader(); 
-      initMenu();
-      initImmediateMenuClose();   // 🔥 WICHTIG: NEU
-      setTimeout(initGlobalEvents, 0);
-
-      if (window.requestIdleCallback) {
-        window.requestIdleCallback(initAnimations);
-      } else {
-        setTimeout(initAnimations, 200);
+        isTicking = true;
       }
     };
 
-    run();
-    document.addEventListener('astro:after-swap', run);
-  })();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    if (window.scrollY > 10) {
+      stickyHeader.classList.add('scroll');
+      lastState = true;
+    }
+
+    cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
+  };
+
+  // --- MENÜ LOGIK MIT SMOOTH SCROLL ---
+  const initMenu = () => {
+    const header = document.getElementById('header');
+    const menuBtn = document.querySelector('[data-aw-toggle-menu]');
+    const nav = header?.querySelector('nav');
+    if (!header || !menuBtn || !nav) return;
+
+    // --- Menü Toggle ---
+    const toggleMenu = () => {
+      menuBtn.classList.toggle('expanded');
+      document.body.classList.toggle('overflow-hidden');
+      header.classList.toggle('h-screen');
+      header.classList.toggle('expanded');
+      header.classList.toggle('bg-page');
+
+      const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]');
+      if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
+
+      nav.classList.toggle('hidden');
+
+      const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
+      if (actions) actions.classList.toggle('hidden');
+    };
+
+    menuBtn.onclick = toggleMenu;
+
+    // --- Untermenüs ---
+    nav.addEventListener('click', (e) => {
+      const trigger = (e.target as HTMLElement).closest('.dropdown > button, .dropdown > a');
+      if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
+
+      e.preventDefault();
+      const subMenu = trigger.nextElementSibling;
+      if (subMenu) {
+        subMenu.classList.toggle('hidden');
+        trigger.classList.toggle('expanded');
+      }
+    });
+
+    // --- Menü sofort schließen bei Klick auf interne Links ---
+    const closeMenuImmediately = () => {
+      menuBtn.classList.remove('expanded');
+      document.body.classList.remove('overflow-hidden');
+      header.classList.remove('h-screen', 'expanded', 'bg-page');
+      nav.classList.add('hidden');
+
+      // Alle offenen Untermenüs schließen
+      const openSubs = header.querySelectorAll('.dropdown > button.expanded, .dropdown > a.expanded');
+      openSubs.forEach(btn => {
+        btn.classList.remove('expanded');
+        const sub = btn.nextElementSibling;
+        if (sub) sub.classList.add('hidden');
+      });
+
+      const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
+      if (actions) actions.classList.add('hidden');
+    };
+
+    const onGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a');
+      if (!link) return;
+
+      if (link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
+        if (header.classList.contains('expanded')) {
+          closeMenuImmediately();
+        }
+      }
+    };
+
+    document.addEventListener('click', onGlobalClick, { capture: true, passive: false });
+    cleanupFns.push(() => document.removeEventListener('click', onGlobalClick, { capture: true }));
+  };
+
+  // --- GLOBAL EVENTS ---
+  const initGlobalEvents = () => {
+    document.addEventListener('click', (e) => {
+      const themeBtn = (e.target as HTMLElement).closest('[data-aw-toggle-color-scheme]');
+      if (!themeBtn) return;
+
+      const themes = ['system', 'light', 'dark'];
+      const current = localStorage.getItem('theme') || 'system';
+      const next = themes[(themes.indexOf(current) + 1) % 3];
+      localStorage.setItem('theme', next);
+      applyTheme(next);
+    });
+  };
+
+  // --- ANIMATION ---
+  const initAnimations = () => {
+    const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
+    const elements = document.querySelectorAll(selectors.join(','));
+    if (elements.length === 0) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLElement;
+          el.setAttribute('data-aw-animated', 'true');
+          el.removeAttribute('no-intersect');
+          if (el.classList.contains('intersect-once')) observer.unobserve(el);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    elements.forEach(el => {
+      el.setAttribute('no-intersect', '');
+      observer.observe(el);
+    });
+
+    cleanupFns.push(() => observer.disconnect());
+  };
+
+  // --- LIFECYCLE ---
+  const run = () => {
+    cleanupFns.forEach(fn => fn());
+    cleanupFns = [];
+
+    document.documentElement.classList.add('motion-safe:scroll-smooth');
+    applyTheme(localStorage.getItem('theme') || 'system');
+
+    initHeader();
+    initMenu();
+    setTimeout(initGlobalEvents, 0);
+
+    if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
+    else setTimeout(initAnimations, 200);
+  };
+
+  run();
+  document.addEventListener('astro:after-swap', run);
+})();
 </script>
