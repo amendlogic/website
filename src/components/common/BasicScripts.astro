@@ -11,8 +11,9 @@ window.basic_script_init = true;
   const addCleanup = (fn) => cleanupFns.add(fn);
 
   // ========== HELPERS ==========
-  const toggleClass = (el, cls, condition) =>
-    el?.classList.toggle(cls, !!condition);
+  const toggleClass = (el, cls, condition) => {
+    if (el) el.classList.toggle(cls, !!condition);
+  };
 
   const getSystemTheme = () =>
     window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -34,12 +35,15 @@ window.basic_script_init = true;
 
   // ========== SYSTEM THEME LISTENER ==========
   const initThemeListener = () => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const mediaQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
+    if (!mediaQuery) return;
+
     const onChange = () => {
       if ((localStorage.getItem('theme') || 'system') === 'system') {
         applyTheme('system');
       }
     };
+
     mediaQuery.addEventListener('change', onChange);
     addCleanup(() => mediaQuery.removeEventListener('change', onChange));
   };
@@ -64,7 +68,7 @@ window.basic_script_init = true;
     addCleanup(() => window.removeEventListener('scroll', onScroll));
   };
 
-  // ========== 2) MENU + A11Y (Fixed) ==========
+  // ========== 2) MENU + A11Y ==========
   const initMenu = () => {
     const header = document.getElementById('header');
     const menuBtn = document.querySelector('[data-aw-toggle-menu]');
@@ -75,19 +79,19 @@ window.basic_script_init = true;
     const toggleMenu = () => {
       const isOpen = header.classList.toggle('expanded');
 
-      // Accessibility
+      // Accessibility Update
       menuBtn.setAttribute('aria-expanded', String(isOpen));
       nav.setAttribute('aria-hidden', String(!isOpen));
 
+      // Visuelle Updates
       menuBtn.classList.toggle('expanded', isOpen);
       document.body.classList.toggle('overflow-hidden', isOpen);
       header.classList.toggle('h-screen', isOpen);
       header.classList.toggle('bg-page', isOpen);
       nav.classList.toggle('hidden', !isOpen);
 
-      // FIX: Icons einfach umschalten, statt Zustand zu erzwingen
-      // (Geht davon aus, dass im HTML ein Icon 'hidden' ist und das andere nicht)
-      menuBtn.querySelectorAll('svg, [data-aw-icon]').forEach((icon) => 
+      // FIX: Icons umschalten (Flip-Logik statt Force-Logik)
+      menuBtn.querySelectorAll('svg, [data-aw-icon]').forEach((icon) =>
         icon.classList.toggle('hidden')
       );
 
@@ -100,17 +104,17 @@ window.basic_script_init = true;
 
     const onNavClick = (e) => {
       const trigger = e.target.closest('.dropdown > button, .dropdown > a');
-      // Nur aktiv wenn Hamburger-Menü sichtbar (Mobile Check)
+      
+      // Abbruch, wenn Menü-Button unsichtbar ist (Desktop-Ansicht)
       if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
 
       e.preventDefault();
 
       const subMenu = trigger.nextElementSibling;
-      // Wenn das Submenü JETZT hidden hat, wird es gleich geöffnet
       const willOpen = subMenu?.classList.contains('hidden');
 
       subMenu?.classList.toggle('hidden');
-      trigger.classList.toggle('expanded', willOpen);
+      trigger.classList.toggle('expanded', !!willOpen);
       trigger.setAttribute('aria-expanded', String(!!willOpen));
     };
 
@@ -121,18 +125,19 @@ window.basic_script_init = true;
   // ========== 3) GLOBAL EVENTS ==========
   const initGlobalEvents = () => {
     const onClick = (e) => {
-      // Theme Toggle
+      // Theme Toggle Logic
       const themeBtn = e.target.closest('[data-aw-toggle-color-scheme]');
       if (themeBtn) {
         const themes = ['system', 'light', 'dark'];
         const current = localStorage.getItem('theme') || 'system';
         const next = themes[(themes.indexOf(current) + 1) % 3];
+
         localStorage.setItem('theme', next);
         applyTheme(next);
         return;
       }
 
-      // Native Smooth Scroll + Menü schließen
+      // Smooth Scroll & Menü schließen Logic
       const link = e.target.closest('a');
       if (link && link.hash && link.origin === location.origin && link.pathname === location.pathname) {
         const header = document.getElementById('header');
@@ -148,9 +153,7 @@ window.basic_script_init = true;
 
   // ========== 4) ANIMATIONS ==========
   const initAnimations = () => {
-    // Selektor: Alle Elemente mit Klasse 'intersect' oder Tailwind-Varianten wie 'md:intersect:...'
     const elements = document.querySelectorAll('.intersect, [class*="intersect:"]');
-
     if (!elements.length) return;
 
     const observer = new IntersectionObserver((entries, obs) => {
@@ -188,10 +191,8 @@ window.basic_script_init = true;
     initHeader();
     initMenu();
 
-    // Event-Listener etwas verzögern, damit das UI erst rendert
     queueMicrotask(initGlobalEvents);
 
-    // Animationen erst laden, wenn der Browser Leerlauf hat (LCP Optimierung)
     if ('requestIdleCallback' in window) {
       requestIdleCallback(initAnimations);
     } else {
