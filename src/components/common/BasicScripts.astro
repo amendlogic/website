@@ -9,7 +9,9 @@ import { UI } from 'astrowind:config';
   (function() {
     let cleanupFns = [];
 
-    // --- HELPER ---
+    // =======================
+    // HELPER
+    // =======================
     const toggleClass = (el, className, condition) => {
       if (condition) el.classList.add(className);
       else el.classList.remove(className);
@@ -28,9 +30,10 @@ import { UI } from 'astrowind:config';
       });
     };
 
-    // --- 1. HEADER LOGIK (ROBUST VERSION) ---
+    // =======================
+    // HEADER LOGIK
+    // =======================
     const initHeader = () => {
-      const header = document.getElementById('header');
       const stickyHeader = document.querySelector('#header[data-aw-sticky-header]');
       if (!stickyHeader) return;
 
@@ -52,7 +55,7 @@ import { UI } from 'astrowind:config';
       };
 
       window.addEventListener('scroll', onScroll, { passive: true });
-      
+
       if (window.scrollY > 10) {
         stickyHeader.classList.add('scroll');
         lastState = true;
@@ -61,7 +64,9 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
     };
 
-    // --- 2. MENU LOGIK ---
+    // =======================
+    // MENU LOGIK
+    // =======================
     const initMenu = () => {
       const header = document.getElementById('header');
       const menuBtn = document.querySelector('[data-aw-toggle-menu]');
@@ -77,11 +82,15 @@ import { UI } from 'astrowind:config';
         header.classList.toggle('bg-page');
 
         const icons = menuBtn.querySelectorAll('svg, [data-aw-icon]'); 
-        if (icons.length > 1) icons.forEach(icon => icon.classList.toggle('hidden'));
+        if (icons.length > 1) {
+          icons.forEach(icon => icon.classList.toggle('hidden'));
+        }
 
         nav.classList.toggle('hidden');
 
-        const actions = header.querySelector('nav + div') || header.querySelector('div > div:last-child');
+        const actions = header.querySelector('nav + div') ||
+                        header.querySelector('div > div:last-child');
+
         if (actions) actions.classList.toggle('hidden');
       };
 
@@ -95,15 +104,45 @@ import { UI } from 'astrowind:config';
         e.preventDefault();
         const subMenu = trigger.nextElementSibling;
         if (subMenu) {
-            subMenu.classList.toggle('hidden');
-            trigger.classList.toggle('expanded');
+          subMenu.classList.toggle('hidden');
+          trigger.classList.toggle('expanded');
         }
       };
 
       nav.addEventListener('click', onNavClick);
     };
 
-    // --- 3. GLOBAL EVENTS (NATIVE SMOOTH SCROLL) ---
+    // =====================================================
+    // 🔥 NEU: Menü SOFORT schließen (VOR Smooth-Scroll)
+    // =====================================================
+    const initImmediateMenuClose = () => {
+      const handler = (e) => {
+        const link = e.target.closest('a');
+
+        if (
+          link &&
+          link.hash &&
+          link.origin === window.location.origin &&
+          link.pathname === window.location.pathname
+        ) {
+          const header = document.getElementById('header');
+
+          if (
+            header?.classList.contains('expanded') &&
+            window.toggleMenuInstance
+          ) {
+            window.toggleMenuInstance();
+          }
+        }
+      };
+
+      document.addEventListener('mousedown', handler);
+      cleanupFns.push(() => document.removeEventListener('mousedown', handler));
+    };
+
+    // =======================
+    // GLOBAL EVENTS
+    // =======================
     const initGlobalEvents = () => {
       const onClick = (e) => {
         // Theme Toggle
@@ -117,27 +156,41 @@ import { UI } from 'astrowind:config';
           return;
         }
 
-        // --- NATIVE SCROLL BEHAVIOR ---
-        // Wir lassen den Browser die Arbeit machen (via CSS scroll-smooth).
-        // Wir müssen nur sicherstellen, dass das Menü zugeht.
+        // Native Smooth Scroll – KEIN preventDefault
         const link = e.target.closest('a');
-        if (link && link.hash && link.origin === window.location.origin && link.pathname === window.location.pathname) {
-            // WICHTIG: Kein e.preventDefault() hier!
-            
-            // Nur Menü schließen, falls offen
-            if (document.getElementById('header')?.classList.contains('expanded') && window.toggleMenuInstance) {
-              window.toggleMenuInstance();
-            }
+        if (
+          link &&
+          link.hash &&
+          link.origin === window.location.origin &&
+          link.pathname === window.location.pathname
+        ) {
+          // Hier NICHTS mehr tun – Menü wurde bereits per mousedown geschlossen ✅
         }
       };
 
-      document.addEventListener('click', onClick, { capture: true, passive: false });
-      cleanupFns.push(() => document.removeEventListener('click', onClick, { capture: true }));
+      document.addEventListener('click', onClick, {
+        capture: true,
+        passive: false
+      });
+
+      cleanupFns.push(() =>
+        document.removeEventListener('click', onClick, { capture: true })
+      );
     };
 
-    // --- 4. ANIMATIONS ---
+    // =======================
+    // ANIMATIONS
+    // =======================
     const initAnimations = () => {
-      const selectors = ['[class*=" intersect:"]','[class*=":intersect:"]','[class^="intersect:"]','[class="intersect"]','.intersect-once','.intersect-quarter'];
+      const selectors = [
+        '[class*=" intersect:"]',
+        '[class*=":intersect:"]',
+        '[class^="intersect:"]',
+        '[class="intersect"]',
+        '.intersect-once',
+        '.intersect-quarter'
+      ];
+
       const elements = document.querySelectorAll(selectors.join(','));
       if (elements.length === 0) return;
 
@@ -147,7 +200,9 @@ import { UI } from 'astrowind:config';
             const el = entry.target;
             el.setAttribute('data-aw-animated', 'true');
             el.removeAttribute('no-intersect');
-            if (el.classList.contains('intersect-once')) observer.unobserve(el);
+            if (el.classList.contains('intersect-once')) {
+              observer.unobserve(el);
+            }
           }
         });
       }, { threshold: 0.1 });
@@ -160,23 +215,27 @@ import { UI } from 'astrowind:config';
       cleanupFns.push(() => observer.disconnect());
     };
 
-    // --- MAIN LIFECYCLE ---
+    // =======================
+    // MAIN
+    // =======================
     const run = () => {
       cleanupFns.forEach(fn => fn());
       cleanupFns = [];
 
-      // CSS Smooth Scroll aktivieren (Wichtig für die "andere" Methode)
       document.documentElement.classList.add('motion-safe:scroll-smooth');
 
       applyTheme(localStorage.getItem('theme') || 'system');
       
       initHeader(); 
-      initMenu();   
-
+      initMenu();
+      initImmediateMenuClose();   // 🔥 WICHTIG: NEU
       setTimeout(initGlobalEvents, 0);
 
-      if (window.requestIdleCallback) window.requestIdleCallback(initAnimations);
-      else setTimeout(initAnimations, 200);
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(initAnimations);
+      } else {
+        setTimeout(initAnimations, 200);
+      }
     };
 
     run();
