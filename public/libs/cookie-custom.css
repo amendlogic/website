@@ -27,6 +27,7 @@
   /* Sekundär-Button (Einstellungen/Ablehnen) */
   --cc-btn-secondary-bg: transparent;
   --cc-btn-secondary-text: var(--aw-color-text-default);
+  --cc-btn-secondary-hover-color: var(--aw-color-text-default);
   --cc-btn-secondary-hover-bg: rgb(243 244 246);
   --cc-btn-secondary-border-color: rgb(156 163 175);
   --cc-btn-secondary-hover-border-color: rgb(75 85 99);
@@ -63,7 +64,7 @@
   --cc-separator-border-color: rgb(55 65 81);
   
   /* Sekundär-Button (Einstellungen/Ablehnen) */
-  --cc-btn-secondary-hover-color: rgb(203 213 225);
+
   --cc-btn-secondary-hover-bg: rgb(30 41 59);
   --cc-btn-secondary-border-color: rgb(100 116 139);
   --cc-btn-secondary-hover-border-color: rgb(229 231 235);
