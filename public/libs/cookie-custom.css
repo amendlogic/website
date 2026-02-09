@@ -33,7 +33,7 @@
   /* Toggles (Schalter) */
   --cc-toggle-off-bg: rgb(203 213 225);
   --cc-toggle-on-bg: var(--aw-color-primary);
-  --cc-toggle-bg-readonly: var(--aw-color-secondary);
+  --cc-toggle-readonly-bg: var(--aw-color-secondary);
   --cc-toggle-knob-bg: rgb(255 255 255);
   --cc-toggle-knob-icon-color: #ecf0f1;
 
@@ -80,6 +80,9 @@
 /* --- Optional: Fein-Tuning für AstroWind Typografie --- */
 #cc-main .cm {
   box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(229 231 235);
 }
 
 #cc-main .cm__title {
