@@ -62,7 +62,7 @@
   --cc-separator-border-color: rgb(30 41 59);
   
   /* Sekundär-Button (Einstellungen/Ablehnen) */
-  --cc-btn-secondary-bg: transparent;
+  --cc-btn-secondary-hover-color: rgb(203 213 225);
   --cc-btn-secondary-hover-bg: rgb(30 41 59);
   --cc-btn-secondary-border-color: rgb(100 116 139);
   --cc-btn-secondary-hover-border-color: rgb(30 41 59);
