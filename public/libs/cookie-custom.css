@@ -107,3 +107,8 @@
   font-weight: 600;
   transition: all 0.2s ease;
 }
+
+#cc-main .cm__btn {
+  border-radius: 9999px;
+}
+ 
