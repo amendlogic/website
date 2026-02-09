@@ -82,14 +82,16 @@
 }
 
 /* --- Optional: Fein-Tuning für AstroWind Typografie --- */
-#cc-main .cm {
+#cc-main .cm,
+#cc-main .pm--box {
   box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
   border-width: 1px;
   border-style: solid;
   border-color: rgb(229 231 235);
 }
 
-.dark #cc-main .cm {
+.dark #cc-main .cm,
+.dark #cc-main .pm--box {
   border-color: rgb(55 65 81);
   }
 
