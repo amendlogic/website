@@ -70,8 +70,8 @@
   --cc-btn-secondary-hover-border-color: rgb(229 231 235);
   
   /* Toggles (Schalter) */
-  --cc-toggle-off-bg: rgb(229 231 235);
-  --cc-toggle-readonly-bg: rgb(229 231 235);
+  --cc-toggle-off-bg: rgb(55 65 81);
+  --cc-toggle-readonly-bg: rgb(55 65 81);
   --cc-toggle-knob-bg: rgb(255 255 255);
 
   /* Links & Footer */
