@@ -41,6 +41,7 @@
   /* Links & Footer */
   --cc-cookie-category-block-bg: transparent;
   --cc-cookie-category-block-hover-bg: rgb(243 244 246);
+
   --cc-cookie-category-block-border: rgb(156 163 175);
   --cc-cookie-category-block-hover-border: rgb(75 85 99);
 
@@ -74,6 +75,7 @@
 
   /* Links & Footer */
   --cc-cookie-category-block-hover-bg: rgb(30 41 59);
+  --cc-cookie-category-expanded-block-hover-bg: rgb(100 116 139);
   --cc-cookie-category-block-border: rgb(100 116 139);
   --cc-cookie-category-block-hover-border: rgb(30 41 59);
 
