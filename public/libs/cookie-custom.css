@@ -33,9 +33,9 @@
   /* Toggles (Schalter) */
   --cc-toggle-off-bg: rgb(203 213 225);
   --cc-toggle-on-bg: var(--aw-color-primary);
-  --cc-toggle-readonly-bg: var(--aw-color-secondary);
+  --cc-toggle-readonly-bg: rgb(203 213 225);
   --cc-toggle-knob-bg: rgb(255 255 255);
-  --cc-toggle-knob-icon-color: #ecf0f1;
+  --cc-toggle-knob-icon-color: var(--aw-color-primary);
 
   /* Links & Footer */
   --cc-cookie-category-block-bg: rgb(239 246 255);
