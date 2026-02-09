@@ -3,107 +3,107 @@
  * Basiert auf Tailwind Colors: Slate & Indigo
  */
 
-:root {
-  /* --- Grundeinstellungen & Light Mode --- */
-  
-  /* Schriftart: Erbt von AstroWind (Inter/System) */
-  --cc-font-family: inherit;
-  
-  /* Hintergrund & Text */
-  --cc-bg: rgb(255 255 255);
-  --cc-text: var(--aw-color-text-default);
-  --cc-primary-color: var(--aw-color-text-default);
-  --cc-secondary-color: var(--aw-color-text-muted);
+ :root {
+    /* --- Grundeinstellungen & Light Mode --- */
     
-  --cc-separator-border-color: rgb(229 231 235);
-  
-  /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
-  --cc-btn-primary-bg: var(--aw-color-primary);
-  --cc-btn-primary-text: rgb(255 255 255);
-  --cc-btn-primary-hover-bg: var(--aw-color-secondary);
-  --cc-btn-primary-border-color: var(--aw-color-primary);
-  --cc-btn-primary-hover-border-color: var(--aw-color-primary);
-  
-  /* Sekundär-Button (Einstellungen/Ablehnen) */
-  --cc-btn-secondary-bg: transparent;
-  --cc-btn-secondary-text: var(--aw-color-text-default);
-  --cc-btn-secondary-hover-color: var(--aw-color-text-default);
-  --cc-btn-secondary-hover-bg: rgb(243 244 246);
-  --cc-btn-secondary-border-color: rgb(156 163 175);
-  --cc-btn-secondary-hover-border-color: rgb(75 85 99);
-  
-  /* Toggles (Schalter) */
-  --cc-toggle-off-bg: rgb(229 231 235);
-  --cc-toggle-on-bg: var(--aw-color-primary);
-  --cc-toggle-readonly-bg: rgb(229 231 235);
-  --cc-toggle-knob-bg: rgb(255 255 255);
-  --cc-toggle-knob-icon-color: var(--aw-color-primary);
-
-  /* Links & Footer */
-  --cc-cookie-category-block-bg: transparent;
-  --cc-cookie-category-block-hover-bg: rgb(243 244 246);
-
-  --cc-cookie-category-block-border: rgb(156 163 175);
-  --cc-cookie-category-block-hover-border: rgb(75 85 99);
-
-  --cc-footer-bg: rgb(239 246 255);
-  --cc-footer-border-color: rgb(229 231 235);
-
-  
-  /* Form - Rundungen anpassen (AstroWind nutzt oft rounded-lg) */
-  --cc-modal-border-radius: .375rem;
-  --cc-btn-border-radius: .375rem;
-}
-
-/* --- Dark Mode --- */
-/* AstroWind nutzt die Klasse .dark auf dem html tag */
-.dark {
+    /* Schriftart: Erbt von AstroWind (Inter/System) */
+    --cc-font-family: inherit;
+    
     /* Hintergrund & Text */
-  --cc-bg: rgb(15 23 42);
+    --cc-bg: rgb(255 255 255);
+    --cc-text: var(--aw-color-text-default);
+    --cc-primary-color: var(--aw-color-text-default);
+    --cc-secondary-color: var(--aw-color-text-muted);
+      
+    --cc-separator-border-color: rgb(229 231 235);
     
-  --cc-separator-border-color: rgb(55 65 81);
+    /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
+    --cc-btn-primary-bg: var(--aw-color-primary);
+    --cc-btn-primary-text: rgb(255 255 255);
+    --cc-btn-primary-hover-bg: var(--aw-color-secondary);
+    --cc-btn-primary-border-color: var(--aw-color-primary);
+    --cc-btn-primary-hover-border-color: var(--aw-color-primary);
+    
+    /* Sekundär-Button (Einstellungen/Ablehnen) */
+    --cc-btn-secondary-bg: transparent;
+    --cc-btn-secondary-text: var(--aw-color-text-default);
+    --cc-btn-secondary-hover-color: var(--aw-color-text-default);
+    --cc-btn-secondary-hover-bg: rgb(243 244 246);
+    --cc-btn-secondary-border-color: rgb(156 163 175);
+    --cc-btn-secondary-hover-border-color: rgb(75 85 99);
+    
+    /* Toggles (Schalter) */
+    --cc-toggle-off-bg: rgb(229 231 235);
+    --cc-toggle-on-bg: var(--aw-color-primary);
+    --cc-toggle-readonly-bg: rgb(229 231 235);
+    --cc-toggle-knob-bg: rgb(255 255 255);
+    --cc-toggle-knob-icon-color: var(--aw-color-primary);
   
-  /* Sekundär-Button (Einstellungen/Ablehnen) */
-
-  --cc-btn-secondary-hover-bg: rgb(30 41 59);
-  --cc-btn-secondary-border-color: rgb(100 116 139);
-  --cc-btn-secondary-hover-border-color: rgb(229 231 235);
+    /* Links & Footer */
+    --cc-cookie-category-block-bg: transparent;
+    --cc-cookie-category-block-hover-bg: rgb(243 244 246);
+    --cc-cookie-category-expanded-block-hover-bg: rgb(156 163 175);;
+    --cc-cookie-category-block-border: rgb(156 163 175);
+    --cc-cookie-category-block-hover-border: rgb(75 85 99);
   
-  /* Toggles (Schalter) */
-  --cc-toggle-off-bg: rgb(55 65 81);
-  --cc-toggle-readonly-bg: rgb(55 65 81);
-  --cc-toggle-knob-bg: rgb(255 255 255);
-
-  /* Links & Footer */
-  --cc-cookie-category-block-hover-bg: rgb(30 41 59);
-  --cc-cookie-category-expanded-block-hover-bg: rgb(100 116 139);
-  --cc-cookie-category-block-border: rgb(100 116 139);
-  --cc-cookie-category-block-hover-border: rgb(229 231 235);
-
-  --cc-footer-bg: rgb(30 41 59);
-  --cc-footer-border-color: rgb(55 65 81);
-}
-
-/* --- Optional: Fein-Tuning für AstroWind Typografie --- */
-#cc-main .cm,
-#cc-main .pm--box {
-  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgb(229 231 235);
-}
-
-.dark #cc-main .cm,
-.dark #cc-main .pm--box {
-  border-color: rgb(55 65 81);
+    --cc-footer-bg: rgb(239 246 255);
+    --cc-footer-border-color: rgb(229 231 235);
+  
+    
+    /* Form - Rundungen anpassen (AstroWind nutzt oft rounded-lg) */
+    --cc-modal-border-radius: .375rem;
+    --cc-btn-border-radius: .375rem;
   }
-
-#cc-main .cm__title {
-  font-weight: 700;
-  letter-spacing: -0.025em; /* Tight tracking wie in AstroWind Überschriften */
-}
-
-#cc-main .cm__btn {
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
+  
+  /* --- Dark Mode --- */
+  /* AstroWind nutzt die Klasse .dark auf dem html tag */
+  .dark {
+      /* Hintergrund & Text */
+    --cc-bg: rgb(15 23 42);
+      
+    --cc-separator-border-color: rgb(55 65 81);
+    
+    /* Sekundär-Button (Einstellungen/Ablehnen) */
+  
+    --cc-btn-secondary-hover-bg: rgb(30 41 59);
+    --cc-btn-secondary-border-color: rgb(100 116 139);
+    --cc-btn-secondary-hover-border-color: rgb(229 231 235);
+    
+    /* Toggles (Schalter) */
+    --cc-toggle-off-bg: rgb(55 65 81);
+    --cc-toggle-readonly-bg: rgb(55 65 81);
+    --cc-toggle-knob-bg: rgb(255 255 255);
+  
+    /* Links & Footer */
+    --cc-cookie-category-block-hover-bg: rgb(30 41 59);
+    --cc-cookie-category-expanded-block-hover-bg: rgb(100 116 139);
+    --cc-cookie-category-block-border: rgb(100 116 139);
+    --cc-cookie-category-block-hover-border: rgb(229 231 235);
+  
+    --cc-footer-bg: rgb(30 41 59);
+    --cc-footer-border-color: rgb(55 65 81);
+  }
+  
+  /* --- Optional: Fein-Tuning für AstroWind Typografie --- */
+  #cc-main .cm,
+  #cc-main .pm--box {
+    box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(229 231 235);
+  }
+  
+  .dark #cc-main .cm,
+  .dark #cc-main .pm--box {
+    border-color: rgb(55 65 81);
+    }
+  
+  #cc-main .cm__title {
+    font-weight: 700;
+    letter-spacing: -0.025em; /* Tight tracking wie in AstroWind Überschriften */
+  }
+  
+  #cc-main .cm__btn {
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
