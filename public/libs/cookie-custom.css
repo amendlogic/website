@@ -38,8 +38,8 @@
   --cc-toggle-knob-icon-color: #ecf0f1;
 
   /* Links & Footer */
-  --cc-cookie-category-block-bg: rgb(243 244 246);
-  --cc-cookie-category-block-hover-bg: rgb(239 246 255);
+  --cc-cookie-category-block-bg: rgb(239 246 255);
+  --cc-cookie-category-block-hover-bg: rgb(243 244 246);
   --cc-cookie-category-block-border: rgb(203 213 225);
   --cc-cookie-category-block-hover-border: rgb(203 213 225);
 
@@ -80,7 +80,6 @@
 /* --- Optional: Fein-Tuning für AstroWind Typografie --- */
 #cc-main .cm {
   box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
-  border-width: 1px;
 }
 
 #cc-main .cm__title {
