@@ -108,7 +108,8 @@
   transition: all 0.2s ease;
 }
 
-#cc-main .cm__btn {
+#cc-main .cm__btn,
+#cc-main .pm__btn {
   border-radius: 9999px;
 }
  
