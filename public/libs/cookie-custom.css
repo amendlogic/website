@@ -55,27 +55,33 @@
 /* --- Dark Mode --- */
 /* AstroWind nutzt die Klasse .dark auf dem html tag */
 .dark {
-  /* Hintergrund: AstroWind Dark BG (oft Slate 900 oder dunkles Blau) */
-  --cc-bg: #030620; /* Sehr dunkles Blau/Slate, typisch für AstroWind */
-  --cc-text: #f8fafc; /* Slate 50 */
+    /* Hintergrund & Text */
+  --cc-bg: rgb(15 23 42)
+    
   --cc-separator-border-color: rgb(30 41 59);
-
-  /* Buttons im Dark Mode */
-  --cc-btn-primary-bg: #6366f1; /* Indigo 500 (etwas heller für Dark Mode) */
-  --cc-btn-primary-hover-bg: #4f46e5; /* Indigo 600 */
   
-  --cc-btn-secondary-bg: #1e293b; /* Slate 800 */
-  --cc-btn-secondary-text: #e2e8f0; /* Slate 200 */
-  --cc-btn-secondary-hover-bg: #334155; /* Slate 700 */
-
-  /* Toggles Dark Mode */
-  --cc-toggle-bg-off: #475569; /* Slate 600 */
-  --cc-toggle-bg-on: #6366f1; /* Indigo 500 */
+  /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
+  --cc-btn-primary-text: rgb(255 255 255);
   
-  /* Blöcke */
-  --cc-cookie-category-block-bg: #0f172a; /* Slate 900 */
-  --cc-cookie-category-block-bg-hover: #1e293b; /* Slate 800 */
-}
+  /* Sekundär-Button (Einstellungen/Ablehnen) */
+  --cc-btn-secondary-bg: rgb(255 255 255);
+  --cc-btn-secondary-hover-bg: rgb(243 244 246);
+  --cc-btn-secondary-border-color: rgb(156 163 175);
+  --cc-btn-secondary-hover-border-color: rgb(75 85 99);
+  
+  /* Toggles (Schalter) */
+  --cc-toggle-off-bg: rgb(229 231 235);
+  --cc-toggle-readonly-bg: rgb(229 231 235);
+  --cc-toggle-knob-bg: rgb(255 255 255);
+
+  /* Links & Footer */
+  --cc-cookie-category-block-bg: rgb(255 255 255);
+  --cc-cookie-category-block-hover-bg: rgb(243 244 246);
+  --cc-cookie-category-block-border: rgb(156 163 175);
+  --cc-cookie-category-block-hover-border: rgb(75 85 99);
+
+  --cc-footer-bg: rgb(239 246 255);
+  --cc-footer-border-color: rgb(30 41 59);
 
 /* --- Optional: Fein-Tuning für AstroWind Typografie --- */
 #cc-main .cm {
