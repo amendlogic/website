@@ -33,7 +33,7 @@
   /* Toggles (Schalter) */
   --cc-toggle-off-bg: rgb(203 213 225);
   --cc-toggle-on-bg: var(--aw-color-primary);
-  --cc-toggle-readonly-bg: rgb(203 213 225);
+  --cc-toggle-readonly-bg: rgb(229 231 235);
   --cc-toggle-knob-bg: rgb(255 255 255);
   --cc-toggle-knob-icon-color: var(--aw-color-primary);
 
