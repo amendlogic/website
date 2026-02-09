@@ -60,9 +60,6 @@
     
   --cc-separator-border-color: rgb(30 41 59);
   
-  /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
-  --cc-btn-primary-text: rgb(255 255 255);
-  
   /* Sekundär-Button (Einstellungen/Ablehnen) */
   --cc-btn-secondary-bg: rgb(255 255 255);
   --cc-btn-secondary-hover-bg: rgb(243 244 246);
