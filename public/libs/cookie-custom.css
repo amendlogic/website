@@ -38,10 +38,10 @@
   --cc-toggle-knob-icon-color: var(--aw-color-primary);
 
   /* Links & Footer */
-  --cc-cookie-category-block-bg: rgb(239 246 255);
+  --cc-cookie-category-block-bg: rgb(255 255 255);
   --cc-cookie-category-block-hover-bg: rgb(243 244 246);
-  --cc-cookie-category-block-border: rgb(203 213 225);
-  --cc-cookie-category-block-hover-border: rgb(203 213 225);
+  --cc-cookie-category-block-border: rgb(156 163 175);
+  --cc-cookie-category-block-hover-border: rgb(75 85 99);
 
   --cc-footer-bg: rgb(239 246 255);
   --cc-footer-border-color: rgb(229 231 235);
