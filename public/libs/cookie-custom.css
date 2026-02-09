@@ -10,7 +10,7 @@
   --cc-font-family: inherit;
   
   /* Hintergrund & Text */
-  --cc-bg: #ffffff;
+  --cc-bg: rgb(255 255 255);
   --cc-text: var(--aw-color-text-default);
   --cc-secondary-color: var(--aw-color-text-muted);
     
@@ -18,13 +18,13 @@
   
   /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
   --cc-btn-primary-bg: var(--aw-color-primary);
-  --cc-btn-primary-text: #ffffff;
+  --cc-btn-primary-text: rgb(255 255 255);
   --cc-btn-primary-hover-bg: var(--aw-color-secondary);
   --cc-btn-primary-border-color: var(--aw-color-primary);
   --cc-btn-primary-hover-border-color: var(--aw-color-primary);
   
   /* Sekundär-Button (Einstellungen/Ablehnen) */
-  --cc-btn-secondary-bg: #ffffff;
+  --cc-btn-secondary-bg: rgb(255 255 255);
   --cc-btn-secondary-text: var(--aw-color-text-default);
   --cc-btn-secondary-hover-bg: rgb(243 244 246);
   --cc-btn-secondary-border-color: rgb(156 163 175);
@@ -34,7 +34,7 @@
   --cc-toggle-off-bg: rgb(203 213 225);
   --cc-toggle-on-bg: var(--aw-color-primary);
   --cc-toggle-bg-readonly: var(--aw-color-secondary);
-  --cc-toggle-knob-bg: #ffffff;
+  --cc-toggle-knob-bg: rgb(255 255 255);
   --cc-toggle-knob-icon-color: #ecf0f1;
 
   /* Links & Footer */
@@ -79,7 +79,8 @@
 
 /* --- Optional: Fein-Tuning für AstroWind Typografie --- */
 #cc-main .cm {
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
+  border-width: 1px;
 }
 
 #cc-main .cm__title {
