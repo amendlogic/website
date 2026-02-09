@@ -79,11 +79,6 @@
 
   --cc-footer-bg: rgb(30 41 59);
   --cc-footer-border-color: rgb(30 41 59);
-
-  #cc-main .cm {
-  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
-  border-color: rgb(55 65 81);
-  }
 }
 
 /* --- Optional: Fein-Tuning für AstroWind Typografie --- */
@@ -93,6 +88,10 @@
   border-style: solid;
   border-color: rgb(229 231 235);
 }
+
+.dark #cc-main .cm {
+  border-color: rgb(55 65 81);
+  }
 
 #cc-main .cm__title {
   font-weight: 700;
