@@ -19,14 +19,8 @@ const { metadata, headerData: headerProps, footerData: footerProps } = Astro.pro
 const { lang } = Astro.params;
 const currentLang = lang || 'en';
 
-// --- FIX START ---
-// Priorität: 
-// 1. Wenn Daten von der Seite (index.astro) kommen -> Nimm die! (Da steckt der Disclaimer drin)
-// 2. Wenn keine Daten kommen -> Hol dir die Standard-Daten aus navigation.ts
-
 const headerData = headerProps || getHeaderData(currentLang);
 const footerData = footerProps || getFooterData(currentLang);
-// --- FIX ENDE ---
 ---
 
 <Layout metadata={metadata}>
