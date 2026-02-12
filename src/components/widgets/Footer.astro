@@ -1,5 +1,5 @@
 ---
-import Logo from '~/components/Logo2.astro';
+import Logo from '~/components/Logo2.astro'; // Oder Logo2, falls du das nutzt
 import { Icon } from 'astro-icon/components';
 import { SITE } from 'astrowind:config';
 import { getHomePermalink } from '~/utils/permalinks';
@@ -9,7 +9,7 @@ interface Link {
   href?: string;
   ariaLabel?: string;
   icon?: string;
-  attrs?: Record<string, string>; /* <--- ÄNDERUNG 1: Damit TS das Feld akzeptiert */
+  attrs?: Record<string, string>;
 }
 
 interface Links {
@@ -17,11 +17,16 @@ interface Links {
   links: Array<Link>;
 }
 
+// HIER WAR DER FEHLER: DisclaimerItem muss definiert sein
+interface DisclaimerItem {
+  text: string;
+}
+
 export interface Props {
   links: Array<Links>;
   secondaryLinks: Array<Link>;
   socialLinks: Array<Link>;
-  disclaimer?: Array<DisclaimerItem>;
+  disclaimer?: Array<DisclaimerItem>; // Jetzt kennt er den Typ
   footNote?: string;
   theme?: string;
 }
@@ -31,13 +36,14 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
 
 <footer class:list={[{ dark: theme === 'dark' }, 'relative border-t border-gray-200 dark:border-slate-800 not-prose']}>
   <div class="dark:bg-dark absolute inset-0 pointer-events-none" aria-hidden="true"></div>
-  <div
-    class="relative max-w-7xl mx-auto px-4 sm:px-6 dark:text-slate-300 intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
-  >
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 dark:text-slate-300">
+    
     <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
       <div class="col-span-12 lg:col-span-4">
         <div class="mb-2">
-          <a class="inline-block font-bold text-xl" href={getHomePermalink()}><Logo /></a>
+          <a class="inline-block font-bold text-xl" href={getHomePermalink()}>
+            <Logo />
+          </a>
         </div>
         <div class="text-sm text-muted flex gap-1">
           {
@@ -61,14 +67,13 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
             <div class="dark:text-gray-300 font-medium mb-2">{title}</div>
             {links && Array.isArray(links) && links.length > 0 && (
               <ul class="text-sm">
-                {/* <--- ÄNDERUNG 2: 'attrs' hier hinzufügen --> */}
                 {links.map(({ text, href, ariaLabel, attrs }) => (
                   <li class="mb-2">
                     <a
                       class="text-muted hover:text-gray-700 hover:underline dark:text-gray-400 transition duration-150 ease-in-out"
                       href={href}
                       aria-label={ariaLabel}
-                      {...attrs} /* <--- ÄNDERUNG 3: Attribute hier 'spreaden' */
+                      {...attrs}
                     >
                       <Fragment set:html={text} />
                     </a>
@@ -81,15 +86,17 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
       }
     </div>
 
-    {disclaimer?.length ? (
-      <div class="text-xs text-muted dark:text-gray-500 space-y-2 leading-relaxed pb-2 md:pb-4">
-        {disclaimer.map(({ text }) => (
-          <p set:html={text} />
-        ))}
-      </div>
-    ) : null}
+    {
+      disclaimer && disclaimer.length > 0 && (
+        <div class="border-t border-gray-200 dark:border-slate-800 py-6 text-xs text-muted dark:text-slate-400 leading-relaxed">
+          {disclaimer.map((item) => (
+            <p class="mb-2 last:mb-0" set:html={item.text} />
+          ))}
+        </div>
+      )
+    }
 
-    <div class="md:flex md:items-center md:justify-between py-6 md:py-8">
+    <div class="md:flex md:items-center md:justify-between py-6 md:py-8 border-t border-gray-200 dark:border-slate-800">
       {
         socialLinks?.length ? (
           <ul class="flex mb-4 md:order-1 -ml-2 md:ml-4 md:mb-0 rtl:ml-0 rtl:-mr-2 rtl:md:ml-0 rtl:md:mr-4">
@@ -110,6 +117,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
           ''
         )
       }
+
       <div class="text-sm mr-4 dark:text-muted">
         <Fragment set:html={footNote} />
       </div>
