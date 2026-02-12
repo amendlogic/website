@@ -5,6 +5,7 @@ import ToggleTheme from '~/components/common/ToggleTheme.astro';
 import ToggleMenu from '~/components/common/ToggleMenu.astro';
 import Button from '~/components/ui/Button.astro';
 
+// WICHTIG: Native Astro Funktion für Links
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { trimSlash, getAsset } from '~/utils/permalinks';
 import type { CallToAction } from '~/types';
@@ -44,23 +45,19 @@ const {
   position = 'center',
 } = Astro.props;
 
-// --- FIX BEGINNT HIER ---
+// 1. Sprache aus URL oder Params ermitteln
+const { lang } = Astro.params;
+const currentLang = lang || 'en';
 
-// 1. Wir holen uns den rohen Pfad (z.B. "/de/features" oder "/en/features")
-const rawPath = Astro.url.pathname;
+// 2. Pfad bereinigen für den Sprachumschalter
+// Wir holen den Pfad ohne Sprache (z.B. /de/blog -> blog)
+const currentPath = Astro.url.pathname.replace(new RegExp(`^/${currentLang}`), '').replace(/^\//, '');
 
-// 2. Wir entfernen JEDE Sprache am Anfang (/de oder /en) und Slashes
-// Das Ergebnis ist der reine "Slug" (z.B. "features" oder "")
-const cleanSlug = trimSlash(rawPath.replace(/^\/(en|de)/, ''));
-
-// 3. Wir ermitteln die aktuelle Sprache NUR für die Anzeige (Fettgedruckt)
-const currentLang = rawPath.startsWith('/de') ? 'de' : 'en';
-
-// 4. Wir bauen die neuen Links mit der nativen Astro Funktion
-const linkEn = getRelativeLocaleUrl('en', cleanSlug);
-const linkDe = getRelativeLocaleUrl('de', cleanSlug);
-
-// --- FIX ENDET HIER ---
+// 3. URLs für den Switcher bauen
+const langLinks = {
+  en: getRelativeLocaleUrl('en', currentPath),
+  de: getRelativeLocaleUrl('de', currentPath),
+};
 ---
 
 <header
@@ -88,7 +85,7 @@ const linkDe = getRelativeLocaleUrl('de', cleanSlug);
   >
     <div class:list={[{ 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' }, 'flex justify-between']}>
       
-      {/* Logo Link korrigiert */}
+      {/* FIX: Logo Link mit Sprache */}
       <a class="flex items-center" href={getRelativeLocaleUrl(currentLang, '')}>
         <Logo />
       </a>
@@ -123,7 +120,8 @@ const linkDe = getRelativeLocaleUrl('de', cleanSlug);
                         <a
                           class:list={[
                             'first:rounded-t last:rounded-b md:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5 block whitespace-no-wrap',
-                            { 'aw-link-active': href2 === rawPath },
+                            // Active State Check vereinfacht
+                            { 'aw-link-active': href2 === Astro.url.pathname },
                           ]}
                           href={href2}
                         >
@@ -137,7 +135,7 @@ const linkDe = getRelativeLocaleUrl('de', cleanSlug);
                 <a
                   class:list={[
                     'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap',
-                    { 'aw-link-active': href === rawPath },
+                    { 'aw-link-active': href === Astro.url.pathname },
                   ]}
                   href={href}
                 >
@@ -171,15 +169,15 @@ const linkDe = getRelativeLocaleUrl('de', cleanSlug);
             )
           }
 
-          {/* SPRACH UMSCHALTER */}
+          {/* NEU: Sprachumschalter (Native Switcher) */}
           <span class="ml-4 flex items-center gap-2 text-sm font-bold">
             <a 
-              href={linkEn} 
+              href={langLinks.en} 
               class:list={['hover:text-primary transition-colors', { 'text-primary': currentLang === 'en', 'text-muted': currentLang !== 'en' }]}
             >EN</a>
             <span class="text-gray-300 dark:text-gray-600">/</span>
             <a 
-              href={linkDe}
+              href={langLinks.de}
               class:list={['hover:text-primary transition-colors', { 'text-primary': currentLang === 'de', 'text-muted': currentLang !== 'de' }]}
             >DE</a>
           </span>
