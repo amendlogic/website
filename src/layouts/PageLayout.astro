@@ -4,17 +4,11 @@ import Header from '~/components/widgets/Header.astro';
 import Footer from '~/components/widgets/Footer.astro';
 import Announcement from '~/components/widgets/Announcement.astro';
 
-import { headerData, footerData as defaultFooterData } from '~/navigation';
+import { getNavigationData } from '~/navigation';
 
-import type { MetaData } from '~/types';
-
-export interface Props {
-  metadata?: MetaData;
-  footerData?: typeof defaultFooterData;
-}
-
-// ✅ Entpacke footerData aus props und setze Default
-const { metadata, footerData = defaultFooterData } = Astro.props;
+const { metadata } = Astro.props;
+const { lang } = Astro.params;
+const { headerData, footerData } = getNavigationData(lang || 'en');
 ---
 
 <Layout metadata={metadata}>
