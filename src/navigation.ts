@@ -1,155 +1,136 @@
-const getUrl = (lang: string, path: string) => {
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './utils/permalinks';
+import navTranslations from '~/i18n/navigation.json';
 
-  if (cleanPath === '/') return `/${lang}/`;
-  return `/${lang}${cleanPath}`;
+// Ein kleiner Helper, falls eine Sprache angefordert wird, die nicht existiert (Fallback auf EN)
+const getNavTexts = (lang: string) => {
+  const key = lang in navTranslations ? lang : 'en';
+  // @ts-ignore
+  return navTranslations[key];
 };
 
-export const getNavigationData = (lang = 'de') => {
-  
-  // === DEUTSCHE NAVIGATION ===
-  if (lang === 'de') {
-    return {
-      headerData: {
-        links: [
-          {
-            text: 'Produkt',
-            links: [
-              { text: 'Funktionen', href: getUrl(lang, '#features') },
-              { text: 'Wie es funktioniert', href: getUrl(lang, 'homes/startup') },
-              { text: 'Leistung', href: getUrl(lang, 'homes/mobile-app') },
-              { text: 'Kundenstimmen', href: getUrl(lang, 'homes/personal') },
-              { text: 'FAQs', href: getUrl(lang, 'homes/personal') },
-            ],
-          },
-          {
-            text: 'Über uns',
-            href: getUrl(lang, 'about'), // Beispielpfad
-          },
-          {
-            text: 'Einblicke',
-            links: [
-              { text: 'Loslegen', href: getUrl(lang, 'blog/get-started-website-with-astro-tailwind-css') },
-              { text: 'Doku', href: getUrl(lang, 'category/tutorials') },
-              { text: 'Blog', href: getUrl(lang, 'blog') },
-            ],
-          },
-          {
-            text: 'Preise',
-            href: getUrl(lang, 'pricing'),
-          },
-        ],
-        actions: [{ text: 'Zugriff erhalten', href: 'https://github.com/arthelokyo/astrowind', target: '_blank' }],
-      },
+export const getHeaderData = (lang = 'en') => {
+  const t = getNavTexts(lang);
 
-      footerData: {
-        links: [
-          {
-            title: 'Produkt',
-            links: [
-              { text: 'Funktionen', href: '#' },
-              { text: 'Preise', href: '#' },
-            ],
-          },
-          {
-            title: 'Ressourcen',
-            links: [
-              { text: 'Dokumentation', href: '#' },
-              { text: 'Community', href: '#' },
-            ],
-          },
-          {
-            title: 'Rechtliches',
-            links: [
-              { text: 'Impressum', href: getUrl(lang, 'imprint') },
-              { text: 'Datenschutz', href: getUrl(lang, 'privacy') },
-            ],
-          },
-        ],
-        secondaryLinks: [
-           // Hier verlinken wir fest auf die Sprachen
-          { text: 'English', href: '/en/' }, 
-          { text: 'Deutsch', href: '/de/' },
-        ],
-        socialLinks: [
-          { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
-          { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
-        ],
-        footNote: `
-          © ${new Date().getFullYear()} AmendLogic · Alle Rechte vorbehalten.
-        `,
-      },
-    };
-  }
-
-  // === ENGLISCHE NAVIGATION (Fallback) ===
   return {
-    headerData: {
-      links: [
-        {
-          text: 'Product',
-          links: [
-            { text: 'Features', href: getUrl(lang, '#features') },
-            { text: 'How it Works', href: getUrl(lang, 'homes/startup') },
-            { text: 'Performance', href: getUrl(lang, 'homes/mobile-app') },
-            { text: 'Testimonials', href: getUrl(lang, 'homes/personal') },
-            { text: 'FAQs', href: getUrl(lang, 'homes/personal') },
-          ],
-        },
-        {
-          text: 'About',
-          href: getUrl(lang, 'about'),
-        },
-        {
-          text: 'Insights',
-          links: [
-            { text: 'Get Started', href: getUrl(lang, 'blog/get-started-website-with-astro-tailwind-css') },
-            { text: 'Docs', href: getUrl(lang, 'category/tutorials') },
-            { text: 'Blog', href: getUrl(lang, 'blog') },
-          ],
-        },
-        {
-          text: 'Pricing',
-          href: getUrl(lang, 'pricing'),
-        },
-      ],
-      actions: [{ text: 'Get Access', href: 'https://github.com/arthelokyo/astrowind', target: '_blank' }],
-    },
+    links: [
+      {
+        text: t.header.product,
+        links: [
+          {
+            text: t.header.features,
+            href: getPermalink('/#features', 'page', lang),
+          },
+          {
+            text: t.header.howItWorks,
+            href: getPermalink('/homes/startup', 'page', lang),
+          },
+          {
+            text: t.header.performance,
+            href: getPermalink('/homes/mobile-app', 'page', lang),
+          },
+          {
+            text: t.header.testimonials,
+            href: getPermalink('/homes/personal', 'page', lang),
+          },
+          {
+            text: t.header.faqs,
+            href: getPermalink('/homes/personal', 'page', lang),
+          },
+        ],
+      },
+      {
+        text: t.header.about,
+        href: getPermalink('/about', 'page', lang),
+      },
+      {
+        text: t.header.insights,
+        links: [
+          {
+            text: t.header.getStarted,
+            href: getPermalink('get-started-website-with-astro-tailwind-css', 'post', lang),
+          },
+          {
+            text: t.header.docs,
+            href: getPermalink('tutorials', 'category', lang),
+          },
+          {
+            text: t.header.blog,
+            href: getBlogPermalink(lang),
+          },
+        ],
+      },
+      {
+        text: t.header.pricing,
+        href: getPermalink('/pricing', 'page', lang),
+      },
+    ],
+    actions: [{ text: t.header.actionBtn, href: 'https://github.com/arthelokyo/astrowind', target: '_blank' }],
+  };
+};
 
-    footerData: {
-      links: [
-        {
-          title: 'Product',
-          links: [
-            { text: 'Features', href: '#' },
-            { text: 'Pricing', href: '#' },
-          ],
-        },
-        {
-          title: 'Resources',
-          links: [
-            { text: 'Documentation', href: '#' },
-          ],
-        },
-        {
-          title: 'Legal',
-          links: [
-            { text: 'Terms', href: '#' },
-            { text: 'Privacy Policy', href: '#' },
-          ],
-        },
-      ],
-      secondaryLinks: [
-        { text: 'English', href: '/en/' },
-        { text: 'Deutsch', href: '/de/' },
-      ],
-      socialLinks: [
-        { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
-        { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
-      ],
-      footNote: `
-        © ${new Date().getFullYear()} AmendLogic · All rights reserved.
-      `,
-    },
+export const getFooterData = (lang = 'en') => {
+  const t = getNavTexts(lang);
+
+  return {
+    links: [
+      {
+        title: t.footer.product,
+        links: [
+          { text: t.header.features, href: '#' },
+          { text: t.header.howItWorks, href: '#' },
+          { text: t.header.performance, href: '#' },
+          { text: t.header.pricing, href: '#' },
+          { text: t.footer.changelog, href: '#' },
+        ],
+      },
+      {
+        title: t.footer.resources,
+        links: [
+          { text: t.header.docs, href: '#' },
+          { text: t.footer.community, href: '#' },
+          { text: t.social.github, href: '#' },
+          { text: t.footer.help, href: '#' },
+        ],
+      },
+      {
+        title: t.footer.company,
+        links: [
+          { text: t.header.about, href: '#' },
+          { text: t.footer.team, href: '#' },
+          { text: t.header.blog, href: '#' },
+          { text: t.footer.contact, href: '#' },
+        ],
+      },
+      {
+        title: t.footer.legal,
+        links: [
+          { text: t.footer.imprint, href: '#' },
+          { text: t.footer.terms, href: '#' },
+          { text: t.footer.privacy, href: '#' },
+          { text: t.footer.cookie, href: '#' },
+          { text: t.footer.risk, href: '#' },
+        ],
+      },
+    ],
+    secondaryLinks: [
+      { 
+        text: 'English', 
+        href: getHomePermalink('en'), 
+      },
+      { 
+        text: 'Deutsch', 
+        href: getHomePermalink('de'), 
+      },
+    ],
+    socialLinks: [
+      { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
+      { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
+      { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
+      { ariaLabel: t.social.rss, icon: 'tabler:rss', href: getAsset('/rss.xml') },
+      { ariaLabel: t.social.github, icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
+    ],
+    footNote: `
+    © ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">AmendLogic</a> · ${t.footer.rights} · <a href="#" data-cc="show-preferencesModal" class="text-blue-600 underline dark:text-muted">Cookie Settings</a>
+  `,
   };
 };
