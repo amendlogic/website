@@ -1,19 +1,12 @@
 import slugify from 'limax';
-
 import { SITE, APP_BLOG } from 'astrowind:config';
-
 import { trim } from '~/utils/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n'; // WICHTIG: Das native Astro Feature
 
+// ----------------------------------------------------------------------
+// KONSTANTEN (Wichtig für Blog-Logik)
+// ----------------------------------------------------------------------
 export const trimSlash = (s: string) => trim(trim(s, '/'));
-const createPath = (...params: string[]) => {
-  const paths = params
-    .map((el) => trimSlash(el))
-    .filter((el) => !!el)
-    .join('/');
-  return '/' + paths + (SITE.trailingSlash && paths ? '/' : '');
-};
-
-const BASE_PATHNAME = SITE.base || '/';
 
 export const cleanSlug = (text = '') =>
   trimSlash(text)
@@ -21,13 +14,84 @@ export const cleanSlug = (text = '') =>
     .map((slug) => slugify(slug))
     .join('/');
 
-export const BLOG_BASE = cleanSlug(APP_BLOG?.list?.pathname);
-export const CATEGORY_BASE = cleanSlug(APP_BLOG?.category?.pathname);
+// Wir holen uns die Basis-Pfade aus der Config (z.B. 'blog', 'category', 'tag')
+export const BLOG_BASE = cleanSlug(APP_BLOG?.list?.pathname) || 'blog';
+export const CATEGORY_BASE = cleanSlug(APP_BLOG?.category?.pathname) || 'category';
 export const TAG_BASE = cleanSlug(APP_BLOG?.tag?.pathname) || 'tag';
-
 export const POST_PERMALINK_PATTERN = trimSlash(APP_BLOG?.post?.permalink || `${BLOG_BASE}/%slug%`);
 
-/** */
+// ----------------------------------------------------------------------
+// HAUPTFUNKTION: getPermalink (Jetzt modernisiert)
+// ----------------------------------------------------------------------
+export const getPermalink = (slug = '', type = 'page', lang = 'en'): string => {
+  
+  // 1. Externe Links oder Anker ignorieren
+  if (slug.startsWith('https://') || slug.startsWith('http://') || slug.startsWith('#') || slug.startsWith('mailto:')) {
+    return slug;
+  }
+
+  const trimmedSlug = trimSlash(slug);
+  let path = trimmedSlug;
+
+  // 2. Pfad basierend auf Typ berechnen
+  switch (type) {
+    case 'home':
+      path = ''; // Leerer Pfad für Home
+      break;
+
+    case 'blog':
+      path = BLOG_BASE; // z.B. "blog"
+      break;
+
+    case 'post':
+      // Wir bauen den Pfad: blog/mein-post
+      // (Wir nutzen hier einfaches Anhängen, da native Patterns komplex sind)
+      path = `${BLOG_BASE}/${trimmedSlug}`;
+      break;
+
+    case 'category':
+      path = `${CATEGORY_BASE}/${trimmedSlug}`;
+      break;
+
+    case 'tag':
+      path = `${TAG_BASE}/${trimmedSlug}`;
+      break;
+
+    case 'asset':
+      return getAsset(slug); // Assets brauchen keine Sprache
+
+    case 'page':
+    default:
+      // Bei normalen Seiten (z.B. 'about') bleibt der Slug wie er ist
+      path = trimmedSlug;
+      break;
+  }
+
+  // 3. MAGIE: Native Astro Funktion nutzen
+  // Erzeugt automatisch /de/blog/mein-post oder /en/about
+  // Kümmert sich auch um Trailing Slashes gemäß deiner Astro Config.
+  return getRelativeLocaleUrl(lang, path);
+};
+
+// ----------------------------------------------------------------------
+// HELPER FUNKTIONEN (Wrapper für Kompatibilität)
+// ----------------------------------------------------------------------
+
+export const getHomePermalink = (lang = 'en'): string => 
+  getRelativeLocaleUrl(lang, '');
+
+export const getBlogPermalink = (lang = 'en'): string => 
+  getPermalink('', 'blog', lang);
+
+// Assets sind statisch und brauchen kein i18n
+export const getAsset = (path: string): string => {
+  const clean = trimSlash(path);
+  return clean ? `/${clean}` : '';
+};
+
+// ----------------------------------------------------------------------
+// CANONICAL URLS (Für SEO)
+// ----------------------------------------------------------------------
 export const getCanonical = (path = ''): string | URL => {
   const url = String(new URL(path, SITE.site));
   if (SITE.trailingSlash == false && path && url.endsWith('/')) {
@@ -38,102 +102,23 @@ export const getCanonical = (path = ''): string | URL => {
   return url;
 };
 
-/** * NEU: 'lang' Parameter hinzugefügt.
- * Er wird standardmäßig auf '' gesetzt, damit bestehende Aufrufe nicht brechen.
- */
-export const getPermalink = (slug = '', type = 'page', lang = ''): string => {
-  let permalink: string;
-
-  // Externe Links oder Anker direkt zurückgeben
-  if (
-    slug.startsWith('https://') ||
-    slug.startsWith('http://') ||
-    slug.startsWith('://') ||
-    slug.startsWith('javascript:')
-  ) {
-    return slug;
-  }
-  
-  // Wenn es nur ein Anker ist (#), nichts tun
-  if (slug.startsWith('#')) {
-    return slug;
-  }
-
-  switch (type) {
-    case 'home':
-      // Home Link generieren (unter Berücksichtigung der Sprache)
-      return getHomePermalink(lang);
-
-    case 'blog':
-      // Blog Link generieren (unter Berücksichtigung der Sprache)
-      return getBlogPermalink(lang);
-
-    case 'asset':
-      // Assets sind meist sprachunabhängig (liegen in /public)
-      return getAsset(slug);
-
-    case 'category':
-      permalink = createPath(CATEGORY_BASE, trimSlash(slug));
-      break;
-
-    case 'tag':
-      permalink = createPath(TAG_BASE, trimSlash(slug));
-      break;
-
-    case 'post':
-      permalink = createPath(trimSlash(slug));
-      break;
-
-    case 'page':
-    default:
-      permalink = createPath(slug);
-      break;
-  }
-
-  // Wenn eine Sprache (lang) übergeben wurde, fügen wir sie dem Pfad hinzu
-  if (lang) {
-    permalink = createPath(lang, permalink);
-  }
-
-  return definitivePermalink(permalink);
-};
-
-/** * NEU: Akzeptiert jetzt 'lang' 
- */
-export const getHomePermalink = (lang = ''): string => {
-  const path = lang ? createPath(lang) : '/';
-  return definitivePermalink(path);
-};
-
-/** * NEU: Akzeptiert jetzt 'lang'
- */
-export const getBlogPermalink = (lang = ''): string => getPermalink(BLOG_BASE, 'page', lang);
-
-/** * Assets bleiben unverändert (keine Sprache nötig)
- */
-export const getAsset = (path: string): string =>
-  '/' +
-  [BASE_PATHNAME, path]
-    .map((el) => trimSlash(el))
-    .filter((el) => !!el)
-    .join('/');
-
-/** */
-const definitivePermalink = (permalink: string): string => createPath(BASE_PATHNAME, permalink);
-
-/** * NEU: Rekursive Funktion akzeptiert jetzt 'lang', um es durchzureichen 
- */
-export const applyGetPermalinks = (menu: object = {}, lang = '') => {
+// ----------------------------------------------------------------------
+// NAVIGATION HELPER (Rekursiv)
+// ----------------------------------------------------------------------
+// Das hier wird von AstroWind genutzt, um ganze Menü-Strukturen zu parsen.
+// Wir reichen 'lang' einfach durch.
+export const applyGetPermalinks = (menu: any = {}, lang = 'en') => {
   if (Array.isArray(menu)) {
     return menu.map((item) => applyGetPermalinks(item, lang));
   } else if (typeof menu === 'object' && menu !== null) {
-    const obj = {};
+    const obj: any = {};
     for (const key in menu) {
       if (key === 'href') {
         if (typeof menu[key] === 'string') {
-          // Hier wird die Sprache an getPermalink weitergegeben
+          // String Links: Sprach-Logik anwenden
           obj[key] = getPermalink(menu[key], 'page', lang);
         } else if (typeof menu[key] === 'object') {
+          // Objekt Links (z.B. { type: 'blog' })
           if (menu[key].type === 'home') {
             obj[key] = getHomePermalink(lang);
           } else if (menu[key].type === 'blog') {
@@ -145,6 +130,7 @@ export const applyGetPermalinks = (menu: object = {}, lang = '') => {
           }
         }
       } else {
+        // Rekursion für Untermenüs
         obj[key] = applyGetPermalinks(menu[key], lang);
       }
     }
