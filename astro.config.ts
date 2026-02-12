@@ -29,6 +29,7 @@ i18n: {
     locales: ["en", "de"],
     routing: {
       prefixDefaultLocale: true,
+      redirectToDefaultLocale: false,
       strategy: "manual"
     }
   },
