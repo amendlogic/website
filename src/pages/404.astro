@@ -1,13 +1,18 @@
 ---
 import Layout from '~/layouts/Layout.astro';
 import { getHomePermalink } from '~/utils/permalinks';
-import { getNavigationData } from '~/navigation'; 
+
+// 1. FIX: Importiere die beiden neuen Funktionen statt der alten
+import { getHeaderData, getFooterData } from '~/navigation'; 
 
 const title = `Error 404`;
-const { headerData, footerData } = getNavigationData('en');
+
+// 2. FIX: Rufe beide Funktionen einzeln auf (Fallback auf Englisch)
+const headerData = getHeaderData('en');
+const footerData = getFooterData('en');
 ---
 
-<Layout metadata={{ title }}>
+<Layout metadata={{ title }} headerData={headerData} footerData={footerData}>
   <section class="flex items-center h-full p-16">
     <div class="container flex flex-col items-center justify-center px-5 mx-auto my-8">
       <div class="max-w-md text-center">
