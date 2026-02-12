@@ -1,5 +1,5 @@
 import { trim } from '~/utils/utils';
-import { SITE } from 'astrowind:config'; // WICHTIG: Das muss importiert werden
+import { SITE } from 'astrowind:config';
 
 export const trimSlash = (s: string) => trim(trim(s, '/'));
 
@@ -17,10 +17,21 @@ export const getAsset = (path: string): string => {
   return '/' + trimSlash(path);
 };
 
+// --- NEU HINZUGEFÜGT FÜR BLOG.TS ---
+// Diese Konstanten werden von src/utils/blog.ts benötigt.
+export const BLOG_BASE = 'blog';
+export const CATEGORY_BASE = 'category';
+export const TAG_BASE = 'tag';
+export const POST_PERMALINK_PATTERN = 'slug'; // Standard Slug-Muster
+
+export const cleanSlug = (text = '') => trimSlash(text);
+// -----------------------------------
+
 export const getPermalink = (slug: string = '', type = 'page'): string => {
   if (slug.startsWith('http')) return slug;
   
-  // Wir erstellen den Pfad
+  // Wir geben einfach den Pfad zurück.
+  // Die Sprach-Logik passiert jetzt in den Komponenten/Pages selbst.
   const permalink = createPath(slug);
   return permalink;
 };
@@ -29,7 +40,6 @@ export const getBlogPermalink = () => getPermalink('/blog');
 export const getHomePermalink = () => getPermalink('/');
 
 /**
- * DIE FEHLENDE FUNKTION:
  * Erstellt die absolute URL (https://deine-seite.com/de/...) für SEO.
  */
 export const getCanonical = (path: string = ''): string | URL => {
