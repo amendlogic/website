@@ -28,7 +28,7 @@ i18n: {
     defaultLocale: "en",
     locales: ["en", "de"],
     routing: {
-      prefixDefaultLocale: false,
+      prefixDefaultLocale: true,
       strategy: "manual"
     }
   },
