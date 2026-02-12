@@ -1,8 +1,10 @@
 ---
-// 1. NEUE IMPORTS (SSOT)
 import { getI18nPaths, DEFAULT_LANG } from '~/i18n/config';
-import { useTranslations } from '~/i18n/ui';
 import { SITE } from 'astrowind:config';
+
+// 1. Daten und Navigation importieren
+import landingData from '~/i18n/landing.json';
+import { getFooterData } from '~/navigation.ts';
 
 // Layout & Widgets
 import Layout from '~/layouts/PageLayout.astro';
@@ -15,209 +17,29 @@ import Testimonials from '~/components/widgets/Testimonials.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
-import { footerData } from '~/navigation.ts';
-
-// 2. PATHS GENERIEREN (SSOT)
+// 2. Pfade generieren (SSOT)
 export async function getStaticPaths() {
   return getI18nPaths();
 }
 
-// 3. SPRACHE & HELPER
+// 3. Sprache & Content laden
 const { lang } = Astro.params;
-const currentLang = lang || DEFAULT_LANG;
-const t = useTranslations(currentLang); // Für Buttons/UI aus ui.ts
+const currentLang = (lang || DEFAULT_LANG) as keyof typeof landingData;
 
-// 4. METADATA
+// Den Textblock für die aktuelle Sprache aus der JSON holen
+const txt = landingData[currentLang];
+
+// 4. Footer zusammenbauen
+const baseFooterData = getFooterData(currentLang);
+const homeFooterData = {
+  ...baseFooterData,
+  disclaimer: txt.footerDisclaimer
+};
+
+// 5. Metadaten
 const metadata = {
   title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
   ignoreTitleTemplate: true,
-};
-
-// --------------------------------------------------------------------------
-// 5. CONTENT DATEN (Hier liegt dein Text für EN und DE)
-// --------------------------------------------------------------------------
-const contentData = {
-  en: {
-    hero: {
-      titleStart: 'Trade with',
-      titleAccent: 'Logic',
-      titleEnd: 'Not Emotion',
-      subtitle: 'ensures disciplined trading and consistent execution.',
-      tagline: 'Automated Trading Strategy',
-      btnPrimary: 'Get Template',
-      btnSecondary: 'Learn more'
-    },
-    note: {
-      title: 'Our philosophy:',
-      desc: 'ensure disciplined trading and consistent execution, regardless of market conditions.'
-    },
-    features1: {
-      tagline: 'Features',
-      title: 'What You Get',
-      items: [
-        { title: 'Market Analysis', description: 'Detects trends and structural market shifts using objective price data.', icon: 'tabler:device-analytics' },
-        { title: 'Adaptive Behavior', description: 'Adjusts its logic as market dynamics change over time.', icon: 'tabler:activity' },
-        { title: 'Automated Execution', description: 'Trades are executed instantly and consistently based on defined rules.', icon: 'tabler:settings-automation' },
-      ],
-      contentTitle: 'Market Structure & Trend Detection',
-      contentDesc: 'Focused on identifying meaningful opportunities — not constant activity.'
-    },
-    features2: {
-      items: [
-        { title: 'Risk Controls', description: 'Integrated safeguards help limit drawdowns and control exposure.', icon: 'tabler:alert-hexagon' },
-        { title: 'Overtrading Protection', description: 'Reduces trading activity during low-quality or unclear market phases.', icon: 'tabler:waves-electricity' },
-        { title: 'Configurable Parameters', description: 'Risk levels and strategy behavior can be adjusted to individual preferences.', icon: 'tabler:adjustments' },
-      ],
-      contentTitle: 'Risk Management & Protection',
-      contentDesc: 'Built to protect capital and enforce consistency.'
-    },
-    steps: {
-      tagline: 'How It Works',
-      title: 'Simple by Design',
-      subtitle: 'The strategy runs directly on TradingView. It continuously analyzes price data, generates trade signals based on predefined rules, and executes positions automatically.',
-      items: [
-        { title: 'Data <span class="font-medium">— Indicator Signal</span>', description: "Market conditions are analyzed by our proprietary indicator.", icon: 'tabler:number-1' },
-        { title: 'Logic <span class="font-medium">— Signal to Trade</span>', description: "Signals are transmitted via webhook and converted into structured trade instructions.", icon: 'tabler:number-2' },
-        { title: 'Execution <span class="font-medium">— Order Placement</span>', description: 'Validated trade instructions are executed automatically.', icon: 'tabler:number-3' },
-      ]
-    },
-    chart: {
-      tagline: 'Performance',
-      title: 'Built on Data',
-      subtitle: 'The strategy is tested using historical market data to understand how it behaves in trending, ranging, and volatile environments.'
-    },
-    testimonials: {
-      tagline: 'Testimonials',
-      title: 'Words from real customers',
-      btnText: 'More testimonials...',
-      items: [
-        { name: 'Emily Kennedy', job: 'Front-end developer', testimonial: 'The designs are not only visually appealing but also highly professional.', image: { src: 'https://images.unsplash.com/photo-1618835962148-cf177563c6c0?auto=format&fit=crop&w=930&q=80', alt: 'Emily' } },
-        { name: 'Sarah Hansen', job: 'Photographer', testimonial: 'It beautifully showcases my work, with its clean and elegant design.', image: { src: 'https://images.unsplash.com/photo-1561406636-b80293969660?auto=format&fit=crop&w=774&q=80', alt: 'Sarah' } },
-        { name: 'Mark Wilkinson', job: 'Small business owner', testimonial: 'I discovered these templates and I am impressed by their variety and quality.', image: { src: 'https://images.unsplash.com/photo-1545167622-3a6ac756afa4?auto=format&fit=crop&w=824&q=80', alt: 'Mark' } },
-      ]
-    },
-    faqs: {
-      title: 'Good to Know',
-      subtitle: 'Answers to the most common questions.',
-      tagline: 'FAQs',
-      items: [
-        { title: 'Which markets and timeframes are supported?', description: "Our strategy is optimized for Bitcoin but can be applied to other volatile assets." },
-        { title: 'How does the system handle market volatility?', description: 'The strategy adapts dynamically to changing market conditions.' },
-        { title: 'Are all trades profitable?', description: "No. Not every trade will be profitable." },
-        // ... (Füge hier weitere FAQs hinzu)
-      ]
-    },
-    cta: {
-      titleLine1: 'Trade with Logic,',
-      titleLine2: 'Not Emotion.',
-      subtitle: 'Automate your strategy, enforce discipline and eliminate the guesswork.',
-      btnText: 'Get Access Now'
-    },
-    footerDisclaimer: [
-      { text: '1. Financial markets are inherently risky...' }, // Gekürzt für Übersicht, hier deinen vollen Text einfügen
-      { text: '2. Simulated performance results have inherent limitations...' },
-      { text: '3. Testimonials appearing on this website...' },
-      { text: '4. As a provider of technical analysis tools...' },
-      { text: '5. Charts used on this website are generated by TradingView...' },
-      { text: 'This text is a summary...' },
-    ]
-  },
-
-  // --- DEUTSCHE ÜBERSETZUNGEN ---
-  de: {
-    hero: {
-      titleStart: 'Handle mit',
-      titleAccent: 'Logik',
-      titleEnd: 'Nicht Emotionen',
-      subtitle: 'sorgt für diszipliniertes Trading und konsistente Ausführung.',
-      tagline: 'Automatisierte Trading Strategie',
-      btnPrimary: 'Vorlage holen',
-      btnSecondary: 'Mehr erfahren'
-    },
-    note: {
-      title: 'Unsere Philosophie:',
-      desc: 'Diszipliniertes Trading und konsistente Ausführung sicherstellen, unabhängig von den Marktbedingungen.'
-    },
-    features1: {
-      tagline: 'Funktionen',
-      title: 'Was du bekommst',
-      items: [
-        { title: 'Marktanalyse', description: 'Erkennt Trends und strukturelle Marktveränderungen anhand objektiver Preisdaten.', icon: 'tabler:device-analytics' },
-        { title: 'Adaptives Verhalten', description: 'Passt die Logik an, wenn sich die Marktdynamik im Laufe der Zeit ändert.', icon: 'tabler:activity' },
-        { title: 'Automatisierte Ausführung', description: 'Trades werden sofort und konsistent auf der Grundlage definierter Regeln ausgeführt.', icon: 'tabler:settings-automation' },
-      ],
-      contentTitle: 'Marktstruktur & Trenderkennung',
-      contentDesc: 'Fokus auf signifikante Chancen – nicht auf ständige Aktivität.'
-    },
-    features2: {
-      items: [
-        { title: 'Risikokontrolle', description: 'Integrierte Schutzmaßnahmen begrenzen Drawdowns.', icon: 'tabler:alert-hexagon' },
-        { title: 'Overtrading-Schutz', description: 'Reduziert die Handelsaktivität in unklaren Marktphasen.', icon: 'tabler:waves-electricity' },
-        { title: 'Konfigurierbare Parameter', description: 'Risikolevel und Strategieverhalten anpassbar.', icon: 'tabler:adjustments' },
-      ],
-      contentTitle: 'Risikomanagement & Schutz',
-      contentDesc: 'Entwickelt, um Kapital zu schützen und Konsistenz durchzusetzen.'
-    },
-    steps: {
-      tagline: 'Wie es funktioniert',
-      title: 'Einfach per Design',
-      subtitle: 'Die Strategie läuft direkt auf TradingView. Sie analysiert kontinuierlich Preisdaten und generiert Handelssignale.',
-      items: [
-        { title: 'Daten <span class="font-medium">— Indikator Signal</span>', description: "Marktbedingungen werden analysiert.", icon: 'tabler:number-1' },
-        { title: 'Logik <span class="font-medium">— Signal zum Trade</span>', description: "Signale werden via Webhook übertragen.", icon: 'tabler:number-2' },
-        { title: 'Ausführung <span class="font-medium">— Order Platzierung</span>', description: 'Validierte Handelsanweisungen werden automatisch ausgeführt.', icon: 'tabler:number-3' },
-      ]
-    },
-    chart: {
-      tagline: 'Performance',
-      title: 'Basierend auf Daten',
-      subtitle: 'Die Strategie wird mit historischen Daten getestet, um ihr Verhalten in verschiedenen Marktphasen zu verstehen.'
-    },
-    testimonials: {
-      tagline: 'Kundenstimmen',
-      title: 'Worte echter Kunden',
-      btnText: 'Mehr Meinungen...',
-      items: [
-        // Du kannst hier die gleichen Bilder nutzen, aber Text übersetzen
-        { name: 'Emily Kennedy', job: 'Front-end Entwicklerin', testimonial: 'Die Designs sind nicht nur optisch ansprechend, sondern auch hochprofessionell.', image: { src: 'https://images.unsplash.com/photo-1618835962148-cf177563c6c0?auto=format&fit=crop&w=930&q=80', alt: 'Emily' } },
-        { name: 'Sarah Hansen', job: 'Fotografin', testimonial: 'Es präsentiert meine Arbeit wunderschön.', image: { src: 'https://images.unsplash.com/photo-1561406636-b80293969660?auto=format&fit=crop&w=774&q=80', alt: 'Sarah' } },
-        { name: 'Mark Wilkinson', job: 'Kleinunternehmer', testimonial: 'Ich bin beeindruckt von der Vielfalt und Qualität.', image: { src: 'https://images.unsplash.com/photo-1545167622-3a6ac756afa4?auto=format&fit=crop&w=824&q=80', alt: 'Mark' } },
-      ]
-    },
-    faqs: {
-      title: 'Gut zu wissen',
-      subtitle: 'Antworten auf die häufigsten Fragen.',
-      tagline: 'FAQs',
-      items: [
-        { title: 'Welche Märkte werden unterstützt?', description: "Optimiert für Bitcoin, aber anwendbar auf andere volatile Assets." },
-        { title: 'Wie geht das System mit Volatilität um?', description: 'Die Strategie passt sich dynamisch an.' },
-        { title: 'Sind alle Trades profitabel?', description: "Nein. Nicht jeder Trade wird profitabel sein." },
-      ]
-    },
-    cta: {
-      titleLine1: 'Handle mit Logik,',
-      titleLine2: 'Nicht Emotion.',
-      subtitle: 'Automatisiere deine Strategie, erzwinge Disziplin und eliminiere das Raten.',
-      btnText: 'Jetzt Zugang erhalten'
-    },
-    footerDisclaimer: [
-      { text: '1. Finanzmärkte sind riskant...' },
-      { text: '2. Simulierte Ergebnisse haben Grenzen...' },
-      { text: '3. Testimonials garantieren keinen Erfolg...' },
-      { text: '4. Wir haben keinen Zugriff auf Konten...' },
-      { text: '5. Charts stammen von TradingView...' },
-      { text: 'Dies ist eine Zusammenfassung...' },
-    ]
-  }
-};
-
-// 6. AKTUELLEN CONTENT WÄHLEN
-const currentContent = contentData[currentLang];
-
-// 7. FOOTER ZUSAMMENBAUEN
-const homeFooterData = {
-  ...footerData,
-  disclaimer: currentContent.footerDisclaimer
 };
 ---
 
@@ -228,67 +50,67 @@ const homeFooterData = {
   >
     <Fragment slot="actions">
       <a href="https://github.com/arthelokyo/astrowind" target="_blank" class="btn btn-primary inline-flex items-center gap-2">
-        {currentContent.hero.btnPrimary}
+        {txt.hero.btnPrimary}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 1 59 59" class="w-10 h-10 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block">
           <path d="M33 17c-3.5 0-6.3 2.85-6.35 6.35 0 3.5 2.85 6.35 6.35 6.35s6.35-2.85 6.35-6.35S36.5 17 33 17ZM45.7 45.5 57.6 17H44.95L33.05 45.5H45.7Zm-22.25 0V17H1.3V28.1H12.4V45.5H23.5Z" fill="#FFFFFF"/>
         </svg>
       </a>
       <a href="#features" class="btn btn-secondary">
-        {currentContent.hero.btnSecondary}
+        {txt.hero.btnSecondary}
       </a>
     </Fragment>
 
     <Fragment slot="title">
-      {currentContent.hero.titleStart}
-      <span class="text-accent dark:text-white"> {currentContent.hero.titleAccent}</span>. {currentContent.hero.titleEnd}
+      {txt.hero.titleStart}
+      <span class="text-accent dark:text-white"> {txt.hero.titleAccent}</span>. {txt.hero.titleEnd}
     </Fragment>
 
     <Fragment slot="subtitle">
-        <span class="block mb-1 font-bold text-blue-600">{currentContent.hero.tagline}</span>
-        <span class="font-semibold">{SITE?.name}</span> {currentContent.hero.subtitle}
+        <span class="block mb-1 font-bold text-blue-600">{txt.hero.tagline}</span>
+        <span class="font-semibold">{SITE?.name}</span> {txt.hero.subtitle}
     </Fragment>
   </Hero>
 
-  <Note title={currentContent.note.title} description={currentContent.note.desc} />
+  <Note title={txt.note.title} description={txt.note.desc} />
 
   <Content
     isReversed
     id="features"
-    tagline={currentContent.features1.tagline}
-    title={currentContent.features1.title}
-    items={currentContent.features1.items}
+    tagline={txt.features1.tagline}
+    title={txt.features1.title}
+    items={txt.features1.items}
     image={{
       src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       alt: 'Colorful Image',
     }}
   >
     <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">{currentContent.features1.contentTitle}</h3>
-      {currentContent.features1.contentDesc}
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">{txt.features1.contentTitle}</h3>
+      {txt.features1.contentDesc}
     </Fragment>
   </Content>
 
   <Content
     isAfterContent
-    items={currentContent.features2.items}
+    items={txt.features2.items}
     image={{
       src: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2194&q=80',
       alt: 'Blueprint Image',
     }}
   >
     <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">{currentContent.features2.contentTitle}</h3>
-      {currentContent.features2.contentDesc}
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">{txt.features2.contentTitle}</h3>
+      {txt.features2.contentDesc}
     </Fragment>
   </Content>
 
 
   <Steps
-    tagline={currentContent.steps.tagline}
-    title={currentContent.steps.title}
-    subtitle={currentContent.steps.subtitle}
+    tagline={txt.steps.tagline}
+    title={txt.steps.title}
+    subtitle={txt.steps.subtitle}
     isReversed={true}
-    items={currentContent.steps.items}
+    items={txt.steps.items}
     image={{
       src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&auto=format&fit=crop&w=987&q=80',
       alt: 'Steps image',
@@ -296,9 +118,9 @@ const homeFooterData = {
   />
 
   <EChart
-    tagline={currentContent.chart.tagline}
-    title={currentContent.chart.title}
-    subtitle={currentContent.chart.subtitle}
+    tagline={txt.chart.tagline}
+    title={txt.chart.title}
+    subtitle={txt.chart.subtitle}
     height="400px"
     options={{
       tooltip: { trigger: "axis", valueFormatter: v => `${v}%` },
@@ -317,30 +139,33 @@ const homeFooterData = {
   />
 
   <Testimonials
-    tagline={currentContent.testimonials.tagline}
-    title={currentContent.testimonials.title}
-    testimonials={currentContent.testimonials.items}
+    tagline={txt.testimonials.tagline}
+    title={txt.testimonials.title}
+    testimonials={txt.testimonials.items.map(item => ({
+      ...item,
+      image: { src: item.image, alt: item.name } // JSON Strings in Astro Images umwandeln
+    }))}
     callToAction={{
       target: '_blank',
-      text: currentContent.testimonials.btnText,
+      text: txt.testimonials.btnText,
       href: 'https://github.com/arthelokyo/astrowind',
       icon: 'tabler:chevron-right',
     }}
   />
 
   <FAQs
-    title={currentContent.faqs.title}
-    subtitle={currentContent.faqs.subtitle}
-    tagline={currentContent.faqs.tagline}
+    title={txt.faqs.title}
+    subtitle={txt.faqs.subtitle}
+    tagline={txt.faqs.tagline}
     classes={{ container: 'max-w-6xl' }}
-    items={currentContent.faqs.items}
+    items={txt.faqs.items}
   />
 
   <CallToAction
     actions={[
       {
         variant: 'primary',
-        text: currentContent.cta.btnText,
+        text: txt.cta.btnText,
         href: 'https://github.com/arthelokyo/astrowind',
         target: '_blank',
         icon: 'tabler:download',
@@ -348,10 +173,10 @@ const homeFooterData = {
     ]}
   >
     <Fragment slot="title">
-      <span class="sm:whitespace-nowrap">{currentContent.cta.titleLine1}&nbsp;</span><br class="block" /><span class="sm:whitespace-nowrap">{currentContent.cta.titleLine2}</span>
+      <span class="sm:whitespace-nowrap">{txt.cta.titleLine1}&nbsp;</span><br class="block" /><span class="sm:whitespace-nowrap">{txt.cta.titleLine2}</span>
     </Fragment>
     <Fragment slot="subtitle">
-      {currentContent.cta.subtitle}
+      {txt.cta.subtitle}
     </Fragment>
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
