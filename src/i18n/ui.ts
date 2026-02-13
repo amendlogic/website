@@ -6,14 +6,13 @@ import footerEn from './locales/en/footer.json';
 import homeDe from './locales/de/home.json';
 import footerDe from './locales/de/footer.json';
 
-// Exportiere ein Objekt, das nach Sprachen sortiert ist
 export const ui = {
   en: {
-    homeEn,
-    footerEn,
+    home: homeEn,
+    footer: footerEn,
   },
   de: {
-    homeDe,
-    footerDe,
+    home: homeDe,
+    footer: footerDe,
   },
 } as const;
