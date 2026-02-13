@@ -1,0 +1,58 @@
+{
+  "hero.titleStart": "Smart\u00A0Trading.",
+  "hero.titleAccent": "Clear\u00A0Rules.",
+  "hero.titleEnd": "No\u00A0Guesswork.",
+  "hero.subtitle": "is a TradingView strategy developed for systematic, automated trading. It follows predefined rules to analyze the market, execute trades, and manage risk consistently.",
+  "hero.tagline": "Automated trading built to simplify decisions and enforce discipline.",
+  "hero.btnPrimary": "Get it for TradingView",
+  "hero.btnSecondary": "Explore the system",
+  "note.title": "Our philosophy:",
+  "note.desc": "ensure disciplined trading and consistent execution, regardless of market conditions.",
+  "features1.tagline": "Features",
+  "features1.title": "What You Get",
+  "features1.contentTitle": "Market Structure & Trend Detection",
+  "features1.contentDesc": "Focused on identifying meaningful opportunities — not constant activity.",
+  "features1.items": [
+    { "title": "Market Analysis", "description": "Detects trends and structural market shifts using objective price data.", "icon": "tabler:device-analytics" },
+    { "title": "Adaptive Behavior", "description": "Adjusts its logic as market dynamics change over time.", "icon": "tabler:activity" },
+    { "title": "Automated Execution", "description": "Trades are executed instantly and consistently based on defined rules.", "icon": "tabler:settings-automation" }
+  ],
+  "features2.contentTitle": "Risk Management & Protection",
+  "features2.contentDesc": "Built to protect capital and enforce consistency.",
+  "features2.items": [
+    { "title": "Risk Controls", "description": "Integrated safeguards help limit drawdowns and control exposure.", "icon": "tabler:alert-hexagon" },
+    { "title": "Overtrading Protection", "description": "Reduces trading activity during low-quality or unclear market phases.", "icon": "tabler:waves-electricity" },
+    { "title": "Configurable Parameters", "description": "Risk levels and strategy behavior can be adjusted to individual preferences.", "icon": "tabler:adjustments" }
+  ],
+  "steps.tagline": "How It Works",
+  "steps.title": "Simple by Design",
+  "steps.subtitle": "The strategy runs directly on TradingView. It continuously analyzes price data, generates trade signals based on predefined rules, and executes positions automatically.",
+  "steps.items": [
+    { "title": "Data <span class=\"font-medium\">— Indicator Signal</span>", "description": "Market conditions are analyzed by our proprietary indicator.", "icon": "tabler:number-1" },
+    { "title": "Logic <span class=\"font-medium\">— Signal to Trade</span>", "description": "Signals are transmitted via webhook and converted into structured trade instructions.", "icon": "tabler:number-2" },
+    { "title": "Execution <span class=\"font-medium\">— Order Placement</span>", "description": "Validated trade instructions are executed automatically.", "icon": "tabler:number-3" }
+  ],
+  "chart.tagline": "Performance",
+  "chart.title": "Built on Data",
+  "chart.subtitle": "The strategy is tested using historical market data to understand how it behaves in trending, ranging, and volatile environments.",
+  "testimonials.tagline": "Testimonials",
+  "testimonials.title": "Words from real customers",
+  "testimonials.btnText": "More testimonials...",
+  "testimonials.items": [
+    { "name": "Emily Kennedy", "job": "Front-end developer", "testimonial": "The designs are not only visually appealing but also highly professional.", "image": "https://images.unsplash.com/photo-1618835962148-cf177563c6c0?auto=format&fit=crop&w=930&q=80" },
+    { "name": "Sarah Hansen", "job": "Photographer", "testimonial": "It beautifully showcases my work, with its clean and elegant design.", "image": "https://images.unsplash.com/photo-1561406636-b80293969660?auto=format&fit=crop&w=774&q=80" },
+    { "name": "Mark Wilkinson", "job": "Small business owner", "testimonial": "I discovered these templates and I am impressed by their variety and quality.", "image": "https://images.unsplash.com/photo-1545167622-3a6ac756afa4?auto=format&fit=crop&w=824&q=80" }
+  ],
+  "faqs.tagline": "FAQs",
+  "faqs.title": "Good to Know",
+  "faqs.subtitle": "Answers to the most common questions.",
+  "faqs.items": [
+    { "title": "Which markets and timeframes are supported?", "description": "Our strategy is optimized for Bitcoin but can be applied to other volatile assets." },
+    { "title": "How does the system handle market volatility?", "description": "The strategy adapts dynamically to changing market conditions." },
+    { "title": "Are all trades profitable?", "description": "No. Not every trade will be profitable." }
+  ],
+  "cta.titleLine1": "Trade with Logic,",
+  "cta.titleLine2": "Not Emotion.",
+  "cta.subtitle": "Automate your strategy, enforce discipline and eliminate the guesswork.",
+  "cta.btnText": "Get Access Now"
+}
