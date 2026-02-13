@@ -1,5 +1,5 @@
 import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './utils/permalinks';
-import { useTranslations } from '~/i18n/utils';
+import { useTranslations } from '~/i18n/config';
 
 export const getHeaderData = (lang = 'en') => {
   const t = useTranslations(lang);
