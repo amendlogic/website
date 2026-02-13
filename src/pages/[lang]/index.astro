@@ -1,5 +1,5 @@
 ---
-import { getI18nPaths, DEFAULT_LANG } from '~/i18n/config';
+import { getI18nPaths, DEFAULT_LANG, useTranslations } from '~/i18n/config';
 import { SITE } from 'astrowind:config';
 
 // 1. Daten und Navigation importieren
@@ -24,10 +24,7 @@ export async function getStaticPaths() {
 
 // 3. Sprache & Content laden
 const { lang } = Astro.params;
-const currentLang = (lang || DEFAULT_LANG) as keyof typeof landingData;
-
-// Den Textblock für die aktuelle Sprache aus der JSON holen
-const txt = landingData[currentLang];
+const t = useTranslations(lang);
 
 // 4. Footer zusammenbauen
 const baseFooterData = getFooterData(currentLang);
@@ -61,7 +58,7 @@ const metadata = {
     </Fragment>
 
     <Fragment slot="title">
-      {txt.hero.titleStart}
+      {t('home.hero.titleStart')}
       <span class="text-accent dark:text-white"> {txt.hero.titleAccent}</span> {txt.hero.titleEnd}
     </Fragment>
 
