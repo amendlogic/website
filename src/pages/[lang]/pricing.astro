@@ -17,8 +17,10 @@ export async function getStaticPaths() {
 const { lang } = Astro.params;
 const t = useTranslations(lang);
 
+// 4. Metadaten
 const metadata = {
-  title: 'Pricing',
+  title: `${t('home.hero.titleStart')} ${t('home.hero.titleAccent')} — AmendLogic`,
+  ignoreTitleTemplate: true,
 };
 ---
 
