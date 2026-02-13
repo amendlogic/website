@@ -57,15 +57,15 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-{isFallback && (
-      <Notice title={lang === 'de' ? 'Kategorie leer' : 'Category empty'}>
-        {lang === 'de' 
-          ? `In dieser Kategorie gibt es noch keine deutschen Beiträge. Wir zeigen dir alle verfügbaren Artikel.` 
-          : `No posts found in this category for your language. Showing all available posts.`}
-      </Notice>
-    )}
+  {isFallback && (
+    <Notice title={lang === 'de' ? 'Kategorie leer' : 'Category empty'}>
+      {lang === 'de' 
+        ? `In dieser Kategorie gibt es noch keine deutschen Beiträge. Wir zeigen dir alle verfügbaren Artikel.` 
+        : `No posts found in this category for your language. Showing all available posts.`}
+    </Notice>
+  )}
 
+  <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
     <Headline> {category?.title} </Headline>
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
