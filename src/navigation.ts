@@ -1,114 +1,108 @@
 import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './utils/permalinks';
-import navTranslations from '~/i18n/navigation.json';
-
-// Ein kleiner Helper, falls eine Sprache angefordert wird, die nicht existiert (Fallback auf EN)
-const getNavTexts = (lang: string) => {
-  const key = lang in navTranslations ? lang : 'en';
-  // @ts-ignore
-  return navTranslations[key];
-};
+import { useTranslations } from '~/i18n/utils';
 
 export const getHeaderData = (lang = 'en') => {
-  const t = getNavTexts(lang);
+  // Wir nutzen jetzt den Hook, um die t-Funktion für die aktuelle Sprache zu bekommen
+  const t = useTranslations(lang);
 
   return {
     links: [
       {
-        text: t.header.product,
+        text: t('nav.header.product'),
         links: [
           {
-            text: t.header.features,
+            text: t('nav.header.features'),
             href: getPermalink('/#features', 'page', lang),
           },
           {
-            text: t.header.howItWorks,
+            text: t('nav.header.howItWorks'),
             href: getPermalink('/homes/startup', 'page', lang),
           },
           {
-            text: t.header.performance,
+            text: t('nav.header.performance'),
             href: getPermalink('/homes/mobile-app', 'page', lang),
           },
           {
-            text: t.header.testimonials,
+            text: t('nav.header.testimonials'),
             href: getPermalink('/homes/personal', 'page', lang),
           },
           {
-            text: t.header.faqs,
+            text: t('nav.header.faqs'),
             href: getPermalink('/homes/personal', 'page', lang),
           },
         ],
       },
       {
-        text: t.header.about,
+        text: t('nav.header.about'),
         href: getPermalink('/about', 'page', lang),
       },
       {
-        text: t.header.insights,
+        text: t('nav.header.insights'),
         links: [
           {
-            text: t.header.getStarted,
+            text: t('nav.header.getStarted'),
             href: getPermalink('get-started-website-with-astro-tailwind-css', 'post', lang),
           },
           {
-            text: t.header.docs,
+            text: t('nav.header.docs'),
             href: getPermalink('tutorials', 'category', lang),
           },
           {
-            text: t.header.blog,
+            text: t('nav.header.blog'),
             href: getBlogPermalink(lang),
           },
         ],
       },
       {
-        text: t.header.pricing,
+        text: t('nav.header.pricing'),
         href: getPermalink('/pricing', 'page', lang),
       },
     ],
-    actions: [{ text: t.header.actionBtn, href: 'https://github.com/arthelokyo/astrowind', target: '_blank' }],
+    actions: [{ text: t('nav.header.actionBtn'), href: 'https://github.com/arthelokyo/astrowind', target: '_blank' }],
   };
 };
 
 export const getFooterData = (lang = 'en') => {
-  const t = getNavTexts(lang);
+  const t = useTranslations(lang);
 
   return {
     links: [
       {
-        title: t.footer.product,
+        title: t('nav.footer.product'),
         links: [
-          { text: t.header.features, href: '#' },
-          { text: t.header.howItWorks, href: '#' },
-          { text: t.header.performance, href: '#' },
-          { text: t.header.pricing, href: '#' },
-          { text: t.footer.changelog, href: '#' },
+          { text: t('nav.header.features'), href: '#' },
+          { text: t('nav.header.howItWorks'), href: '#' },
+          { text: t('nav.header.performance'), href: '#' },
+          { text: t('nav.header.pricing'), href: '#' },
+          { text: t('nav.footer.changelog'), href: '#' },
         ],
       },
       {
-        title: t.footer.resources,
+        title: t('nav.footer.resources'),
         links: [
-          { text: t.header.docs, href: '#' },
-          { text: t.footer.community, href: '#' },
-          { text: t.social.github, href: '#' },
-          { text: t.footer.help, href: '#' },
+          { text: t('nav.header.docs'), href: '#' },
+          { text: t('nav.footer.community'), href: '#' },
+          { text: t('nav.social.github'), href: '#' },
+          { text: t('nav.footer.help'), href: '#' },
         ],
       },
       {
-        title: t.footer.company,
+        title: t('nav.footer.company'),
         links: [
-          { text: t.header.about, href: '#' },
-          { text: t.footer.team, href: '#' },
-          { text: t.header.blog, href: '#' },
-          { text: t.footer.contact, href: '#' },
+          { text: t('nav.header.about'), href: '#' },
+          { text: t('nav.footer.team'), href: '#' },
+          { text: t('nav.header.blog'), href: '#' },
+          { text: t('nav.footer.contact'), href: '#' },
         ],
       },
       {
-        title: t.footer.legal,
+        title: t('nav.footer.legal'),
         links: [
-          { text: t.footer.imprint, href: '#' },
-          { text: t.footer.terms, href: '#' },
-          { text: t.footer.privacy, href: '#' },
-          { text: t.footer.cookie, href: '#' },
-          { text: t.footer.risk, href: '#' },
+          { text: t('nav.footer.imprint'), href: '#' },
+          { text: t('nav.footer.terms'), href: '#' },
+          { text: t('nav.footer.privacy'), href: '#' },
+          { text: t('nav.footer.cookie'), href: '#' },
+          { text: t('nav.footer.risk'), href: '#' },
         ],
       },
     ],
@@ -126,11 +120,11 @@ export const getFooterData = (lang = 'en') => {
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
       { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
-      { ariaLabel: t.social.rss, icon: 'tabler:rss', href: getAsset('/rss.xml') },
-      { ariaLabel: t.social.github, icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
+      { ariaLabel: t('nav.social.rss'), icon: 'tabler:rss', href: getAsset('/rss.xml') },
+      { ariaLabel: t('nav.social.github'), icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
     ],
     footNote: `
-    © ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">AmendLogic</a> · ${t.footer.rights} · <a href="#" data-cc="show-preferencesModal" class="text-blue-600 underline dark:text-muted">Cookie Settings</a>
+    © ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">AmendLogic</a> · ${t('nav.footer.rights')} · <a href="#" data-cc="show-preferencesModal" class="text-blue-600 underline dark:text-muted">Cookie Settings</a>
   `,
   };
 };
