@@ -1,0 +1,40 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import BlogList from '~/components/blog/List.astro';
+import Headline from '~/components/blog/Headline.astro';
+import { getCollection } from 'astro:content';
+import { getI18nPaths, DEFAULT_LANG } from '~/i18n/config';
+
+// 1. Pfade generieren (/en/blog, /de/blog)
+export async function getStaticPaths() {
+  return getI18nPaths();
+}
+
+// 2. Sprache holen
+const { lang } = Astro.params;
+const currentLang = lang || DEFAULT_LANG;
+
+// 3. Posts holen und filtern (nur Posts der aktuellen Sprache)
+const allPosts = await getCollection('post');
+const posts = allPosts.filter((post) => {
+  // Prüft, ob der Post im Ordner "en/" oder "de/" liegt
+  return post.id.startsWith(`${currentLang}/`);
+});
+
+// Sortieren: Neueste zuerst
+posts.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+
+const metadata = {
+  title: currentLang === 'de' ? 'Blog' : 'Blog',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <Headline>
+      {currentLang === 'de' ? 'Unser Blog' : 'Our Blog'}
+    </Headline>
+    
+    <BlogList posts={posts} />
+  </section>
+</Layout>
