@@ -2,20 +2,18 @@ import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import type { Post } from '~/types';
 import { APP_BLOG } from 'astrowind:config';
-import { cleanSlug, trimSlash, getPermalink } from './permalinks';
+import { cleanSlug, getPermalink } from './permalinks';
 
 // --------------------------------------------------------------------------
 // CONFIG & CACHING
 // --------------------------------------------------------------------------
 
-// Deine unterstützten Sprachen
 const LOCALES = ['en', 'de'];
 const DEFAULT_LANG = 'en';
 
 // Regex: Erkennt "en/" oder "de/" am Anfang der ID
 const LOCALE_REGEX = new RegExp(`^(${LOCALES.join('|')})/`);
 
-// Der Cache: Speichert die verarbeiteten Posts, damit wir nicht 100x neu rechnen müssen
 let _postsCache: Post[] | null = null;
 
 // --------------------------------------------------------------------------
@@ -39,20 +37,18 @@ const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> 
     metadata = {},
   } = data;
 
-  // 1. Sprache ermitteln (aus ID oder Frontmatter)
+  // 1. Sprache ermitteln
   let lang = DEFAULT_LANG;
   const match = id.match(LOCALE_REGEX);
-  
   if (match) {
-    lang = match[1]; // "en" oder "de"
+    lang = match[1];
   }
 
-  // 2. ID bereinigen (Sprache entfernen für den Slug)
-  // Aus "en/mein-post.md" wird "mein-post"
+  // 2. ID bereinigen
   const baseId = id.replace(LOCALE_REGEX, '').replace(/\.[^/.]+$/, "");
-  const slug = cleanSlug(data.slug || baseId); // Frontmatter Slug hat Vorrang
+  const slug = cleanSlug(data.slug || baseId);
 
-  // 3. Permalink via permalinks.ts generieren
+  // 3. Permalink generieren
   const permalink = getPermalink(slug, 'post', lang);
 
   const publishDateObj = new Date(publishDate);
@@ -71,7 +67,7 @@ const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> 
     id: id,
     slug: slug,
     permalink: permalink,
-    lang: lang, // Wichtig für Filter!
+    lang: lang,
 
     publishDate: publishDateObj,
     updateDate: updateDateObj,
@@ -101,7 +97,6 @@ const load = async (): Promise<Post[]> => {
   const entries = await getCollection('post');
   const normalized = await Promise.all(entries.map(getNormalizedPost));
 
-  // Sortieren nach Datum (Neueste zuerst) und Drafts entfernen
   _postsCache = normalized
     .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf())
     .filter((p) => !p.draft);
@@ -110,18 +105,27 @@ const load = async (): Promise<Post[]> => {
 };
 
 // --------------------------------------------------------------------------
-// PUBLIC API
+// PUBLIC API (EXPORTS)
 // --------------------------------------------------------------------------
 
 export const isBlogEnabled = APP_BLOG.isEnabled;
 export const isRelatedPostsEnabled = APP_BLOG.isRelatedPostsEnabled;
 export const isBlogListRouteEnabled = APP_BLOG.list.isEnabled;
 export const isBlogPostRouteEnabled = APP_BLOG.post.isEnabled;
+export const isBlogCategoryRouteEnabled = APP_BLOG.category.isEnabled;
+export const isBlogTagRouteEnabled = APP_BLOG.tag.isEnabled;
+
 export const blogPostsPerPage = APP_BLOG?.postsPerPage;
+
+// --- HIER WAR DER FEHLER: Diese Exports haben gefehlt ---
+export const blogListRobots = APP_BLOG.list.robots;
+export const blogPostRobots = APP_BLOG.post.robots;
+export const blogCategoryRobots = APP_BLOG.category.robots; // <--- Jetzt da!
+export const blogTagRobots = APP_BLOG.tag.robots;           // <--- Jetzt da!
+// --------------------------------------------------------
 
 /**
  * Holt Posts für eine bestimmte Sprache.
- * @param lang 'en' | 'de' | undefined (wenn undefined, gibt alle zurück)
  */
 export const fetchPosts = async (lang?: string) => {
   const posts = await load();
@@ -129,25 +133,20 @@ export const fetchPosts = async (lang?: string) => {
 };
 
 /**
- * Holt Posts für eine Sprache, aber falls leer, gibt es Default-Sprache zurück.
- * (Gut für "Latest Posts" Widgets, damit die nicht leer bleiben)
+ * Holt Posts mit Fallback auf Default-Sprache (für Widgets).
  */
 export const fetchPostsWithFallback = async (lang: string) => {
   const posts = await load();
   const inLang = posts.filter((p) => p.lang === lang);
 
   if (inLang.length === 0 && lang !== DEFAULT_LANG) {
-    // Fallback auf Englisch, falls keine deutschen Posts da sind
     return posts.filter((p) => p.lang === DEFAULT_LANG);
   }
   return inLang;
 };
 
-/**
- * Findet die neuesten Posts (gefiltert nach Sprache)
- */
 export const findLatestPosts = async ({ count = 4, lang = DEFAULT_LANG }: { count?: number; lang?: string }) => {
-  const posts = await fetchPosts(lang); // Hier nutzen wir Strict Fetch, kein Fallback für Hauptlisten
+  const posts = await fetchPosts(lang);
   return posts.slice(0, count);
 };
 
@@ -158,32 +157,24 @@ export const findPostsByIds = async (ids: string[]) => {
     .filter((p): p is Post => Boolean(p));
 };
 
-/**
- * Findet verwandte Artikel (nur in der gleichen Sprache!)
- */
 export const getRelatedPosts = async (original: Post, maxResults = 4) => {
-  const posts = await fetchPosts(original.lang); // Nur Posts gleicher Sprache laden
+  const posts = await fetchPosts(original.lang);
   const tagSet = new Set(original.tags.map((t) => t.slug));
 
   const scored = posts
-    .filter((p) => p.slug !== original.slug) // Sich selbst ausschließen
+    .filter((p) => p.slug !== original.slug)
     .map((p) => {
       let score = 0;
-
-      // Gleiche Kategorie gibt viele Punkte
       if (p.category && original.category && p.category.slug === original.category.slug) {
         score += 5;
       }
-
-      // Gleiche Tags geben Punkte
       p.tags.forEach((t) => {
         if (tagSet.has(t.slug)) score += 1;
       });
-
       return { post: p, score };
     })
-    .filter((p) => p.score > 0) // Nur Posts mit Relevanz
-    .sort((a, b) => b.score - a.score); // Beste zuerst
+    .filter((p) => p.score > 0)
+    .sort((a, b) => b.score - a.score);
 
   return scored.slice(0, maxResults).map((s) => s.post);
 };
