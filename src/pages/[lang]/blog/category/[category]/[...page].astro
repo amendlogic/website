@@ -1,6 +1,7 @@
 ---
 import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 import { blogCategoryRobots, fetchPosts, blogPostsPerPage } from '~/utils/blog';
+import { LANGUAGES } from '~/i18n/config';
 import Layout from '~/layouts/PageLayout.astro';
 import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
@@ -9,36 +10,33 @@ import Pagination from '~/components/blog/Pagination.astro';
 export const prerender = true;
 
 export const getStaticPaths = (async ({ paginate }) => {
-  const LANGUAGES = ['en', 'de'];
+  const locales = Object.keys(LANGUAGES);
+  const allPosts = await fetchPosts();
 
   const paths = await Promise.all(
-    LANGUAGES.map(async (lang) => {
-      // 1. Posts für die Sprache laden
-      const posts = await fetchPosts(lang);
-      
-      // 2. Alle Kategorien sammeln, die in diesen Posts vorkommen
+    locales.map(async (lang) => {
       const categories = new Set<string>();
-      posts.forEach((post) => {
-        if (post.category?.slug) {
-          categories.add(post.category.slug);
-        }
+      allPosts.forEach((post) => {
+        if (post.category?.slug) categories.add(post.category.slug);
       });
 
-      // 3. Pagination für jede Kategorie erstellen
       return Array.from(categories).flatMap((categorySlug) => {
-        // Filtern: Nur Posts dieser Kategorie
-        const categoryPosts = posts.filter((post) => post.category?.slug === categorySlug);
-        
-        // Titel der Kategorie holen (vom ersten Post nehmen)
-        const categoryData = categoryPosts[0].category;
+        let categoryPosts = allPosts.filter(
+          (post) => post.lang === lang && post.category?.slug === categorySlug
+        );
+        let isFallback = false;
+
+        if (categoryPosts.length === 0) {
+          categoryPosts = allPosts.filter((post) => post.category?.slug === categorySlug);
+          isFallback = true;
+        }
+
+        const categoryData = categoryPosts[0]?.category;
 
         return paginate(categoryPosts, {
-          params: { 
-            lang: lang, 
-            category: categorySlug // WICHTIG: Muss zum Ordnernamen [category] passen
-          },
+          params: { lang, category: categorySlug },
           pageSize: blogPostsPerPage || 6,
-          props: { category: categoryData },
+          props: { category: categoryData, isFallback },
         });
       });
     })
@@ -47,31 +45,29 @@ export const getStaticPaths = (async ({ paginate }) => {
   return paths.flat();
 }) satisfies GetStaticPaths;
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths> & { category: any };
-
-const { page, category } = Astro.props;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { page, category, isFallback } = Astro.props;
 const { lang } = Astro.params;
 
-const currentPage = page.currentPage ?? 1;
-
-// Metadaten erstellen
 const metadata = {
-  title: `Category '${category.title}' ${currentPage > 1 ? ` — Page ${currentPage}` : ''}`,
-  robots: {
-    index: blogCategoryRobots?.index,
-    follow: blogCategoryRobots?.follow,
-  },
+  title: category?.title || 'Category',
+  robots: { index: !isFallback && blogCategoryRobots?.index, follow: true },
 };
-
-const headlineText = lang === 'de' ? 'Kategorie' : 'Category';
 ---
 
 <Layout metadata={metadata}>
   <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <Headline subtitle={`${headlineText}: ${category.title}`}>
-      {category.title}
-    </Headline>
-    
+    {isFallback && (
+      <div class="mb-8 bg-blue-50 dark:bg-slate-800 border-l-4 border-blue-500 p-4 rounded shadow-sm">
+        <p class="text-sm text-blue-800 dark:text-blue-200">
+          {lang === 'de' 
+            ? 'In dieser Kategorie gibt es noch keine deutschen Beiträge. Zeige alle verfügbaren Artikel:' 
+            : 'No posts found in this category for the selected language. Showing all available posts:'}
+        </p>
+      </div>
+    )}
+
+    <Headline> {category?.title} </Headline>
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
   </section>
