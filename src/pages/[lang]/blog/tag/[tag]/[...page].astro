@@ -13,9 +13,10 @@ export const getStaticPaths = (async ({ paginate }) => {
 
   const paths = await Promise.all(
     LANGUAGES.map(async (lang) => {
+      // 1. Posts laden
       const posts = await fetchPosts(lang);
       
-      // Tags sammeln
+      // 2. Alle Tags sammeln
       const tags = new Set<string>();
       posts.forEach((post) => {
         if (Array.isArray(post.tags)) {
@@ -23,17 +24,21 @@ export const getStaticPaths = (async ({ paginate }) => {
         }
       });
 
+      // 3. Pagination für jeden Tag erstellen
       return Array.from(tags).flatMap((tagSlug) => {
-        // Filtern nach Tag
+        // Filtern: Nur Posts mit diesem Tag
         const tagPosts = posts.filter((post) => 
           Array.isArray(post.tags) && post.tags.some(t => t.slug === tagSlug)
         );
         
-        // Tag Daten holen
+        // Tag-Daten holen (für Titel)
         const tagData = tagPosts[0].tags.find(t => t.slug === tagSlug);
 
         return paginate(tagPosts, {
-          params: { lang: lang, tag: tagSlug },
+          params: { 
+            lang: lang, 
+            tag: tagSlug // WICHTIG: Muss zum Ordnernamen [tag] passen
+          },
           pageSize: blogPostsPerPage || 6,
           props: { tag: tagData },
         });
@@ -47,6 +52,8 @@ export const getStaticPaths = (async ({ paginate }) => {
 type Props = InferGetStaticPropsType<typeof getStaticPaths> & { tag: any };
 
 const { page, tag } = Astro.props;
+const { lang } = Astro.params;
+
 const currentPage = page.currentPage ?? 1;
 
 const metadata = {
@@ -56,13 +63,16 @@ const metadata = {
     follow: blogTagRobots?.follow,
   },
 };
+
+const headlineText = lang === 'de' ? 'Beiträge mit dem Tag' : 'Posts tagged with';
 ---
 
 <Layout metadata={metadata}>
   <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <Headline>
-      Tag: {tag.title}
+    <Headline subtitle={`${headlineText}: ${tag.title}`}>
+      {tag.title}
     </Headline>
+    
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
   </section>
