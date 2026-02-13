@@ -1,66 +1,81 @@
 ---
-import { fetchPosts, getRelatedPosts, blogPostRobots } from '~/utils/blog'; // WICHTIG: Import aus utils/blog
+import { fetchPosts, blogPostRobots } from '~/utils/blog';
 import merge from 'lodash.merge';
-import type { ImageMetadata } from 'astro';
-
 import Layout from '~/layouts/PageLayout.astro';
 import SinglePost from '~/components/blog/SinglePost.astro';
 import ToBlogLink from '~/components/blog/ToBlogLink.astro';
 import RelatedPosts from '~/components/blog/RelatedPosts.astro';
-
 import { getCanonical, getPermalink } from '~/utils/permalinks';
-import type { MetaData } from '~/types';
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-  // 1. Alle Posts holen (die sind durch blog.ts schon sauber verarbeitet!)
-  const posts = await fetchPosts();
+  const posts = await fetchPosts(); // Holt alle Posts (en & de)
+  const LANGUAGES = ['en', 'de'];
+  
+  // Wir finden alle eindeutigen Slugs (unabhängig von der Sprache)
+  const allSlugs = [...new Set(posts.map(p => p.slug))];
 
-  // 2. Pfade generieren
-  return posts.map((post) => ({
-    params: { 
-      lang: post.lang, // 'en' oder 'de' (kommt jetzt sauber aus blog.ts)
-      slug: post.slug  // 'mein-post' (ohne .md, ohne Ordner)
-    },
-    props: { post },
-  }));
+  return LANGUAGES.flatMap((lang) => {
+    return allSlugs.map((slug) => {
+      // 1. Versuche den Post in der aktuellen Sprache zu finden
+      let post = posts.find((p) => p.slug === slug && p.lang === lang);
+      let isFallback = false;
+
+      // 2. Wenn nicht gefunden, nimm die alternative Sprache (Fallback)
+      if (!post) {
+        post = posts.find((p) => p.slug === slug);
+        isFallback = true;
+      }
+
+      if (!post) return null;
+
+      return {
+        params: { lang, slug },
+        props: { post, isFallback },
+      };
+    }).filter(Boolean);
+  });
 }
 
-const { post } = Astro.props;
+const { post, isFallback } = Astro.props;
 const { lang } = Astro.params;
 
 const url = getCanonical(getPermalink(post.permalink, 'post', lang));
-
-// Content rendern
-const { Content } = await post.Content.render ? await post.Content.render() : { Content: post.Content }; 
-// HINWEIS: In der neuen blog.ts geben wir Content direkt zurück, 
-// falls 'Content' eine Komponente ist, nutze einfach <post.Content /> unten.
-// Da wir in blog.ts "Content" direkt aus "render(entry)" holen, ist es eine Komponente.
 
 const metadata = merge(
   {
     title: post.title,
     description: post.excerpt,
     robots: {
-      index: blogPostRobots?.index,
+      index: !isFallback && blogPostRobots?.index, // Fallbacks nicht indexieren (SEO!)
       follow: blogPostRobots?.follow,
     },
-    openGraph: {
-      type: 'article',
-      image: post.image,
-    },
+    openGraph: { type: 'article', image: post.image },
   },
-  { ...(post?.metadata ? { ...post.metadata, canonical: post.metadata?.canonical || url } : {}) }
-) as MetaData;
+  { ...(post?.metadata ?? {}) }
+);
 ---
 
 <Layout metadata={metadata}>
   <SinglePost post={post} url={url}>
+    
+    {isFallback && (
+      <div class="bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-500 text-yellow-700 dark:text-yellow-200 p-4 mb-8 mx-auto max-w-3xl" role="alert">
+        <p class="font-bold">
+          {lang === 'de' ? 'Nicht übersetzt' : 'Not translated'}
+        </p>
+        <p>
+          {lang === 'de' 
+            ? 'Dieser Artikel ist zurzeit leider nur auf Englisch verfügbar.' 
+            : 'This article is currently only available in German.'}
+        </p>
+      </div>
+    )}
+
     <post.Content />
   </SinglePost>
   
   <ToBlogLink />
-  
   <RelatedPosts post={post} />
 </Layout>
