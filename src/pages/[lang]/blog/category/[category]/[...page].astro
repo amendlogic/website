@@ -6,6 +6,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
 import Pagination from '~/components/blog/Pagination.astro';
+import Notice from '~/components/ui/Notice.astro';
 
 export const prerender = true;
 
@@ -57,14 +58,12 @@ const metadata = {
 
 <Layout metadata={metadata}>
   <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    {isFallback && (
-      <div class="mb-8 bg-blue-50 dark:bg-slate-800 border-l-4 border-blue-500 p-4 rounded shadow-sm">
-        <p class="text-sm text-blue-800 dark:text-blue-200">
-          {lang === 'de' 
-            ? 'In dieser Kategorie gibt es noch keine deutschen Beiträge. Zeige alle verfügbaren Artikel:' 
-            : 'No posts found in this category for the selected language. Showing all available posts:'}
-        </p>
-      </div>
+{isFallback && (
+      <Notice title={lang === 'de' ? 'Kategorie leer' : 'Category empty'}>
+        {lang === 'de' 
+          ? `In dieser Kategorie gibt es noch keine deutschen Beiträge. Wir zeigen dir alle verfügbaren Artikel.` 
+          : `No posts found in this category for your language. Showing all available posts.`}
+      </Notice>
     )}
 
     <Headline> {category?.title} </Headline>
