@@ -18,13 +18,15 @@ export interface Props {
 const { post } = Astro.props;
 const image = (await findImage(post.image)) as ImageMetadata | undefined;
 
-const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : '';
+// ÄNDERUNG 1: Link direkt nutzen (post.permalink ist schon fertig!)
+// Kein erneutes getPermalink() hier, sonst verdoppelt sich der Pfad.
+const link = APP_BLOG?.post?.isEnabled ? post.permalink : '';
 ---
 
 <article
-  class={`max-w-md mx-auto md:max-w-none grid gap-6 md:gap-8 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade ${image ? 'md:grid-cols-2' : ''}`}
+  class={`max-w-md mx-auto md:max-w-none grid gap-6 md:gap-8 ${image ? 'md:grid-cols-2' : ''}`}
 >
-  {
+{
     image &&
       (link ? (
         <a class="relative block group" href={link ?? 'javascript:void(0)'}>
@@ -82,7 +84,8 @@ const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : 
               <>
                 {' '}
                 ·{' '}
-                <a class="hover:underline" href={getPermalink(post.category.slug, 'category')}>
+                {/* ÄNDERUNG 3: post.lang übergeben, damit der Link stimmt (/en/category/...) */}
+                <a class="hover:underline" href={getPermalink(post.category.slug, 'category', post.lang)}>
                   {post.category.title}
                 </a>
               </>
