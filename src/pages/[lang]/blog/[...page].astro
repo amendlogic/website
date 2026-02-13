@@ -5,28 +5,32 @@ import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
 import Pagination from '~/components/blog/Pagination.astro';
 
-import { getCollection } from 'astro:content';
-import { LANGUAGES } from '~/i18n/config'; // Oder wo deine Sprachen definiert sind
+// Wir nutzen deine neue, optimierte blog.ts
+import { fetchPosts, blogPostsPerPage } from '~/utils/blog'; 
 import { APP_BLOG } from 'astrowind:config';
 
 export const prerender = true;
 
 export const getStaticPaths = (async ({ paginate }) => {
-  const allPosts = await getCollection('post');
-  const posts = allPosts.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+  // Config: Deine Sprachen (Hardcoded oder aus Config importieren)
+  const LANGUAGES = ['en', 'de'];
 
-  // Wir müssen für JEDE Sprache eine eigene Pagination erstellen
-  return Object.keys(LANGUAGES).flatMap((lang) => {
-    
-    // 1. Filtern: Nur Posts dieser Sprache
-    const langPosts = posts.filter((post) => post.id.startsWith(`${lang}/`));
+  // 1. FIX: Promise.all nutzen, statt direkt flatMap mit async
+  const paths = await Promise.all(
+    LANGUAGES.map(async (lang) => {
+      // Posts für diese Sprache holen (mit deinem neuen Cache-System)
+      const langPosts = await fetchPosts(lang);
 
-    // 2. Paginieren: Astro erstellt automatisch Seite 1, 2, 3...
-    return paginate(langPosts, {
-      params: { lang }, // WICHTIG: Das 'lang' Parameter weitergeben
-      pageSize: APP_BLOG.postsPerPage || 6, // Anzahl aus der Config nehmen
-    });
-  });
+      // Pagination erstellen
+      return paginate(langPosts, {
+        params: { lang }, // WICHTIG: 'lang' muss in den params sein!
+        pageSize: blogPostsPerPage || 6,
+      });
+    })
+  );
+
+  // 2. Das Ergebnis "flachklopfen" (Array von Arrays -> Ein Array)
+  return paths.flat();
 }) satisfies GetStaticPaths;
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
@@ -39,8 +43,8 @@ const currentPage = page.currentPage ?? 1;
 const metadata = {
   title: `Blog ${currentPage > 1 ? ` — Page ${currentPage}` : ''}`,
   robots: {
-    index: true, // Blog soll indexiert werden
-    follow: true,
+    index: blogListRobots?.index && currentPage === 1,
+    follow: blogListRobots?.follow,
   },
   openGraph: {
     type: 'blog',
@@ -52,15 +56,13 @@ const metadata = {
   <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
     <Headline
       subtitle={lang === 'de' 
-        ? 'Neuigkeiten, Tutorials und Ressourcen für dein Trading.' 
+        ? 'Neuigkeiten, Tutorials und Ressourcen.' 
         : 'A statically generated blog example with news, tutorials, and resources.'}
     >
       {lang === 'de' ? 'Der Blog' : 'The Blog'}
     </Headline>
     
     <BlogList posts={page.data} />
-
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
-    
   </section>
 </Layout>
