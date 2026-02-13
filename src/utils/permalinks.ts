@@ -1,10 +1,10 @@
 import slugify from 'limax';
 import { SITE, APP_BLOG } from 'astrowind:config';
 import { trim } from '~/utils/utils';
-import { getRelativeLocaleUrl } from 'astro:i18n'; // WICHTIG: Das native Astro Feature
+import { getRelativeLocaleUrl } from 'astro:i18n';
 
 // ----------------------------------------------------------------------
-// KONSTANTEN (Wichtig für Blog-Logik)
+// KONSTANTEN & CLEANUP
 // ----------------------------------------------------------------------
 export const trimSlash = (s: string) => trim(trim(s, '/'));
 
@@ -14,14 +14,13 @@ export const cleanSlug = (text = '') =>
     .map((slug) => slugify(slug))
     .join('/');
 
-// Wir holen uns die Basis-Pfade aus der Config (z.B. 'blog', 'category', 'tag')
 export const BLOG_BASE = cleanSlug(APP_BLOG?.list?.pathname) || 'blog';
 export const CATEGORY_BASE = cleanSlug(APP_BLOG?.category?.pathname) || 'category';
 export const TAG_BASE = cleanSlug(APP_BLOG?.tag?.pathname) || 'tag';
 export const POST_PERMALINK_PATTERN = trimSlash(APP_BLOG?.post?.permalink || `${BLOG_BASE}/%slug%`);
 
 // ----------------------------------------------------------------------
-// HAUPTFUNKTION: getPermalink (Jetzt modernisiert)
+// HAUPTFUNKTION: getPermalink
 // ----------------------------------------------------------------------
 export const getPermalink = (slug = '', type = 'page', lang = 'en'): string => {
   
@@ -36,45 +35,44 @@ export const getPermalink = (slug = '', type = 'page', lang = 'en'): string => {
   // 2. Pfad basierend auf Typ berechnen
   switch (type) {
     case 'home':
-      path = ''; // Leerer Pfad für Home
+      path = ''; 
       break;
 
     case 'blog':
-      path = BLOG_BASE; // z.B. "blog"
+      path = BLOG_BASE; 
       break;
 
     case 'post':
-      // Wir bauen den Pfad: blog/mein-post
-      // (Wir nutzen hier einfaches Anhängen, da native Patterns komplex sind)
+      // Erzeugt: blog/mein-post
       path = `${BLOG_BASE}/${trimmedSlug}`;
       break;
 
     case 'category':
-      path = `${CATEGORY_BASE}/${trimmedSlug}`;
+      // FIX: Erzeugt blog/category/name (Passend zu deiner Ordnerstruktur)
+      path = `${BLOG_BASE}/${CATEGORY_BASE}/${trimmedSlug}`;
       break;
 
     case 'tag':
-      path = `${TAG_BASE}/${trimmedSlug}`;
+      // FIX: Erzeugt blog/tag/name (Passend zu deiner Ordnerstruktur)
+      path = `${BLOG_BASE}/${TAG_BASE}/${trimmedSlug}`;
       break;
 
     case 'asset':
-      return getAsset(slug); // Assets brauchen keine Sprache
+      return getAsset(slug); 
 
     case 'page':
     default:
-      // Bei normalen Seiten (z.B. 'about') bleibt der Slug wie er ist
       path = trimmedSlug;
       break;
   }
 
-  // 3. MAGIE: Native Astro Funktion nutzen
-  // Erzeugt automatisch /de/blog/mein-post oder /en/about
-  // Kümmert sich auch um Trailing Slashes gemäß deiner Astro Config.
+  // 3. Native Astro i18n Funktion
+  // Erzeugt /en/blog/category/tutorials oder /de/blog/tag/tools
   return getRelativeLocaleUrl(lang, path);
 };
 
 // ----------------------------------------------------------------------
-// HELPER FUNKTIONEN (Wrapper für Kompatibilität)
+// HELPER FUNKTIONEN
 // ----------------------------------------------------------------------
 
 export const getHomePermalink = (lang = 'en'): string => 
@@ -83,14 +81,13 @@ export const getHomePermalink = (lang = 'en'): string =>
 export const getBlogPermalink = (lang = 'en'): string => 
   getPermalink('', 'blog', lang);
 
-// Assets sind statisch und brauchen kein i18n
 export const getAsset = (path: string): string => {
   const clean = trimSlash(path);
   return clean ? `/${clean}` : '';
 };
 
 // ----------------------------------------------------------------------
-// CANONICAL URLS (Für SEO)
+// SEO: CANONICAL URLS
 // ----------------------------------------------------------------------
 export const getCanonical = (path = ''): string | URL => {
   const url = String(new URL(path, SITE.site));
@@ -103,10 +100,8 @@ export const getCanonical = (path = ''): string | URL => {
 };
 
 // ----------------------------------------------------------------------
-// NAVIGATION HELPER (Rekursiv)
+// NAVIGATION HELPER
 // ----------------------------------------------------------------------
-// Das hier wird von AstroWind genutzt, um ganze Menü-Strukturen zu parsen.
-// Wir reichen 'lang' einfach durch.
 export const applyGetPermalinks = (menu: any = {}, lang = 'en') => {
   if (Array.isArray(menu)) {
     return menu.map((item) => applyGetPermalinks(item, lang));
@@ -115,10 +110,8 @@ export const applyGetPermalinks = (menu: any = {}, lang = 'en') => {
     for (const key in menu) {
       if (key === 'href') {
         if (typeof menu[key] === 'string') {
-          // String Links: Sprach-Logik anwenden
           obj[key] = getPermalink(menu[key], 'page', lang);
         } else if (typeof menu[key] === 'object') {
-          // Objekt Links (z.B. { type: 'blog' })
           if (menu[key].type === 'home') {
             obj[key] = getHomePermalink(lang);
           } else if (menu[key].type === 'blog') {
@@ -130,7 +123,6 @@ export const applyGetPermalinks = (menu: any = {}, lang = 'en') => {
           }
         }
       } else {
-        // Rekursion für Untermenüs
         obj[key] = applyGetPermalinks(menu[key], lang);
       }
     }
