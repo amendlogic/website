@@ -8,6 +8,15 @@ import Steps from '~/components/widgets/Steps.astro';
 import Features3 from '~/components/widgets/Features3.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
+// 2. Pfade generieren (SSOT für [lang])
+export async function getStaticPaths() {
+  return getI18nPaths();
+}
+
+// 3. Sprache & Content laden
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
 const metadata = {
   title: 'Pricing',
 };
