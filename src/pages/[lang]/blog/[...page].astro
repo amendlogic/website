@@ -1,9 +1,6 @@
 ---
-import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
-
-// 1. WICHTIG: Alle Variablen aus deiner neuen blog.ts importieren
 import { fetchPosts, blogPostsPerPage, blogListRobots } from '~/utils/blog';
-
+import { LANGUAGES } from '~/i18n/config';
 import Layout from '~/layouts/PageLayout.astro';
 import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
@@ -12,64 +9,51 @@ import Pagination from '~/components/blog/Pagination.astro';
 export const prerender = true;
 
 export const getStaticPaths = (async ({ paginate }) => {
-  // Deine unterstützten Sprachen
-  const LANGUAGES = ['en', 'de'];
+  const locales = Object.keys(LANGUAGES);
+  const allPosts = await fetchPosts();
 
-  // 2. WICHTIG: Wir warten auf alle Promises (async fetchPosts)
   const paths = await Promise.all(
-    LANGUAGES.map(async (lang) => {
-      // Posts für die spezifische Sprache laden
-      const langPosts = await fetchPosts(lang);
+    locales.map(async (lang) => {
+      let langPosts = allPosts.filter(p => p.lang === lang);
+      let isFallback = false;
 
-      // Pagination erstellen
+      if (langPosts.length === 0) {
+        langPosts = allPosts; // Zeige alle Posts, wenn für die Sprache keine da sind
+        isFallback = true;
+      }
+
       return paginate(langPosts, {
-        params: { lang }, // Die Sprache als Parameter für die URL
+        params: { lang },
         pageSize: blogPostsPerPage || 6,
+        props: { isFallback }
       });
     })
   );
 
-  // Das Ergebnis flachklopfen (Array von Arrays -> Ein Array)
   return paths.flat();
 }) satisfies GetStaticPaths;
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths>;
-
-const { page } = Astro.props;
+const { page, isFallback } = Astro.props;
 const { lang } = Astro.params;
 
-const currentPage = page.currentPage ?? 1;
-
-// 3. Metadaten erstellen
 const metadata = {
-  title: `Blog${currentPage > 1 ? ` — Seite ${currentPage}` : ''}`,
-  robots: {
-    // Nur die erste Seite indexieren, aber Links auf allen Seiten folgen
-    index: blogListRobots?.index && currentPage === 1,
-    follow: blogListRobots?.follow,
-  },
-  openGraph: {
-    type: 'blog',
-  },
+  title: `Blog`,
+  robots: { index: !isFallback, follow: true },
 };
-
-// Einfache Übersetzungs-Logik für den Header
-const titleText = lang === 'de' ? 'Der Blog' : 'The Blog';
-const subtitleText = lang === 'de' 
-  ? 'Neuigkeiten, Tutorials und Ressourcen für dein Trading.' 
-  : 'News, tutorials, and resources for your trading journey.';
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+  <section class="px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    {isFallback && lang === 'de' && (
+      <div class="mb-8 bg-blue-50 dark:bg-slate-800 border-l-4 border-blue-500 p-4 rounded shadow-sm">
+        <p class="text-sm text-blue-800 dark:text-blue-200">
+          Wir haben noch keine deutschen Artikel veröffentlicht. Hier sind unsere neuesten englischen Beiträge:
+        </p>
+      </div>
+    )}
     
-    <Headline subtitle={subtitleText}>
-      {titleText}
-    </Headline>
-    
+    <Headline> {lang === 'de' ? 'Der Blog' : 'The Blog'} </Headline>
     <BlogList posts={page.data} />
-
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
-    
   </section>
 </Layout>
