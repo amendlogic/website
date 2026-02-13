@@ -1,13 +1,13 @@
 {
   "en": {
     "hero": {
-      "titleStart": "Trade with",
-      "titleAccent": "Logic",
-      "titleEnd": "Not Emotion",
-      "subtitle": "ensures disciplined trading and consistent execution.",
-      "tagline": "Automated Trading Strategy",
-      "btnPrimary": "Get Template",
-      "btnSecondary": "Learn more"
+      "titleStart": "Smart\u00A0Trading.",
+      "titleAccent": "Clear\u00A0Rules.",
+      "titleEnd": "No\u00A0Guesswork.",
+      "subtitle": "is a TradingView strategy developed for systematic, automated trading. It follows predefined rules to analyze the market, execute trades, and manage risk consistently.",
+      "tagline": "Automated trading built to simplify decisions and enforce discipline.",
+      "btnPrimary": "Get it for TradingView",
+      "btnSecondary": "Explore the system"
     },
     "note": {
       "title": "Our philosophy:",
