@@ -9,11 +9,11 @@ import footerDe from './locales/de/footer.json';
 // Exportiere ein Objekt, das nach Sprachen sortiert ist
 export const ui = {
   en: {
-    ...homeEn,
-    ...footerEn,
+    homeEn,
+    footerEn,
   },
   de: {
-    ...homeDe,
-    ...footerDe,
+    homeDe,
+    footerDe,
   },
 } as const;
