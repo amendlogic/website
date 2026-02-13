@@ -1,6 +1,7 @@
 ---
 import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 import { blogTagRobots, fetchPosts, blogPostsPerPage } from '~/utils/blog';
+import { LANGUAGES } from '~/i18n/config';
 import Layout from '~/layouts/PageLayout.astro';
 import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
@@ -9,38 +10,33 @@ import Pagination from '~/components/blog/Pagination.astro';
 export const prerender = true;
 
 export const getStaticPaths = (async ({ paginate }) => {
-  const LANGUAGES = ['en', 'de'];
+  const locales = Object.keys(LANGUAGES);
+  const allPosts = await fetchPosts();
 
   const paths = await Promise.all(
-    LANGUAGES.map(async (lang) => {
-      // 1. Posts laden
-      const posts = await fetchPosts(lang);
-      
-      // 2. Alle Tags sammeln
+    locales.map(async (lang) => {
       const tags = new Set<string>();
-      posts.forEach((post) => {
-        if (Array.isArray(post.tags)) {
-          post.tags.forEach(tag => tags.add(tag.slug));
-        }
+      allPosts.forEach((post) => {
+        post.tags?.forEach(t => tags.add(t.slug));
       });
 
-      // 3. Pagination für jeden Tag erstellen
       return Array.from(tags).flatMap((tagSlug) => {
-        // Filtern: Nur Posts mit diesem Tag
-        const tagPosts = posts.filter((post) => 
-          Array.isArray(post.tags) && post.tags.some(t => t.slug === tagSlug)
+        let tagPosts = allPosts.filter(
+          (post) => post.lang === lang && post.tags?.some(t => t.slug === tagSlug)
         );
-        
-        // Tag-Daten holen (für Titel)
-        const tagData = tagPosts[0].tags.find(t => t.slug === tagSlug);
+        let isFallback = false;
+
+        if (tagPosts.length === 0) {
+          tagPosts = allPosts.filter((post) => post.tags?.some(t => t.slug === tagSlug));
+          isFallback = true;
+        }
+
+        const tagData = tagPosts[0]?.tags.find(t => t.slug === tagSlug);
 
         return paginate(tagPosts, {
-          params: { 
-            lang: lang, 
-            tag: tagSlug // WICHTIG: Muss zum Ordnernamen [tag] passen
-          },
+          params: { lang, tag: tagSlug },
           pageSize: blogPostsPerPage || 6,
-          props: { tag: tagData },
+          props: { tag: tagData, isFallback },
         });
       });
     })
@@ -49,30 +45,29 @@ export const getStaticPaths = (async ({ paginate }) => {
   return paths.flat();
 }) satisfies GetStaticPaths;
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths> & { tag: any };
-
-const { page, tag } = Astro.props;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { page, tag, isFallback } = Astro.props;
 const { lang } = Astro.params;
 
-const currentPage = page.currentPage ?? 1;
-
 const metadata = {
-  title: `Tag: ${tag.title} ${currentPage > 1 ? ` — Page ${currentPage}` : ''}`,
-  robots: {
-    index: blogTagRobots?.index,
-    follow: blogTagRobots?.follow,
-  },
+  title: tag?.title || 'Tag',
+  robots: { index: !isFallback && blogTagRobots?.index, follow: true },
 };
-
-const headlineText = lang === 'de' ? 'Beiträge mit dem Tag' : 'Posts tagged with';
 ---
 
 <Layout metadata={metadata}>
   <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <Headline subtitle={`${headlineText}: ${tag.title}`}>
-      {tag.title}
-    </Headline>
-    
+    {isFallback && (
+      <div class="mb-8 bg-blue-50 dark:bg-slate-800 border-l-4 border-blue-500 p-4 rounded shadow-sm">
+        <p class="text-sm text-blue-800 dark:text-blue-200">
+          {lang === 'de' 
+            ? 'Zu diesem Tag gibt es noch keine deutschen Beiträge. Zeige alle verfügbaren Artikel:' 
+            : 'No posts found for this tag in the selected language. Showing all available posts:'}
+        </p>
+      </div>
+    )}
+
+    <Headline> Tag: {tag?.title} </Headline>
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
   </section>
