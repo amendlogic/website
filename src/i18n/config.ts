@@ -1,6 +1,5 @@
 import { ui } from './ui';
 
-// 1. Definition der Sprachen
 export const LANGUAGES = {
   en: 'English',
   de: 'Deutsch',
@@ -8,40 +7,56 @@ export const LANGUAGES = {
 
 export const DEFAULT_LANG = 'en';
 
-// 2. Helper für [lang] Pfade
 export const getI18nPaths = () => {
   return Object.keys(LANGUAGES).map((lang) => ({
     params: { lang },
   }));
 };
 
-// 3. Übersetzungs-Funktion (angepasst an die neue Struktur)
 export function useTranslations(lang: string) {
-  return function t(key: string) { // string statt keyof, da Typescript bei JSON Spread manchmal zickt
-    
-    // Aktuelle Sprache oder Default
+  return function t(keyString: string) {
     const currentLang = (lang in LANGUAGES) ? (lang as keyof typeof LANGUAGES) : DEFAULT_LANG;
     const defaultLang = DEFAULT_LANG;
 
-    // Zugriff auf das Sprach-Objekt (z.B. ui.de)
-    // @ts-ignore
-    const strings = ui[currentLang];
-    // @ts-ignore
-    const defaultStrings = ui[defaultLang];
-
-    // Zugriff auf den Key
-    const text = strings[key] || defaultStrings[key];
-
-    if (!text) {
-      console.warn(`[i18n] Key "${key}" not found in language "${currentLang}" or fallback.`);
-      return key;
+    // 1. Key splitten: "home.hero.titleStart" -> file: "home", key: "hero.titleStart"
+    const firstDotIndex = keyString.indexOf('.');
+    
+    // Sicherheitscheck: Hat der Key überhaupt einen Punkt?
+    if (firstDotIndex === -1) {
+      console.warn(`[i18n] Key "${keyString}" needs a namespace (e.g. 'home.title')`);
+      return keyString;
     }
 
-    return text;
+    const namespace = keyString.substring(0, firstDotIndex); // z.B. "home"
+    const specificKey = keyString.substring(firstDotIndex + 1); // z.B. "hero.titleStart"
+
+    // 2. Zugriff auf die Sprach-Ebene
+    // @ts-ignore
+    const langObj = ui[currentLang];
+    // @ts-ignore
+    const defaultObj = ui[defaultLang];
+
+    // 3. Zugriff auf die Datei-Ebene (Namespace)
+    const fileObj = langObj[namespace] || defaultObj[namespace];
+
+    if (!fileObj) {
+      console.warn(`[i18n] Namespace "${namespace}" not found in ui.ts`);
+      return keyString;
+    }
+
+    // 4. Zugriff auf den eigentlichen Text
+    const text = fileObj[specificKey];
+
+    // Fallback auf Default-Sprache, wenn Text fehlt
+    if (!text && currentLang !== defaultLang) {
+       const fallbackFileObj = defaultObj[namespace];
+       return fallbackFileObj ? fallbackFileObj[specificKey] || keyString : keyString;
+    }
+
+    return text || keyString;
   };
 }
 
-/** Helper um Sprache aus URL zu lesen */
 export function getLangFromUrl(url: URL) {
   const [, lang] = url.pathname.split('/');
   if (lang in LANGUAGES) return lang as keyof typeof LANGUAGES;
