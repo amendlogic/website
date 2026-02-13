@@ -3,7 +3,6 @@ import { getI18nPaths, DEFAULT_LANG, useTranslations } from '~/i18n/config';
 import { SITE } from 'astrowind:config';
 
 // 1. Daten und Navigation importieren
-import landingData from '~/i18n/landing.json';
 import { getFooterData } from '~/navigation.ts';
 
 // Layout & Widgets
@@ -27,15 +26,17 @@ const { lang } = Astro.params;
 const t = useTranslations(lang);
 
 // 4. Footer zusammenbauen
-const baseFooterData = getFooterData(currentLang);
+const baseFooterData = getFooterData(lang);
+const disclaimerItems = t('footer.footerDisclaimer');
+
 const homeFooterData = {
   ...baseFooterData,
-  disclaimer: txt.footerDisclaimer
+  disclaimer: disclaimerItems
 };
 
 // 5. Metadaten
 const metadata = {
-  title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
+  title: `${t('home.hero.titleStart')} ${t('home.hero.titleAccent')} — AmendLogic`,
   ignoreTitleTemplate: true,
 };
 ---
