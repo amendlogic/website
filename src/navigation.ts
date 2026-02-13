@@ -120,8 +120,8 @@ export const getFooterData = (lang = 'en') => {
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
       { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
-      { ariaLabel: t('nav.social.rss'), icon: 'tabler:rss', href: getAsset('/rss.xml') },
-      { ariaLabel: t('nav.social.github'), icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
+      { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
+      { ariaLabel: 'GitHub', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
     ],
     footNote: `
     © ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">AmendLogic</a> · ${t('nav.footer.rights')} · <a href="#" data-cc="show-preferencesModal" class="text-blue-600 underline dark:text-muted">Cookie Settings</a>
