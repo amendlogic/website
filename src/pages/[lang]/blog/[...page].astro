@@ -5,31 +5,24 @@ import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
 import Pagination from '~/components/blog/Pagination.astro';
 
-// Wir nutzen deine neue, optimierte blog.ts
-import { fetchPosts, blogPostsPerPage } from '~/utils/blog'; 
-import { APP_BLOG } from 'astrowind:config';
+// FIX: blogListRobots hier importieren!
+import { fetchPosts, blogPostsPerPage, blogListRobots } from '~/utils/blog'; 
 
 export const prerender = true;
 
 export const getStaticPaths = (async ({ paginate }) => {
-  // Config: Deine Sprachen (Hardcoded oder aus Config importieren)
   const LANGUAGES = ['en', 'de'];
 
-  // 1. FIX: Promise.all nutzen, statt direkt flatMap mit async
   const paths = await Promise.all(
     LANGUAGES.map(async (lang) => {
-      // Posts für diese Sprache holen (mit deinem neuen Cache-System)
       const langPosts = await fetchPosts(lang);
-
-      // Pagination erstellen
       return paginate(langPosts, {
-        params: { lang }, // WICHTIG: 'lang' muss in den params sein!
+        params: { lang },
         pageSize: blogPostsPerPage || 6,
       });
     })
   );
 
-  // 2. Das Ergebnis "flachklopfen" (Array von Arrays -> Ein Array)
   return paths.flat();
 }) satisfies GetStaticPaths;
 
@@ -43,6 +36,7 @@ const currentPage = page.currentPage ?? 1;
 const metadata = {
   title: `Blog ${currentPage > 1 ? ` — Page ${currentPage}` : ''}`,
   robots: {
+    // Jetzt kennt er die Variable
     index: blogListRobots?.index && currentPage === 1,
     follow: blogListRobots?.follow,
   },
@@ -53,16 +47,4 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <Headline
-      subtitle={lang === 'de' 
-        ? 'Neuigkeiten, Tutorials und Ressourcen.' 
-        : 'A statically generated blog example with news, tutorials, and resources.'}
-    >
-      {lang === 'de' ? 'Der Blog' : 'The Blog'}
-    </Headline>
-    
-    <BlogList posts={page.data} />
-    <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
-  </section>
-</Layout>
+   </Layout>
