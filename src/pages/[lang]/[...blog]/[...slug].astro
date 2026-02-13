@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import merge from 'lodash.merge';
+import type { ImageMetadata } from 'astro';
+
+import Layout from '~/layouts/PageLayout.astro';
+import SinglePost from '~/components/blog/SinglePost.astro';
+import ToBlogLink from '~/components/blog/ToBlogLink.astro';
+import RelatedPosts from '~/components/blog/RelatedPosts.astro';
+
+import { getCanonical, getPermalink } from '~/utils/permalinks';
+import { findImage } from '~/utils/images';
+import type { MetaData } from '~/types';
+import { blogPostRobots } from '~/utils/blog';
+
+export const prerender = true;
+
+// 1. NEUE LOGIK: Pfade basierend auf Ordnerstruktur (en/de) generieren
+export async function getStaticPaths() {
+  const posts = await getCollection('post');
+
+  return posts.map((post) => {
+    // Die ID ist z.B. "en/my-first-post.md" oder "de/mein-erster-post.md"
+    // Wir splitten das am ersten Slash "/"
+    const [lang, ...slugParts] = post.id.split('/');
+    
+    // Den Slug bereinigen (Dateiendung weg)
+    // Wenn im Frontmatter ein 'slug' definiert ist, hat der Vorrang, sonst Dateiname
+    const slug = post.slug || slugParts.join('/').replace(/\.[^/.]+$/, "");
+
+    return {
+      params: { 
+        lang: lang, // 'en' oder 'de'
+        slug: slug  // 'my-first-post'
+      },
+      props: { post },
+    };
+  });
+}
+
+// 2. Props & Params holen
+const { post } = Astro.props;
+const { lang } = Astro.params;
+
+// 3. Permalink generieren (Jetzt mit 'lang'!)
+const url = getCanonical(getPermalink(post.permalink || post.slug, 'post', lang));
+
+// 4. Bild verarbeiten
+const image = (await findImage(post.image)) as ImageMetadata | string | undefined;
+
+// 5. Content rendern (Native Astro Funktion)
+const { Content } = await post.render();
+
+// 6. Metadaten zusammenbauen
+const metadata = merge(
+  {
+    title: post.title,
+    description: post.excerpt,
+    robots: {
+      index: blogPostRobots?.index,
+      follow: blogPostRobots?.follow,
+    },
+    openGraph: {
+      type: 'article',
+      ...(image
+        ? { images: [{ url: image, width: (image as ImageMetadata)?.width, height: (image as ImageMetadata)?.height }] }
+        : {}),
+    },
+  },
+  { ...(post?.metadata ? { ...post.metadata, canonical: post.metadata?.canonical || url } : {}) }
+) as MetaData;
+---
+
+<Layout metadata={metadata}>
+  <SinglePost post={{ ...post, image: image }} url={url}>
+    <Content />
+  </SinglePost>
+  
+  <ToBlogLink />
+  
+  <RelatedPosts post={post} />
+</Layout>
