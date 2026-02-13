@@ -1,9 +1,19 @@
-// Importiere die separaten JSON Dateien
-import home from './locales/home.json';
-import footer from './locales/footer.json';
+// Englisch Imports
+import homeEn from './locales/en/home.json';
+import footerEn from './locales/en/footer.json';
 
-// Füge alles in ein großes UI-Objekt zusammen
+// Deutsch Imports
+import homeDe from './locales/de/home.json';
+import footerDe from './locales/de/footer.json';
+
+// Exportiere ein Objekt, das nach Sprachen sortiert ist
 export const ui = {
-  ...home,
-  ...footer,
+  en: {
+    ...homeEn,
+    ...footerEn,
+  },
+  de: {
+    ...homeDe,
+    ...footerDe,
+  },
 } as const;
