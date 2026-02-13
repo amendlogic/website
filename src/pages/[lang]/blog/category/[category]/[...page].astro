@@ -1,6 +1,6 @@
 ---
 import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
-import { blogCategoryRobots, fetchPosts, blogPostsPerPage } from '~/utils/blog'; // Neue Imports
+import { blogCategoryRobots, fetchPosts, blogPostsPerPage } from '~/utils/blog';
 import Layout from '~/layouts/PageLayout.astro';
 import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
@@ -11,13 +11,12 @@ export const prerender = true;
 export const getStaticPaths = (async ({ paginate }) => {
   const LANGUAGES = ['en', 'de'];
 
-  // 1. Wir gehen durch jede Sprache
   const paths = await Promise.all(
     LANGUAGES.map(async (lang) => {
-      // 2. Alle Posts dieser Sprache holen
+      // 1. Posts für die Sprache laden
       const posts = await fetchPosts(lang);
       
-      // 3. Alle Kategorien in dieser Sprache sammeln
+      // 2. Alle Kategorien sammeln, die in diesen Posts vorkommen
       const categories = new Set<string>();
       posts.forEach((post) => {
         if (post.category?.slug) {
@@ -25,18 +24,18 @@ export const getStaticPaths = (async ({ paginate }) => {
         }
       });
 
-      // 4. Für jede Kategorie eine Pagination erstellen
+      // 3. Pagination für jede Kategorie erstellen
       return Array.from(categories).flatMap((categorySlug) => {
         // Filtern: Nur Posts dieser Kategorie
         const categoryPosts = posts.filter((post) => post.category?.slug === categorySlug);
         
-        // Das Kategorie-Objekt für den Titel holen (vom ersten Post nehmen)
+        // Titel der Kategorie holen (vom ersten Post nehmen)
         const categoryData = categoryPosts[0].category;
 
         return paginate(categoryPosts, {
           params: { 
             lang: lang, 
-            category: categorySlug 
+            category: categorySlug // WICHTIG: Muss zum Ordnernamen [category] passen
           },
           pageSize: blogPostsPerPage || 6,
           props: { category: categoryData },
@@ -55,6 +54,7 @@ const { lang } = Astro.params;
 
 const currentPage = page.currentPage ?? 1;
 
+// Metadaten erstellen
 const metadata = {
   title: `Category '${category.title}' ${currentPage > 1 ? ` — Page ${currentPage}` : ''}`,
   robots: {
@@ -62,11 +62,13 @@ const metadata = {
     follow: blogCategoryRobots?.follow,
   },
 };
+
+const headlineText = lang === 'de' ? 'Kategorie' : 'Category';
 ---
 
 <Layout metadata={metadata}>
   <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <Headline>
+    <Headline subtitle={`${headlineText}: ${category.title}`}>
       {category.title}
     </Headline>
     
