@@ -3,13 +3,14 @@ import type { CollectionEntry } from 'astro:content';
 import type { Post } from '~/types';
 import { APP_BLOG } from 'astrowind:config';
 import { cleanSlug, getPermalink } from './permalinks';
+import { LANGUAGES, DEFAULT_LANG } from '~/i18n/config'; // <--- WICHTIG: Importiere die Config!
 
 // --------------------------------------------------------------------------
 // CONFIG & CACHING
 // --------------------------------------------------------------------------
 
-const LOCALES = ['en', 'de'];
-const DEFAULT_LANG = 'en';
+// Wir holen die Sprachen dynamisch aus deiner Config, statt sie hier hardzucodieren
+const LOCALES = Object.keys(LANGUAGES); 
 
 // Regex: Erkennt "en/" oder "de/" am Anfang der ID
 const LOCALE_REGEX = new RegExp(`^(${LOCALES.join('|')})/`);
@@ -44,7 +45,7 @@ const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> 
     lang = match[1];
   }
 
-  // 2. ID bereinigen
+  // 2. ID bereinigen (Sprach-Präfix entfernen)
   const baseId = id.replace(LOCALE_REGEX, '').replace(/\.[^/.]+$/, "");
   const slug = cleanSlug(data.slug || baseId);
 
@@ -117,15 +118,16 @@ export const isBlogTagRouteEnabled = APP_BLOG.tag.isEnabled;
 
 export const blogPostsPerPage = APP_BLOG?.postsPerPage;
 
-// --- HIER WAR DER FEHLER: Diese Exports haben gefehlt ---
+// SEO Robots Exports (Wichtig für deine Pages!)
 export const blogListRobots = APP_BLOG.list.robots;
 export const blogPostRobots = APP_BLOG.post.robots;
-export const blogCategoryRobots = APP_BLOG.category.robots; // <--- Jetzt da!
-export const blogTagRobots = APP_BLOG.tag.robots;           // <--- Jetzt da!
-// --------------------------------------------------------
+export const blogCategoryRobots = APP_BLOG.category.robots; 
+export const blogTagRobots = APP_BLOG.tag.robots;           
 
 /**
- * Holt Posts für eine bestimmte Sprache.
+ * Holt Posts. 
+ * - Ohne 'lang': Gibt ALLE Posts zurück (Wichtig für getStaticPaths).
+ * - Mit 'lang': Filtert strikt nach Sprache.
  */
 export const fetchPosts = async (lang?: string) => {
   const posts = await load();
@@ -133,7 +135,9 @@ export const fetchPosts = async (lang?: string) => {
 };
 
 /**
- * Holt Posts mit Fallback auf Default-Sprache (für Widgets).
+ * Optional: Nützlich für Widgets (z.B. Latest Posts auf der Homepage).
+ * Wenn du auf der DE-Startseite bist, aber keine DE-Posts hast,
+ * zeigt diese Funktion englische Posts statt gar nichts an.
  */
 export const fetchPostsWithFallback = async (lang: string) => {
   const posts = await load();
@@ -158,6 +162,7 @@ export const findPostsByIds = async (ids: string[]) => {
 };
 
 export const getRelatedPosts = async (original: Post, maxResults = 4) => {
+  // Wir suchen Related Posts nur in der GLEICHEN Sprache wie der Artikel selbst
   const posts = await fetchPosts(original.lang);
   const tagSet = new Set(original.tags.map((t) => t.slug));
 
