@@ -1,7 +1,6 @@
 ---
 import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
-import { blogCategoryRobots, getStaticPathsBlogCategory } from '~/utils/blog';
-
+import { blogCategoryRobots, fetchPosts, blogPostsPerPage } from '~/utils/blog'; // Neue Imports
 import Layout from '~/layouts/PageLayout.astro';
 import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
@@ -10,12 +9,49 @@ import Pagination from '~/components/blog/Pagination.astro';
 export const prerender = true;
 
 export const getStaticPaths = (async ({ paginate }) => {
-  return await getStaticPathsBlogCategory({ paginate });
+  const LANGUAGES = ['en', 'de'];
+
+  // 1. Wir gehen durch jede Sprache
+  const paths = await Promise.all(
+    LANGUAGES.map(async (lang) => {
+      // 2. Alle Posts dieser Sprache holen
+      const posts = await fetchPosts(lang);
+      
+      // 3. Alle Kategorien in dieser Sprache sammeln
+      const categories = new Set<string>();
+      posts.forEach((post) => {
+        if (post.category?.slug) {
+          categories.add(post.category.slug);
+        }
+      });
+
+      // 4. Für jede Kategorie eine Pagination erstellen
+      return Array.from(categories).flatMap((categorySlug) => {
+        // Filtern: Nur Posts dieser Kategorie
+        const categoryPosts = posts.filter((post) => post.category?.slug === categorySlug);
+        
+        // Das Kategorie-Objekt für den Titel holen (vom ersten Post nehmen)
+        const categoryData = categoryPosts[0].category;
+
+        return paginate(categoryPosts, {
+          params: { 
+            lang: lang, 
+            category: categorySlug 
+          },
+          pageSize: blogPostsPerPage || 6,
+          props: { category: categoryData },
+        });
+      });
+    })
+  );
+
+  return paths.flat();
 }) satisfies GetStaticPaths;
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths> & { category: Record<string, string> };
+type Props = InferGetStaticPropsType<typeof getStaticPaths> & { category: any };
 
-const { page, category } = Astro.props as Props;
+const { page, category } = Astro.props;
+const { lang } = Astro.params;
 
 const currentPage = page.currentPage ?? 1;
 
@@ -30,7 +66,10 @@ const metadata = {
 
 <Layout metadata={metadata}>
   <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <Headline>{category.title}</Headline>
+    <Headline>
+      {category.title}
+    </Headline>
+    
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
   </section>
