@@ -7,6 +7,15 @@ import Stats from '~/components/widgets/Stats.astro';
 import Steps2 from '~/components/widgets/Steps2.astro';
 import Layout from '~/layouts/PageLayout.astro';
 
+// 2. Pfade generieren (SSOT für [lang])
+export async function getStaticPaths() {
+  return getI18nPaths();
+}
+
+// 3. Sprache & Content laden
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
 const metadata = {
   title: 'About us',
 };
