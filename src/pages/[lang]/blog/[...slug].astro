@@ -1,28 +1,27 @@
 ---
 import { fetchPosts, blogPostRobots } from '~/utils/blog';
+import { LANGUAGES } from '~/i18n/config'; // Deine SSoT
 import merge from 'lodash.merge';
 import Layout from '~/layouts/PageLayout.astro';
 import SinglePost from '~/components/blog/SinglePost.astro';
 import ToBlogLink from '~/components/blog/ToBlogLink.astro';
 import RelatedPosts from '~/components/blog/RelatedPosts.astro';
 import { getCanonical, getPermalink } from '~/utils/permalinks';
-import { Icon } from 'astro-icon/components';
 
 export const prerender = true;
 
 export async function getStaticPaths() {
   const posts = await fetchPosts();
-  const LANGUAGES = ['en', 'de'];
+  const locales = Object.keys(LANGUAGES); // Dynamisch aus deiner Config
   const allSlugs = [...new Set(posts.map(p => p.slug))];
 
-  return LANGUAGES.flatMap((lang) => {
+  return locales.flatMap((lang) => {
     return allSlugs.map((slug) => {
       let post = posts.find((p) => p.slug === slug && p.lang === lang);
       let isFallback = false;
 
       if (!post) {
-        // Fallback-Logik: Nimm die erste verfügbare Sprache für diesen Slug
-        post = posts.find((p) => p.slug === slug);
+        post = posts.find((p) => p.slug === slug); // Finde Post in irgendeiner Sprache
         isFallback = true;
       }
 
@@ -46,7 +45,7 @@ const metadata = merge(
     title: post.title,
     description: post.excerpt,
     robots: {
-      index: !isFallback && blogPostRobots?.index,
+      index: !isFallback && blogPostRobots?.index, // SEO: Fallbacks nicht indexieren
       follow: blogPostRobots?.follow,
     },
     openGraph: { type: 'article', image: post.image },
@@ -56,23 +55,28 @@ const metadata = merge(
 ---
 
 <Layout metadata={metadata}>
-  {isFallback && (
-    <div class="container mx-auto px-4 sm:px-6 max-w-3xl mt-8 sm:mt-16 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-      <div class="flex items-start gap-4 p-4 rounded-lg bg-blue-50 dark:bg-slate-800 border-l-4 border-blue-500 dark:border-blue-700 shadow-sm" role="alert">
-        <Icon name="tabler:info-circle" class="w-6 h-6 flex-shrink-0 mt-0.5 text-blue-500" />
-        <div>
-          <h3 class="font-medium text-sm uppercase tracking-wide mb-1 text-blue-800 dark:text-blue-200">
-            {lang === 'de' ? 'Hinweis' : 'Note'}
-          </h3>
-          <p class="text-sm leading-relaxed text-blue-800 dark:text-blue-200">
-            {lang === 'de'
+  <section class="py-8 sm:py-16 lg:py-20 mx-auto">
+    
+    {isFallback && (
+      <div
+        class="container mx-auto px-4 sm:px-6 max-w-3xl mt-8 sm:mt-16 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+        <div
+          class="flex items-start gap-4 p-4 rounded-lg bg-blue-50 dark:bg-slate-800 border-l-4 border-blue-500 dark:border-blue-700 shadow-sm"
+          role="alert">
+          <Icon name="tabler:info-circle" class="w-6 h-6 flex-shrink-0 mt-0.5 text-blue-500" />
+          <div>
+            <h3 class="font-medium text-sm uppercase tracking-wide mb-1 text-blue-800 dark:text-blue-200">
+              {lang === 'de' ? 'Hinweis' : 'Note'}
+            </h3>
+            <p class="text-sm leading-relaxed text-blue-800 dark:text-blue-200">
+              {lang === 'de'
               ? `Dieser Artikel ist leider noch nicht auf Deutsch verfügbar. Wir zeigen dir daher die englische Version.`
               : `This article is currently not available in your language. We are displaying the original version.`}
-          </p>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  )}
+    )}
 
     <SinglePost post={post} url={url}>
       <post.Content />
@@ -80,4 +84,5 @@ const metadata = merge(
     
     <ToBlogLink />
     <RelatedPosts post={post} />
+  </section>
 </Layout>
