@@ -1,0 +1,58 @@
+{
+  "hero.titleStart": "Handle mit",
+  "hero.titleAccent": "Logik",
+  "hero.titleEnd": "Nicht Emotionen",
+  "hero.subtitle": "sorgt für diszipliniertes Trading und konsistente Ausführung.",
+  "hero.tagline": "Automatisierte Trading Strategie",
+  "hero.btnPrimary": "Vorlage holen",
+  "hero.btnSecondary": "Mehr erfahren",
+  "note.title": "Unsere Philosophie:",
+  "note.desc": "Diszipliniertes Trading und konsistente Ausführung sicherstellen, unabhängig von den Marktbedingungen.",
+  "features1.tagline": "Funktionen",
+  "features1.title": "Was du bekommst",
+  "features1.contentTitle": "Marktstruktur & Trenderkennung",
+  "features1.contentDesc": "Fokus auf signifikante Chancen – nicht auf ständige Aktivität.",
+  "features1.items": [
+    { "title": "Marktanalyse", "description": "Erkennt Trends und strukturelle Marktveränderungen anhand objektiver Preisdaten.", "icon": "tabler:device-analytics" },
+    { "title": "Adaptives Verhalten", "description": "Passt die Logik an, wenn sich die Marktdynamik im Laufe der Zeit ändert.", "icon": "tabler:activity" },
+    { "title": "Automatisierte Ausführung", "description": "Trades werden sofort und konsistent auf der Grundlage definierter Regeln ausgeführt.", "icon": "tabler:settings-automation" }
+  ],
+  "features2.contentTitle": "Risikomanagement & Schutz",
+  "features2.contentDesc": "Entwickelt, um Kapital zu schützen und Konsistenz durchzusetzen.",
+  "features2.items": [
+    { "title": "Risikokontrolle", "description": "Integrierte Schutzmaßnahmen begrenzen Drawdowns.", "icon": "tabler:alert-hexagon" },
+    { "title": "Overtrading-Schutz", "description": "Reduziert die Handelsaktivität in unklaren Marktphasen.", "icon": "tabler:waves-electricity" },
+    { "title": "Konfigurierbare Parameter", "description": "Risikolevel und Strategieverhalten anpassbar.", "icon": "tabler:adjustments" }
+  ],
+  "steps.tagline": "Wie es funktioniert",
+  "steps.title": "Einfach per Design",
+  "steps.subtitle": "Die Strategie läuft direkt auf TradingView. Sie analysiert kontinuierlich Preisdaten und generiert Handelssignale.",
+  "steps.items": [
+    { "title": "Daten <span class=\"font-medium\">— Indikator Signal</span>", "description": "Marktbedingungen werden analysiert.", "icon": "tabler:number-1" },
+    { "title": "Logik <span class=\"font-medium\">— Signal zum Trade</span>", "description": "Signale werden via Webhook übertragen.", "icon": "tabler:number-2" },
+    { "title": "Ausführung <span class=\"font-medium\">— Order Platzierung</span>", "description": "Validierte Handelsanweisungen werden automatisch ausgeführt.", "icon": "tabler:number-3" }
+  ],
+  "chart.tagline": "Performance",
+  "chart.title": "Basierend auf Daten",
+  "chart.subtitle": "Die Strategie wird mit historischen Daten getestet, um ihr Verhalten in verschiedenen Marktphasen zu verstehen.",
+  "testimonials.tagline": "Kundenstimmen",
+  "testimonials.title": "Worte echter Kunden",
+  "testimonials.btnText": "Mehr Meinungen...",
+  "testimonials.items": [
+    { "name": "Emily Kennedy", "job": "Front-end Entwicklerin", "testimonial": "Die Designs sind nicht nur optisch ansprechend, sondern auch hochprofessionell.", "image": "https://images.unsplash.com/photo-1618835962148-cf177563c6c0?auto=format&fit=crop&w=930&q=80" },
+    { "name": "Sarah Hansen", "job": "Fotografin", "testimonial": "Es präsentiert meine Arbeit wunderschön.", "image": "https://images.unsplash.com/photo-1561406636-b80293969660?auto=format&fit=crop&w=774&q=80" },
+    { "name": "Mark Wilkinson", "job": "Kleinunternehmer", "testimonial": "Ich bin beeindruckt von der Vielfalt und Qualität.", "image": "https://images.unsplash.com/photo-1545167622-3a6ac756afa4?auto=format&fit=crop&w=824&q=80" }
+  ],
+  "faqs.tagline": "FAQs",
+  "faqs.title": "Gut zu wissen",
+  "faqs.subtitle": "Antworten auf die häufigsten Fragen.",
+  "faqs.items": [
+    { "title": "Welche Märkte werden unterstützt?", "description": "Optimiert für Bitcoin, aber anwendbar auf andere volatile Assets." },
+    { "title": "Wie geht das System mit Volatilität um?", "description": "Die Strategie passt sich dynamisch an." },
+    { "title": "Sind alle Trades profitabel?", "description": "Nein. Nicht jeder Trade wird profitabel sein." }
+  ],
+  "cta.titleLine1": "Handle mit Logik,",
+  "cta.titleLine2": "Nicht Emotion.",
+  "cta.subtitle": "Automatisiere deine Strategie, erzwinge Disziplin und eliminiere das Raten.",
+  "cta.btnText": "Jetzt Zugang erhalten"
+}
