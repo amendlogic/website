@@ -1,9 +1,9 @@
 ---
-import { getI18nPaths, DEFAULT_LANG, useTranslations } from '~/i18n/config';
+import { getI18nPaths, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
 import { SITE } from 'astrowind:config';
 
 // 1. Daten und Navigation importieren
-import { getFooterData } from '~/navigation.ts';
+import { getFooterData } from '~/navigation';
 
 // Layout & Widgets
 import Layout from '~/layouts/PageLayout.astro';
@@ -11,12 +11,12 @@ import Hero from '~/components/widgets/Hero.astro';
 import Note from '~/components/widgets/Note.astro';
 import Content from '~/components/widgets/Content.astro';
 import Steps from '~/components/widgets/Steps.astro';
-import EChart from '~/components/widgets/EChart.astro'; 
+import EChart from '~/components/widgets/EChart.astro';
 import Testimonials from '~/components/widgets/Testimonials.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
-// 2. Pfade generieren (SSOT)
+// 2. Pfade generieren (SSOT für [lang])
 export async function getStaticPaths() {
   return getI18nPaths();
 }
@@ -42,73 +42,79 @@ const metadata = {
 ---
 
 <Layout metadata={metadata} footerData={homeFooterData}>
-  
-  <Hero 
+
+  <Hero
     image={{ src: '~/assets/images/hero-image.png', alt: 'AstroWind Hero Image' }}
   >
     <Fragment slot="actions">
       <a href="https://github.com/arthelokyo/astrowind" target="_blank" class="btn btn-primary inline-flex items-center gap-2">
-        {txt.hero.btnPrimary}
+        {t('home.hero.btnPrimary')}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 1 59 59" class="w-10 h-10 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block">
           <path d="M33 17c-3.5 0-6.3 2.85-6.35 6.35 0 3.5 2.85 6.35 6.35 6.35s6.35-2.85 6.35-6.35S36.5 17 33 17ZM45.7 45.5 57.6 17H44.95L33.05 45.5H45.7Zm-22.25 0V17H1.3V28.1H12.4V45.5H23.5Z" fill="#FFFFFF"/>
         </svg>
       </a>
       <a href="#features" class="btn btn-secondary">
-        {txt.hero.btnSecondary}
+        {t('home.hero.btnSecondary')}
       </a>
     </Fragment>
 
     <Fragment slot="title">
       {t('home.hero.titleStart')}
-      <span class="text-accent dark:text-white"> {txt.hero.titleAccent}</span> {txt.hero.titleEnd}
+      <span class="text-accent dark:text-white"> {t('home.hero.titleAccent')}</span> {t('home.hero.titleEnd')}
     </Fragment>
 
     <Fragment slot="subtitle">
-        <span class="block mb-1 font-bold text-blue-600">{txt.hero.tagline}</span>
-        <span class="font-semibold">{SITE?.name}</span> {txt.hero.subtitle}
+      <span class="block mb-1 font-bold text-blue-600">{t('home.hero.tagline')}</span>
+      <span class="font-semibold">{SITE?.name}</span> {t('home.hero.subtitle')}
     </Fragment>
   </Hero>
 
-  <Note title={txt.note.title} description={txt.note.desc} />
+  <Note 
+    title={t('home.note.title')} 
+    description={t('home.note.desc')} 
+  />
 
   <Content
     isReversed
     id="features"
-    tagline={txt.features1.tagline}
-    title={txt.features1.title}
-    items={txt.features1.items}
+    tagline={t('home.features1.tagline')}
+    title={t('home.features1.title')}
+    items={t('home.features1.items')} 
     image={{
       src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       alt: 'Colorful Image',
     }}
   >
     <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">{txt.features1.contentTitle}</h3>
-      {txt.features1.contentDesc}
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+        {t('home.features1.contentTitle')}
+      </h3>
+      {t('home.features1.contentDesc')}
     </Fragment>
   </Content>
 
   <Content
     isAfterContent
-    items={txt.features2.items}
+    items={t('home.features2.items')}
     image={{
       src: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2194&q=80',
       alt: 'Blueprint Image',
     }}
   >
     <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">{txt.features2.contentTitle}</h3>
-      {txt.features2.contentDesc}
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+        {t('home.features2.contentTitle')}
+      </h3>
+      {t('home.features2.contentDesc')}
     </Fragment>
   </Content>
 
-
   <Steps
-    tagline={txt.steps.tagline}
-    title={txt.steps.title}
-    subtitle={txt.steps.subtitle}
+    tagline={t('home.steps.tagline')}
+    title={t('home.steps.title')}
+    subtitle={t('home.steps.subtitle')}
     isReversed={true}
-    items={txt.steps.items}
+    items={t('home.steps.items')}
     image={{
       src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&auto=format&fit=crop&w=987&q=80',
       alt: 'Steps image',
@@ -116,9 +122,9 @@ const metadata = {
   />
 
   <EChart
-    tagline={txt.chart.tagline}
-    title={txt.chart.title}
-    subtitle={txt.chart.subtitle}
+    tagline={t('home.chart.tagline')}
+    title={t('home.chart.title')}
+    subtitle={t('home.chart.subtitle')}
     height="400px"
     options={{
       tooltip: { trigger: "axis", valueFormatter: v => `${v}%` },
@@ -137,33 +143,33 @@ const metadata = {
   />
 
   <Testimonials
-    tagline={txt.testimonials.tagline}
-    title={txt.testimonials.title}
-    testimonials={txt.testimonials.items.map(item => ({
+    tagline={t('home.testimonials.tagline')}
+    title={t('home.testimonials.title')}
+    testimonials={t('home.testimonials.items').map(item => ({
       ...item,
-      image: { src: item.image, alt: item.name } // JSON Strings in Astro Images umwandeln
+      image: { src: item.image, alt: item.name }
     }))}
     callToAction={{
       target: '_blank',
-      text: txt.testimonials.btnText,
+      text: t('home.testimonials.btnText'),
       href: 'https://github.com/arthelokyo/astrowind',
       icon: 'tabler:chevron-right',
     }}
   />
 
   <FAQs
-    title={txt.faqs.title}
-    subtitle={txt.faqs.subtitle}
-    tagline={txt.faqs.tagline}
+    title={t('home.faqs.title')}
+    subtitle={t('home.faqs.subtitle')}
+    tagline={t('home.faqs.tagline')}
     classes={{ container: 'max-w-6xl' }}
-    items={txt.faqs.items}
+    items={t('home.faqs.items')}
   />
 
   <CallToAction
     actions={[
       {
         variant: 'primary',
-        text: txt.cta.btnText,
+        text: t('home.cta.btnText'),
         href: 'https://github.com/arthelokyo/astrowind',
         target: '_blank',
         icon: 'tabler:download',
@@ -171,10 +177,11 @@ const metadata = {
     ]}
   >
     <Fragment slot="title">
-      <span class="sm:whitespace-nowrap">{txt.cta.titleLine1}&nbsp;</span><br class="block" /><span class="sm:whitespace-nowrap">{txt.cta.titleLine2}</span>
+      <span class="sm:whitespace-nowrap">{t('home.cta.titleLine1')}&nbsp;</span><br class="block" />
+      <span class="sm:whitespace-nowrap">{t('home.cta.titleLine2')}</span>
     </Fragment>
     <Fragment slot="subtitle">
-      {txt.cta.subtitle}
+      {t('home.cta.subtitle')}
     </Fragment>
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
