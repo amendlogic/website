@@ -2,7 +2,7 @@
   "hero.titleStart": "Smart\u00A0Trading.",
   "hero.titleAccent": "Clear\u00A0Rules.",
   "hero.titleEnd": "No\u00A0Guesswork.",
-  "hero.subtitle": "is a TradingView strategy developed for systematic, automated trading. It follows predefined rules to analyze the market, execute trades, and manage risk consistently.",
+  "hero.subtitle": "is a TradingView strategy developed for systematic, automated trading. It follows predefined rules to analyze the market, execute trades, and manage risk consistently — helping traders stay disciplined across different market conditions.",
   "hero.tagline": "Automated trading built to simplify decisions and enforce discipline.",
   "hero.btnPrimary": "Get it for TradingView",
   "hero.btnSecondary": "Explore the system",
@@ -26,15 +26,15 @@
   ],
   "steps.tagline": "How It Works",
   "steps.title": "Simple by Design",
-  "steps.subtitle": "The strategy runs directly on TradingView. It continuously analyzes price data, generates trade signals based on predefined rules, and executes positions automatically.",
+  "steps.subtitle": "The strategy runs directly on TradingView. It continuously analyzes price data, generates trade signals based on predefined rules, and executes positions automatically. Once set up, it operates independently — without manual intervention or constant monitoring.",
   "steps.items": [
-    { "title": "Data <span class=\"font-medium\">— Indicator Signal</span>", "description": "Market conditions are analyzed by our proprietary indicator.", "icon": "tabler:number-1" },
-    { "title": "Logic <span class=\"font-medium\">— Signal to Trade</span>", "description": "Signals are transmitted via webhook and converted into structured trade instructions.", "icon": "tabler:number-2" },
-    { "title": "Execution <span class=\"font-medium\">— Order Placement</span>", "description": "Validated trade instructions are executed automatically.", "icon": "tabler:number-3" }
+    { "title": "Data <span class=\"font-medium\">— Indicator Signal</span>", "description": "Market conditions are analyzed by our proprietary indicator. When predefined conditions are met, a trading signal is generated.", "icon": "tabler:number-1" },
+    { "title": "Logic <span class=\"font-medium\">— Signal to Trade</span>", "description": "Signals are transmitted via webhook and converted into structured trade instructions. Parameters such as direction, size, and risk settings are automatically validated.", "icon": "tabler:number-2" },
+    { "title": "Execution <span class=\"font-medium\">— Order Placement</span>", "description": "Validated trade instructions are executed automatically. Orders are placed instantly, following defined risk and execution parameters.", "icon": "tabler:number-3" }
   ],
   "chart.tagline": "Performance",
   "chart.title": "Built on Data",
-  "chart.subtitle": "The strategy is tested using historical market data to understand how it behaves in trending, ranging, and volatile environments.",
+  "chart.subtitle": "The strategy is tested using historical market data to understand how it behaves in trending, ranging, and volatile environments. The focus lies on realistic assumptions, controlled risk, and consistent behavior rather than short-term optimization.",
   "testimonials.tagline": "Testimonials",
   "testimonials.title": "Words from real customers",
   "testimonials.btnText": "More testimonials...",
@@ -60,6 +60,6 @@
   ],
   "cta.titleLine1": "Trade with Logic,",
   "cta.titleLine2": "Not Emotion.",
-  "cta.subtitle": "Automate your strategy, enforce discipline and eliminate the guesswork.",
+  "cta.subtitle": "Automate your strategy, enforce discipline, and eliminate the guesswork. Experience systematic trading on TradingView today.",
   "cta.btnText": "Get Access Now"
 }
