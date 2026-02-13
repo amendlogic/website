@@ -49,6 +49,13 @@
   "faqs.items": [
     { "title": "Which markets and timeframes are supported?", "description": "Our strategy is optimized for Bitcoin but can be applied to other volatile assets." },
     { "title": "How does the system handle market volatility?", "description": "The strategy adapts dynamically to changing market conditions." },
+    { "title": "Are all trades profitable?", "description": "No. Not every trade will be profitable." },
+    { "title": "Are all trades profitable?", "description": "No. Not every trade will be profitable." },
+    { "title": "Are all trades profitable?", "description": "No. Not every trade will be profitable." },
+    { "title": "Are all trades profitable?", "description": "No. Not every trade will be profitable." },
+    { "title": "Are all trades profitable?", "description": "No. Not every trade will be profitable." },
+    { "title": "Are all trades profitable?", "description": "No. Not every trade will be profitable." },
+    { "title": "Are all trades profitable?", "description": "No. Not every trade will be profitable." },
     { "title": "Are all trades profitable?", "description": "No. Not every trade will be profitable." }
   ],
   "cta.titleLine1": "Trade with Logic,",
