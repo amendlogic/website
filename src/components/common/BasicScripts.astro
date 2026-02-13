@@ -24,9 +24,11 @@ window.basic_script_init = true;
     const resolved = theme === 'system' ? getSystemTheme() : theme;
     const isDark = resolved === 'dark';
 
-    requestAnimationFrame(() => {
-      toggleClass(document.documentElement, 'dark', isDark);
+    // FIX: Dark Mode sofort anwenden, um White-Flash zu verhindern
+    toggleClass(document.documentElement, 'dark', isDark);
 
+    // UI Updates (Icons) können asynchron laufen
+    requestAnimationFrame(() => {
       document.querySelectorAll('[data-aw-theme-icon]').forEach((icon) =>
         toggleClass(icon, 'hidden', icon.dataset.awThemeIcon !== theme)
       );
@@ -90,7 +92,7 @@ window.basic_script_init = true;
       header.classList.toggle('bg-page', isOpen);
       nav.classList.toggle('hidden', !isOpen);
 
-      // FIX: Icons umschalten (Flip-Logik statt Force-Logik)
+      // Icons umschalten
       menuBtn.querySelectorAll('svg, [data-aw-icon]').forEach((icon) =>
         icon.classList.toggle('hidden')
       );
@@ -104,8 +106,6 @@ window.basic_script_init = true;
 
     const onNavClick = (e) => {
       const trigger = e.target.closest('.dropdown > button, .dropdown > a');
-      
-      // Abbruch, wenn Menü-Button unsichtbar ist (Desktop-Ansicht)
       if (!trigger || window.getComputedStyle(menuBtn).display === 'none') return;
 
       e.preventDefault();
