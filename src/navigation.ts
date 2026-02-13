@@ -108,11 +108,11 @@ export const getFooterData = (lang = 'en') => {
     ],
     secondaryLinks: [
       { 
-        text: 'English', 
+        text: 'We speak English', 
         href: getHomePermalink('en'), 
       },
       { 
-        text: 'Deutsch', 
+        text: 'Wir sprechen Deutsch', 
         href: getHomePermalink('de'), 
       },
     ],
