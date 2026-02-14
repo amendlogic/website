@@ -1,6 +1,6 @@
 import { SITE } from 'astrowind:config';
 import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './utils/permalinks';
-import { useTranslations } from '~/i18n/config';
+import { useTranslations } from '~/i18n/utils';
 
 export const getHeaderData = (lang = 'en') => {
   const t = useTranslations(lang);
