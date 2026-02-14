@@ -1,5 +1,8 @@
 import { z, defineCollection } from 'astro:content';
 
+// ----------------------------------------------------------------------------
+// 1. METADATA HELPER (Unverändert, aber wiederverwendbar)
+// ----------------------------------------------------------------------------
 const metadataDefinition = () =>
   z
     .object({
@@ -40,6 +43,9 @@ const metadataDefinition = () =>
     })
     .optional();
 
+// ----------------------------------------------------------------------------
+// 2. BLOG POST COLLECTION (Deine bestehende)
+// ----------------------------------------------------------------------------
 const postCollection = defineCollection({
   type: 'content', 
   
@@ -60,6 +66,29 @@ const postCollection = defineCollection({
   }),
 });
 
+// ----------------------------------------------------------------------------
+// 3. NEU: PAGES COLLECTION (Für Terms, Privacy, Imprint etc.)
+// ----------------------------------------------------------------------------
+const pagesCollection = defineCollection({
+  type: 'content',
+  
+  schema: z.object({
+    // Datum ist optional, aber gut für "Zuletzt aktualisiert am..." in AGBs
+    updateDate: z.date().optional(), 
+    draft: z.boolean().optional(),
+
+    // Titel ist Pflicht (z.B. "Datenschutzerklärung")
+    title: z.string(),
+
+    // Auch hier Metadaten erlauben (z.B. um Impressum auf noindex zu setzen)
+    metadata: metadataDefinition(),
+  }),
+});
+
+// ----------------------------------------------------------------------------
+// 4. EXPORTS
+// ----------------------------------------------------------------------------
 export const collections = {
   post: postCollection,
+  pages: pagesCollection, // <--- Hier registriert!
 };
