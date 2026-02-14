@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import type { Post } from '~/types';
 import { APP_BLOG } from 'astrowind:config';
 import { cleanSlug, getPermalink } from './permalinks';
-import { LANGUAGES, DEFAULT_LANG } from '~/i18n/config'; // <--- WICHTIG: Importiere die Config!
+import { LANGUAGES, DEFAULT_LANG } from '~/i18n/utils'; // <--- WICHTIG: Importiere die Config!
 
 // --------------------------------------------------------------------------
 // CONFIG & CACHING
