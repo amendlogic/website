@@ -4,7 +4,7 @@
   "hero.titleEnd": "No\u00A0Guesswork.",
   "hero.subtitle": "A systematic TradingView strategy designed for automated execution. It analyzes market structure, manages risk, and executes trades based on strict rules — keeping you disciplined in every market condition.",
   "hero.tagline": "Automated trading built to standardize decisions and enforce discipline.",
-  "hero.btnPrimary": "Get it for TradingView",
+  "hero.btnPrimary": "Start Automating Now",
   "hero.btnSecondary": "Explore the system",
   "note.title": "Our philosophy:",
   "note.desc": "To ensure disciplined trading and consistent execution, regardless of market volatility.",
@@ -36,12 +36,12 @@
   "chart.title": "Built on Data",
   "chart.subtitle": "Backed by extensive testing on historical data. The strategy is built to withstand trending, ranging, and volatile environments, focusing on realistic growth and controlled risk rather than curve-fitted optimization.",
   "testimonials.tagline": "Testimonials",
-  "testimonials.title": "Words from real customers",
+  "testimonials.title": "Words from real traders",
   "testimonials.btnText": "More testimonials...",
   "testimonials.items": [
-    { "name": "Emily Kennedy", "job": "Front-end developer", "testimonial": "The designs are not only visually appealing but also highly professional.", "image": "https://images.unsplash.com/photo-1618835962148-cf177563c6c0?auto=format&fit=crop&w=930&q=80" },
-    { "name": "Sarah Hansen", "job": "Photographer", "testimonial": "It beautifully showcases my work, with its clean and elegant design.", "image": "https://images.unsplash.com/photo-1561406636-b80293969660?auto=format&fit=crop&w=774&q=80" },
-    { "name": "Mark Wilkinson", "job": "Small business owner", "testimonial": "I discovered these templates and I am impressed by their variety and quality.", "image": "https://images.unsplash.com/photo-1545167622-3a6ac756afa4?auto=format&fit=crop&w=824&q=80" }
+    { "name": "Alex M.", "job": "Part-time Trader", "testimonial": "Finally, I can trade without staring at charts all day. The discipline this system enforces has completely stopped my revenge trading.", "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80" },
+    { "name": "David K.", "job": "Software Engineer", "testimonial": "I appreciate the logic behind the entries. It doesn't trade just for the sake of it. The overtrading protection saved me during the last chop.", "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80" },
+    { "name": "Sophie L.", "job": "Crypto Investor", "testimonial": "Trustworthy and consistent. Unlike other bots I tried, this one prioritizes risk management over unrealistic gains. Highly recommended.", "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80" }
   ],
   "faqs.tagline": "FAQs",
   "faqs.title": "Good to Know",
