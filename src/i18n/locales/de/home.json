@@ -61,13 +61,5 @@
   "cta.titleLine1": "Handle mit Logik,",
   "cta.titleLine2": "nicht mit Emotionen.",
   "cta.subtitle": "Automatisiere deine Strategie, erzwinge Disziplin und beende das Rätselraten noch heute.",
-  "cta.btnText": "Jetzt Zugang sichern",
-  "footerDisclaimer": [
-    { "text": "1. **Risikohinweis:** Trading birgt erhebliche Risiken und kann zum Verlust deines Kapitals führen. Du solltest nicht mehr investieren, als du zu verlieren bereit bist. Die Inhalte dienen nur der Information und sind keine Finanzberatung." },
-    { "text": "2. **Hypothetische Performance:** Die Ergebnisse auf dieser Website basieren auf simulierten oder hypothetischen Ergebnissen, die Einschränkungen unterliegen. Im Gegensatz zu echten Trades repräsentieren diese keine tatsächlichen Handlungen. Es wird keine Garantie für zukünftige Gewinne übernommen." },
-    { "text": "3. **Testimonials:** Erfahrungsberichte sind Einzelergebnisse und nicht repräsentativ für alle Kunden. Sie stellen keine Garantie für zukünftige Erfolge dar." },
-    { "text": "4. **Software-Anbieter:** Wir bieten technische Analyse-Tools und automatisierte Strategien an. Wir haben keinen Zugriff auf deine privaten Konten und sind kein registrierter Finanzberater oder Broker." },
-    { "text": "5. **Kennzeichnung:** Charts werden von <a class=\"underline\" href=\"https://www.tradingview.com/\" target=\"_blank\">TradingView</a> bereitgestellt. TradingView® ist eine eingetragene Marke der TradingView, Inc. Diese Strategie steht in keiner offiziellen Verbindung zu TradingView." },
-    { "text": "Für vollständige Details zu Haftung und Risiken lies bitte unsere <a class=\"underline\" href=\"/terms\">Nutzungsbedingungen</a> und den vollständigen <a class=\"underline\" href=\"/risk-disclosure\">Risikohinweis</a>." }
-  ]
+  "cta.btnText": "Jetzt Zugang sichern"
 }
