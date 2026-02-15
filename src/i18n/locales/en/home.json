@@ -61,13 +61,5 @@
   "cta.titleLine1": "Trade with Logic,",
   "cta.titleLine2": "Not Emotion.",
   "cta.subtitle": "Automate your strategy, enforce discipline, and eliminate the guesswork. Experience systematic trading on TradingView today.",
-  "cta.btnText": "Get Access Now",
-  "footerDisclaimer": [
-    { "text": "1. **Risk Warning:** Trading involves significant risk and can result in the loss of your invested capital. You should not invest more than you can afford to lose. The content provided is for educational and informational purposes only and does not constitute financial advice." },
-    { "text": "2. **Hypothetical Performance:** The results presented on this website are based on simulated or hypothetical performance results that have certain inherent limitations. Unlike the results shown in an actual performance record, these results do not represent actual trading. Also, because these trades have not actually been executed, these results may have under-or over-compensated for the impact, if any, of certain market factors, such as lack of liquidity. No representation is being made that any account will or is likely to achieve profits or losses similar to those shown." },
-    { "text": "3. **Testimonials:** Testimonials appearing on this website may not be representative of the experience of other clients or customers and is not a guarantee of future performance or success." },
-    { "text": "4. **Software Provider:** We are a provider of technical analysis tools and automated strategies. We do not have access to your personal trading accounts or funds. We are not a registered financial advisor or broker-dealer." },
-    { "text": "5. **Attribution:** Charts and data used on this website are powered by <a class=\"underline\" href=\"https://www.tradingview.com/\" target=\"_blank\">TradingView</a>. TradingView® is a registered trademark of TradingView, Inc. This strategy is not affiliated with, endorsed by, or sponsored by TradingView." },
-    { "text": "For full details regarding liability, risks, and data usage, please refer to our <a class=\"underline\" href=\"/terms\">Terms of Service</a> and full <a class=\"underline\" href=\"/risk-disclosure\">Risk Disclosure</a>." }
-  ]
+  "cta.btnText": "Get Access Now"
 }
