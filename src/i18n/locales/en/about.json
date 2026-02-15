@@ -1,10 +1,17 @@
 {
-  "about.title": "Our Story & Philosophy",
-  "about.intro": "For a long time, trading felt like a battle between intuition, emotion, and hindsight. The deeper I went into the markets, the clearer one thing became: success isn’t built on perfect predictions — it’s built on discipline, structure, and repeatable rules.",
-  "about.founding": "I founded this company to turn that realization into a professional-grade solution. We don’t offer a 'black box' or a 'get-rich-quick bot.' We provide a systematic rule set that reads the market objectively and executes with precision.",
-  "about.philosophyTitle": "Trading is Selective Action",
-  "about.philosophyDesc": "Good trading is not about reacting to every move. It is about acting only when conditions truly align — and then following the plan without hesitation. Our goal is not maximum activity, but stable, reproducible performance.",
-  "about.riskFocus": "For us, risk is more important than profit. Our system includes safeguards to limit drawdowns and reduce overtrading in unclear market phases.",
-  "about.whyUs": "We deliberately chose to build a focused firm rather than an anonymous platform. We stand directly behind our strategy because transparency matters. Using this system means working with a company that prioritizes long-term trust over fast sales.",
-  "about.finalThought": "Trading doesn’t have to be a guessing game. With clear rules, it becomes a profession."
+  "about.hero.title": "Our Journey & Philosophy",
+  "about.story.title": "From Intuition to Structure",
+  "about.story.content": "For a long time, trading felt like a battle between intuition, emotion, and hindsight. The deeper I went into the markets, the clearer one thing became: success isn’t built on perfect predictions — it’s built on discipline, structure, and repeatable rules. From that realization, I developed this strategy to simplify decisions and maintain consistency — no matter how chaotic the market appears.",
+  "about.definition.title": "Not a Black Box",
+  "about.definition.content": "I don’t call it a 'bot' or a 'black box system.' Instead, it is a systematic rule set that reads the market objectively, evaluates opportunities in a structured way, and executes trades automatically.",
+  "about.philosophy.title": "Trading is Selective Action",
+  "about.philosophy.content": "Good trading is not about reacting to every market move. It is about acting only when conditions truly make sense — and then following the plan without hesitation. The goal is not maximum activity, but stable and reproducible performance.",
+  "about.methodology.title": "Market Structure & Trend Detection",
+  "about.methodology.content": "At its core, the strategy relies on objective market analysis. It detects trends and structural shifts directly from price data without subjective interpretation. It adapts to changing market dynamics instead of remaining rigid. Less guesswork. More structure.",
+  "about.risk.title": "Risk Management as a Foundation",
+  "about.risk.content": "For me, risk is more important than profit. That’s why the system includes safeguards that limit drawdowns, reduce overtrading in unclear phases, and control overall exposure. Parameters can be adjusted to match individual risk preferences.",
+  "about.transparency.title": "Why a Founder-Led Firm?",
+  "about.transparency.content": "We deliberately chose to offer this as a focused firm because I stand directly behind the strategy. Transparency matters to us. We prefer building long-term trust over fast sales. Using this system means working with a company that values accountability.",
+  "about.closing": "Trading doesn’t have to be a guessing game. Trade with Logic, Not Emotion."
 }
+
