@@ -1,36 +1,95 @@
 ---
+// ==========================================
+// 1. IMPORTS
+// ==========================================
 import { getCollection } from 'astro:content';
+import { LANGUAGES, DEFAULT_LANG } from '~/i18n/utils';
 import Layout from '~/layouts/PageLayout.astro';
-import { getLocalizedPathname } from '~/i18n/utils';
+import Notice from '~/components/ui/Notice.astro';
 
-// 1. Generiere Pfade für ALLE Sprachen und ALLE Pages
+// ==========================================
+// 2. CONFIG
+// ==========================================
+export const prerender = true;
+
+// ==========================================
+// 3. ROUTING LOGIK (Matrix: Sprache x Seite)
+// ==========================================
 export async function getStaticPaths() {
   const pages = await getCollection('pages');
+  const locales = Object.keys(LANGUAGES);
 
-  return pages.map((page) => {
-    // Die ID ist z.B. "de/terms" oder "en/privacy"
-    const [lang, ...slugParts] = page.slug.split('/');
-    const slug = slugParts.join('/');
+  // A. Alle einzigartigen "Basis-Slugs" finden
+  // Wir entfernen das Sprach-Präfix (z.B. "de/terms" -> "terms")
+  const allSlugs = new Set(
+    pages.map((page) => {
+      const parts = page.slug.split('/');
+      // Wenn der Slug "de/terms" ist, nehmen wir alles nach dem ersten Slash
+      return parts.slice(1).join('/');
+    })
+  );
 
-    return {
-      params: { lang, slug },
-      props: { page },
-    };
+  // B. Matrix erstellen
+  return locales.flatMap((lang) => {
+    return Array.from(allSlugs).map((baseSlug) => {
+      
+      // 1. Versuche exakten Match (z.B. "de/terms")
+      // Wir bauen den gesuchten Slug: "de" + "/" + "terms"
+      let page = pages.find((p) => p.slug === `${lang}/${baseSlug}`);
+      let isFallback = false;
+
+      // 2. Fallback suchen (z.B. "en/terms"), falls Match fehlt
+      if (!page) {
+        page = pages.find((p) => p.slug === `${DEFAULT_LANG}/${baseSlug}`);
+        isFallback = true;
+      }
+
+      // 3. Wenn Seite gar nicht existiert (auch nicht im Default), überspringen
+      if (!page) return null;
+
+      return {
+        params: { lang, slug: baseSlug },
+        props: { page, isFallback },
+      };
+    }).filter(Boolean);
   });
 }
 
-const { page } = Astro.props;
-const { Content } = await page.render();
+// ==========================================
+// 4. PAGE CONTEXT
+// ==========================================
+const { page, isFallback } = Astro.props;
 const { lang } = Astro.params;
 
-// Metadaten für das Layout
+// Content rendern
+const { Content } = await page.render();
+
+// ==========================================
+// 5. METADATEN
+// ==========================================
 const metadata = {
   title: page.data.title,
+  // Metadaten aus dem Frontmatter mergen (z.B. noindex für Terms)
+  ...(page.data.metadata || {}),
+  robots: {
+    // Fallbacks nicht indexieren, um Duplicate Content zu vermeiden
+    index: !isFallback && (page.data.metadata?.robots?.index ?? true),
+    follow: page.data.metadata?.robots?.follow ?? true,
+  }
 };
 ---
 
 <Layout metadata={metadata}>
   <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
+    
+    {isFallback && (
+      <Notice title={lang === 'de' ? 'Sprachhinweis' : 'Language Note'}>
+        {lang === 'de'
+          ? `Diese Seite ("${page.data.title}") ist noch nicht auf Deutsch verfügbar. Wir zeigen dir die englische Originalversion.`
+          : `This page ("${page.data.title}") is not available in your language yet. Showing the original version.`}
+      </Notice>
+    )}
+
     <h1 class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter mb-8 font-heading">
       {page.data.title}
     </h1>
@@ -38,5 +97,12 @@ const metadata = {
     <div class="mx-auto prose prose-lg max-w-4xl dark:prose-invert dark:prose-headings:text-slate-300 prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8">
       <Content />
     </div>
+
+    {page.data.updateDate && (
+      <div class="mt-8 text-sm text-gray-500 dark:text-gray-400">
+        {lang === 'de' ? 'Zuletzt aktualisiert:' : 'Last updated:'} {page.data.updateDate.toLocaleDateString(lang)}
+      </div>
+    )}
+
   </section>
 </Layout>
