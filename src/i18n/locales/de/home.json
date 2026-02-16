@@ -1,7 +1,7 @@
 {
-  "hero.titleStart": "Systematisches\u00A0Trading.",
-  "hero.titleAccent": "Definierte\u00A0Regeln.",
-  "hero.titleEnd": "Disziplinierte\u00A0Ausführung.",
+  "hero.titleStart": "Systematisches Trading.",
+  "hero.titleAccent": "Definierte Regeln.",
+  "hero.titleEnd": "Disziplinierte Ausführung.",
   "hero.subtitle": "Eine strukturierte TradingView-Strategie, entwickelt aus jahrelanger praktischer Krypto-Markterfahrung. Gebaut, um Entscheidungen zu standardisieren, Risiken zu managen und konsistent zu agieren – selbst unter volatilen Bedingungen.",
   "hero.tagline": "Logikbasierte Automatisierung für disziplinierte Trader.",
   "hero.btnPrimary": "Strategie aktivieren",
@@ -138,8 +138,7 @@
     { "title": "Welcher Support wird angeboten?", "description": "Unser Team ist rund um die Uhr per Chat und E-Mail für dich da." }
   ],
 
-  "cta.titleLine1": "Strukturiere dein Trading,",
-  "cta.titleLine2": "eliminiere Emotionen.",
+  "cta.title": "Strukturiere dein Trading, eliminiere Emotionen.",
   "cta.subtitle": "Nutze ein regelbasiertes Framework, das für Beständigkeit in volatilen Märkten entwickelt wurde.",
   "cta.btnText": "System aktivieren"
 }
