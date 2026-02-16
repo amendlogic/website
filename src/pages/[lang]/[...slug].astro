@@ -60,6 +60,7 @@ export async function getStaticPaths() {
 // ==========================================
 const { page, isFallback } = Astro.props;
 const { lang } = Astro.params;
+const t = useTranslations(lang);
 
 // Content rendern
 const { Content } = await page.render();
@@ -80,16 +81,13 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
+  <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
 
     {isFallback && (
-      <Notice title={lang === 'de' ? 'Sprachhinweis' : 'Language Note'}>
-        {lang === 'de'
-          ? `Diese Seite ("${page.data.title}") ist noch nicht auf Deutsch verfügbar. Wir zeigen dir die englische Originalversion.`
-          : `This page ("${page.data.title}") is not available in your language yet. Showing the original version.`}
+      <Notice title={t('fallbacks.page.title')}>
+        {t('fallbacks.page.desc')} 
       </Notice>
     )}
-
-  <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
 
     <h1 class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter mb-8 font-heading">
       {page.data.title}
