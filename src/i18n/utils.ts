@@ -1,61 +1,64 @@
 import { ui } from './ui';
 
-// -------------------------
-// Typen
-// -------------------------
 export const LANGUAGES = {
   en: 'English',
   de: 'Deutsch',
 } as const;
 
-export type Language = keyof typeof LANGUAGES;
+export const DEFAULT_LANG = 'en';
 
-export const DEFAULT_LANG: Language = 'en';
-
-type UI = typeof ui;
-
-// -------------------------
-// Pfade für Static Generation
-// -------------------------
-export const getI18nPaths = (): { params: { lang: Language } }[] =>
-  Object.keys(LANGUAGES).map((lang) => ({
-    params: { lang: lang as Language },
+export const getI18nPaths = () => {
+  return Object.keys(LANGUAGES).map((lang) => ({
+    params: { lang },
   }));
+};
 
-// -------------------------
-// Hauptfunktion: useTranslations
-// -------------------------
 export function useTranslations(lang: string) {
-  const currentLang: Language = lang in LANGUAGES ? (lang as Language) : DEFAULT_LANG;
+  return function t(keyString: string) {
+    const currentLang = (lang in LANGUAGES) ? (lang as keyof typeof LANGUAGES) : DEFAULT_LANG;
+    const defaultLang = DEFAULT_LANG;
 
-  // Funktion für rekursives Traversieren von verschachtelten Keys
-  const getValue = (obj: any, path: string): string | undefined =>
-    path.split('.').reduce((acc, part) => acc?.[part], obj);
-
-  return function t(keyString: string): string {
-    if (!keyString.includes('.')) {
-      console.warn(`[i18n] Key "${keyString}" should include a namespace, e.g. "home.title"`);
+    // 1. Key splitten: "home.hero.titleStart" -> file: "home", key: "hero.titleStart"
+    const firstDotIndex = keyString.indexOf('.');
+    
+    // Sicherheitscheck: Hat der Key überhaupt einen Punkt?
+    if (firstDotIndex === -1) {
+      console.warn(`[i18n] Key "${keyString}" needs a namespace (e.g. 'home.title')`);
       return keyString;
     }
 
-    // Versuch erst die aktuelle Sprache, dann Default Language
-    const text =
-      getValue(ui[currentLang], keyString) ||
-      getValue(ui[DEFAULT_LANG], keyString);
+    const namespace = keyString.substring(0, firstDotIndex); // z.B. "home"
+    const specificKey = keyString.substring(firstDotIndex + 1); // z.B. "hero.titleStart"
 
-    if (!text) {
-      console.warn(`[i18n] Missing key "${keyString}" in language "${currentLang}" and fallback "${DEFAULT_LANG}"`);
+    // 2. Zugriff auf die Sprach-Ebene
+    // @ts-ignore
+    const langObj = ui[currentLang];
+    // @ts-ignore
+    const defaultObj = ui[defaultLang];
+
+    // 3. Zugriff auf die Datei-Ebene (Namespace)
+    const fileObj = langObj[namespace] || defaultObj[namespace];
+
+    if (!fileObj) {
+      console.warn(`[i18n] Namespace "${namespace}" not found in ui.ts`);
       return keyString;
     }
 
-    return text;
+    // 4. Zugriff auf den eigentlichen Text
+    const text = fileObj[specificKey];
+
+    // Fallback auf Default-Sprache, wenn Text fehlt
+    if (!text && currentLang !== defaultLang) {
+       const fallbackFileObj = defaultObj[namespace];
+       return fallbackFileObj ? fallbackFileObj[specificKey] || keyString : keyString;
+    }
+
+    return text || keyString;
   };
 }
 
-// -------------------------
-// Sprache aus URL ermitteln
-// -------------------------
-export function getLangFromUrl(url: URL): Language {
+export function getLangFromUrl(url: URL) {
   const [, lang] = url.pathname.split('/');
-  return (lang in LANGUAGES ? (lang as Language) : DEFAULT_LANG);
+  if (lang in LANGUAGES) return lang as keyof typeof LANGUAGES;
+  return DEFAULT_LANG;
 }
