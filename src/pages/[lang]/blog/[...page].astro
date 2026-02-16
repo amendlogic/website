@@ -1,6 +1,6 @@
 ---
 import { fetchPosts, blogPostsPerPage, blogListRobots } from '~/utils/blog';
-import { LANGUAGES } from '~/i18n/utils';
+import { LANGUAGES, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
 import Layout from '~/layouts/PageLayout.astro';
 import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
@@ -35,6 +35,7 @@ export const getStaticPaths = (async ({ paginate }) => {
 
 const { page, isFallback } = Astro.props;
 const { lang } = Astro.params;
+const t = useTranslations(lang);
 
 const metadata = {
   title: `Blog`,
@@ -44,13 +45,12 @@ const metadata = {
 
 <Layout metadata={metadata}>
   <section class="px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    {isFallback && lang === 'de' && (
-      <div class="mb-8 bg-blue-50 dark:bg-slate-800 border-l-4 border-blue-500 p-4 rounded shadow-sm">
-        <p class="text-sm text-blue-800 dark:text-blue-200">
-          Wir haben noch keine deutschen Artikel veröffentlicht. Hier sind unsere neuesten englischen Beiträge:
-        </p>
-      </div>
-    )}
+
+{isFallback && (
+    <Notice title={t('fallbacks.list.title')}>
+      {t('fallbacks.list.desc')}
+    </Notice>
+  )}
     
     <Headline> {lang === 'de' ? 'Der Blog' : 'The Blog'} </Headline>
     <BlogList posts={page.data} />
