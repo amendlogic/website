@@ -13,25 +13,34 @@ export type Language = keyof typeof LANGUAGES;
 export const DEFAULT_LANG: Language = "en";
 
 /* ------------------------------------------------ */
-/* 2. Type Magic (Full Autocomplete Support) */
+/* 2. Type Magic (Autocomplete + Smart Return) */
 /* ------------------------------------------------ */
 
 type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
 
-type NestedKeys<T> = (
-  T extends object
-    ? {
-        [K in keyof T & string]:
-          `${K}${DotPrefix<NestedKeys<T[K]>>}`;
+// Rekursive Key-Generierung, stoppt bei Arrays
+type NestedKeys<T> = T extends object
+  ? T extends any[]
+    ? "" // keine Autocomplete für Array-Indizes
+    : {
+        [K in keyof T & string]: `${K}${DotPrefix<NestedKeys<T[K]>>}`;
       }[keyof T & string]
-    : ""
-);
+  : "";
+
+// Rückgabetyp basierend auf Key
+type NestedValue<T, K extends string> = K extends `${infer Head}.${infer Rest}`
+  ? Head extends keyof T
+    ? NestedValue<T[Head], Rest>
+    : never
+  : K extends keyof T
+  ? T[K]
+  : never;
 
 type TranslationSchema = typeof ui[typeof DEFAULT_LANG];
 export type TranslationKey = NestedKeys<TranslationSchema>;
 
 /* ------------------------------------------------ */
-/* 3. Strict Deep Resolver (No any, Fast) */
+/* 3. Strict Deep Resolver (No any) */
 /* ------------------------------------------------ */
 
 function resolvePath(obj: unknown, path: string): unknown {
@@ -48,7 +57,6 @@ function resolvePath(obj: unknown, path: string): unknown {
     ) {
       return undefined;
     }
-
     current = (current as Record<string, unknown>)[part];
   }
 
@@ -56,7 +64,7 @@ function resolvePath(obj: unknown, path: string): unknown {
 }
 
 /* ------------------------------------------------ */
-/* 4. Interpolation */
+/* 4. Interpolation (Strings only) */
 /* ------------------------------------------------ */
 
 function interpolate(
@@ -72,64 +80,65 @@ function interpolate(
 }
 
 /* ------------------------------------------------ */
-/* 5. useTranslations (Strict + Typed) */
+/* 5. useTranslations (Master Function) */
 /* ------------------------------------------------ */
 
-export function useTranslations(lang: string) {
+export function useTranslations(lang: string | Language) {
   const currentLang: Language =
     lang in LANGUAGES ? (lang as Language) : DEFAULT_LANG;
 
   const langObj = ui[currentLang];
   const defaultObj = ui[DEFAULT_LANG];
 
-  const cache = new Map<string, string>();
+  const cache = new Map<string, unknown>();
 
   return function t<K extends TranslationKey>(
     key: K,
     vars?: Record<string, string | number>
-  ): string {
+  ): NestedValue<TranslationSchema, K> {
+    // Stabiler Cache-Key, sortiert die Variablen
+    const varsKey = vars
+      ? Object.entries(vars)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([k, v]) => `${k}:${v}`)
+          .join("|")
+      : "";
 
-    const cacheKey = vars
-      ? `${currentLang}:${key}:${JSON.stringify(vars)}`
-      : `${currentLang}:${key}`;
+    const cacheKey = `${currentLang}:${key}:${varsKey}`;
 
     if (cache.has(cacheKey)) {
-      return cache.get(cacheKey)!;
+      return cache.get(cacheKey) as NestedValue<TranslationSchema, K>;
     }
 
-    // 1️⃣ Lookup in active language
+    // 1️⃣ Aktuelle Sprache
     let value = resolvePath(langObj, key);
 
-    // 2️⃣ Fallback to default language
+    // 2️⃣ Fallback auf Default
     if (value === undefined && currentLang !== DEFAULT_LANG) {
       value = resolvePath(defaultObj, key);
     }
 
-    // 3️⃣ Strict validation
-    if (
-      value === undefined ||
-      (typeof value !== "string" && typeof value !== "number")
-    ) {
+    // 3️⃣ DEV-Validierung
+    if (value === undefined) {
       if (import.meta.env.DEV) {
         throw new Error(`[i18n] Missing translation: "${key}"`);
       }
-      return key;
+      return key as unknown as NestedValue<TranslationSchema, K>;
     }
 
-    let result = String(value);
-
-    // 4️⃣ Interpolation
-    if (vars) {
-      result = interpolate(result, vars);
+    // 4️⃣ Interpolation (nur Strings)
+    if (typeof value === "string") {
+      value = interpolate(value, vars);
     }
 
-    cache.set(cacheKey, result);
-    return result;
+    cache.set(cacheKey, value);
+
+    return value as NestedValue<TranslationSchema, K>;
   };
 }
 
 /* ------------------------------------------------ */
-/* 6. Astro Static Paths */
+/* 6. Helpers */
 /* ------------------------------------------------ */
 
 export const getI18nPaths = () =>
@@ -137,20 +146,10 @@ export const getI18nPaths = () =>
     params: { lang },
   }));
 
-/* ------------------------------------------------ */
-/* 7. Language from URL */
-/* ------------------------------------------------ */
-
 export function getLangFromUrl(url: URL): Language {
   const lang = url.pathname.split("/")[1];
-  return lang in LANGUAGES
-    ? (lang as Language)
-    : DEFAULT_LANG;
+  return lang in LANGUAGES ? (lang as Language) : DEFAULT_LANG;
 }
-
-/* ------------------------------------------------ */
-/* 8. Localized Path Helper */
-/* ------------------------------------------------ */
 
 export function getLocalizedPathname(
   pathname: string,
