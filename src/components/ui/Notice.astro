@@ -15,7 +15,7 @@ const {
 } = Astro.props;
 
 // Standard-Klassen für Layout und Animation
-const containerClasses = "container mx-auto px-4 sm:px-6 max-w-full mb-8 sm:mb-16 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade";
+const containerClasses = "container mx-auto max-w-full mb-8 sm:mb-16 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade";
 ---
 
 <div class={twMerge(containerClasses, className)}>
