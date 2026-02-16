@@ -1,6 +1,6 @@
 ---
 import { fetchPosts, blogPostRobots } from '~/utils/blog';
-import { LANGUAGES } from '~/i18n/utils'; // Deine SSoT
+import { LANGUAGES, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
 import merge from 'lodash.merge';
 import Layout from '~/layouts/PageLayout.astro';
 import SinglePost from '~/components/blog/SinglePost.astro';
@@ -39,6 +39,7 @@ export async function getStaticPaths() {
 
 const { post, isFallback } = Astro.props;
 const { lang } = Astro.params;
+const t = useTranslations(lang);
 
 const url = getCanonical(getPermalink(post.permalink, 'post', lang));
 
@@ -57,18 +58,18 @@ const metadata = merge(
 ---
 
 <Layout metadata={metadata}>
+<section class="py-8 sm:py-16 lg:py-20 mx-auto">
+
 {isFallback && (
-    <Notice title={lang === 'de' ? 'Hinweis' : 'Note'}>
-      {lang === 'de'
-        ? 'Dieser Artikel ist leider noch nicht auf Deutsch verfügbar. Wir zeigen dir daher die englische Version.'
-        : 'This article is currently not available in your language. We are displaying the original version.'}
+    <Notice title={t('fallbacks.post.title')}>
+      {t('fallbacks.post.desc')}
     </Notice>
   )}
 
     <SinglePost post={post} url={url}>
       <post.Content />
     </SinglePost>
-    
+    </section>
     <ToBlogLink />
     <RelatedPosts post={post} />
 </Layout>
