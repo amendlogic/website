@@ -1,64 +1,49 @@
-import { ui } from './ui';
+import { ui } from "./ui";
 
-/**
- * -----------------------------
- * 1. Language Setup
- * -----------------------------
- */
+/* ------------------------------------------------ */
+/* 1. Language Setup */
+/* ------------------------------------------------ */
 
 export const LANGUAGES = {
-  en: 'English',
-  de: 'Deutsch',
+  en: "English",
+  de: "Deutsch",
 } as const;
 
 export type Language = keyof typeof LANGUAGES;
+export const DEFAULT_LANG: Language = "en";
 
-export const DEFAULT_LANG: Language = 'en';
+/* ------------------------------------------------ */
+/* 2. Type Magic (Full Autocomplete Support) */
+/* ------------------------------------------------ */
 
-/**
- * -----------------------------
- * 2. Static Paths Helper (Astro)
- * -----------------------------
- */
+type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
 
-export const getI18nPaths = () => {
-  return (Object.keys(LANGUAGES) as Language[]).map((lang) => ({
-    params: { lang },
-  }));
-};
+type NestedKeys<T> = (
+  T extends object
+    ? {
+        [K in keyof T & string]:
+          `${K}${DotPrefix<NestedKeys<T[K]>>}`;
+      }[keyof T & string]
+    : ""
+);
 
-/**
- * -----------------------------
- * 3. Deep Value Resolver
- * Unterstützt:
- * - direkte keys
- * - verschachtelte keys (a.b.c)
- * - arrays
- * - objects
- * -----------------------------
- */
+type TranslationSchema = typeof ui[typeof DEFAULT_LANG];
+export type TranslationKey = NestedKeys<TranslationSchema>;
 
-function getValueFromObject(
-  obj: unknown,
-  key: string
-): unknown {
-  if (!obj || typeof obj !== 'object') return undefined;
+/* ------------------------------------------------ */
+/* 3. Strict Deep Resolver (No any, Fast) */
+/* ------------------------------------------------ */
 
-  const record = obj as Record<string, unknown>;
+function resolvePath(obj: unknown, path: string): unknown {
+  if (!obj || typeof obj !== "object") return undefined;
 
-  // Direkter Zugriff
-  if (record[key] !== undefined) {
-    return record[key];
-  }
-
-  // Verschachtelter Zugriff
-  const parts = key.split('.');
-  let current: unknown = record;
+  const parts = path.split(".");
+  let current: unknown = obj;
 
   for (const part of parts) {
     if (
-      !current ||
-      typeof current !== 'object' ||
+      current == null ||
+      typeof current !== "object" ||
       !(part in (current as Record<string, unknown>))
     ) {
       return undefined;
@@ -70,13 +55,9 @@ function getValueFromObject(
   return current;
 }
 
-/**
- * -----------------------------
- * 4. String Interpolation
- * Beispiel:
- * "Hello {name}"
- * -----------------------------
- */
+/* ------------------------------------------------ */
+/* 4. Interpolation */
+/* ------------------------------------------------ */
 
 function interpolate(
   text: string,
@@ -90,102 +71,97 @@ function interpolate(
   });
 }
 
-/**
- * -----------------------------
- * 5. useTranslations Hook
- * - Unterstützt Strings, Arrays, Objekte
- * - Fallback auf DEFAULT_LANG
- * - Caching
- * -----------------------------
- */
+/* ------------------------------------------------ */
+/* 5. useTranslations (Strict + Typed) */
+/* ------------------------------------------------ */
 
 export function useTranslations(lang: string) {
   const currentLang: Language =
     lang in LANGUAGES ? (lang as Language) : DEFAULT_LANG;
 
-  const cache = new Map<string, unknown>();
+  const langObj = ui[currentLang];
+  const defaultObj = ui[DEFAULT_LANG];
 
-  return function t<T = unknown>(
-    keyString: string,
+  const cache = new Map<string, string>();
+
+  return function t<K extends TranslationKey>(
+    key: K,
     vars?: Record<string, string | number>
-  ): T {
-    const cacheKey = `${currentLang}:${keyString}:${JSON.stringify(vars)}`;
+  ): string {
+
+    const cacheKey = vars
+      ? `${currentLang}:${key}:${JSON.stringify(vars)}`
+      : `${currentLang}:${key}`;
 
     if (cache.has(cacheKey)) {
-      return cache.get(cacheKey) as T;
+      return cache.get(cacheKey)!;
     }
 
-    const firstDotIndex = keyString.indexOf('.');
-    if (firstDotIndex === -1) {
-      console.warn(`[i18n] Key "${keyString}" needs namespace`);
-      return keyString as T;
-    }
+    // 1️⃣ Lookup in active language
+    let value = resolvePath(langObj, key);
 
-    const namespace = keyString.slice(0, firstDotIndex);
-    const specificKey = keyString.slice(firstDotIndex + 1);
-
-    const langObj = ui[currentLang];
-    const defaultObj = ui[DEFAULT_LANG];
-
-    const fileObj = langObj?.[namespace];
-    const defaultFileObj = defaultObj?.[namespace];
-
-    let value = getValueFromObject(fileObj, specificKey);
-
-    // Fallback auf Default Language
+    // 2️⃣ Fallback to default language
     if (value === undefined && currentLang !== DEFAULT_LANG) {
-      value = getValueFromObject(defaultFileObj, specificKey);
+      value = resolvePath(defaultObj, key);
     }
 
-    if (value === undefined) {
-      console.warn(`[i18n] Missing translation: "${keyString}"`);
-      return keyString as T;
+    // 3️⃣ Strict validation
+    if (
+      value === undefined ||
+      (typeof value !== "string" && typeof value !== "number")
+    ) {
+      if (import.meta.env.DEV) {
+        throw new Error(`[i18n] Missing translation: "${key}"`);
+      }
+      return key;
     }
 
-    // Interpolation nur bei Strings
-    if (typeof value === 'string' && vars) {
-      value = interpolate(value, vars);
+    let result = String(value);
+
+    // 4️⃣ Interpolation
+    if (vars) {
+      result = interpolate(result, vars);
     }
 
-    cache.set(cacheKey, value);
-
-    return value as T;
+    cache.set(cacheKey, result);
+    return result;
   };
 }
 
-/**
- * -----------------------------
- * 6. Sprache aus URL holen
- * -----------------------------
- */
+/* ------------------------------------------------ */
+/* 6. Astro Static Paths */
+/* ------------------------------------------------ */
+
+export const getI18nPaths = () =>
+  (Object.keys(LANGUAGES) as Language[]).map((lang) => ({
+    params: { lang },
+  }));
+
+/* ------------------------------------------------ */
+/* 7. Language from URL */
+/* ------------------------------------------------ */
 
 export function getLangFromUrl(url: URL): Language {
-  const [, lang] = url.pathname.split('/');
-
-  if (lang && lang in LANGUAGES) {
-    return lang as Language;
-  }
-
-  return DEFAULT_LANG;
+  const lang = url.pathname.split("/")[1];
+  return lang in LANGUAGES
+    ? (lang as Language)
+    : DEFAULT_LANG;
 }
 
-/**
- * -----------------------------
- * 7. Localized Path Helper
- * Dynamisch – keine hardcoded Regex
- * -----------------------------
- */
+/* ------------------------------------------------ */
+/* 8. Localized Path Helper */
+/* ------------------------------------------------ */
 
-export const getLocalizedPathname = (
+export function getLocalizedPathname(
   pathname: string,
   newLang: Language
-) => {
-  const langs = Object.keys(LANGUAGES).join('|');
+): string {
+  const langs = Object.keys(LANGUAGES).join("|");
   const langRegex = new RegExp(`^\\/(${langs})(?=\\/|$)`);
 
   if (langRegex.test(pathname)) {
     return pathname.replace(langRegex, `/${newLang}`);
   }
 
-  return `/${newLang}${pathname === '/' ? '' : pathname}`;
-};
+  return `/${newLang}${pathname === "/" ? "" : pathname}`;
+}
