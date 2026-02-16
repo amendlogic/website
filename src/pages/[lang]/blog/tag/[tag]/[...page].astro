@@ -58,14 +58,16 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
+
+  {isFallback && (
+    <Notice 
+      title={t('fallbacks.tag.title')} 
+      class="max-w-4xl px-4 md:px-6" >
+      {t('fallbacks.tag.desc')}
+    </Notice>
+  )}
+
   <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-
-    {isFallback && (
-      <Notice title={t('fallbacks.tag.title')}>
-        {t('fallbacks.tag.desc')}
-      </Notice>
-    )}
-
     <Headline> Tag: {tag?.title} </Headline>
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
