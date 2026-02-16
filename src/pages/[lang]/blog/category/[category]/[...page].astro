@@ -1,7 +1,7 @@
 ---
 import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 import { blogCategoryRobots, fetchPosts, blogPostsPerPage } from '~/utils/blog';
-import { LANGUAGES } from '~/i18n/utils';
+import { LANGUAGES, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
 import Layout from '~/layouts/PageLayout.astro';
 import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
@@ -49,6 +49,7 @@ export const getStaticPaths = (async ({ paginate }) => {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const { page, category, isFallback } = Astro.props;
 const { lang } = Astro.params;
+const t = useTranslations(lang);
 
 const metadata = {
   title: category?.title || 'Category',
@@ -57,15 +58,14 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  {isFallback && (
-    <Notice title={lang === 'de' ? 'Kategorie leer' : 'Category empty'}>
-      {lang === 'de' 
-        ? `In dieser Kategorie gibt es noch keine deutschen Beiträge. Wir zeigen dir alle verfügbaren Artikel.` 
-        : `No posts found in this category for your language. Showing all available posts.`}
-    </Notice>
-  )}
-
   <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+
+    {isFallback && (
+      <Notice title={t('fallbacks.category.title')}>
+        {t('fallbacks.category.desc')}
+      </Notice>
+    )}
+
     <Headline> {category?.title} </Headline>
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
