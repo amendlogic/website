@@ -1,6 +1,22 @@
 {
-  "post2": {
-    "title": "Language Note",
-    "desc": "This article is currently not available in your language. We are displaying the original"
+  "post": {
+    "title": "Sprachhinweis",
+    "desc": "Dieser Artikel ist momentan nur auf Englisch verfügbar. Wir zeigen dir daher die Originalversion."
+  },
+  "list": {
+    "title": "Noch keine Beiträge",
+    "desc": "Unser Blog ist auf Deutsch noch im Aufbau. Stöbere gerne solange durch unsere englischen Artikel."
+  },
+  "category": {
+    "title": "Kategorie leer",
+    "desc": "In dieser Kategorie haben wir noch keine übersetzten Beiträge. Wir zeigen dir stattdessen die englischen Inhalte."
+  },
+  "tag": {
+    "title": "Keine Treffer",
+    "desc": "Zu diesem Schlagwort gibt es noch keine deutschen Beiträge. Hier findest du alle englischen Artikel dazu."
+  },
+  "page": {
+    "title": "Sprachhinweis",
+    "desc": "Diese Seite ist noch nicht übersetzt. Hier findest du die rechtlich bindende, englische Originalversion."
   }
 }
