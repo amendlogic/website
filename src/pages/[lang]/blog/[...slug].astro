@@ -58,18 +58,22 @@ const metadata = merge(
 ---
 
 <Layout metadata={metadata}>
-<section class="py-8 sm:py-16 lg:py-20 mx-auto">
 
-{isFallback && (
-    <Notice title={t('fallbacks.post.title')}>
+  {isFallback && (
+    <Notice 
+      title={t('fallbacks.post.title')} 
+      class="max-w-4xl"  >
       {t('fallbacks.post.desc')}
     </Notice>
   )}
 
+
+
+
     <SinglePost post={post} url={url}>
       <post.Content />
     </SinglePost>
-    </section>
+
     <ToBlogLink />
     <RelatedPosts post={post} />
 </Layout>
