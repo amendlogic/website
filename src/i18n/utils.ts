@@ -1,166 +1,64 @@
-import { ui } from "./ui";
-
-/* ------------------------------------------------ */
-/* 1. Language Setup */
-/* ------------------------------------------------ */
+import { ui } from './ui';
 
 export const LANGUAGES = {
-  en: "English",
-  de: "Deutsch",
+  en: 'English',
+  de: 'Deutsch',
 } as const;
 
-export type Language = keyof typeof LANGUAGES;
-export const DEFAULT_LANG: Language = "en";
+export const DEFAULT_LANG = 'en';
 
-/* ------------------------------------------------ */
-/* 2. Type Magic (Autocomplete + Smart Return) */
-/* ------------------------------------------------ */
+export const getI18nPaths = () => {
+  return Object.keys(LANGUAGES).map((lang) => ({
+    params: { lang },
+  }));
+};
 
-type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
+export function useTranslations(lang: string) {
+  return function t(keyString: string) {
+    const currentLang = (lang in LANGUAGES) ? (lang as keyof typeof LANGUAGES) : DEFAULT_LANG;
+    const defaultLang = DEFAULT_LANG;
 
-// Rekursive Key-Generierung, stoppt bei Arrays
-type NestedKeys<T> = T extends object
-  ? T extends any[]
-    ? "" // keine Autocomplete für Array-Indizes
-    : {
-        [K in keyof T & string]: `${K}${DotPrefix<NestedKeys<T[K]>>}`;
-      }[keyof T & string]
-  : "";
-
-// Rückgabetyp basierend auf Key
-type NestedValue<T, K extends string> = K extends `${infer Head}.${infer Rest}`
-  ? Head extends keyof T
-    ? NestedValue<T[Head], Rest>
-    : never
-  : K extends keyof T
-  ? T[K]
-  : never;
-
-type TranslationSchema = typeof ui[typeof DEFAULT_LANG];
-export type TranslationKey = NestedKeys<TranslationSchema>;
-
-/* ------------------------------------------------ */
-/* 3. Strict Deep Resolver (No any) */
-/* ------------------------------------------------ */
-
-function resolvePath(obj: unknown, path: string): unknown {
-  if (!obj || typeof obj !== "object") return undefined;
-
-  const parts = path.split(".");
-  let current: unknown = obj;
-
-  for (const part of parts) {
-    if (
-      current == null ||
-      typeof current !== "object" ||
-      !(part in (current as Record<string, unknown>))
-    ) {
-      return undefined;
-    }
-    current = (current as Record<string, unknown>)[part];
-  }
-
-  return current;
-}
-
-/* ------------------------------------------------ */
-/* 4. Interpolation (Strings only) */
-/* ------------------------------------------------ */
-
-function interpolate(
-  text: string,
-  vars?: Record<string, string | number>
-): string {
-  if (!vars) return text;
-
-  return text.replace(/\{(.*?)\}/g, (_, key) => {
-    const value = vars[key.trim()];
-    return value !== undefined ? String(value) : `{${key}}`;
-  });
-}
-
-/* ------------------------------------------------ */
-/* 5. useTranslations (Master Function) */
-/* ------------------------------------------------ */
-
-export function useTranslations(lang: string | Language) {
-  const currentLang: Language =
-    lang in LANGUAGES ? (lang as Language) : DEFAULT_LANG;
-
-  const langObj = ui[currentLang];
-  const defaultObj = ui[DEFAULT_LANG];
-
-  const cache = new Map<string, unknown>();
-
-  return function t<K extends TranslationKey>(
-    key: K,
-    vars?: Record<string, string | number>
-  ): NestedValue<TranslationSchema, K> {
-    // Stabiler Cache-Key, sortiert die Variablen
-    const varsKey = vars
-      ? Object.entries(vars)
-          .sort(([a], [b]) => a.localeCompare(b))
-          .map(([k, v]) => `${k}:${v}`)
-          .join("|")
-      : "";
-
-    const cacheKey = `${currentLang}:${key}:${varsKey}`;
-
-    if (cache.has(cacheKey)) {
-      return cache.get(cacheKey) as NestedValue<TranslationSchema, K>;
+    // 1. Key splitten: "home.hero.titleStart" -> file: "home", key: "hero.titleStart"
+    const firstDotIndex = keyString.indexOf('.');
+    
+    // Sicherheitscheck: Hat der Key überhaupt einen Punkt?
+    if (firstDotIndex === -1) {
+      console.warn(`[i18n] Key "${keyString}" needs a namespace (e.g. 'home.title')`);
+      return keyString;
     }
 
-    // 1️⃣ Aktuelle Sprache
-    let value = resolvePath(langObj, key);
+    const namespace = keyString.substring(0, firstDotIndex); // z.B. "home"
+    const specificKey = keyString.substring(firstDotIndex + 1); // z.B. "hero.titleStart"
 
-    // 2️⃣ Fallback auf Default
-    if (value === undefined && currentLang !== DEFAULT_LANG) {
-      value = resolvePath(defaultObj, key);
+    // 2. Zugriff auf die Sprach-Ebene
+    // @ts-ignore
+    const langObj = ui[currentLang];
+    // @ts-ignore
+    const defaultObj = ui[defaultLang];
+
+    // 3. Zugriff auf die Datei-Ebene (Namespace)
+    const fileObj = langObj[namespace] || defaultObj[namespace];
+
+    if (!fileObj) {
+      console.warn(`[i18n] Namespace "${namespace}" not found in ui.ts`);
+      return keyString;
     }
 
-    // 3️⃣ DEV-Validierung
-    if (value === undefined) {
-      if (import.meta.env.DEV) {
-        throw new Error(`[i18n] Missing translation: "${key}"`);
-      }
-      return key as unknown as NestedValue<TranslationSchema, K>;
+    // 4. Zugriff auf den eigentlichen Text
+    const text = fileObj[specificKey];
+
+    // Fallback auf Default-Sprache, wenn Text fehlt
+    if (!text && currentLang !== defaultLang) {
+       const fallbackFileObj = defaultObj[namespace];
+       return fallbackFileObj ? fallbackFileObj[specificKey] || keyString : keyString;
     }
 
-    // 4️⃣ Interpolation (nur Strings)
-    if (typeof value === "string") {
-      value = interpolate(value, vars);
-    }
-
-    cache.set(cacheKey, value);
-
-    return value as NestedValue<TranslationSchema, K>;
+    return text || keyString;
   };
 }
 
-/* ------------------------------------------------ */
-/* 6. Helpers */
-/* ------------------------------------------------ */
-
-export const getI18nPaths = () =>
-  (Object.keys(LANGUAGES) as Language[]).map((lang) => ({
-    params: { lang },
-  }));
-
-export function getLangFromUrl(url: URL): Language {
-  const lang = url.pathname.split("/")[1];
-  return lang in LANGUAGES ? (lang as Language) : DEFAULT_LANG;
-}
-
-export function getLocalizedPathname(
-  pathname: string,
-  newLang: Language
-): string {
-  const langs = Object.keys(LANGUAGES).join("|");
-  const langRegex = new RegExp(`^\\/(${langs})(?=\\/|$)`);
-
-  if (langRegex.test(pathname)) {
-    return pathname.replace(langRegex, `/${newLang}`);
-  }
-
-  return `/${newLang}${pathname === "/" ? "" : pathname}`;
+export function getLangFromUrl(url: URL) {
+  const [, lang] = url.pathname.split('/');
+  if (lang in LANGUAGES) return lang as keyof typeof LANGUAGES;
+  return DEFAULT_LANG;
 }
