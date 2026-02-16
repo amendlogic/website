@@ -57,17 +57,17 @@
   "steps.subtitle": "The strategy operates directly on TradingView. It continuously evaluates market data, validates predefined conditions, and executes trades according to strict parameters.",
   "steps.items": [
     {
-      "title": "Signal Generation — Objective Criteria",
+      "title": "Signal Generation <span class=\"font-medium\">— Objective Criteria</span>",
       "description": "The proprietary indicator monitors market structure continuously and generates signals only when predefined conditions align.",
       "icon": "tabler:number-1"
     },
     {
-      "title": "Validation — Risk & Direction",
+      "title": "Validation <span class=\"font-medium\">— Risk & Direction</span>",
       "description": "Each signal is automatically validated against risk rules and position sizing parameters.",
       "icon": "tabler:number-2"
     },
     {
-      "title": "Execution — Consistent Placement",
+      "title": "Execution <span class=\"font-medium\">— Consistent Placement</span>",
       "description": "Orders are placed instantly and consistently according to your configured risk framework.",
       "icon": "tabler:number-3"
     }
