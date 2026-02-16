@@ -1,22 +1,22 @@
 {
   "post": {
     "title": "Language Note",
-    "desc": "This article is currently not available in your language. We are displaying the original version."
+    "desc": "This article is not yet available in your language. We are displaying the original English version."
   },
   "list": {
     "title": "No posts yet",
-    "desc": "There are currently no blog posts in your language. Showing our latest English posts."
+    "desc": "We don't have translated posts in this section yet. Feel free to browse our English articles instead."
   },
   "category": {
     "title": "Category empty",
-    "desc": "No posts found in this category for your language. Showing all available posts."
+    "desc": "No translated posts found in this category. We are showing you the English content instead."
   },
   "tag": {
-    "title": "Tag empty",
-    "desc": "No posts found for this tag in your language. Showing all available posts."
+    "title": "No matches",
+    "desc": "No translated posts found for this tag. Showing all available English articles."
   },
   "page": {
     "title": "Language Note",
-    "desc": "This page is not available in your language yet. Showing the original version."
+    "desc": "This page is not yet translated. Here is the original English version."
   }
 }
