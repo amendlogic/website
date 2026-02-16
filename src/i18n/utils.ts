@@ -1,19 +1,26 @@
 import { ui } from './ui';
 
 /**
- * 1. Languages sauber typisiert
+ * -----------------------------
+ * 1. Language Setup
+ * -----------------------------
  */
+
 export const LANGUAGES = {
   en: 'English',
   de: 'Deutsch',
 } as const;
 
 export type Language = keyof typeof LANGUAGES;
+
 export const DEFAULT_LANG: Language = 'en';
 
 /**
- * 2. Get Static Paths Helper
+ * -----------------------------
+ * 2. Static Paths Helper (Astro)
+ * -----------------------------
  */
+
 export const getI18nPaths = () => {
   return (Object.keys(LANGUAGES) as Language[]).map((lang) => ({
     params: { lang },
@@ -21,22 +28,27 @@ export const getI18nPaths = () => {
 };
 
 /**
- * 3. Sichere Object-Wert-Auflösung
+ * -----------------------------
+ * 3. Deep Value Resolver
+ * Unterstützt:
+ * - direkte keys
+ * - verschachtelte keys (a.b.c)
+ * - arrays
+ * - objects
+ * -----------------------------
  */
+
 function getValueFromObject(
   obj: unknown,
   key: string
-): string | undefined {
+): unknown {
   if (!obj || typeof obj !== 'object') return undefined;
 
   const record = obj as Record<string, unknown>;
 
   // Direkter Zugriff
   if (record[key] !== undefined) {
-    const val = record[key];
-    if (typeof val === 'string' || typeof val === 'number') {
-      return String(val);
-    }
+    return record[key];
   }
 
   // Verschachtelter Zugriff
@@ -55,16 +67,17 @@ function getValueFromObject(
     current = (current as Record<string, unknown>)[part];
   }
 
-  if (typeof current === 'string' || typeof current === 'number') {
-    return String(current);
-  }
-
-  return undefined;
+  return current;
 }
 
 /**
- * 4. Interpolation
+ * -----------------------------
+ * 4. String Interpolation
+ * Beispiel:
+ * "Hello {name}"
+ * -----------------------------
  */
+
 function interpolate(
   text: string,
   vars?: Record<string, string | number>
@@ -78,29 +91,34 @@ function interpolate(
 }
 
 /**
- * 5. useTranslations (mit Cache & Type-Safety)
+ * -----------------------------
+ * 5. useTranslations Hook
+ * - Unterstützt Strings, Arrays, Objekte
+ * - Fallback auf DEFAULT_LANG
+ * - Caching
+ * -----------------------------
  */
+
 export function useTranslations(lang: string) {
   const currentLang: Language =
     lang in LANGUAGES ? (lang as Language) : DEFAULT_LANG;
 
-  const cache = new Map<string, string>();
+  const cache = new Map<string, unknown>();
 
-  return function t(
+  return function t<T = unknown>(
     keyString: string,
     vars?: Record<string, string | number>
-  ): string {
+  ): T {
     const cacheKey = `${currentLang}:${keyString}:${JSON.stringify(vars)}`;
+
     if (cache.has(cacheKey)) {
-      return cache.get(cacheKey)!;
+      return cache.get(cacheKey) as T;
     }
 
     const firstDotIndex = keyString.indexOf('.');
     if (firstDotIndex === -1) {
-      console.warn(
-        `[i18n] Key "${keyString}" needs namespace (e.g. 'home.title')`
-      );
-      return keyString;
+      console.warn(`[i18n] Key "${keyString}" needs namespace`);
+      return keyString as T;
     }
 
     const namespace = keyString.slice(0, firstDotIndex);
@@ -112,35 +130,35 @@ export function useTranslations(lang: string) {
     const fileObj = langObj?.[namespace];
     const defaultFileObj = defaultObj?.[namespace];
 
-    if (!fileObj && !defaultFileObj) {
-      console.warn(`[i18n] Namespace "${namespace}" not found.`);
-      return keyString;
+    let value = getValueFromObject(fileObj, specificKey);
+
+    // Fallback auf Default Language
+    if (value === undefined && currentLang !== DEFAULT_LANG) {
+      value = getValueFromObject(defaultFileObj, specificKey);
     }
 
-    // Aktuelle Sprache
-    let text = getValueFromObject(fileObj, specificKey);
-
-    // Fallback
-    if (text === undefined && currentLang !== DEFAULT_LANG) {
-      text = getValueFromObject(defaultFileObj, specificKey);
-    }
-
-    if (text === undefined) {
+    if (value === undefined) {
       console.warn(`[i18n] Missing translation: "${keyString}"`);
-      return keyString;
+      return keyString as T;
     }
 
-    const finalText = interpolate(text, vars);
+    // Interpolation nur bei Strings
+    if (typeof value === 'string' && vars) {
+      value = interpolate(value, vars);
+    }
 
-    cache.set(cacheKey, finalText);
+    cache.set(cacheKey, value);
 
-    return finalText;
+    return value as T;
   };
 }
 
 /**
+ * -----------------------------
  * 6. Sprache aus URL holen
+ * -----------------------------
  */
+
 export function getLangFromUrl(url: URL): Language {
   const [, lang] = url.pathname.split('/');
 
@@ -152,8 +170,12 @@ export function getLangFromUrl(url: URL): Language {
 }
 
 /**
- * 7. Dynamischer Localized Pathname Helper
+ * -----------------------------
+ * 7. Localized Path Helper
+ * Dynamisch – keine hardcoded Regex
+ * -----------------------------
  */
+
 export const getLocalizedPathname = (
   pathname: string,
   newLang: Language
