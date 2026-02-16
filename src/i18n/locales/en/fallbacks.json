@@ -1,22 +1,16 @@
 {
-  "post": {
-    "title": "Language Note",
-    "desc": "This article is not yet available in your language. We are displaying the original English version."
-  },
-  "list": {
-    "title": "No posts yet",
-    "desc": "We don't have translated posts in this section yet. Feel free to browse our English articles instead."
-  },
-  "category": {
-    "title": "Category empty",
-    "desc": "No translated posts found in this category. We are showing you the English content instead."
-  },
-  "tag": {
-    "title": "No matches",
-    "desc": "No translated posts found for this tag. Showing all available English articles."
-  },
-  "page": {
-    "title": "Language Note",
-    "desc": "This page is not yet translated. Here is the original English version."
-  }
+  "post.title": "Language Note",
+  "post.desc": "This article is not yet available in your language. We are displaying the original English version.",
+  
+  "list.title": "No posts yet",
+  "list.desc": "We don't have translated posts in this section yet. Feel free to browse our English articles instead.",
+  
+  "category.title": "Category empty",
+  "category.desc": "No translated posts found in this category. We are showing you the English content instead.",
+  
+  "tag.title": "No matches",
+  "tag.desc": "No translated posts found for this tag. Showing all available English articles.",
+  
+  "page.title": "Language Note",
+  "page.desc": "This page is not yet translated. Here is the original English version."
 }
