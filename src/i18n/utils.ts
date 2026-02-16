@@ -1,44 +1,60 @@
 import { ui } from './ui';
 
+/**
+ * 1. Languages sauber typisiert
+ */
 export const LANGUAGES = {
   en: 'English',
   de: 'Deutsch',
 } as const;
 
-export const DEFAULT_LANG = 'en';
+export type Language = keyof typeof LANGUAGES;
+export const DEFAULT_LANG: Language = 'en';
 
-// Helper für die Pfade (für getStaticPaths)
+/**
+ * 2. Get Static Paths Helper
+ */
 export const getI18nPaths = () => {
-  return Object.keys(LANGUAGES).map((lang) => ({
+  return (Object.keys(LANGUAGES) as Language[]).map((lang) => ({
     params: { lang },
   }));
 };
 
 /**
- * Hilfsfunktion: Versucht einen Wert zu finden.
- * Strategie 1: Direkter Zugriff (für "hero.titleStart")
- * Strategie 2: Verschachtelter Zugriff (für "post.title" -> post -> title)
+ * 3. Sichere Object-Wert-Auflösung
  */
-function getValueFromObject(obj: any, key: string): string | undefined {
-  if (!obj) return undefined;
+function getValueFromObject(
+  obj: unknown,
+  key: string
+): string | undefined {
+  if (!obj || typeof obj !== 'object') return undefined;
 
-  // 1. Versuch: Gibt es den Key exakt so? (z.B. home.json "hero.titleStart")
-  if (obj[key] !== undefined) {
-    return obj[key];
+  const record = obj as Record<string, unknown>;
+
+  // Direkter Zugriff
+  if (record[key] !== undefined) {
+    const val = record[key];
+    if (typeof val === 'string' || typeof val === 'number') {
+      return String(val);
+    }
   }
 
-  // 2. Versuch: Ist es verschachtelt? (z.B. fallbacks.json { post: { title: ... } })
+  // Verschachtelter Zugriff
   const parts = key.split('.');
-  let current = obj;
-  
+  let current: unknown = record;
+
   for (const part of parts) {
-    if (current === undefined || current === null || typeof current !== 'object') {
+    if (
+      !current ||
+      typeof current !== 'object' ||
+      !(part in (current as Record<string, unknown>))
+    ) {
       return undefined;
     }
-    current = current[part];
+
+    current = (current as Record<string, unknown>)[part];
   }
 
-  // Wenn wir am Ende einen String (oder Zahl) haben, zurückgeben
   if (typeof current === 'string' || typeof current === 'number') {
     return String(current);
   }
@@ -46,66 +62,108 @@ function getValueFromObject(obj: any, key: string): string | undefined {
   return undefined;
 }
 
-export function useTranslations(lang: string) {
-  return function t(keyString: string) {
-    const currentLang = (lang in LANGUAGES) ? (lang as keyof typeof LANGUAGES) : DEFAULT_LANG;
-    const defaultLang = DEFAULT_LANG;
+/**
+ * 4. Interpolation
+ */
+function interpolate(
+  text: string,
+  vars?: Record<string, string | number>
+): string {
+  if (!vars) return text;
 
-    // 1. Namespace trennen (immer am ersten Punkt)
+  return text.replace(/\{(.*?)\}/g, (_, key) => {
+    const value = vars[key.trim()];
+    return value !== undefined ? String(value) : `{${key}}`;
+  });
+}
+
+/**
+ * 5. useTranslations (mit Cache & Type-Safety)
+ */
+export function useTranslations(lang: string) {
+  const currentLang: Language =
+    lang in LANGUAGES ? (lang as Language) : DEFAULT_LANG;
+
+  const cache = new Map<string, string>();
+
+  return function t(
+    keyString: string,
+    vars?: Record<string, string | number>
+  ): string {
+    const cacheKey = `${currentLang}:${keyString}:${JSON.stringify(vars)}`;
+    if (cache.has(cacheKey)) {
+      return cache.get(cacheKey)!;
+    }
+
     const firstDotIndex = keyString.indexOf('.');
-    
     if (firstDotIndex === -1) {
-      console.warn(`[i18n] Key "${keyString}" needs a namespace (e.g. 'home.title')`);
+      console.warn(
+        `[i18n] Key "${keyString}" needs namespace (e.g. 'home.title')`
+      );
       return keyString;
     }
 
-    const namespace = keyString.substring(0, firstDotIndex); // z.B. "home" oder "fallbacks"
-    const specificKey = keyString.substring(firstDotIndex + 1); // z.B. "hero.titleStart" oder "post.title"
+    const namespace = keyString.slice(0, firstDotIndex);
+    const specificKey = keyString.slice(firstDotIndex + 1);
 
-    // 2. Sprach-Objekte laden
-    // @ts-ignore
     const langObj = ui[currentLang];
-    // @ts-ignore
-    const defaultObj = ui[defaultLang];
+    const defaultObj = ui[DEFAULT_LANG];
 
-    // 3. Datei-Objekt laden (Namespace)
     const fileObj = langObj?.[namespace];
     const defaultFileObj = defaultObj?.[namespace];
 
     if (!fileObj && !defaultFileObj) {
-      console.warn(`[i18n] Namespace "${namespace}" not found in ui.ts`);
+      console.warn(`[i18n] Namespace "${namespace}" not found.`);
       return keyString;
     }
 
-    // 4. Wert suchen (Hybrid-Strategie)
-    
-    // A. Suche in aktueller Sprache
-    const text = getValueFromObject(fileObj, specificKey);
-    if (text) return text;
+    // Aktuelle Sprache
+    let text = getValueFromObject(fileObj, specificKey);
 
-    // B. Fallback auf Default-Sprache (nur wenn wir nicht eh schon dort sind)
-    if (currentLang !== defaultLang) {
-      const fallbackText = getValueFromObject(defaultFileObj, specificKey);
-      if (fallbackText) return fallbackText;
+    // Fallback
+    if (text === undefined && currentLang !== DEFAULT_LANG) {
+      text = getValueFromObject(defaultFileObj, specificKey);
     }
 
-    // Nichts gefunden -> Key zurückgeben
-    return keyString;
+    if (text === undefined) {
+      console.warn(`[i18n] Missing translation: "${keyString}"`);
+      return keyString;
+    }
+
+    const finalText = interpolate(text, vars);
+
+    cache.set(cacheKey, finalText);
+
+    return finalText;
   };
 }
 
-// Helper um Sprache aus URL zu holen (für Middleware etc.)
-export function getLangFromUrl(url: URL) {
+/**
+ * 6. Sprache aus URL holen
+ */
+export function getLangFromUrl(url: URL): Language {
   const [, lang] = url.pathname.split('/');
-  if (lang in LANGUAGES) return lang as keyof typeof LANGUAGES;
+
+  if (lang && lang in LANGUAGES) {
+    return lang as Language;
+  }
+
   return DEFAULT_LANG;
 }
 
-// Helper für Link-Austausch (hatten wir vorhin besprochen, hier der Vollständigkeit halber)
-export const getLocalizedPathname = (pathname: string, newLang: string) => {
-  const langRegex = /^\/(en|de)/;
+/**
+ * 7. Dynamischer Localized Pathname Helper
+ */
+export const getLocalizedPathname = (
+  pathname: string,
+  newLang: Language
+) => {
+  const langs = Object.keys(LANGUAGES).join('|');
+  const langRegex = new RegExp(`^\\/(${langs})(?=\\/|$)`);
+
   if (langRegex.test(pathname)) {
     return pathname.replace(langRegex, `/${newLang}`);
   }
+
   return `/${newLang}${pathname === '/' ? '' : pathname}`;
 };
