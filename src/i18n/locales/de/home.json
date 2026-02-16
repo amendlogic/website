@@ -1,65 +1,145 @@
 {
-  "hero.titleStart": "Smartes\u00A0Trading.",
-  "hero.titleAccent": "Klare\u00A0Regeln.",
-  "hero.titleEnd": "Schluss\u00A0mit\u00A0Raten.",
-  "hero.subtitle": "Eine systematische TradingView-Strategie für die automatisierte Ausführung. Basierend auf meiner Markterfahrung analysiert sie Strukturen und verwaltet Risiken, um deine Disziplin zu wahren.",
-  "hero.tagline": "Automatisierter Handel, entwickelt um Entscheidungen zu standardisieren und Disziplin konsequent umzusetzen.",
-  "hero.btnPrimary": "Jetzt Automatisierung starten",
-  "hero.btnSecondary": "System entdecken",
-  "note.title": "Unsere Philosophie:",
-  "note.desc": "Diszipliniertes Trading durch automatisierte Logik sicherstellen – ungeachtet der Marktvolatilität.",
+  "hero.titleStart": "Systematisches\u00A0Trading.",
+  "hero.titleAccent": "Definierte\u00A0Regeln.",
+  "hero.titleEnd": "Disziplinierte\u00A0Ausführung.",
+  "hero.subtitle": "Eine strukturierte TradingView-Strategie, entwickelt aus jahrelanger praktischer Krypto-Markterfahrung. Gebaut, um Entscheidungen zu standardisieren, Risiken zu managen und konsistent zu agieren – selbst unter volatilen Bedingungen.",
+  "hero.tagline": "Logikbasierte Automatisierung für disziplinierte Trader.",
+  "hero.btnPrimary": "Strategie aktivieren",
+  "hero.btnSecondary": "Das Framework entdecken",
+
+  "note.title": "Unser Ansatz:",
+  "note.desc": "Märkte sind volatil. Emotionen sind unberechenbar. Unsere Strategie ersetzt beides durch vordefinierte Strukturen, objektive Regeln und kontrolliertes Risikomanagement.",
+
   "features1.tagline": "Features",
   "features1.title": "Was du bekommst",
-  "features1.contentTitle": "Marktstruktur & Trend-Erkennung",
-  "features1.contentDesc": "Fokussiert auf echte Chancen – nicht auf konstantes Marktrauschen.",
+  "features1.contentTitle": "Marktstruktur & Objektive Signal-Logik",
+  "features1.contentDesc": "Entwickelt, um signifikante Chancen zu identifizieren und minderwertiges Marktrauschen zu filtern.",
   "features1.items": [
-    { "title": "Marktanalyse", "description": "Erkennt Trends und strukturelle Marktveränderungen auf Basis objektiver Daten und eliminiert subjektive Fehlentscheidungen.", "icon": "tabler:device-analytics" },
-    { "title": "Adaptives Verhalten", "description": "Passt die Logik dynamisch an wechselnde Bedingungen an, damit du nicht ständig manuell nachjustieren musst.", "icon": "tabler:activity" },
-    { "title": "Automatisierte Ausführung", "description": "Trades werden sofort nach deinen Regeln ausgeführt – ohne Zögern und ohne emotionale Fehler.", "icon": "tabler:settings-automation" }
+    {
+      "title": "Objektive Marktanalyse",
+      "description": "Bewertet Preisstruktur und Trendverhalten mittels regelbasierter Logik – ohne subjektive Interpretation.",
+      "icon": "tabler:device-analytics"
+    },
+    {
+      "title": "Adaptives Framework",
+      "description": "Passt sich systematisch an wechselnde Volatilität und strukturelle Änderungen an, ohne ständiges manuelles Eingreifen.",
+      "icon": "tabler:activity"
+    },
+    {
+      "title": "Automatisierte Regelausführung",
+      "description": "Vordefinierte Kriterien werden sofort und konsistent ausgeführt, was Zögern und emotionale Störfaktoren eliminiert.",
+      "icon": "tabler:settings-automation"
+    }
   ],
+
   "features2.contentTitle": "Risikomanagement & Kapitalschutz",
-  "features2.contentDesc": "Entwickelt, um Kapital zu schützen und Beständigkeit zu erzwingen.",
+  "features2.contentDesc": "Strukturierte Sicherheitsmechanismen für den Schutz deines Kapitals und langfristige Konsistenz.",
   "features2.items": [
-    { "title": "Risikokontrolle", "description": "Integrierte Schutzmechanismen helfen dabei, Drawdowns zu begrenzen und das Risiko automatisch zu kontrollieren.", "icon": "tabler:alert-hexagon" },
-    { "title": "Schutz vor Overtrading", "description": "Reduziert die Aktivität in unklaren Marktphasen, um dein Kapital konsequent zu schonen.", "icon": "tabler:waves-electricity" },
-    { "title": "Anpassbare Parameter", "description": "Risikoniveaus und Strategieverhalten können vollständig an deine individuelle Risikobereitschaft angepasst werden.", "icon": "tabler:adjustments" }
+    {
+      "title": "Kontrollierte Exposure",
+      "description": "Integrierte Risikoparameter begrenzen Drawdowns und verhindern unkontrollierte Positionsgrößen.",
+      "icon": "tabler:alert-hexagon"
+    },
+    {
+      "title": "Overtrading-Prävention",
+      "description": "Reduziert die Aktivität in strukturell schwachen oder unruhigen Marktphasen (Chop).",
+      "icon": "tabler:waves-electricity"
+    },
+    {
+      "title": "Konfigurierbare Risikoprofile",
+      "description": "Zentrale Parameter können angepasst werden, um sie mit deiner persönlichen Risikotoleranz abzugleichen.",
+      "icon": "tabler:adjustments"
+    }
   ],
-  "steps.tagline": "So funktioniert es",
-  "steps.title": "Einfachheit durch Design",
-  "steps.subtitle": "Die Strategie läuft direkt auf TradingView. Sie scannt Daten, validiert Signale und führt Positionen eigenständig aus – damit du nicht mehr am Bildschirm kleben musst.",
+
+  "steps.tagline": "Ausführungsprozess",
+  "steps.title": "Struktur durch Design",
+  "steps.subtitle": "Die Strategie arbeitet direkt auf TradingView. Sie bewertet kontinuierlich Marktdaten, validiert Bedingungen und führt Trades nach strikten Parametern aus.",
   "steps.items": [
-    { "title": "Daten <span class=\"font-medium\">— Indikator-Signal</span>", "description": "Unser proprietärer Indikator scannt den Markt rund um die Uhr. Signale werden nur bei hochwahrscheinlichen Kriterien generiert.", "icon": "tabler:number-1" },
-    { "title": "Logik <span class=\"font-medium\">— Signal zum Trade</span>", "description": "Signale werden sofort in Handelsanweisungen umgewandelt. Das System validiert automatisch Richtung, Größe und Risiko.", "icon": "tabler:number-2" },
-    { "title": "Ausführung <span class=\"font-medium\">— Order-Platzierung</span>", "description": "Validierte Anweisungen werden sofort ausgeführt. Orders werden präzise platziert, strikt nach deinen Parametern.", "icon": "tabler:number-3" }
+    {
+      "title": "Signalgenerierung — Objektive Kriterien",
+      "description": "Der proprietäre Indikator überwacht die Marktstruktur rund um die Uhr und generiert Signale nur bei Übereinstimmung vordefinierter Bedingungen.",
+      "icon": "tabler:number-1"
+    },
+    {
+      "title": "Validierung — Risiko & Richtung",
+      "description": "Jedes Signal wird automatisch gegen Risikoregeln und Parameter zur Positionsgröße geprüft.",
+      "icon": "tabler:number-2"
+    },
+    {
+      "title": "Ausführung — Konsistente Platzierung",
+      "description": "Orders werden sofort und präzise innerhalb deines konfigurierten Risiko-Frameworks platziert.",
+      "icon": "tabler:number-3"
+    }
   ],
-  "chart.tagline": "Performance",
-  "chart.title": "Auf Daten gebaut",
-  "chart.subtitle": "Gestützt durch umfangreiches Backtesting. Wir fokussieren uns auf realistische Annahmen und kontrolliertes Risiko statt kurzfristiger Gewinnmaximierung.",
+
+  "chart.tagline": "Performance-Übersicht",
+  "chart.title": "Gefestigt durch strukturierte Tests",
+  "chart.subtitle": "Backtesting unter realistischen Annahmen über mehrere Marktzyklen hinweg. Fokus auf Stabilität und Nachhaltigkeit statt aggressiver Optimierung.",
+
   "testimonials.tagline": "Testimonials",
-  "testimonials.title": "Das sagen andere Trader",
+  "testimonials.title": "Das sagen echte Trader",
   "testimonials.btnText": "Mehr Erfahrungsberichte...",
   "testimonials.items": [
-    { "name": "Alex M.", "job": "Teilzeit-Trader", "testimonial": "Endlich kann ich traden, ohne den ganzen Tag auf die Charts zu starren. Die Disziplin des Systems hat meine Rache-Trades gestoppt.", "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80" },
-    { "name": "David K.", "job": "Software-Entwickler", "testimonial": "Ich schätze die Logik hinter den Einstiegen. Der Schutz vor Overtrading hat mich im letzten Seitwärtsmarkt vor großen Verlusten bewahrt.", "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80" },
-    { "name": "Sophie L.", "job": "Krypto-Investorin", "testimonial": "Vertrauenswürdig und konsistent. Im Gegensatz zu anderen Bots priorisiert dieses System das Risiko vor unrealistischen Gewinnen.", "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80" }
+    {
+      "name": "Alex M.",
+      "job": "Teilzeit-Trader",
+      "testimonial": "Endlich kann ich traden, ohne den ganzen Tag auf die Charts zu starren. Die Disziplin des Systems hat meine Rache-Trades gestoppt.",
+      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "name": "David K.",
+      "job": "Software-Entwickler",
+      "testimonial": "Ich schätze die Logik hinter den Einstiegen. Die Overtrading-Prävention hat mich im letzten Seitwärtsmarkt gerettet.",
+      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "name": "Sophie L.",
+      "job": "Krypto-Investorin",
+      "testimonial": "Vertrauenswürdig und konsistent. Im Gegensatz zu anderen Bots priorisiert dieses System Risikomanagement vor unrealistischen Gewinnen.",
+      "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80"
+    }
   ],
+
   "faqs.tagline": "FAQs",
   "faqs.title": "Gut zu wissen",
   "faqs.subtitle": "Antworten auf die häufigsten Fragen.",
   "faqs.items": [
-    { "title": "Welche Märkte und Zeitrahmen werden unterstützt?", "description": "Unsere Strategie ist für Bitcoin optimiert, kann aber auf andere volatile Assets und Zeitrahmen über 4 Stunden angewendet werden." },
-    { "title": "Wie geht das System mit Marktvolatilität um?", "description": "Die Strategie passt sich dynamisch an wechselnde Marktbedingungen an und bewahrt auch in turbulenten Phasen Stabilität." },
-    { "title": "Sind alle Trades profitabel?", "description": "Nein. Nicht jeder Trade wird profitabel sein. Wir nutzen intelligentes Risikomanagement, um Verluste zu minimieren und dein Kapital zu schützen." },
-    { "title": "Ist das System für Anfänger geeignet?", "description": "Ja. Die vollautomatische Bedienung und das intuitive Design machen den Einstieg leicht – es ist keine vorherige Erfahrung erforderlich." },
-    { "title": "Wie erhalte ich Zugriff auf die Strategie?", "description": "Nach dem Abonnement kannst du die Strategie direkt über deinen Account aktivieren und verwalten – schnell und unkompliziert." },
-    { "title": "Kann ich die Strategie anpassen?", "description": "Ja. Wichtige Parameter wie das Risikoprofil und das Handelsverhalten können an deine persönlichen Vorlieben angepasst werden." },
-    { "title": "Ist mein Kapital sicher?", "description": "Ja. Das System hat keinen Zugriff auf deine Wallet oder dein Guthaben. Du behältst jederzeit die volle Kontrolle über dein Geld." },
+    {
+      "title": "Welche Märkte und Zeitrahmen werden unterstützt?",
+      "description": "Optimiert für Bitcoin, aber anwendbar auf andere volatile Assets und Zeitrahmen ab 4 Stunden."
+    },
+    {
+      "title": "Wie geht das System mit Volatilität um?",
+      "description": "Die Strategie passt sich dynamisch an wechselnde Marktbedingungen an und bewahrt auch in turbulenten Phasen Stabilität."
+    },
+    {
+      "title": "Sind alle Trades profitabel?",
+      "description": "Nein. Verluste gehören zu jeder Strategie. Das System fokussiert sich auf das Risikomanagement und einen langfristigen statistischen Edge."
+    },
+    {
+      "title": "Ist das System für Anfänger geeignet?",
+      "description": "Ja. Die automatisierte Bedienung und das intuitive Design machen den Einstieg leicht – keine Vorerfahrung nötig."
+    },
+    {
+      "title": "Wie erhalte ich Zugriff?",
+      "description": "Nach dem Abonnement kannst du die Strategie direkt über deinen Account verwalten – einfach und unkompliziert."
+    },
+    {
+      "title": "Kann ich die Strategie anpassen?",
+      "description": "Ja. Zentrale Parameter wie das Risikoprofil können an deine Präferenzen angepasst werden."
+    },
+    {
+      "title": "Ist mein Kapital sicher?",
+      "description": "Ja. Das System hat keinen Zugriff auf deine Wallet. Du behältst jederzeit die volle Kontrolle über deine Mittel."
+    },
     { "title": "Was kostet das System?", "description": "Wir bieten verschiedene Abonnements an – transparent, fair und leistungsorientiert." },
     { "title": "Gibt es eine Testversion?", "description": "Ja. Du kannst die Strategie 7 Tage kostenlos testen, um die Performance in deinem eigenen Umfeld zu prüfen." },
-    { "title": "Welcher Support wird angeboten?", "description": "Unser Support-Team steht dir rund um die Uhr per Chat und E-Mail zur Verfügung." }
+    { "title": "Welcher Support wird angeboten?", "description": "Unser Team ist rund um die Uhr per Chat und E-Mail für dich da." }
   ],
-  "cta.titleLine1": "Handle mit Logik,",
-  "cta.titleLine2": "nicht mit Emotionen.",
-  "cta.subtitle": "Automatisiere deine Strategie, erzwinge Disziplin und beende das Rätselraten noch heute.",
-  "cta.btnText": "Jetzt Zugang sichern"
+
+  "cta.titleLine1": "Strukturiere dein Trading,",
+  "cta.titleLine2": "eliminiere Emotionen.",
+  "cta.subtitle": "Nutze ein regelbasiertes Framework, das für Beständigkeit in volatilen Märkten entwickelt wurde.",
+  "cta.btnText": "System aktivieren"
 }
