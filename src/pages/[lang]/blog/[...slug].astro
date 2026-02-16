@@ -62,18 +62,15 @@ const metadata = merge(
   {isFallback && (
     <Notice 
       title={t('fallbacks.post.title')} 
-      class="max-w-4xl"  >
+      class="max-w-3xl"  >
       {t('fallbacks.post.desc')}
     </Notice>
   )}
 
+  <SinglePost post={post} url={url}>
+    <post.Content />
+  </SinglePost>
 
-
-
-    <SinglePost post={post} url={url}>
-      <post.Content />
-    </SinglePost>
-
-    <ToBlogLink />
-    <RelatedPosts post={post} />
+  <ToBlogLink />
+  <RelatedPosts post={post} />
 </Layout>
