@@ -74,13 +74,12 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
                 href={href}
                 aria-label={ariaLabel}
                 {...attrs}
-              >
-                {/* 3. Icon anzeigen, falls vorhanden */}
-                {icon && (
-                  <Icon name={icon} class="w-4 h-4 mr-2" /> 
-                )}
-                
+              >   
                 <Fragment set:html={text} />
+                {/* 3. Icon anzeigen, falls vorhanden */}
+                 {icon && (
+                  <Icon name={icon} class="w-4 h-4 ml-2" />
+                )}
               </a>
             </li>
           ))}
