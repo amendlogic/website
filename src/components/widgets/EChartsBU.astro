@@ -20,10 +20,9 @@ const {
 
 let baseOptions = {};
 
-// --- KONFIGURATION STARTKAPITAL ---
+// --- KONFIGURATION ---
 const INITIAL_CAPITAL = 300; 
 
-// --- CSV Parsing (Server-Side) ---
 if (csvPath) {
   try {
     const fileContent = fs.readFileSync(path.resolve(csvPath), 'utf-8');
@@ -51,11 +50,9 @@ if (csvPath) {
         const currentProfit = parseFloat(row[idx.profit]);
         const currentPrice = parseFloat(row[idx.price]);
 
-        // 1. Portfolio Value & Drawdown
         data.equity.push([isoDate, INITIAL_CAPITAL + currentProfit]);
         data.dd.push([isoDate, Math.abs(parseFloat(row[idx.dd] || 0)) * -1]);
 
-        // 2. Buy & Hold Berechnung
         if (firstPrice === null && !isNaN(currentPrice)) {
             firstPrice = currentPrice;
             const c = parseFloat(row[idx.contracts]);
@@ -69,10 +66,18 @@ if (csvPath) {
     }
 
     baseOptions = {
-      grid: { left: 15, right: 15, bottom: '3%', top: 50, containLabel: true },
+      // Abstand oben auf 80 erhöht für maximale Klarheit
+      grid: { left: 15, right: 15, bottom: '15', top: 80, containLabel: true },
+      
       tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
-      legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'] },
+      
+      legend: { 
+        data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'],
+        top: 10 // Legende etwas vom absoluten Rand wegrücken
+      },
+
       xAxis: { type: 'time', boundaryGap: false },
+      
       yAxis: [
         { 
           type: 'value', 
@@ -81,7 +86,8 @@ if (csvPath) {
           scale: true, 
           splitLine: { show: true },
           alignTicks: true,
-          nameTextStyle: { align: 'left' } 
+          nameGap: 25, // Abstand Titel zu Achse
+          nameTextStyle: { align: 'left', fontWeight: 'bold' } 
         },
         { 
           type: 'value', 
@@ -90,7 +96,8 @@ if (csvPath) {
           max: 0, 
           axisLabel: { formatter: '{value}%' }, 
           splitLine: { show: false },
-          nameTextStyle: { align: 'right' }
+          nameGap: 25, // Abstand Titel zu Achse
+          nameTextStyle: { align: 'right', fontWeight: 'bold' }
         }
       ],
       series: [
@@ -107,7 +114,6 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
 
 <WidgetWrapper id={chartId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
-  {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
   
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
     <div 
@@ -141,7 +147,10 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
       legend: { textStyle: { color: c.text } },
       tooltip: { backgroundColor: c.bg, borderColor: c.border, textStyle: { color: c.text } },
       textStyle: { color: c.text },
-      yAxis: [{ splitLine: { lineStyle: { color: c.split } } }, { splitLine: { show: false } }],
+      yAxis: [
+        { splitLine: { lineStyle: { color: c.split } }, nameTextStyle: { color: c.text } }, 
+        { nameTextStyle: { color: c.text } }
+      ],
       xAxis: { splitLine: { lineStyle: { color: c.split } } }
     });
   };
@@ -156,7 +165,6 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
     const baseOpts = JSON.parse(el.dataset.base || '{}');
     const userOpts = JSON.parse(el.dataset.user || '{}');
 
-    // Tooltip Formatter
     if (baseOpts.tooltip) {
       baseOpts.tooltip.formatter = (params) => {
         const date = new Date(params[0].value[0]).toLocaleDateString();
@@ -171,7 +179,6 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
       };
     }
 
-    // ECharts Smart Merge: Erst Basis, dann User-Modifikationen
     chart.setOption(baseOpts);
     chart.setOption(userOpts);
     updateTheme(chart);
@@ -186,7 +193,6 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
     
     document.querySelectorAll('.echart-container').forEach(el => observer.observe(el));
 
-    // Globaler Theme-Switcher
     new MutationObserver((m) => {
       if (m.some(x => x.attributeName === 'class')) {
         document.querySelectorAll('.echart-container').forEach(el => el._echarts && updateTheme(el._echarts));
