@@ -18,7 +18,7 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-let finalOptions = userOptions || {}; // Fallback falls undefined
+let finalOptions = userOptions || {};
 
 if (csvPath) {
   try {
@@ -30,7 +30,11 @@ if (csvPath) {
 
     const idxDate = headers.indexOf('Date/Time');
     const idxProfit = headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%'));
-    const idxDD = headers.findIndex(h => h.includes('Drawdown') && !h.includes('%') && !h.includes('Max'));
+    
+    // --- HIER WAR DER FEHLER ---
+    // Alt: Suchte Drawdown OHNE %
+    // Neu: Sucht Drawdown MIT %
+    const idxDD = headers.findIndex(h => h.includes('Drawdown') && h.includes('%'));
 
     const dateData = [];
     const profitData = [];
@@ -43,8 +47,7 @@ if (csvPath) {
       if (profitVal && profitVal.trim() !== '') {
         let rawDate = row[idxDate];
         
-        // SICHERER DATUMS-PARSER (String Split statt Date Objekt)
-        // Verhindert Zeitzonen-Fehler bei ISO Strings
+        // Datum bereinigen
         if (rawDate.includes('T')) rawDate = rawDate.split('T')[0];
         else if (rawDate.includes(' ')) rawDate = rawDate.split(' ')[0];
         
@@ -52,19 +55,18 @@ if (csvPath) {
         profitData.push(parseFloat(profitVal));
 
         const ddVal = parseFloat(row[idxDD] || 0);
-        drawdownData.push(ddVal * -1); 
+        drawdownData.push(ddVal * -1); // Negativ machen für Chart
       }
     }
 
-    // Basis-Optionen (OHNE Funktionen hier, da JSON sie löscht)
     finalOptions = {
       tooltip: {
         trigger: 'axis',
         axisPointer: { type: 'cross' }
-        // FORMATTER WIRD IM CLIENT SCRIPT GESETZT
+        // Formatter kommt via Script unten
       },
       legend: {
-        data: ['Equity (Cum. Profit)', 'Drawdown']
+        data: ['Equity (Cum. Profit)', 'Drawdown %']
       },
       grid: {
         left: '3%', right: '4%', bottom: '3%', containLabel: true
@@ -84,7 +86,6 @@ if (csvPath) {
           max: 0, 
           interval: 25,
           splitLine: { show: false },
-          // String Template für Formatter funktioniert in JSON:
           axisLabel: { formatter: '{value}%' } 
         }
       ],
@@ -99,7 +100,7 @@ if (csvPath) {
           areaStyle: { opacity: 0.1 }
         },
         {
-          name: 'Drawdown',
+          name: 'Drawdown %', // Name angepasst
           type: 'bar',
           yAxisIndex: 1,
           data: drawdownData,
@@ -160,24 +161,21 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
       const chart = echartsLib.init(container, null, { renderer: 'canvas' });
       const options = JSON.parse(container.dataset.chartOptions || '{}');
 
-      // --- HIER FIXEN WIR DEN TOOLTIP FORMATTER ---
-      // Wir prüfen, ob es CSV-Daten sind (anhand der Achsen) und setzen den Formatter JS-seitig
+      // --- TOOLTIP FORMATTER FIX ---
       if (!options.tooltip) options.tooltip = {};
       
-      // Nur überschreiben, wenn kein eigener Formatter String existiert
-      // Wir definieren die Funktion hier im Browser-Kontext:
       options.tooltip.formatter = function (params) {
           const equity = params.find(p => p.seriesName.includes('Equity'));
+          // Wir suchen jetzt nach 'Drawdown %' oder einfach 'Drawdown'
           const dd = params.find(p => p.seriesName.includes('Drawdown'));
           
           let html = `<strong>${params[0].axisValue}</strong><br/>`;
           if (equity) html += `Equity: ${equity.value.toLocaleString()}<br/>`;
-          if (dd) html += `Drawdown: ${dd.value}%`;
+          if (dd) html += `Drawdown: ${Math.abs(dd.value)}%`; // Math.abs entfernt das Minuszeichen für die Anzeige
           
           return html;
       };
 
-      // Auch Achsen-Formatter sicherstellen (falls via JSON Strings übergeben)
       if (options.yAxis && options.yAxis[1] && !options.yAxis[1].axisLabel) {
          options.yAxis[1].axisLabel = { formatter: '{value}%' };
       }
@@ -231,7 +229,6 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
     else setTimeout(init, 100);
   };
 
-  // Logik für View Transitions UND initialen Load
   document.addEventListener('astro:page-load', run);
 })();
 </script>
