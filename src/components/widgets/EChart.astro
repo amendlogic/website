@@ -118,7 +118,7 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
   
   {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
   
-  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
+  <div class="p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
     <div 
       id={chartId} 
       class="echart-container w-full overflow-hidden" 
