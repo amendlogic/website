@@ -26,7 +26,6 @@ let baseOptions = {};
 if (csvPath) {
   try {
     const fileContent = fs.readFileSync(path.resolve(csvPath), 'utf-8');
-    // Robuster Split für CSV-Zeilen
     const lines = fileContent.trim().split(/\r?\n/);
     
     if (lines.length > 1) {
@@ -46,9 +45,7 @@ if (csvPath) {
       let firstPrice = null;
       let initialContracts = 1;
 
-      // Daten-Loop (Start bei 1 wegen Header)
       for (let i = 1; i < lines.length; i++) {
-        // Regex Split: Beachtet Kommas innerhalb von Anführungszeichen
         const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
         
         if (!row[idx.date]) continue;
@@ -60,11 +57,9 @@ if (csvPath) {
         const currentProfit = parseFloat(row[idx.profit]);
         const currentPrice = parseFloat(row[idx.price]);
 
-        // 1. Equity & Drawdown
         equity.push([isoDate, INITIAL_CAPITAL + currentProfit]);
         dd.push([isoDate, Math.abs(parseFloat(row[idx.dd] || 0)) * -1]);
 
-        // 2. Buy & Hold Logic
         if (firstPrice === null && !isNaN(currentPrice)) {
             firstPrice = currentPrice;
             const c = parseFloat(row[idx.contracts]);
@@ -77,20 +72,16 @@ if (csvPath) {
       }
 
       baseOptions = {
-        // Grid: containLabel automatisiert Ränder, 'top' gibt Luft für Legende
         grid: { left: 0, right: 0, bottom: 0, containLabel: true },
-        
         tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
         legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], top: 0 },
         xAxis: { type: 'time', boundaryGap: false },
-        
         yAxis: [
           { 
             type: 'value', 
             scale: true, 
             splitLine: { show: true }, 
             nameTextStyle: { align: 'left', fontWeight: 'bold' }
-            // axisLabel formatter kommt via Script
           },
           { 
             type: 'value', 
@@ -101,33 +92,9 @@ if (csvPath) {
           }
         ],
         series: [
-          { 
-            name: 'Portfolio Value', 
-            type: 'line', 
-            sampling: 'lttb', 
-            smooth: true, 
-            showSymbol: false, 
-            areaStyle: { opacity: 0.1 }, 
-            itemStyle: { color: '#10B981' }, 
-            data: equity 
-          },
-          { 
-            name: 'Buy & Hold', 
-            type: 'line', 
-            sampling: 'lttb', 
-            smooth: true, 
-            showSymbol: false, 
-            lineStyle: { type: 'dashed', width: 2 }, 
-            itemStyle: { color: '#94a3b8' }, 
-            data: bnh 
-          },
-          { 
-            name: 'Drawdown %', 
-            type: 'bar', 
-            yAxisIndex: 1, 
-            itemStyle: { color: '#EF4444', opacity: 0.9 }, 
-            data: dd 
-          }
+          { name: 'Portfolio Value', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: equity },
+          { name: 'Buy & Hold', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, lineStyle: { type: 'dashed', width: 2 }, itemStyle: { color: '#94a3b8' }, data: bnh },
+          { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.9 }, data: dd }
         ]
       };
     }
@@ -154,13 +121,12 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
 
 <script is:inline>
 (() => {
-  // Singleton Check
-  if (window.echarts_init) return;
-  window.echarts_init = true;
+  // State-Management für Cleanups
+  let chartInstances = new Set();
+  let resizeObserver = null;
+  let intersectionObserver = null;
+  let mutationObserver = null;
 
-  let echartsLib = null;
-
-  // --- THEME LOGIC ---
   const getColors = () => {
     const isDark = document.documentElement.classList.contains('dark');
     return {
@@ -182,28 +148,29 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
     });
   };
 
-  // --- RENDER LOGIC ---
   const render = async (el) => {
-    if (el._echarts) return;
+    // Verhindert doppelte Initialisierung am selben Element
+    if (el.getAttribute('data-chart-initialized')) return;
     
-    // Lazy Load Library
-    if (!echartsLib) {
-        echartsLib = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js").then(m => m.default || m);
-    }
+    // Library Lazy Load (Browser cached das Modul automatisch)
+    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js").then(m => m.default || m);
     
-    const chart = echartsLib.init(el, null, { renderer: 'canvas' });
-    el._echarts = chart;
+    const chart = echarts.init(el, null, { renderer: 'canvas' });
+    
+    // Instanz tracken für Cleanup
+    chartInstances.add(chart);
+    el.setAttribute('data-chart-initialized', 'true');
+    // Referenz für Theme-Updates speichern
+    el._echartsInstance = chart;
 
     const baseOpts = JSON.parse(el.dataset.base || '{}');
     const userOpts = JSON.parse(el.dataset.user || '{}');
-
-    // 1. Achsen-Formatter (10k, 1.5M)
     const compactFormatter = new Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 });
+
     if (baseOpts.yAxis && baseOpts.yAxis[0]) {
         baseOpts.yAxis[0].axisLabel = { formatter: val => compactFormatter.format(val) };
     }
 
-    // 2. Tooltip Formatter
     if (baseOpts.tooltip) {
       baseOpts.tooltip.formatter = (params) => {
         const date = new Date(params[0].value[0]).toLocaleDateString();
@@ -218,35 +185,66 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
       };
     }
 
-    // Apply Options & Theme
     chart.setOption(baseOpts);
     chart.setOption(userOpts);
     updateTheme(chart);
 
-    // Resize Fix (width: auto)
-    new ResizeObserver(() => chart.resize({ width: 'auto' })).observe(el);
+    // Resize Observer registrieren
+    if (resizeObserver) resizeObserver.observe(el);
   };
 
-  // --- INIT OBSERVERS ---
+  const cleanup = () => {
+    // 1. Alle Charts zerstören
+    chartInstances.forEach(chart => chart.dispose());
+    chartInstances.clear();
+
+    // 2. Observer trennen
+    if (resizeObserver) resizeObserver.disconnect();
+    if (intersectionObserver) intersectionObserver.disconnect();
+    if (mutationObserver) mutationObserver.disconnect();
+    
+    // 3. Markierungen entfernen (falls Soft-Nav zurück auf die Seite führt)
+    document.querySelectorAll('.echart-container').forEach(el => {
+        el.removeAttribute('data-chart-initialized');
+        delete el._echartsInstance;
+    });
+  };
+
   const init = () => {
-    // Lazy Loading via Viewport
-    const observer = new IntersectionObserver((entries, obs) => {
+    // Erst aufräumen, falls noch Reste da sind
+    cleanup();
+
+    // Observer neu erstellen
+    resizeObserver = new ResizeObserver((entries) => {
+        entries.forEach(entry => {
+            const chart = entry.target._echartsInstance;
+            if (chart) chart.resize({ width: 'auto' });
+        });
+    });
+
+    intersectionObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(e => { 
           if(e.isIntersecting) { render(e.target); obs.unobserve(e.target); }
       });
     }, { rootMargin: '200px' });
     
-    document.querySelectorAll('.echart-container').forEach(el => observer.observe(el));
-
-    // Dark Mode Switcher
-    new MutationObserver((m) => {
+    mutationObserver = new MutationObserver((m) => {
       if (m.some(x => x.attributeName === 'class')) {
-        document.querySelectorAll('.echart-container').forEach(el => el._echarts && updateTheme(el._echarts));
+        document.querySelectorAll('.echart-container').forEach(el => {
+            if (el._echartsInstance) updateTheme(el._echartsInstance);
+        });
       }
-    }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    document.querySelectorAll('.echart-container').forEach(el => intersectionObserver.observe(el));
   };
 
+  // Lifecycle Events für Astro View Transitions
   document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', cleanup);
+  
+  // Fallback für normalen Load
   if (document.readyState !== 'loading') init();
 })();
 </script>
