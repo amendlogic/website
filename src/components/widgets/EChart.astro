@@ -20,27 +20,27 @@ const {
 
 let baseOptions = {};
 
+// --- KONFIGURATION STARTKAPITAL ---
+// Damit die Kurve nie unter 0 fällt, starten wir mit einem Puffer.
+const INITIAL_CAPITAL = 10000; 
+
 // --- CSV Parsing ---
 if (csvPath) {
   try {
     const fileContent = fs.readFileSync(path.resolve(csvPath), 'utf-8');
-    
-    // Regex Split für CSV
     const rows = fileContent.trim().split(/\r?\n/).filter(Boolean).map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
     const headers = rows[0].map(h => h.trim());
 
-    // Indizes finden
     const idx = {
       date: headers.indexOf('Date/Time'),
       profit: headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%')),
       dd: headers.findIndex(h => h.includes('Drawdown') && h.includes('%')),
-      price: headers.indexOf('Price'),       // <--- NEU: Preis für B&H
-      contracts: headers.indexOf('Contracts') // <--- NEU: Positionsgröße
+      price: headers.indexOf('Price'),
+      contracts: headers.indexOf('Contracts')
     };
 
     const data = { equity: [], dd: [], bnh: [] };
     
-    // Variablen für Buy & Hold Berechnung
     let firstPrice = null;
     let initialContracts = 1;
 
@@ -48,30 +48,29 @@ if (csvPath) {
       const row = rows[i];
       const d = new Date(row[idx.date]);
       
-      // Nur valide Zeilen verarbeiten
       if (!isNaN(d.getTime()) && row[idx.profit]) {
         const isoDate = d.toISOString();
         const currentProfit = parseFloat(row[idx.profit]);
         const currentPrice = parseFloat(row[idx.price]);
 
-        // 1. Equity & Drawdown
-        data.equity.push([isoDate, currentProfit]);
+        // 1. Equity: Startkapital + Gewinn
+        data.equity.push([isoDate, INITIAL_CAPITAL + currentProfit]);
+
+        // 2. Drawdown (Bleibt negativ, da es ein Unterwasser-Chart ist)
         data.dd.push([isoDate, Math.abs(parseFloat(row[idx.dd] || 0)) * -1]);
 
-        // 2. Buy & Hold Berechnung
-        // Wir setzen den Startpunkt beim allerersten validen Trade
+        // 3. Buy & Hold Berechnung
         if (firstPrice === null && !isNaN(currentPrice)) {
             firstPrice = currentPrice;
-            // Falls vorhanden, nehmen wir die Kontraktgröße, sonst 1
             const c = parseFloat(row[idx.contracts]);
             if (!isNaN(c)) initialContracts = c;
             
-            // Startpunkt ist immer 0 Profit
-            data.bnh.push([isoDate, 0]); 
+            // Startpunkt = Startkapital (0 Gewinn)
+            data.bnh.push([isoDate, INITIAL_CAPITAL]); 
         } else if (firstPrice !== null && !isNaN(currentPrice)) {
-            // Berechnung: (Aktueller Preis - Startpreis) * Anzahl Kontrakte
             const bnhProfit = (currentPrice - firstPrice) * initialContracts;
-            data.bnh.push([isoDate, bnhProfit]);
+            // B&H Wert: Startkapital + B&H Gewinn
+            data.bnh.push([isoDate, INITIAL_CAPITAL + bnhProfit]);
         }
       }
     }
@@ -79,39 +78,50 @@ if (csvPath) {
     baseOptions = {
       grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
       tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
-      legend: { data: ['Equity', 'Buy & Hold', 'Drawdown %'] }, // <--- Legende erweitert
+      legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'] }, // Name geändert
       xAxis: { type: 'time', boundaryGap: false },
       yAxis: [
-        { type: 'value', name: 'Equity', position: 'left', scale: true, splitLine: { show: true } },
-        { type: 'value', name: 'Drawdown (%)', position: 'right', max: 0, axisLabel: { formatter: '{value}%' }, splitLine: { show: false } }
+        { 
+          type: 'value', 
+          name: 'Value', // Achsenbeschriftung neutraler
+          position: 'left', 
+          scale: true, 
+          splitLine: { show: true },
+          alignTicks: true 
+        },
+        { 
+          type: 'value', 
+          name: 'Drawdown (%)', 
+          position: 'right', 
+          max: 0, 
+          axisLabel: { formatter: '{value}%' }, 
+          splitLine: { show: false } 
+        }
       ],
       series: [
         { 
-          name: 'Equity', 
+          name: 'Portfolio Value', // Name angepasst
           type: 'line', 
           sampling: 'lttb', 
           showSymbol: false, 
           areaStyle: { opacity: 0.1 }, 
           itemStyle: { color: '#10B981' }, 
-          data: data.equity,
-          z: 10 // Equity liegt über B&H
+          data: data.equity 
         },
-        // --- NEUE SERIE: BUY & HOLD ---
         { 
           name: 'Buy & Hold', 
           type: 'line', 
           sampling: 'lttb', 
           showSymbol: false, 
-          lineStyle: { type: 'dashed', width: 2 }, // Gestrichelt
-          itemStyle: { color: '#94a3b8' }, // Neutrales Grau (Slate-400)
-          data: data.bnh,
-          z: 5
+          lineStyle: { type: 'dashed', width: 2 }, 
+          itemStyle: { color: '#94a3b8' }, 
+          data: data.bnh 
         },
         { 
           name: 'Drawdown %', 
           type: 'bar', 
           yAxisIndex: 1, 
-          itemStyle: { color: '#EF4444', opacity: 0.75 }, 
+          itemStyle: { color: '#EF4444', opacity: 0.5 }, 
           data: data.dd 
         }
       ]
@@ -126,9 +136,7 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
   {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
   
-  <div 
-    class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900"
-  >
+  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
     <div 
       id={chartId} 
       class="echart-container w-full" 
@@ -175,9 +183,8 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
     const baseOpts = JSON.parse(el.dataset.base || '{}');
     const userOpts = JSON.parse(el.dataset.user || '{}');
 
-    // Tooltip Formatter für 3 Serien angepasst
+    // Tooltip Formatter
     baseOpts.tooltip.formatter = (params) => {
-      // Datum formatieren
       const date = new Date(params[0].value[0]).toLocaleDateString(undefined, { 
         year: 'numeric', month: '2-digit', day: '2-digit' 
       });
@@ -187,9 +194,10 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
       params.forEach(p => {
          let valStr = "";
          if (p.seriesName.includes('Drawdown')) {
+             // Drawdown ist immer negativ/prozentual
              valStr = Math.abs(p.value[1]).toFixed(2) + '%';
          } else {
-             // Währung formatieren für Equity und Buy & Hold
+             // Equity & B&H zeigen jetzt den Portfolio-Wert (z.B. 10.500)
              valStr = p.value[1].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
          }
          html += `${p.marker} ${p.seriesName}: ${valStr}<br/>`;
