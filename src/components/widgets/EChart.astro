@@ -18,22 +18,19 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-let finalOptions = userOptions;
+let finalOptions = userOptions || {}; // Fallback falls undefined
 
-// --- CSV PARSING LOGIK ---
 if (csvPath) {
   try {
     const filePath = path.resolve(csvPath);
     const fileContent = fs.readFileSync(filePath, 'utf-8');
 
-    // CSV splitten
-    const rows = fileContent.trim().split('\n').map(row => row.split(','));
+    const rows = fileContent.trim().split(/\r?\n/).map(row => row.split(','));
     const headers = rows[0].map(h => h.trim());
 
-    // Indizes finden
     const idxDate = headers.indexOf('Date/Time');
     const idxProfit = headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%'));
-    const idxDD = headers.findIndex(h => h.includes('Drawdown') && !h.includes('%') && !h.includes('Max')); 
+    const idxDD = headers.findIndex(h => h.includes('Drawdown') && !h.includes('%') && !h.includes('Max'));
 
     const dateData = [];
     const profitData = [];
@@ -42,29 +39,32 @@ if (csvPath) {
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
       const profitVal = row[idxProfit];
-      
+
       if (profitVal && profitVal.trim() !== '') {
-        // --- ANPASSUNG 1: Datum bereinigen (Nur YYYY-MM-DD) ---
         let rawDate = row[idxDate];
-        // Schneidet alles ab dem 'T' (ISO) oder Leerzeichen weg
+        
+        // SICHERER DATUMS-PARSER (String Split statt Date Objekt)
+        // Verhindert Zeitzonen-Fehler bei ISO Strings
         if (rawDate.includes('T')) rawDate = rawDate.split('T')[0];
         else if (rawDate.includes(' ')) rawDate = rawDate.split(' ')[0];
+        
         dateData.push(rawDate);
-        
         profitData.push(parseFloat(profitVal));
-        
+
         const ddVal = parseFloat(row[idxDD] || 0);
         drawdownData.push(ddVal * -1); 
       }
     }
 
+    // Basis-Optionen (OHNE Funktionen hier, da JSON sie löscht)
     finalOptions = {
       tooltip: {
         trigger: 'axis',
         axisPointer: { type: 'cross' }
+        // FORMATTER WIRD IM CLIENT SCRIPT GESETZT
       },
       legend: {
-        data: ['Equity', 'Drawdown']
+        data: ['Equity (Cum. Profit)', 'Drawdown']
       },
       grid: {
         left: '3%', right: '4%', bottom: '3%', containLabel: true
@@ -75,26 +75,22 @@ if (csvPath) {
         boundaryGap: false
       },
       yAxis: [
-        {
-          type: 'value',
-          name: 'Profit',
-          position: 'left',
-          axisLabel: { formatter: '{value}' } // Währung
-        },
-        {
-          type: 'value',
-          name: 'Drawdown',
-          position: 'right',
-          // --- ANPASSUNG 2: Achse fixieren und Formatierung ---
-          max: 0,
-          min: -100, // Zwingt die Skala bis -100 runter
+        { type: 'value', name: 'Equity', position: 'left' },
+        { 
+          type: 'value', 
+          name: 'Drawdown (%)', 
+          position: 'right', 
+          min: -100, 
+          max: 0, 
+          interval: 25,
           splitLine: { show: false },
-          axisLabel: { formatter: '{value}%' } // Fügt %-Zeichen hinzu
+          // String Template für Formatter funktioniert in JSON:
+          axisLabel: { formatter: '{value}%' } 
         }
       ],
       series: [
         {
-          name: 'Equity',
+          name: 'Equity (Cum. Profit)',
           type: 'line',
           data: profitData,
           smooth: true,
@@ -104,7 +100,7 @@ if (csvPath) {
         },
         {
           name: 'Drawdown',
-          type: 'bar', 
+          type: 'bar',
           yAxisIndex: 1,
           data: drawdownData,
           itemStyle: { color: '#EF4444' }
@@ -113,7 +109,7 @@ if (csvPath) {
     };
 
     if (userOptions) {
-        finalOptions = { ...finalOptions, ...userOptions };
+      finalOptions = { ...finalOptions, ...userOptions };
     }
 
   } catch (e) {
@@ -121,96 +117,121 @@ if (csvPath) {
   }
 }
 
-const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
+const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
+const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
 ---
 
-<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+<WidgetWrapper id={chartId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
 
-  {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
+  {content && (
+    <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />
+  )}
 
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
-    <div 
-      id={chartId} 
-      class="echart-container overflow-hidden w-full" 
-      data-chart-options={JSON.stringify(finalOptions)} 
+    <div
+      id={chartId}
+      class="echart-container overflow-hidden w-full"
+      data-chart-options={safeOptions}
       style={`height:${height}; min-height:${height};`}
     ></div>
   </div>
 </WidgetWrapper>
 
 <script is:inline>
-  // --- Script bleibt unverändert (das funktionierende von vorher) ---
-  (function() {
-    if (window.echarts_optimized_init) return;
-    window.echarts_optimized_init = true;
+(function () {
+  if (window.echarts_optimized_init) return;
+  window.echarts_optimized_init = true;
 
-    let echartsLib = null;
-    let resizeObserver = null;
-    let cleanupFns = [];
-    const instances = new Map();
+  let echartsLib = null;
+  let resizeObserver = null;
+  let cleanupFns = [];
+  const instances = new Map();
 
-    async function renderChart(container) {
-      if (instances.has(container.id)) return;
+  async function renderChart(container) {
+    if (instances.has(container.id)) return;
 
-      try {
-        if (!echartsLib) {
-          const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
-          echartsLib = mod.default || mod;
-        }
-
-        const chart = echartsLib.init(container, null, { renderer: 'canvas' });
-        const options = JSON.parse(container.dataset.chartOptions || '{}');
-        
-        chart.setOption(options);
-        instances.set(container.id, chart);
-
-        if (resizeObserver) resizeObserver.observe(container);
-
-      } catch (e) {
-        console.error("Chart Render Error:", e);
+    try {
+      if (!echartsLib) {
+        const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
+        echartsLib = mod.default || mod;
       }
+
+      const chart = echartsLib.init(container, null, { renderer: 'canvas' });
+      const options = JSON.parse(container.dataset.chartOptions || '{}');
+
+      // --- HIER FIXEN WIR DEN TOOLTIP FORMATTER ---
+      // Wir prüfen, ob es CSV-Daten sind (anhand der Achsen) und setzen den Formatter JS-seitig
+      if (!options.tooltip) options.tooltip = {};
+      
+      // Nur überschreiben, wenn kein eigener Formatter String existiert
+      // Wir definieren die Funktion hier im Browser-Kontext:
+      options.tooltip.formatter = function (params) {
+          const equity = params.find(p => p.seriesName.includes('Equity'));
+          const dd = params.find(p => p.seriesName.includes('Drawdown'));
+          
+          let html = `<strong>${params[0].axisValue}</strong><br/>`;
+          if (equity) html += `Equity: ${equity.value.toLocaleString()}<br/>`;
+          if (dd) html += `Drawdown: ${dd.value}%`;
+          
+          return html;
+      };
+
+      // Auch Achsen-Formatter sicherstellen (falls via JSON Strings übergeben)
+      if (options.yAxis && options.yAxis[1] && !options.yAxis[1].axisLabel) {
+         options.yAxis[1].axisLabel = { formatter: '{value}%' };
+      }
+
+      chart.setOption(options);
+      instances.set(container.id, chart);
+      
+      if (resizeObserver) resizeObserver.observe(container);
+
+    } catch (e) {
+      console.error("Chart Render Error:", e);
     }
+  }
 
-    function init() {
-      const containers = document.querySelectorAll('.echart-container');
-      if (containers.length === 0) return;
+  function init() {
+    const containers = document.querySelectorAll('.echart-container');
+    if (containers.length === 0) return;
 
-      resizeObserver = new ResizeObserver((entries) => {
-        entries.forEach(entry => {
-          const chart = instances.get(entry.target.id);
-          if (chart && !chart.isDisposed()) {
-            chart.resize({ width: 'auto', animation: { duration: 0 } });
-          }
-        });
+    resizeObserver = new ResizeObserver(entries => {
+      entries.forEach(entry => {
+        const chart = instances.get(entry.target.id);
+        if (chart && !chart.isDisposed()) {
+          chart.resize({ width: 'auto', animation: { duration: 0 } });
+        }
       });
+    });
 
-      const viewportObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            renderChart(entry.target);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { rootMargin: '200px' });
-
-      containers.forEach(c => viewportObserver.observe(c));
-
-      cleanupFns.push(() => {
-        viewportObserver.disconnect();
-        resizeObserver.disconnect();
-        instances.forEach(c => c.dispose());
-        instances.clear();
+    const viewportObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          renderChart(entry.target);
+          observer.unobserve(entry.target);
+        }
       });
-    }
+    }, { rootMargin: '200px' });
 
-    const run = () => {
-      cleanupFns.forEach(fn => fn());
-      cleanupFns = [];
-      if (window.requestIdleCallback) window.requestIdleCallback(init);
-      else setTimeout(init, 100);
-    };
+    containers.forEach(c => viewportObserver.observe(c));
 
-    document.addEventListener('astro:page-load', run);
-  })();
+    cleanupFns.push(() => {
+      viewportObserver.disconnect();
+      resizeObserver.disconnect();
+      instances.forEach(c => c.dispose());
+      instances.clear();
+    });
+  }
+
+  const run = () => {
+    cleanupFns.forEach(fn => fn());
+    cleanupFns = [];
+    if (window.requestIdleCallback) window.requestIdleCallback(init);
+    else setTimeout(init, 100);
+  };
+
+  // Logik für View Transitions UND initialen Load
+  document.addEventListener('astro:page-load', run);
+})();
 </script>
