@@ -9,27 +9,23 @@ const {
   subtitle = await Astro.slots.render('subtitle'),
   tagline,
   content = await Astro.slots.render('content'),
-  options: userOptions = {},
   csvPath,
   height = '450px',
   id,
-  isDark = false,
   classes = {},
-  bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
+const INITIAL_CAPITAL = 300;
 let baseOptions = {};
 
-// --- KONFIGURATION STARTKAPITAL ---
-const INITIAL_CAPITAL = 300; 
-
-// --- CSV Parsing (Server-Side) ---
+// --- SERVER SIDE: CSV PARSING (Dein sauberer Code + Farben) ---
 if (csvPath) {
   try {
-    const fileContent = fs.readFileSync(path.resolve(csvPath), 'utf-8');
-    const rows = fileContent.trim().split(/\r?\n/).filter(Boolean).map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
-    const headers = rows[0].map(h => h.trim());
+    const file = fs.readFileSync(path.resolve(csvPath), 'utf-8');
+    const lines = file.trim().split(/\r?\n/);
+    if (lines.length < 2) throw new Error('CSV empty');
 
+    const headers = lines[0].split(',');
     const idx = {
       date: headers.indexOf('Date/Time'),
       profit: headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%')),
@@ -38,185 +34,199 @@ if (csvPath) {
       contracts: headers.indexOf('Contracts')
     };
 
-    const data = { equity: [], dd: [], bnh: [] };
+    const equity = [];
+    const dd = [];
+    const bnh = [];
+
     let firstPrice = null;
     let initialContracts = 1;
 
-    for (let i = 1; i < rows.length; i++) {
-      const row = rows[i];
-      const d = new Date(row[idx.date]);
-      
-      if (!isNaN(d.getTime()) && row[idx.profit]) {
-        const isoDate = d.toISOString();
-        const currentProfit = parseFloat(row[idx.profit]);
-        const currentPrice = parseFloat(row[idx.price]);
+    for (let i = 1; i < lines.length; i++) {
+      // Regex Split für CSV (Wichtig für Kommas in Zahlen)
+      const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+      if (row.length < headers.length) continue;
 
-        // 1. Portfolio Value & Drawdown
-        data.equity.push([isoDate, INITIAL_CAPITAL + currentProfit]);
-        data.dd.push([isoDate, Math.abs(parseFloat(row[idx.dd] || 0)) * -1]);
+      const rawDate = row[idx.date];
+      if (!rawDate) continue;
 
-        // 2. Buy & Hold Berechnung
-        if (firstPrice === null && !isNaN(currentPrice)) {
-            firstPrice = currentPrice;
-            const c = parseFloat(row[idx.contracts]);
-            if (!isNaN(c)) initialContracts = c;
-            data.bnh.push([isoDate, INITIAL_CAPITAL]); 
-        } else if (firstPrice !== null && !isNaN(currentPrice)) {
-            const bnhProfit = (currentPrice - firstPrice) * initialContracts;
-            data.bnh.push([isoDate, INITIAL_CAPITAL + bnhProfit]);
-        }
+      const d = new Date(rawDate.replace(' ', 'T'));
+      if (isNaN(d.getTime())) continue;
+
+      const iso = d.toISOString();
+      const profit = parseFloat(row[idx.profit] || 0);
+      const price = parseFloat(row[idx.price] || 0);
+      const drawdown = parseFloat(row[idx.dd] || 0);
+
+      equity.push([iso, INITIAL_CAPITAL + profit]);
+      dd.push([iso, -Math.abs(drawdown)]);
+
+      if (firstPrice === null && !isNaN(price)) {
+        firstPrice = price;
+        const c = parseFloat(row[idx.contracts]);
+        if (!isNaN(c) && c > 0) initialContracts = c;
+        bnh.push([iso, INITIAL_CAPITAL]);
+      } else if (firstPrice !== null && !isNaN(price)) {
+        bnh.push([iso, INITIAL_CAPITAL + (price - firstPrice) * initialContracts]);
       }
     }
 
     baseOptions = {
-      // Deine Grid Einstellungen
-      grid: { left: 0, right: 0, bottom: 0, containLabel: true },
-      
+      animation: false,
+      grid: { left: 0, right: 0, bottom: 0, top: 30, containLabel: true },
       tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
-      
-      legend: { 
-        data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %']
-      },
-
+      legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], top: 0 },
       xAxis: { type: 'time', boundaryGap: false },
-      
       yAxis: [
-        { 
-          type: 'value', 
-          name: 'Value', 
-          position: 'left', 
-          scale: true, 
-          splitLine: { show: true },
-          alignTicks: true,
-          nameTextStyle: { align: 'left', fontWeight: 'bold' } 
-          // axisLabel formatter wird unten im Script gesetzt
-        },
-        { 
-          type: 'value', 
-          name: 'Drawdown (%)', 
-          position: 'right', 
-          max: 0, 
-          axisLabel: { formatter: '{value}%' }, 
-          splitLine: { show: false },
-          nameTextStyle: { align: 'right', fontWeight: 'bold' }
-        }
+        { type: 'value', scale: true, splitLine: { show: true } },
+        { type: 'value', max: 0, splitLine: { show: false }, axisLabel: { formatter: '{value}%' } }
       ],
       series: [
-        { name: 'Portfolio Value', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: data.equity },
-        { name: 'Buy & Hold', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, lineStyle: { type: 'dashed', width: 2 }, itemStyle: { color: '#94a3b8' }, data: data.bnh },
-        { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.5 }, data: data.dd }
+        {
+          name: 'Portfolio Value',
+          type: 'line',
+          sampling: 'lttb',
+          smooth: 0.2,
+          showSymbol: false,
+          areaStyle: { opacity: 0.1 },
+          itemStyle: { color: '#10B981' }, // HIER: AstroWind Grün wieder eingefügt
+          data: equity
+        },
+        {
+          name: 'Buy & Hold',
+          type: 'line',
+          sampling: 'lttb',
+          smooth: 0.2,
+          showSymbol: false,
+          lineStyle: { type: 'dashed' },
+          itemStyle: { color: '#94a3b8' }, // HIER: Neutrales Grau
+          data: bnh
+        },
+        {
+          name: 'Drawdown %',
+          type: 'bar',
+          yAxisIndex: 1,
+          itemStyle: { color: '#EF4444', opacity: 0.9 }, // HIER: AstroWind Rot
+          data: dd
+        }
       ]
     };
-  } catch (e) { console.error(`[EChart CSV Error]: ${e.message}`); }
+
+  } catch (e) {
+    console.error('[Chart Error]', e.message);
+  }
 }
 
-const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
+const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 9)}`;
 ---
 
-<WidgetWrapper id={chartId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+<WidgetWrapper containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
+  {content && <div class="mb-10" set:html={content} />}
   
-  {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
-  
-  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
-    <div 
-      id={chartId} 
-      class="echart-container w-full overflow-hidden" 
-      data-base={JSON.stringify(baseOptions)} 
-      data-user={JSON.stringify(userOptions)}
-      style={`height:${height}; min-height:${height};`}
+  <div class="bg-white dark:bg-slate-900 rounded-lg shadow-xl dark:shadow-none dark:border dark:border-slate-600">
+    <div
+      id={chartId}
+      class="echart-container w-full overflow-hidden p-4 md:p-6"
+      data-base={JSON.stringify(baseOptions)}
+      style={`height:${height}`}
     ></div>
   </div>
 </WidgetWrapper>
 
 <script is:inline>
-(function () {
-  if (window.echarts_init) return;
-  window.echarts_init = true;
+(() => {
+  let echartsLib;
 
-  const getColors = () => {
+  // Lazy Load Funktion
+  const loadEcharts = async () => {
+    if (echartsLib) return echartsLib;
+    echartsLib = await import("https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.esm.min.js")
+      .then(m => m.default || m);
+    return echartsLib;
+  };
+
+  // HIER: Die lebenswichtige Theme-Logik (AstroWind Farben)
+  const getThemeColors = () => {
     const isDark = document.documentElement.classList.contains('dark');
     return {
-      text: isDark ? '#cbd5e1' : '#475569',
+      text: isDark ? '#cbd5e1' : '#475569',      // Hellgrau im Darkmode, Dunkel im Lightmode
       split: isDark ? '#334155' : '#e2e8f0',
       bg: isDark ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)',
       border: isDark ? '#475569' : '#cbd5e1'
     };
   };
 
-  const updateTheme = (chart) => {
-    const c = getColors();
+  const updateChartTheme = (chart) => {
+    const c = getThemeColors();
     chart.setOption({
       legend: { textStyle: { color: c.text } },
       tooltip: { backgroundColor: c.bg, borderColor: c.border, textStyle: { color: c.text } },
-      textStyle: { color: c.text },
-      yAxis: [{ splitLine: { lineStyle: { color: c.split } }, nameTextStyle: { color: c.text } }, { nameTextStyle: { color: c.text } }],
+      textStyle: { color: c.text }, // Das färbt alle Achsenbeschriftungen auf einen Schlag!
+      yAxis: [{ splitLine: { lineStyle: { color: c.split } } }, {}],
       xAxis: { splitLine: { lineStyle: { color: c.split } } }
     });
   };
 
   const render = async (el) => {
-    if (el._echarts) return;
-    
-    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js").then(m => m.default || m);
+    if (el._chart) return;
+
+    const echarts = await loadEcharts();
     const chart = echarts.init(el, null, { renderer: 'canvas' });
-    el._echarts = chart;
+    el._chart = chart;
 
-    const baseOpts = JSON.parse(el.dataset.base || '{}');
-    const userOpts = JSON.parse(el.dataset.user || '{}');
+    const base = JSON.parse(el.dataset.base || '{}');
 
-    // --- NEU: FORMATTER LOGIK EINGEFÜGT ---
-    // Kürzt große Zahlen auf der Y-Achse (10.5k, 1.5M)
-    if (baseOpts.yAxis && baseOpts.yAxis[0]) {
-        baseOpts.yAxis[0].axisLabel = {
-            formatter: (value) => {
-                if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
-                if (value >= 1000) return (value / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
-                return value;
-            }
-        };
+    // 1. Dein cleaner Formatter (10k, 1.5M)
+    const compact = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
+    if (base.yAxis && base.yAxis[0]) {
+      base.yAxis[0].axisLabel = { formatter: v => compact.format(v) };
     }
-    // --------------------------------------
 
-    if (baseOpts.tooltip) {
-      baseOpts.tooltip.formatter = (params) => {
+    // 2. Tooltip Formatter
+    if (base.tooltip) {
+      base.tooltip.formatter = (params) => {
         const date = new Date(params[0].value[0]).toLocaleDateString();
         let html = `<strong>${date}</strong><br/>`;
-        params.forEach(p => {
-          const val = p.seriesName.includes('Drawdown') 
-            ? Math.abs(p.value[1]).toFixed(2) + '%' 
+        for (const p of params) {
+          const val = p.seriesName.includes('Drawdown')
+            ? Math.abs(p.value[1]).toFixed(2) + '%'
             : p.value[1].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
           html += `${p.marker} ${p.seriesName}: ${val}<br/>`;
-        });
+        }
         return html;
       };
     }
 
-    chart.setOption(baseOpts);
-    chart.setOption(userOpts);
-    updateTheme(chart);
+    chart.setOption(base);
+    updateChartTheme(chart); // Farben sofort beim Start setzen
 
-    // Resize Fix: 'width: auto' ist entscheidend für Landscape/Portrait Wechsel
-    new ResizeObserver(() => {
-        chart.resize({ width: 'auto' });
-    }).observe(el);
+    // Resize Fix: 'width: auto' ist wichtig für Landscape/Portrait Wechsel
+    new ResizeObserver(() => chart.resize({ width: 'auto' })).observe(el);
   };
 
   const init = () => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if(e.isIntersecting) { render(e.target); observer.unobserve(e.target); }});
+    // 1. Intersection Observer (Lazy Loading)
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          render(e.target);
+          obs.unobserve(e.target);
+        }
+      });
     }, { rootMargin: '200px' });
-    
+
     document.querySelectorAll('.echart-container').forEach(el => observer.observe(el));
 
+    // 2. Theme Observer (WICHTIG! Sonst keine Anpassung bei Dark Mode Toggle)
     new MutationObserver((m) => {
       if (m.some(x => x.attributeName === 'class')) {
-        document.querySelectorAll('.echart-container').forEach(el => el._echarts && updateTheme(el._echarts));
+        document.querySelectorAll('.echart-container').forEach(el => el._chart && updateChartTheme(el._chart));
       }
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
   };
 
   document.addEventListener('astro:page-load', init);
   if (document.readyState !== 'loading') init();
+
 })();
 </script>
