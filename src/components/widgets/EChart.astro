@@ -9,8 +9,8 @@ const {
   subtitle = await Astro.slots.render('subtitle'),
   tagline,
   content = await Astro.slots.render('content'),
-  options: userOptions,
-  csvPath,
+  options: userOptions, // Umbenannt, da wir "options" evtl. neu berechnen
+  csvPath, // NEUE PROP: Pfad zur CSV Datei (z.B. './src/data/strategy.csv')
   height = '400px',
   id,
   isDark = false,
@@ -18,57 +18,107 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-let finalOptions = userOptions || {};
+let finalOptions = userOptions;
 
-// --- CSV LOGIK (Server-Side) ---
+// --- CSV PARSING LOGIK (Server-Side) ---
 if (csvPath) {
   try {
+    // 1. Datei lesen
     const filePath = path.resolve(csvPath);
     const fileContent = fs.readFileSync(filePath, 'utf-8');
+
+    // 2. Einfacher CSV Parser
     const rows = fileContent.trim().split('\n').map(row => row.split(','));
     const headers = rows[0].map(h => h.trim());
 
+    // Indizes finden (dynamisch, falls TradingView die Spalten ändert)
     const idxDate = headers.indexOf('Date/Time');
-    const idxProfit = headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%'));
+    const idxProfit = headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%')); // Vermeidet % Spalte
     const idxDD = headers.findIndex(h => h.includes('Drawdown') && !h.includes('%') && !h.includes('Max')); 
 
     const dateData = [];
     const profitData = [];
     const drawdownData = [];
 
+    // 3. Daten extrahieren (ab Zeile 1, Zeile 0 ist Header)
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
+      
+      // TradingView hat oft Entry und Exit Zeilen. Nur Zeilen mit "Cum. Profit" sind relevant (Exits).
       const profitVal = row[idxProfit];
+      
       if (profitVal && profitVal.trim() !== '') {
+        // Datum konvertieren (TradingView ISO String ist meist sicher)
         dateData.push(row[idxDate]);
+        
+        // Zahlen parsen (parseFloat)
         profitData.push(parseFloat(profitVal));
+        
+        // Drawdown ist in CSV meist positiv, für Chart oft negativ schöner oder als Area
+        // Wir nehmen hier den absoluten Wert, ECharts kann ihn invertieren oder wir machen ihn negativ:
         const ddVal = parseFloat(row[idxDD] || 0);
-        drawdownData.push(ddVal * -1); 
+        drawdownData.push(ddVal * -1); // Drawdown als negativer Wert für Unter-Wasser-Chart
       }
     }
 
-    // Automatische Options
+    // 4. ECharts Options automatisch generieren
     finalOptions = {
-      tooltip: { trigger: 'axis' },
-      legend: { data: ['Equity', 'Drawdown'] },
-      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-      xAxis: { type: 'category', data: dateData, boundaryGap: false },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'cross' }
+      },
+      legend: {
+        data: ['Equity (Cum. Profit)', 'Drawdown']
+      },
+      grid: {
+        left: '3%', right: '4%', bottom: '3%', containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: dateData,
+        boundaryGap: false
+      },
       yAxis: [
-        { type: 'value', name: 'Profit', position: 'left' },
-        { type: 'value', name: 'Drawdown', position: 'right', max: 0, splitLine: { show: false } }
+        {
+          type: 'value',
+          name: 'Profit',
+          position: 'left'
+        },
+        {
+          type: 'value',
+          name: 'Drawdown',
+          position: 'right',
+          max: 0, // Drawdown immer unter 0
+          splitLine: { show: false }
+        }
       ],
       series: [
-        { name: 'Equity', type: 'line', data: profitData, smooth: true, showSymbol: false, itemStyle: { color: '#10B981' }, areaStyle: { opacity: 0.1 } },
-        { name: 'Drawdown', type: 'bar', yAxisIndex: 1, data: drawdownData, itemStyle: { color: '#EF4444' } }
+        {
+          name: 'Equity (Cum. Profit)',
+          type: 'line',
+          data: profitData,
+          smooth: true,
+          showSymbol: false,
+          itemStyle: { color: '#10B981' }, // Grün
+          areaStyle: { opacity: 0.1 }
+        },
+        {
+          name: 'Drawdown',
+          type: 'bar', // oder 'line' mit areaStyle
+          yAxisIndex: 1,
+          data: drawdownData,
+          itemStyle: { color: '#EF4444' } // Rot
+        }
       ]
     };
-    
-    // User Options mergen (falls vorhanden)
+
+    // Merge: Falls der User eigene Options übergeben hat, diese überschreiben/ergänzen
     if (userOptions) {
         finalOptions = { ...finalOptions, ...userOptions };
     }
+
   } catch (e) {
-    console.error(`CSV Error:`, e);
+    console.error(`Error parsing CSV at ${csvPath}:`, e);
   }
 }
 
@@ -91,9 +141,14 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 </WidgetWrapper>
 
 <script is:inline>
+  // ... (Hier dein existierender Script Code) ...
   (function() {
+    if (window.echarts_optimized_init) return;
+    window.echarts_optimized_init = true;
+    // ... Rest deines Codes ...
     let echartsLib = null;
     let resizeObserver = null;
+    let cleanupFns = [];
     const instances = new Map();
 
     async function renderChart(container) {
@@ -108,16 +163,6 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
         const chart = echartsLib.init(container, null, { renderer: 'canvas' });
         const options = JSON.parse(container.dataset.chartOptions || '{}');
         
-        // HIER: Manuelle Formatierung wiederherstellen (Workaround für JSON Problem)
-        // Falls du % Zeichen an den Achsen willst:
-        if (options.yAxis && Array.isArray(options.yAxis)) {
-           options.yAxis.forEach(axis => {
-             if (!axis.axisLabel) axis.axisLabel = {};
-             // Einfaches String-Template nutzen, das funktioniert auch via JSON
-             axis.axisLabel.formatter = '{value}'; 
-           });
-        }
-
         chart.setOption(options);
         instances.set(container.id, chart);
 
@@ -127,7 +172,7 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
         console.error("Chart Render Error:", e);
       }
     }
-
+    // ... Rest deines Codes (init, run, Observer) ...
     function init() {
       const containers = document.querySelectorAll('.echart-container');
       if (containers.length === 0) return;
@@ -151,25 +196,22 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
       }, { rootMargin: '200px' });
 
       containers.forEach(c => viewportObserver.observe(c));
+
+      cleanupFns.push(() => {
+        viewportObserver.disconnect();
+        resizeObserver.disconnect();
+        instances.forEach(c => c.dispose());
+        instances.clear();
+      });
     }
 
-    // --- FIX FÜR DEN START ---
-    // Startet sowohl bei normalem Laden als auch bei View Transitions
     const run = () => {
-       // Cleanup falls nötig
-       instances.forEach(c => c.dispose());
-       instances.clear();
-       
-       if (window.requestIdleCallback) window.requestIdleCallback(init);
-       else setTimeout(init, 100);
+      cleanupFns.forEach(fn => fn());
+      cleanupFns = [];
+      if (window.requestIdleCallback) window.requestIdleCallback(init);
+      else setTimeout(init, 100);
     };
 
-    // 1. Sofortiger Start (falls DOM schon da)
-    if (document.readyState !== 'loading') run();
-    else document.addEventListener('DOMContentLoaded', run);
-
-    // 2. Astro Navigation Support (falls View Transitions genutzt werden)
     document.addEventListener('astro:page-load', run);
-    
   })();
 </script>
