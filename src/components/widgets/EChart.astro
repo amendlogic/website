@@ -9,7 +9,7 @@ const {
   subtitle = await Astro.slots.render('subtitle'),
   tagline,
   content = await Astro.slots.render('content'),
-  options: userOptions,
+  options: userOptions = {}, // Leeres Objekt als Default
   csvPath,
   height = '450px',
   id,
@@ -18,152 +18,63 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-let finalOptions = {};
+let baseOptions = {};
 
-// -------- 1. Deep Merge Helper --------
-function deepMerge(target, source) {
-  if (!source) return target;
-  const output = { ...target };
-  for (const key in source) {
-    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-      output[key] = deepMerge(target[key] || {}, source[key]);
-    } else {
-      output[key] = source[key];
-    }
-  }
-  return output;
-}
-
-// -------- 2. CSV Parsing Logic --------
+// --- 1. CSV Parsing (Bleibt robust, aber kompakt) ---
 if (csvPath) {
   try {
-    const filePath = path.resolve(csvPath);
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
-
-    // Zerlegt CSV Zeilen und beachtet Kommas innerhalb von Anführungszeichen
-    const rows = fileContent
-      .trim()
-      .split(/\r?\n/)
-      .filter(Boolean)
-      .map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
-
+    const fileContent = fs.readFileSync(path.resolve(csvPath), 'utf-8');
+    const rows = fileContent.trim().split(/\r?\n/).filter(Boolean).map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
     const headers = rows[0].map(h => h.trim());
 
-    // Spalten finden
-    const idxDate = headers.indexOf('Date/Time');
-    const idxProfit = headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%'));
-    const idxDD = headers.findIndex(h => h.includes('Drawdown') && h.includes('%'));
+    const idx = {
+      date: headers.indexOf('Date/Time'),
+      profit: headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%')),
+      dd: headers.findIndex(h => h.includes('Drawdown') && h.includes('%'))
+    };
 
-    const equityData = [];
-    const drawdownData = [];
+    const data = { equity: [], dd: [] };
 
-    // Daten extrahieren
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
-      const profitVal = row[idxProfit];
-
-      if (profitVal && profitVal.trim() !== '') {
-        const rawDate = row[idxDate];
-        const d = new Date(rawDate);
-        if (isNaN(d.getTime())) continue;
-
-        equityData.push([d.toISOString(), parseFloat(profitVal)]);
-        
-        const ddVal = parseFloat(row[idxDD] || 0);
-        // Drawdown immer negativ speichern
-        drawdownData.push([d.toISOString(), Math.abs(ddVal) * -1]);
+      const d = new Date(row[idx.date]);
+      if (row[idx.profit] && !isNaN(d.getTime())) {
+        data.equity.push([d.toISOString(), parseFloat(row[idx.profit])]);
+        data.dd.push([d.toISOString(), Math.abs(parseFloat(row[idx.dd] || 0)) * -1]);
       }
     }
 
-    // Standard-Optionen
-    finalOptions = {
-      animationDuration: 1000,
-      animationEasing: 'cubicOut',
+    // Basis-Konfiguration
+    baseOptions = {
       grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-      
-      tooltip: { 
-        trigger: 'axis', 
-        axisPointer: { type: 'cross' },
-        confine: true
-      },
-
-      legend: { 
-        data: ['Equity', 'Drawdown %'] 
-      },
-
-      xAxis: { 
-        type: 'time',
-        boundaryGap: false
-      },
-
+      tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
+      legend: { data: ['Equity', 'Drawdown %'] },
+      xAxis: { type: 'time', boundaryGap: false },
       yAxis: [
-        { 
-          type: 'value', 
-          name: 'Equity', 
-          position: 'left', 
-          scale: true,
-          splitLine: { show: true } 
-        },
-        { 
-          type: 'value', 
-          name: 'Drawdown (%)', 
-          position: 'right', 
-          min: -100, 
-          max: 0, 
-          axisLabel: { formatter: '{value}%' }, 
-          splitLine: { show: false } 
-        }
+        { type: 'value', name: 'Equity', position: 'left', scale: true, splitLine: { show: true } },
+        { type: 'value', name: 'Drawdown (%)', position: 'right', min: -100, max: 0, axisLabel: { formatter: '{value}%' }, splitLine: { show: false } }
       ],
-
       series: [
-        { 
-          name: 'Equity', 
-          type: 'line', 
-          sampling: 'lttb',
-          smooth: true, 
-          showSymbol: false, 
-          areaStyle: { opacity: 0.1 }, 
-          itemStyle: { color: '#10B981' }, 
-          data: equityData 
-        },
-        { 
-          name: 'Drawdown %', 
-          type: 'bar', 
-          yAxisIndex: 1, 
-          itemStyle: { 
-            color: '#EF4444',
-            opacity: 0.5  // <--- Hier: Transparenz für die Balken
-          }, 
-          data: drawdownData 
-        }
+        { name: 'Equity', type: 'line', sampling: 'lttb', showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: data.equity },
+        { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.5 }, data: data.dd }
       ]
     };
-
-    if (userOptions) {
-      finalOptions = deepMerge(finalOptions, userOptions);
-    }
-
-  } catch (e) {
-    console.error(`[Chart Error] CSV Parsing failed for ${csvPath}:`, e);
-  }
+  } catch (e) { console.error(`CSV Error: ${e.message}`); }
 }
 
 const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
-const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
 ---
 
 <WidgetWrapper id={chartId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
-
-  {content && (
-    <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />
-  )}
-
+  {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
+  
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
-    <div
-      id={chartId}
-      class="echart-container w-full"
-      data-chart-options={safeOptions}
+    <div 
+      id={chartId} 
+      class="echart-container w-full" 
+      data-base={JSON.stringify(baseOptions)} 
+      data-user={JSON.stringify(userOptions)}
       style={`height:${height}; min-height:${height};`}
     ></div>
   </div>
@@ -171,155 +82,80 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
 
 <script is:inline>
 (function () {
-  if (window.echarts_optimized_init) return;
-  window.echarts_optimized_init = true;
+  if (window.echarts_init) return;
+  window.echarts_init = true;
 
-  let echartsLib = null;
-  let resizeObserver = null;
-  let themeObserver = null;
-  let cleanupFns = [];
-  const instances = new Map();
-
-  const getThemeColors = () => {
+  const getColors = () => {
     const isDark = document.documentElement.classList.contains('dark');
     return {
       text: isDark ? '#cbd5e1' : '#475569',
-      axis: isDark ? '#64748b' : '#94a3b8',
       split: isDark ? '#334155' : '#e2e8f0',
-      tooltipBg: isDark ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)',
-      tooltipBorder: isDark ? '#475569' : '#cbd5e1',
-      tooltipText: isDark ? '#f1f5f9' : '#1e293b'
+      bg: isDark ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)',
+      border: isDark ? '#475569' : '#cbd5e1'
     };
   };
 
-  const applyThemeToChart = (chart, colors) => {
-    // 1. Hole aktuelle Optionen, um den Status der Achsen (show: false?) zu kennen
-    const currentOpts = chart.getOption();
-    
-    // Style Definition
-    const axisBaseStyle = {
-        axisLine: { lineStyle: { color: colors.axis } },
-        axisLabel: { color: colors.text },
-        nameTextStyle: { color: colors.text }
-    };
-
-    // 2. Erstelle dynamisches Y-Achsen-Array basierend auf dem, was da ist
-    // Wichtig: Behalte existierende Eigenschaften (wie show, min, max) bei!
-    const newYAxis = (currentOpts.yAxis || []).map(axis => ({
-        ...axis, // Behalte Einstellungen (z.B. show: false) bei
-        ...axisBaseStyle, // Überschreibe nur Farben
-        splitLine: { 
-            // Behalte show Status bei, ändere nur Farbe
-            show: axis.splitLine ? axis.splitLine.show : false, 
-            lineStyle: { color: colors.split } 
-        }
-    }));
-
+  const updateTheme = (chart) => {
+    const c = getColors();
+    // ECharts "Smart Update": Wir setzen nur Farben, der Rest bleibt erhalten
     chart.setOption({
-      legend: { textStyle: { color: colors.text } },
-      tooltip: {
-        backgroundColor: colors.tooltipBg,
-        borderColor: colors.tooltipBorder,
-        textStyle: { color: colors.tooltipText }
-      },
-      xAxis: {
-        axisLine: { lineStyle: { color: colors.axis } },
-        axisLabel: { color: colors.text },
-        splitLine: { lineStyle: { color: colors.split } }
-      },
-      yAxis: newYAxis
+      legend: { textStyle: { color: c.text } },
+      tooltip: { backgroundColor: c.bg, borderColor: c.border, textStyle: { color: c.text } },
+      textStyle: { color: c.text }, // Vererbt sich auf Achsen-Labels & Namen!
+      yAxis: [{ splitLine: { lineStyle: { color: c.split } } }, {}], // Nur Splitlines explizit färben
+      xAxis: { splitLine: { lineStyle: { color: c.split } } }
     });
   };
 
-  async function renderChart(container) {
-    if (instances.has(container.id)) return;
-
-    if (!echartsLib) {
-      const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
-      echartsLib = mod.default || mod;
-    }
-
-    const chart = echartsLib.init(container, null, { renderer: 'canvas' });
-    const options = JSON.parse(container.dataset.chartOptions || '{}');
+  const render = async (el) => {
+    if (el._echarts) return; // Schutz vor Doppel-Init
     
-    // Tooltip Formatter wiederherstellen
-    if (!options.tooltip) options.tooltip = {};
-    options.tooltip.formatter = function (params) {
-      const equity = params.find(p => p.seriesName === 'Equity');
-      const dd = params.find(p => p.seriesName === 'Drawdown %');
+    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js").then(m => m.default || m);
+    const chart = echarts.init(el, null, { renderer: 'canvas' });
+    el._echarts = chart; // Chart Instanz am DOM-Element speichern
 
-      const dateVal = new Date(params[0].value[0]);
-      const dateStr = !isNaN(dateVal) 
-        ? dateVal.toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }) 
-        : params[0].axisValueLabel;
+    const baseOpts = JSON.parse(el.dataset.base || '{}');
+    const userOpts = JSON.parse(el.dataset.user || '{}');
 
-      let html = `<strong>${dateStr}</strong><br/>`;
-      if (equity) {
-        html += `Equity: ${equity.value[1].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<br/>`;
-      }
-      if (dd) {
-        html += `Drawdown: ${Math.abs(dd.value[1]).toFixed(2)}%`;
-      }
+    // 1. Tooltip Funktion (Kann nicht per JSON kommen)
+    baseOpts.tooltip.formatter = (params) => {
+      const date = new Date(params[0].value[0]).toLocaleDateString();
+      let html = `<strong>${date}</strong><br/>`;
+      params.forEach(p => {
+         const val = p.seriesName.includes('Drawdown') ? Math.abs(p.value[1]) + '%' : p.value[1].toFixed(2);
+         html += `${p.marker} ${p.seriesName}: ${val}<br/>`;
+      });
       return html;
     };
 
-    chart.setOption(options);
-    applyThemeToChart(chart, getThemeColors());
-
-    instances.set(container.id, chart);
-    if (resizeObserver) resizeObserver.observe(container);
-  }
-
-  function init() {
-    const containers = document.querySelectorAll('.echart-container');
-    if (!containers.length) return;
-
-    const viewportObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          renderChart(entry.target);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { rootMargin: '200px' });
-
-    containers.forEach(c => viewportObserver.observe(c));
-
-    resizeObserver = new ResizeObserver(entries => {
-      entries.forEach(entry => {
-        const chart = instances.get(entry.target.id);
-        if (chart && !chart.isDisposed()) chart.resize();
-      });
-    });
-
-    themeObserver = new MutationObserver((mutations) => {
-        const isClassMutation = mutations.some(m => m.attributeName === 'class');
-        if (isClassMutation) {
-            const newColors = getThemeColors();
-            instances.forEach(chart => {
-                applyThemeToChart(chart, newColors);
-            });
-        }
-    });
+    // 2. Daten laden (ECharts mischt userOpts automatisch dazu!)
+    chart.setOption(baseOpts);
+    chart.setOption(userOpts);
     
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    // 3. Farben initial setzen
+    updateTheme(chart);
 
-    cleanupFns.push(() => {
-      viewportObserver.disconnect();
-      resizeObserver.disconnect();
-      themeObserver.disconnect();
-      instances.forEach(c => c.dispose());
-      instances.clear();
-    });
-  }
-
-  const run = () => {
-    cleanupFns.forEach(fn => fn());
-    cleanupFns = [];
-    if (window.requestIdleCallback) window.requestIdleCallback(init);
-    else setTimeout(init, 100);
+    // 4. Observer für Resize & Theme Change
+    new ResizeObserver(() => chart.resize()).observe(el);
   };
 
-  document.addEventListener('astro:page-load', run);
+  // Init Logic (Lazy Loading + Theme Watcher)
+  const init = () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if(e.isIntersecting) { render(e.target); observer.unobserve(e.target); }});
+    }, { rootMargin: '200px' });
+    
+    document.querySelectorAll('.echart-container').forEach(el => observer.observe(el));
+
+    // Globaler Theme Watcher (nur 1x für alle Charts)
+    new MutationObserver((m) => {
+      if (m.some(x => x.attributeName === 'class')) {
+        document.querySelectorAll('.echart-container').forEach(el => el._echarts && updateTheme(el._echarts));
+      }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  };
+
+  document.addEventListener('astro:page-load', init); // Astro Support
+  if (document.readyState !== 'loading') init(); // Fallback Support
 })();
 </script>
