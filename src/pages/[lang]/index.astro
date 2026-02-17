@@ -125,18 +125,7 @@ const metadata = {
   title={t('home.chart.title')}
   subtitle={t('home.chart.subtitle')}
   height="400px"
-  csvPath="./src/assets/strategy_report.csv"  // <--- Hier Pfad zur CSV
-  options={{
-    // Nur STYLING-Optionen hier lassen, KEINE Daten!
-    tooltip: { trigger: "axis", valueFormatter: v => `${v}` }, // % entfernt, da Währung
-    legend: { data: ["Equity (Cum. Profit)", "Drawdown"] },    // Namen müssen zur CSV-Logik passen
-    yAxis: [
-      { type: "value", name: "Profit", position: "left" },
-      { type: "value", name: "Drawdown", position: "right", max: 0 }
-    ],
-    // KEIN xAxis
-    // KEIN series
-  }}
+  csvPath="./src/data/strategy.csv" 
 />
 
   <Testimonials
