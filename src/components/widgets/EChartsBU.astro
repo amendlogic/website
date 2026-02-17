@@ -20,9 +20,10 @@ const {
 
 let baseOptions = {};
 
-// --- KONFIGURATION ---
+// --- KONFIGURATION STARTKAPITAL ---
 const INITIAL_CAPITAL = 300; 
 
+// --- CSV Parsing (Server-Side) ---
 if (csvPath) {
   try {
     const fileContent = fs.readFileSync(path.resolve(csvPath), 'utf-8');
@@ -50,9 +51,11 @@ if (csvPath) {
         const currentProfit = parseFloat(row[idx.profit]);
         const currentPrice = parseFloat(row[idx.price]);
 
+        // 1. Portfolio Value & Drawdown
         data.equity.push([isoDate, INITIAL_CAPITAL + currentProfit]);
         data.dd.push([isoDate, Math.abs(parseFloat(row[idx.dd] || 0)) * -1]);
 
+        // 2. Buy & Hold Berechnung
         if (firstPrice === null && !isNaN(currentPrice)) {
             firstPrice = currentPrice;
             const c = parseFloat(row[idx.contracts]);
@@ -66,14 +69,13 @@ if (csvPath) {
     }
 
     baseOptions = {
-      // Abstand oben auf 80 erhöht für maximale Klarheit
-      grid: { containLabel: true },
+      // Deine Grid Einstellungen
+      grid: { left: 0, right: 0, bottom: 0, containLabel: true },
       
       tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
       
       legend: { 
-        data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'],
-        // Legende etwas vom absoluten Rand wegrücken
+        data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %']
       },
 
       xAxis: { type: 'time', boundaryGap: false },
@@ -86,8 +88,8 @@ if (csvPath) {
           scale: true, 
           splitLine: { show: true },
           alignTicks: true,
-          // Abstand Titel zu Achse
           nameTextStyle: { align: 'left', fontWeight: 'bold' } 
+          // axisLabel formatter wird unten im Script gesetzt
         },
         { 
           type: 'value', 
@@ -96,14 +98,13 @@ if (csvPath) {
           max: 0, 
           axisLabel: { formatter: '{value}%' }, 
           splitLine: { show: false },
-          // Abstand Titel zu Achse
           nameTextStyle: { align: 'right', fontWeight: 'bold' }
         }
       ],
       series: [
         { name: 'Portfolio Value', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: data.equity },
         { name: 'Buy & Hold', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, lineStyle: { type: 'dashed', width: 2 }, itemStyle: { color: '#94a3b8' }, data: data.bnh },
-        { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.9 }, data: data.dd }
+        { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.5 }, data: data.dd }
       ]
     };
   } catch (e) { console.error(`[EChart CSV Error]: ${e.message}`); }
@@ -115,10 +116,12 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
 <WidgetWrapper id={chartId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
   
+  {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
+  
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
     <div 
       id={chartId} 
-      class="echart-container w-full" 
+      class="echart-container w-full overflow-hidden" 
       data-base={JSON.stringify(baseOptions)} 
       data-user={JSON.stringify(userOptions)}
       style={`height:${height}; min-height:${height};`}
@@ -147,10 +150,7 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
       legend: { textStyle: { color: c.text } },
       tooltip: { backgroundColor: c.bg, borderColor: c.border, textStyle: { color: c.text } },
       textStyle: { color: c.text },
-      yAxis: [
-        { splitLine: { lineStyle: { color: c.split } }, nameTextStyle: { color: c.text } }, 
-        { nameTextStyle: { color: c.text } }
-      ],
+      yAxis: [{ splitLine: { lineStyle: { color: c.split } }, nameTextStyle: { color: c.text } }, { nameTextStyle: { color: c.text } }],
       xAxis: { splitLine: { lineStyle: { color: c.split } } }
     });
   };
@@ -164,6 +164,19 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
 
     const baseOpts = JSON.parse(el.dataset.base || '{}');
     const userOpts = JSON.parse(el.dataset.user || '{}');
+
+    // --- NEU: FORMATTER LOGIK EINGEFÜGT ---
+    // Kürzt große Zahlen auf der Y-Achse (10.5k, 1.5M)
+    if (baseOpts.yAxis && baseOpts.yAxis[0]) {
+        baseOpts.yAxis[0].axisLabel = {
+            formatter: (value) => {
+                if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
+                if (value >= 1000) return (value / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+                return value;
+            }
+        };
+    }
+    // --------------------------------------
 
     if (baseOpts.tooltip) {
       baseOpts.tooltip.formatter = (params) => {
@@ -183,7 +196,10 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
     chart.setOption(userOpts);
     updateTheme(chart);
 
-    new ResizeObserver(() => chart.resize()).observe(el);
+    // Resize Fix: 'width: auto' ist entscheidend für Landscape/Portrait Wechsel
+    new ResizeObserver(() => {
+        chart.resize({ width: 'auto' });
+    }).observe(el);
   };
 
   const init = () => {
