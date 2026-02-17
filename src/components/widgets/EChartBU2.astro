@@ -1,0 +1,250 @@
+---
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import Headline from '~/components/ui/Headline.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline,
+  content = await Astro.slots.render('content'),
+  options: userOptions = {},
+  csvPath,
+  height = '450px',
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+
+// --- CONFIG ---
+const INITIAL_CAPITAL = 300;
+let baseOptions = {};
+
+// --- SERVER-SIDE DATA PROCESSING ---
+if (csvPath) {
+  try {
+    const fileContent = fs.readFileSync(path.resolve(csvPath), 'utf-8');
+    const lines = fileContent.trim().split(/\r?\n/);
+    
+    if (lines.length > 1) {
+      const headers = lines[0].split(',');
+      const idx = {
+        date: headers.indexOf('Date/Time'),
+        profit: headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%')),
+        dd: headers.findIndex(h => h.includes('Drawdown') && h.includes('%')),
+        price: headers.indexOf('Price'),
+        contracts: headers.indexOf('Contracts')
+      };
+
+      const equity = [];
+      const dd = [];
+      const bnh = [];
+      
+      let firstPrice = null;
+      let initialContracts = 1;
+
+      for (let i = 1; i < lines.length; i++) {
+        const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        
+        if (!row[idx.date]) continue;
+        
+        const d = new Date(row[idx.date]);
+        if (isNaN(d.getTime()) || !row[idx.profit]) continue;
+
+        const isoDate = d.toISOString();
+        const currentProfit = parseFloat(row[idx.profit]);
+        const currentPrice = parseFloat(row[idx.price]);
+
+        equity.push([isoDate, INITIAL_CAPITAL + currentProfit]);
+        dd.push([isoDate, Math.abs(parseFloat(row[idx.dd] || 0)) * -1]);
+
+        if (firstPrice === null && !isNaN(currentPrice)) {
+            firstPrice = currentPrice;
+            const c = parseFloat(row[idx.contracts]);
+            if (!isNaN(c)) initialContracts = c;
+            bnh.push([isoDate, INITIAL_CAPITAL]); 
+        } else if (firstPrice !== null && !isNaN(currentPrice)) {
+            const bnhProfit = (currentPrice - firstPrice) * initialContracts;
+            bnh.push([isoDate, INITIAL_CAPITAL + bnhProfit]);
+        }
+      }
+
+      baseOptions = {
+        grid: { left: 0, right: 0, bottom: 0, containLabel: true },
+        tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
+        legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], top: 0 },
+        xAxis: { type: 'time', boundaryGap: false },
+        yAxis: [
+          { 
+            type: 'value', 
+            scale: true, 
+            splitLine: { show: true }, 
+            nameTextStyle: { align: 'left', fontWeight: 'bold' }
+          },
+          { 
+            type: 'value', 
+            max: 0, 
+            splitLine: { show: false }, 
+            axisLabel: { formatter: '{value}%' },
+            nameTextStyle: { align: 'right', fontWeight: 'bold' }
+          }
+        ],
+        series: [
+          { name: 'Portfolio Value', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: equity },
+          { name: 'Buy & Hold', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, lineStyle: { type: 'dashed', width: 2 }, itemStyle: { color: '#94a3b8' }, data: bnh },
+          { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.9 }, data: dd }
+        ]
+      };
+    }
+  } catch (e) { console.error(`[EChart CSV Error]: ${e.message}`); }
+}
+
+const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
+---
+
+<WidgetWrapper id={chartId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+  <Headline title={title} subtitle={subtitle} tagline={tagline} />
+  {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
+  
+  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
+    <div 
+      id={chartId} 
+      class="echart-container w-full overflow-hidden" 
+      data-base={JSON.stringify(baseOptions)} 
+      data-user={JSON.stringify(userOptions)}
+      style={`height:${height}; min-height:${height};`}
+    ></div>
+  </div>
+</WidgetWrapper>
+
+<script is:inline>
+(() => {
+  // State-Management für Cleanups
+  let chartInstances = new Set();
+  let resizeObserver = null;
+  let intersectionObserver = null;
+  let mutationObserver = null;
+
+  const getColors = () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    return {
+      text: isDark ? '#cbd5e1' : '#475569',
+      split: isDark ? '#334155' : '#e2e8f0',
+      bg: isDark ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)',
+      border: isDark ? '#475569' : '#cbd5e1'
+    };
+  };
+
+  const updateTheme = (chart) => {
+    const c = getColors();
+    chart.setOption({
+      legend: { textStyle: { color: c.text } },
+      tooltip: { backgroundColor: c.bg, borderColor: c.border, textStyle: { color: c.text } },
+      textStyle: { color: c.text },
+      yAxis: [{ splitLine: { lineStyle: { color: c.split } } }, {}],
+      xAxis: { splitLine: { lineStyle: { color: c.split } } }
+    });
+  };
+
+  const render = async (el) => {
+    // Verhindert doppelte Initialisierung am selben Element
+    if (el.getAttribute('data-chart-initialized')) return;
+    
+    // Library Lazy Load (Browser cached das Modul automatisch)
+    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js").then(m => m.default || m);
+    
+    const chart = echarts.init(el, null, { renderer: 'canvas' });
+    
+    // Instanz tracken für Cleanup
+    chartInstances.add(chart);
+    el.setAttribute('data-chart-initialized', 'true');
+    // Referenz für Theme-Updates speichern
+    el._echartsInstance = chart;
+
+    const baseOpts = JSON.parse(el.dataset.base || '{}');
+    const userOpts = JSON.parse(el.dataset.user || '{}');
+    const compactFormatter = new Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 });
+
+    if (baseOpts.yAxis && baseOpts.yAxis[0]) {
+        baseOpts.yAxis[0].axisLabel = { formatter: val => compactFormatter.format(val) };
+    }
+
+    if (baseOpts.tooltip) {
+      baseOpts.tooltip.formatter = (params) => {
+        const date = new Date(params[0].value[0]).toLocaleDateString();
+        let html = `<strong>${date}</strong><br/>`;
+        params.forEach(p => {
+          const val = p.seriesName.includes('Drawdown') 
+            ? Math.abs(p.value[1]).toFixed(2) + '%' 
+            : p.value[1].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          html += `${p.marker} ${p.seriesName}: ${val}<br/>`;
+        });
+        return html;
+      };
+    }
+
+    chart.setOption(baseOpts);
+    chart.setOption(userOpts);
+    updateTheme(chart);
+
+    // Resize Observer registrieren
+    if (resizeObserver) resizeObserver.observe(el);
+  };
+
+  const cleanup = () => {
+    // 1. Alle Charts zerstören
+    chartInstances.forEach(chart => chart.dispose());
+    chartInstances.clear();
+
+    // 2. Observer trennen
+    if (resizeObserver) resizeObserver.disconnect();
+    if (intersectionObserver) intersectionObserver.disconnect();
+    if (mutationObserver) mutationObserver.disconnect();
+    
+    // 3. Markierungen entfernen (falls Soft-Nav zurück auf die Seite führt)
+    document.querySelectorAll('.echart-container').forEach(el => {
+        el.removeAttribute('data-chart-initialized');
+        delete el._echartsInstance;
+    });
+  };
+
+  const init = () => {
+    // Erst aufräumen, falls noch Reste da sind
+    cleanup();
+
+    // Observer neu erstellen
+    resizeObserver = new ResizeObserver((entries) => {
+        entries.forEach(entry => {
+            const chart = entry.target._echartsInstance;
+            if (chart) chart.resize({ width: 'auto' });
+        });
+    });
+
+    intersectionObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => { 
+          if(e.isIntersecting) { render(e.target); obs.unobserve(e.target); }
+      });
+    }, { rootMargin: '200px' });
+    
+    mutationObserver = new MutationObserver((m) => {
+      if (m.some(x => x.attributeName === 'class')) {
+        document.querySelectorAll('.echart-container').forEach(el => {
+            if (el._echartsInstance) updateTheme(el._echartsInstance);
+        });
+      }
+    });
+
+    mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    document.querySelectorAll('.echart-container').forEach(el => intersectionObserver.observe(el));
+  };
+
+  // Lifecycle Events für Astro View Transitions
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', cleanup);
+  
+  // Fallback für normalen Load
+  if (document.readyState !== 'loading') init();
+})();
+</script>
