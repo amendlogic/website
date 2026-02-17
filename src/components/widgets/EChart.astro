@@ -9,8 +9,8 @@ const {
   subtitle = await Astro.slots.render('subtitle'),
   tagline,
   content = await Astro.slots.render('content'),
-  options: userOptions, // Umbenannt, da wir "options" evtl. neu berechnen
-  csvPath, // NEUE PROP: Pfad zur CSV Datei (z.B. './src/data/strategy.csv')
+  options: userOptions,
+  csvPath,
   height = '400px',
   id,
   isDark = false,
@@ -20,55 +20,51 @@ const {
 
 let finalOptions = userOptions;
 
-// --- CSV PARSING LOGIK (Server-Side) ---
+// --- CSV PARSING LOGIK ---
 if (csvPath) {
   try {
-    // 1. Datei lesen
     const filePath = path.resolve(csvPath);
     const fileContent = fs.readFileSync(filePath, 'utf-8');
 
-    // 2. Einfacher CSV Parser
+    // CSV splitten
     const rows = fileContent.trim().split('\n').map(row => row.split(','));
     const headers = rows[0].map(h => h.trim());
 
-    // Indizes finden (dynamisch, falls TradingView die Spalten ändert)
+    // Indizes finden
     const idxDate = headers.indexOf('Date/Time');
-    const idxProfit = headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%')); // Vermeidet % Spalte
+    const idxProfit = headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%'));
     const idxDD = headers.findIndex(h => h.includes('Drawdown') && !h.includes('%') && !h.includes('Max')); 
 
     const dateData = [];
     const profitData = [];
     const drawdownData = [];
 
-    // 3. Daten extrahieren (ab Zeile 1, Zeile 0 ist Header)
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
-      
-      // TradingView hat oft Entry und Exit Zeilen. Nur Zeilen mit "Cum. Profit" sind relevant (Exits).
       const profitVal = row[idxProfit];
       
       if (profitVal && profitVal.trim() !== '') {
-        // Datum konvertieren (TradingView ISO String ist meist sicher)
-        dateData.push(row[idxDate]);
+        // --- ANPASSUNG 1: Datum bereinigen (Nur YYYY-MM-DD) ---
+        let rawDate = row[idxDate];
+        // Schneidet alles ab dem 'T' (ISO) oder Leerzeichen weg
+        if (rawDate.includes('T')) rawDate = rawDate.split('T')[0];
+        else if (rawDate.includes(' ')) rawDate = rawDate.split(' ')[0];
+        dateData.push(rawDate);
         
-        // Zahlen parsen (parseFloat)
         profitData.push(parseFloat(profitVal));
         
-        // Drawdown ist in CSV meist positiv, für Chart oft negativ schöner oder als Area
-        // Wir nehmen hier den absoluten Wert, ECharts kann ihn invertieren oder wir machen ihn negativ:
         const ddVal = parseFloat(row[idxDD] || 0);
-        drawdownData.push(ddVal * -1); // Drawdown als negativer Wert für Unter-Wasser-Chart
+        drawdownData.push(ddVal * -1); 
       }
     }
 
-    // 4. ECharts Options automatisch generieren
     finalOptions = {
       tooltip: {
         trigger: 'axis',
         axisPointer: { type: 'cross' }
       },
       legend: {
-        data: ['Equity (Cum. Profit)', 'Drawdown']
+        data: ['Equity', 'Drawdown']
       },
       grid: {
         left: '3%', right: '4%', bottom: '3%', containLabel: true
@@ -82,37 +78,40 @@ if (csvPath) {
         {
           type: 'value',
           name: 'Profit',
-          position: 'left'
+          position: 'left',
+          axisLabel: { formatter: '{value}' } // Währung
         },
         {
           type: 'value',
           name: 'Drawdown',
           position: 'right',
-          max: 0, // Drawdown immer unter 0
-          splitLine: { show: false }
+          // --- ANPASSUNG 2: Achse fixieren und Formatierung ---
+          max: 0,
+          min: -100, // Zwingt die Skala bis -100 runter
+          splitLine: { show: false },
+          axisLabel: { formatter: '{value}%' } // Fügt %-Zeichen hinzu
         }
       ],
       series: [
         {
-          name: 'Equity (Cum. Profit)',
+          name: 'Equity',
           type: 'line',
           data: profitData,
           smooth: true,
           showSymbol: false,
-          itemStyle: { color: '#10B981' }, // Grün
+          itemStyle: { color: '#10B981' },
           areaStyle: { opacity: 0.1 }
         },
         {
           name: 'Drawdown',
-          type: 'bar', // oder 'line' mit areaStyle
+          type: 'bar', 
           yAxisIndex: 1,
           data: drawdownData,
-          itemStyle: { color: '#EF4444' } // Rot
+          itemStyle: { color: '#EF4444' }
         }
       ]
     };
 
-    // Merge: Falls der User eigene Options übergeben hat, diese überschreiben/ergänzen
     if (userOptions) {
         finalOptions = { ...finalOptions, ...userOptions };
     }
@@ -141,11 +140,11 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
 </WidgetWrapper>
 
 <script is:inline>
-  // ... (Hier dein existierender Script Code) ...
+  // --- Script bleibt unverändert (das funktionierende von vorher) ---
   (function() {
     if (window.echarts_optimized_init) return;
     window.echarts_optimized_init = true;
-    // ... Rest deines Codes ...
+
     let echartsLib = null;
     let resizeObserver = null;
     let cleanupFns = [];
@@ -172,7 +171,7 @@ const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
         console.error("Chart Render Error:", e);
       }
     }
-    // ... Rest deines Codes (init, run, Observer) ...
+
     function init() {
       const containers = document.querySelectorAll('.echart-container');
       if (containers.length === 0) return;
