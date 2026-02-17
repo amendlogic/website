@@ -1,30 +1,23 @@
 {
-  "hero": {
-    "title": "Unsere Geschichte & Philosophie"
-  },
-  "story": {
-    "title": "Von der Intuition zur Struktur",
-    "content": "Lange Zeit fühlte sich Trading wie ein Kampf zwischen Intuition, Emotionen und Rückschaufehlern an. Je tiefer ich in die Märkte eintauchte, desto klarer wurde mir: Erfolg basiert nicht auf perfekten Vorhersagen – er basiert auf Disziplin, Struktur und wiederholbaren Regeln. Aus dieser Erkenntnis heraus habe ich diese Strategie entwickelt, um Entscheidungen zu vereinfachen und Konsistenz zu wahren – egal wie chaotisch der Markt wirkt."
-  },
-  "definition": {
-    "title": "Keine Black Box",
-    "content": "Ich nenne es nicht 'Bot' oder 'Black-Box-System'. Stattdessen ist es ein systematisches Regelwerk, das den Markt objektiv liest, Chancen strukturiert bewertet und Trades automatisch ausführt."
-  },
-  "philosophy": {
-    "title": "Trading ist selektives Handeln",
-    "content": "Gutes Trading bedeutet nicht, auf jede Marktbewegung zu reagieren. Es bedeutet, nur dann zu handeln, wenn die Bedingungen wirklich sinnvoll sind – und den Plan dann ohne Zögern durchzuziehen. Das Ziel ist nicht maximale Aktivität, sondern stabile und reproduzierbare Performance."
-  },
-  "methodology": {
-    "title": "Marktstruktur & Trend-Erkennung",
-    "content": "Im Kern basiert die Strategie auf objektiver Marktanalyse. Sie erkennt Trends und strukturelle Verschiebungen direkt aus den Preisdaten ohne subjektive Interpretation. Sie passt sich dynamisch an, statt starr zu bleiben. Weniger Raten. Mehr Struktur."
-  },
-  "risk": {
-    "title": "Risikomanagement als Fundament",
-    "content": "Für mich ist das Risiko wichtiger als der Profit. Deshalb enthält das System Schutzmechanismen, die Drawdowns begrenzen, Overtrading in unklaren Phasen reduzieren und das Gesamtrisiko kontrollieren. Die Parameter sind flexibel an deine Risikobereitschaft anpassbar."
-  },
-  "transparency": {
-    "title": "Warum ein gründergeführtes Unternehmen?",
-    "content": "Wir haben uns bewusst für eine spezialisierte Firma entschieden, weil ich persönlich hinter der Strategie stehe. Transparenz ist uns wichtig. Wir bauen lieber auf langfristiges Vertrauen als auf schnelle Verkäufe. Dieses System zu nutzen bedeutet, mit einem Partner zu arbeiten, dem Verantwortlichkeit wichtig ist."
-  },
-  "closing": "Trading muss kein Ratespiel sein. Handle mit Logik, nicht mit Emotionen."
+  "about.hero.title": "Struktur statt Spekulation",
+
+  "about.story.title": "Von Intuition zu klar definierten Regeln",
+  "about.story.content": "In den frühen Phasen des Tradings waren Entscheidungen häufig von Emotionen, Marktgeräuschen und Rückschaufehlern geprägt. Mit zunehmender Erfahrung wurde jedoch eines deutlich: Nachhaltige Performance entsteht nicht durch Vorhersagen, sondern durch Struktur, Disziplin und wiederholbare Prozesse. Aus dieser Erkenntnis entstand ein regelbasiertes Framework, das Entscheidungen standardisiert und über unterschiedliche Marktphasen hinweg Konsistenz schafft.",
+
+  "about.definition.title": "Ein Framework – keine Black Box",
+  "about.definition.content": "Dieses System ist kein hype-getriebener Trading-Bot und keine undurchsichtige Black-Box-Lösung. Es handelt sich um ein strukturiertes Regelwerk, das den Markt objektiv analysiert. Signale entstehen ausschließlich auf Basis vordefinierter Kriterien, werden systematisch geprüft und nach klaren Parametern ausgeführt. Transparenz und Nachvollziehbarkeit stehen im Mittelpunkt der Entwicklung.",
+
+  "about.philosophy.title": "Selektives Handeln statt Daueraktivität",
+  "about.philosophy.content": "Professionelles Trading bedeutet nicht, auf jede Marktbewegung zu reagieren. Es bedeutet, nur dann zu handeln, wenn klar definierte Bedingungen erfüllt sind – und anschließend konsequent dem Plan zu folgen. Ziel ist nicht maximale Aktivität, sondern kontrollierbare und reproduzierbare Ergebnisse über einen längeren Zeitraum.",
+
+  "about.methodology.title": "Objektive Marktstruktur & Trendlogik",
+  "about.methodology.content": "Die Strategie basiert auf strukturierter Marktanalyse. Sie bewertet Trends und strukturelle Veränderungen direkt anhand von Preisdaten – ohne subjektive Interpretation. Das Framework passt sich verändernder Volatilität und dynamischen Marktphasen an, anstatt starr zu bleiben. Weniger Bauchgefühl. Mehr definierte Logik.",
+
+  "about.risk.title": "Risikomanagement als Fundament",
+  "about.risk.content": "Kapitalerhalt steht über kurzfristiger Gewinnmaximierung. Integrierte Schutzmechanismen begrenzen Drawdowns, reduzieren Überaktivität in unklaren Marktphasen und kontrollieren das Gesamtrisiko. Wichtige Parameter lassen sich an individuelle Risikopräferenzen anpassen, ohne die strukturelle Integrität des Systems zu gefährden.",
+
+  "about.transparency.title": "Gründergeführt. Verantwortungsvoll.",
+  "about.transparency.content": "Dieses Unternehmen ist bewusst als fokussierte, gründergeführte Firma aufgebaut. Langfristiges Vertrauen hat Vorrang vor kurzfristigem Marketing. Die Strategie wird kontinuierlich weiterentwickelt und verantwortungsvoll betreut. Ein strukturiertes System anzubieten bedeutet, hinter Methodik, Logik und Risikokonzept zu stehen – transparent und nachvollziehbar.",
+
+  "about.closing": "Märkte bleiben volatil. Disziplin sollte es nicht sein. Strukturieren Sie Ihr Trading. Eliminieren Sie Emotionen."
 }
