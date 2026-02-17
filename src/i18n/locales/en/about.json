@@ -1,17 +1,23 @@
 {
-  "about.hero.title": "Our Journey & Philosophy",
-  "about.story.title": "From Intuition to Structure",
-  "about.story.content": "For a long time, trading felt like a battle between intuition, emotion, and hindsight. The deeper I went into the markets, the clearer one thing became: success isn’t built on perfect predictions — it’s built on discipline, structure, and repeatable rules. From that realization, I developed this strategy to simplify decisions and maintain consistency — no matter how chaotic the market appears.",
-  "about.definition.title": "Not a Black Box",
-  "about.definition.content": "I don’t call it a 'bot' or a 'black box system.' Instead, it is a systematic rule set that reads the market objectively, evaluates opportunities in a structured way, and executes trades automatically.",
-  "about.philosophy.title": "Trading is Selective Action",
-  "about.philosophy.content": "Good trading is not about reacting to every market move. It is about acting only when conditions truly make sense — and then following the plan without hesitation. The goal is not maximum activity, but stable and reproducible performance.",
-  "about.methodology.title": "Market Structure & Trend Detection",
-  "about.methodology.content": "At its core, the strategy relies on objective market analysis. It detects trends and structural shifts directly from price data without subjective interpretation. It adapts to changing market dynamics instead of remaining rigid. Less guesswork. More structure.",
-  "about.risk.title": "Risk Management as a Foundation",
-  "about.risk.content": "For me, risk is more important than profit. That’s why the system includes safeguards that limit drawdowns, reduce overtrading in unclear phases, and control overall exposure. Parameters can be adjusted to match individual risk preferences.",
-  "about.transparency.title": "Why a Founder-Led Firm?",
-  "about.transparency.content": "We deliberately chose to offer this as a focused firm because I stand directly behind the strategy. Transparency matters to us. We prefer building long-term trust over fast sales. Using this system means working with a company that values accountability.",
-  "about.closing": "Trading doesn’t have to be a guessing game. Trade with Logic, Not Emotion."
-}
+  "about.hero.title": "Structure Over Speculation",
 
+  "about.story.title": "From Discretion to Defined Rules",
+  "about.story.content": "In the early stages of trading, decisions often felt influenced by emotion, market noise, and hindsight bias. Over time, one principle became clear: sustainable performance is not built on prediction — it is built on structure, discipline, and repeatable processes. This realization led to the development of a rule-based framework designed to standardize decisions and maintain consistency across different market conditions.",
+
+  "about.definition.title": "A Framework — Not a Black Box",
+  "about.definition.content": "This is not a hype-driven trading bot or an opaque black-box system. It is a structured rule set built on objective market logic. Every signal is generated through predefined criteria, evaluated systematically, and executed according to strict parameters. Transparency and clarity are core principles of its design.",
+
+  "about.philosophy.title": "Selective Execution, Not Constant Activity",
+  "about.philosophy.content": "Professional trading is not about reacting to every price movement. It is about acting only when conditions align with a defined edge — and then executing without hesitation or emotional interference. The objective is not maximum trade frequency, but controlled, repeatable performance over time.",
+
+  "about.methodology.title": "Objective Market Structure & Trend Logic",
+  "about.methodology.content": "The strategy is built around structured market analysis. It evaluates trend behavior and structural shifts directly from price data, avoiding subjective interpretation. Rather than remaining rigid, the framework adapts to changing volatility and evolving market dynamics. Less discretion. More defined logic.",
+
+  "about.risk.title": "Risk Management as the Foundation",
+  "about.risk.content": "Capital protection is prioritized over aggressive returns. The system integrates safeguards designed to limit drawdowns, reduce exposure during structurally weak phases, and prevent uncontrolled position sizing. Key parameters can be configured to align with individual risk tolerance while maintaining structural integrity.",
+
+  "about.transparency.title": "Founder-Led. Accountability-Driven.",
+  "about.transparency.content": "This is a focused, founder-led firm built around one core principle: long-term trust over short-term marketing. The strategy is continuously refined and monitored with direct accountability. Offering a structured system means standing behind its logic, methodology, and risk framework — transparently and responsibly.",
+
+  "about.closing": "Markets will always fluctuate. Discipline should not. Structure your trading. Eliminate emotion."
+}
