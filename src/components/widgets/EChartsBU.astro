@@ -1,120 +1,233 @@
 ---
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Headline from '~/components/ui/Headline.astro';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const {
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
   tagline,
   content = await Astro.slots.render('content'),
-  options,
-  height = '400px',
+  options: userOptions = {},
+  csvPath,
+  height = '450px',
   id,
   isDark = false,
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
+let baseOptions = {};
+
+// --- KONFIGURATION STARTKAPITAL ---
+// Damit die Kurve nie unter 0 fällt, starten wir mit einem Puffer.
+const INITIAL_CAPITAL = 300; 
+
+// --- CSV Parsing ---
+if (csvPath) {
+  try {
+    const fileContent = fs.readFileSync(path.resolve(csvPath), 'utf-8');
+    const rows = fileContent.trim().split(/\r?\n/).filter(Boolean).map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
+    const headers = rows[0].map(h => h.trim());
+
+    const idx = {
+      date: headers.indexOf('Date/Time'),
+      profit: headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%')),
+      dd: headers.findIndex(h => h.includes('Drawdown') && h.includes('%')),
+      price: headers.indexOf('Price'),
+      contracts: headers.indexOf('Contracts')
+    };
+
+    const data = { equity: [], dd: [], bnh: [] };
+    
+    let firstPrice = null;
+    let initialContracts = 1;
+
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      const d = new Date(row[idx.date]);
+      
+      if (!isNaN(d.getTime()) && row[idx.profit]) {
+        const isoDate = d.toISOString();
+        const currentProfit = parseFloat(row[idx.profit]);
+        const currentPrice = parseFloat(row[idx.price]);
+
+        // 1. Equity: Startkapital + Gewinn
+        data.equity.push([isoDate, INITIAL_CAPITAL + currentProfit]);
+
+        // 2. Drawdown (Bleibt negativ, da es ein Unterwasser-Chart ist)
+        data.dd.push([isoDate, Math.abs(parseFloat(row[idx.dd] || 0)) * -1]);
+
+        // 3. Buy & Hold Berechnung
+        if (firstPrice === null && !isNaN(currentPrice)) {
+            firstPrice = currentPrice;
+            const c = parseFloat(row[idx.contracts]);
+            if (!isNaN(c)) initialContracts = c;
+            
+            // Startpunkt = Startkapital (0 Gewinn)
+            data.bnh.push([isoDate, INITIAL_CAPITAL]); 
+        } else if (firstPrice !== null && !isNaN(currentPrice)) {
+            const bnhProfit = (currentPrice - firstPrice) * initialContracts;
+            // B&H Wert: Startkapital + B&H Gewinn
+            data.bnh.push([isoDate, INITIAL_CAPITAL + bnhProfit]);
+        }
+      }
+    }
+
+    baseOptions = {
+      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+      tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
+      legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'] }, // Name geändert
+      xAxis: { type: 'time', boundaryGap: false },
+      yAxis: [
+        { 
+          type: 'value', 
+          name: 'Value', // Achsenbeschriftung neutraler
+          position: 'left', 
+          scale: true, 
+          splitLine: { show: true },
+          alignTicks: true 
+        },
+        { 
+          type: 'value', 
+          name: 'Drawdown (%)', 
+          position: 'right', 
+          min: -100,
+          max: 0, 
+          axisLabel: { formatter: '{value}%' }, 
+          splitLine: { show: false } 
+        }
+      ],
+      series: [
+        { 
+          name: 'Portfolio Value', // Name angepasst
+          type: 'line', 
+          sampling: 'lttb', 
+          showSymbol: false, 
+          areaStyle: { opacity: 0.1 }, 
+          itemStyle: { color: '#10B981' }, 
+          data: data.equity 
+        },
+        { 
+          name: 'Buy & Hold', 
+          type: 'line', 
+          sampling: 'lttb', 
+          showSymbol: false, 
+          lineStyle: { type: 'dashed', width: 2 }, 
+          itemStyle: { color: '#94a3b8' }, 
+          data: data.bnh 
+        },
+        { 
+          name: 'Drawdown %', 
+          type: 'bar', 
+          yAxisIndex: 1, 
+          itemStyle: { color: '#EF4444', opacity: 0.9 }, 
+          data: data.dd 
+        }
+      ]
+    };
+  } catch (e) { console.error(`CSV Error: ${e.message}`); }
+}
+
+const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
 ---
 
-<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+<WidgetWrapper id={chartId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
-
   {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
-
+  
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
     <div 
       id={chartId} 
-      class="echart-container overflow-hidden w-full" 
-      data-chart-options={JSON.stringify(options)} 
+      class="echart-container w-full" 
+      data-base={JSON.stringify(baseOptions)} 
+      data-user={JSON.stringify(userOptions)}
       style={`height:${height}; min-height:${height};`}
     ></div>
   </div>
 </WidgetWrapper>
 
 <script is:inline>
-  (function() {
-    // Singleton Check
-    if (window.echarts_optimized_init) return;
-    window.echarts_optimized_init = true;
+(function () {
+  if (window.echarts_init) return;
+  window.echarts_init = true;
 
-    let echartsLib = null;
-    let resizeObserver = null;
-    let cleanupFns = [];
-    const instances = new Map();
+  const getColors = () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    return {
+      text: isDark ? '#cbd5e1' : '#475569',
+      split: isDark ? '#334155' : '#e2e8f0',
+      bg: isDark ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)',
+      border: isDark ? '#475569' : '#cbd5e1'
+    };
+  };
 
-    async function renderChart(container) {
-      if (instances.has(container.id)) return;
+  const updateTheme = (chart) => {
+    const c = getColors();
+    chart.setOption({
+      legend: { textStyle: { color: c.text } },
+      tooltip: { backgroundColor: c.bg, borderColor: c.border, textStyle: { color: c.text } },
+      textStyle: { color: c.text },
+      yAxis: [{ splitLine: { lineStyle: { color: c.split } } }, {}],
+      xAxis: { splitLine: { lineStyle: { color: c.split } } }
+    });
+  };
 
-      try {
-        // Library lazy laden
-        if (!echartsLib) {
-          const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
-          echartsLib = mod.default || mod;
-        }
+  const render = async (el) => {
+    if (el._echarts) return;
+    
+    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js").then(m => m.default || m);
+    const chart = echarts.init(el, null, { renderer: 'canvas' });
+    el._echarts = chart;
 
-        const chart = echartsLib.init(container, null, { renderer: 'canvas' });
-        
-        // Optionen direkt übernehmen (keine Theme-Manipulation mehr hier)
-        const options = JSON.parse(container.dataset.chartOptions || '{}');
-        
-        chart.setOption(options);
-        instances.set(container.id, chart);
+    const baseOpts = JSON.parse(el.dataset.base || '{}');
+    const userOpts = JSON.parse(el.dataset.user || '{}');
 
-        if (resizeObserver) resizeObserver.observe(container);
-
-      } catch (e) {
-        console.error("Chart Render Error:", e);
-      }
-    }
-
-    function init() {
-      const containers = document.querySelectorAll('.echart-container');
-      if (containers.length === 0) return;
-
-      // OPTIMIERTER RESIZE OBSERVER (gegen Scrollbars)
-      resizeObserver = new ResizeObserver((entries) => {
-        entries.forEach(entry => {
-          const chart = instances.get(entry.target.id);
-          if (chart && !chart.isDisposed()) {
-            chart.resize({
-              width: 'auto',
-              animation: { duration: 0 }
-            });
-          }
-        });
+    // Tooltip Formatter
+    baseOpts.tooltip.formatter = (params) => {
+      const date = new Date(params[0].value[0]).toLocaleDateString(undefined, { 
+        year: 'numeric', month: '2-digit', day: '2-digit' 
       });
-
-      // VIEWPORT OBSERVER (Lazy Loading)
-      const viewportObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            renderChart(entry.target);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { rootMargin: '200px' });
-
-      containers.forEach(c => viewportObserver.observe(c));
-
-      // Cleanup registrieren
-      cleanupFns.push(() => {
-        viewportObserver.disconnect();
-        resizeObserver.disconnect();
-        instances.forEach(c => c.dispose());
-        instances.clear();
+      
+      let html = `<strong>${date}</strong><br/>`;
+      
+      params.forEach(p => {
+         let valStr = "";
+         if (p.seriesName.includes('Drawdown')) {
+             // Drawdown ist immer negativ/prozentual
+             valStr = Math.abs(p.value[1]).toFixed(2) + '%';
+         } else {
+             // Equity & B&H zeigen jetzt den Portfolio-Wert (z.B. 10.500)
+             valStr = p.value[1].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+         }
+         html += `${p.marker} ${p.seriesName}: ${valStr}<br/>`;
       });
-    }
-
-    const run = () => {
-      cleanupFns.forEach(fn => fn());
-      cleanupFns = [];
-      if (window.requestIdleCallback) window.requestIdleCallback(init);
-      else setTimeout(init, 100);
+      return html;
     };
 
-    document.addEventListener('astro:page-load', run);
+    chart.setOption(baseOpts);
+    chart.setOption(userOpts);
+    updateTheme(chart);
+
+    new ResizeObserver(() => chart.resize()).observe(el);
+  };
+
+  const init = () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if(e.isIntersecting) { render(e.target); observer.unobserve(e.target); }});
+    }, { rootMargin: '200px' });
     
-  })();
+    document.querySelectorAll('.echart-container').forEach(el => observer.observe(el));
+
+    new MutationObserver((m) => {
+      if (m.some(x => x.attributeName === 'class')) {
+        document.querySelectorAll('.echart-container').forEach(el => el._echarts && updateTheme(el._echarts));
+      }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  };
+
+  document.addEventListener('astro:page-load', init);
+  if (document.readyState !== 'loading') init();
+})();
 </script>
