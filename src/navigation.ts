@@ -81,7 +81,7 @@ export const getFooterData = (lang = 'en') => {
         title: t('nav.resources'),
         links: [
           { text: t('nav.docs'), href: '#' },
-          { text: t('nav.community'), href: '#' },
+          { text: t('nav.community'), href: '#', icon: 'tabler:external-link' },
           { text: 'Github', href: '#', icon: 'tabler:external-link' }, // Markenname = Keine Übersetzung nötig
           { text: t('nav.help'), href: '#' },
         ],
