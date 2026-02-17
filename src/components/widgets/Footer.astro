@@ -1,7 +1,6 @@
 ---
-import Logo from '~/components/Logo2.astro'; // Oder Logo2, falls du das nutzt
+import Logo from '~/components/Logo2.astro';
 import { Icon } from 'astro-icon/components';
-import { SITE } from 'astrowind:config';
 import { getHomePermalink } from '~/utils/permalinks';
 
 interface Link {
@@ -17,7 +16,6 @@ interface Links {
   links: Array<Link>;
 }
 
-// HIER WAR DER FEHLER: DisclaimerItem muss definiert sein
 interface DisclaimerItem {
   text: string;
 }
@@ -26,12 +24,19 @@ export interface Props {
   links: Array<Links>;
   secondaryLinks: Array<Link>;
   socialLinks: Array<Link>;
-  disclaimer?: Array<DisclaimerItem>; // Jetzt kennt er den Typ
+  disclaimer?: Array<DisclaimerItem>;
   footNote?: string;
   theme?: string;
 }
 
-const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], footNote = '', theme = 'light' } = Astro.props;
+const { 
+  socialLinks = [], 
+  secondaryLinks = [], 
+  links = [], 
+  disclaimer = [], 
+  footNote = '', 
+  theme = 'light' 
+} = Astro.props;
 ---
 
 <footer class:list={[{ dark: theme === 'dark' }, 'relative border-t border-gray-200 dark:border-slate-800 not-prose']}>
@@ -61,35 +66,40 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
           }
         </div>
       </div>
-{
-  links.map(({ title, links }) => (
-    <div class="col-span-6 md:col-span-3 lg:col-span-2">
-      <div class="dark:text-gray-300 font-medium mb-2">{title}</div>
-      {links && Array.isArray(links) && links.length > 0 && (
-        <ul class="text-sm">
-          {links.map(({ text, href, ariaLabel, icon, attrs }) => ( /* 1. "icon" hier hinzufügen */
-            <li class="mb-2">
-              <a
-                class="text-muted hover:text-gray-700 hover:underline dark:text-gray-400 transition duration-150 ease-in-out inline-flex items-center" /* 2. "inline-flex items-center" für Ausrichtung */
-                href={href}
-                aria-label={ariaLabel}
-                {...attrs}
-              >   
-                <Fragment set:html={text} />
-                {/* 3. Icon anzeigen, falls vorhanden */}
-                 {icon && (
-                  <Icon name={icon} class="w-4 h-4 ml-2" />
-                )}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  ))
-}
+      
+      {/* HAUPT-LINKS BEREICH */}
+      {
+        links.map(({ title, links }) => (
+          <div class="col-span-6 md:col-span-3 lg:col-span-2">
+            <div class="dark:text-gray-300 font-medium mb-2">{title}</div>
+            {links && Array.isArray(links) && links.length > 0 && (
+              <ul class="text-sm">
+                {links.map(({ text, href, ariaLabel, icon, attrs }) => (
+                  <li class="mb-2">
+                    <a
+                      class="text-muted hover:text-gray-700 hover:underline dark:text-gray-400 transition duration-150 ease-in-out inline-flex items-center"
+                      href={href}
+                      aria-label={ariaLabel}
+                      {...attrs}
+                    >
+                      {/* 1. Text zuerst */}
+                      <Fragment set:html={text} />
+                      
+                      {/* 2. Icon dahinter */}
+                      {icon && (
+                        <Icon name={icon} class="w-4 h-4 ml-2 text-gray-500 dark:text-gray-400" />
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))
+      }
     </div>
 
+    {/* DISCLAIMER BEREICH */}
     {
       disclaimer && disclaimer.length > 0 && (
         <div class="border-t border-gray-200 dark:border-slate-800 py-6 text-xs text-muted dark:text-slate-400 leading-relaxed">
@@ -111,6 +121,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], disclaimer = [], foot
                   aria-label={ariaLabel}
                   href={href}
                 >
+                  {/* Bei Social Links ist Icon vorne meist besser, aber das kannst du auch drehen wenn du willst */}
                   {icon && <Icon name={icon} class="w-5 h-5" />}
                   <Fragment set:html={text} />
                 </a>
