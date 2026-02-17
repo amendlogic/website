@@ -64,20 +64,18 @@ if (csvPath) {
 
       if (profitVal && profitVal.trim() !== '') {
         const rawDate = row[idxDate];
-        // Datum parsen
         const d = new Date(rawDate);
         if (isNaN(d.getTime())) continue;
 
-        // ECharts Time Series Format: [Timestamp/ISO, Value]
         equityData.push([d.toISOString(), parseFloat(profitVal)]);
         
         const ddVal = parseFloat(row[idxDD] || 0);
-        // Drawdown immer negativ speichern für den Unterwasser-Effekt
+        // Drawdown immer negativ speichern
         drawdownData.push([d.toISOString(), Math.abs(ddVal) * -1]);
       }
     }
 
-    // Standard-Optionen definieren
+    // Standard-Optionen
     finalOptions = {
       animationDuration: 1000,
       animationEasing: 'cubicOut',
@@ -121,24 +119,26 @@ if (csvPath) {
         { 
           name: 'Equity', 
           type: 'line', 
-          sampling: 'lttb', // Performance Optimierung für viele Datenpunkte
+          sampling: 'lttb',
           smooth: true, 
           showSymbol: false, 
           areaStyle: { opacity: 0.1 }, 
-          itemStyle: { color: '#10B981' }, // AstroWind Grün
+          itemStyle: { color: '#10B981' }, 
           data: equityData 
         },
         { 
           name: 'Drawdown %', 
           type: 'bar', 
           yAxisIndex: 1, 
-          itemStyle: { color: '#EF4444' }, // AstroWind Rot
+          itemStyle: { 
+            color: '#EF4444',
+            opacity: 0.5  // <--- Hier: Transparenz für die Balken
+          }, 
           data: drawdownData 
         }
       ]
     };
 
-    // User Options einmischen
     if (userOptions) {
       finalOptions = deepMerge(finalOptions, userOptions);
     }
@@ -171,7 +171,6 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
 
 <script is:inline>
 (function () {
-  // Singleton Pattern: Script nur einmal ausführen
   if (window.echarts_optimized_init) return;
   window.echarts_optimized_init = true;
 
@@ -181,13 +180,12 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
   let cleanupFns = [];
   const instances = new Map();
 
-  // -------- Theme Logik (AstroWind / Tailwind) --------
   const getThemeColors = () => {
     const isDark = document.documentElement.classList.contains('dark');
     return {
-      text: isDark ? '#cbd5e1' : '#475569',      // slate-300 : slate-600
-      axis: isDark ? '#64748b' : '#94a3b8',      // slate-500 : slate-400
-      split: isDark ? '#334155' : '#e2e8f0',     // slate-700 : slate-200
+      text: isDark ? '#cbd5e1' : '#475569',
+      axis: isDark ? '#64748b' : '#94a3b8',
+      split: isDark ? '#334155' : '#e2e8f0',
       tooltipBg: isDark ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)',
       tooltipBorder: isDark ? '#475569' : '#cbd5e1',
       tooltipText: isDark ? '#f1f5f9' : '#1e293b'
@@ -195,6 +193,28 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
   };
 
   const applyThemeToChart = (chart, colors) => {
+    // 1. Hole aktuelle Optionen, um den Status der Achsen (show: false?) zu kennen
+    const currentOpts = chart.getOption();
+    
+    // Style Definition
+    const axisBaseStyle = {
+        axisLine: { lineStyle: { color: colors.axis } },
+        axisLabel: { color: colors.text },
+        nameTextStyle: { color: colors.text }
+    };
+
+    // 2. Erstelle dynamisches Y-Achsen-Array basierend auf dem, was da ist
+    // Wichtig: Behalte existierende Eigenschaften (wie show, min, max) bei!
+    const newYAxis = (currentOpts.yAxis || []).map(axis => ({
+        ...axis, // Behalte Einstellungen (z.B. show: false) bei
+        ...axisBaseStyle, // Überschreibe nur Farben
+        splitLine: { 
+            // Behalte show Status bei, ändere nur Farbe
+            show: axis.splitLine ? axis.splitLine.show : false, 
+            lineStyle: { color: colors.split } 
+        }
+    }));
+
     chart.setOption({
       legend: { textStyle: { color: colors.text } },
       tooltip: {
@@ -207,28 +227,13 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
         axisLabel: { color: colors.text },
         splitLine: { lineStyle: { color: colors.split } }
       },
-      yAxis: [
-        { // Linke Achse (Equity)
-          axisLine: { lineStyle: { color: colors.axis } },
-          axisLabel: { color: colors.text },
-          nameTextStyle: { color: colors.text },
-          splitLine: { lineStyle: { color: colors.split } }
-        },
-        { // Rechte Achse (Drawdown)
-          axisLine: { lineStyle: { color: colors.axis } },
-          axisLabel: { color: colors.text },
-          nameTextStyle: { color: colors.text },
-          splitLine: { show: false }
-        }
-      ]
+      yAxis: newYAxis
     });
   };
 
-  // -------- Render Funktion --------
   async function renderChart(container) {
     if (instances.has(container.id)) return;
 
-    // Lazy Load ECharts
     if (!echartsLib) {
       const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
       echartsLib = mod.default || mod;
@@ -237,13 +242,12 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
     const chart = echartsLib.init(container, null, { renderer: 'canvas' });
     const options = JSON.parse(container.dataset.chartOptions || '{}');
     
-    // Tooltip Formatter wiederherstellen (da JSON keine Funktionen kann)
+    // Tooltip Formatter wiederherstellen
     if (!options.tooltip) options.tooltip = {};
     options.tooltip.formatter = function (params) {
       const equity = params.find(p => p.seriesName === 'Equity');
       const dd = params.find(p => p.seriesName === 'Drawdown %');
 
-      // Datum formatieren
       const dateVal = new Date(params[0].value[0]);
       const dateStr = !isNaN(dateVal) 
         ? dateVal.toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }) 
@@ -254,27 +258,22 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
         html += `Equity: ${equity.value[1].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<br/>`;
       }
       if (dd) {
-        // Drawdown positiv darstellen im Tooltip (ohne Minuszeichen)
         html += `Drawdown: ${Math.abs(dd.value[1]).toFixed(2)}%`;
       }
       return html;
     };
 
     chart.setOption(options);
-    
-    // Theme initial anwenden
     applyThemeToChart(chart, getThemeColors());
 
     instances.set(container.id, chart);
     if (resizeObserver) resizeObserver.observe(container);
   }
 
-  // -------- Init Logic --------
   function init() {
     const containers = document.querySelectorAll('.echart-container');
     if (!containers.length) return;
 
-    // 1. Viewport Observer (Lazy Loading)
     const viewportObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -286,7 +285,6 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
 
     containers.forEach(c => viewportObserver.observe(c));
 
-    // 2. Resize Observer (Responsiveness)
     resizeObserver = new ResizeObserver(entries => {
       entries.forEach(entry => {
         const chart = instances.get(entry.target.id);
@@ -294,23 +292,18 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
       });
     });
 
-    // 3. Theme Observer (Light/Dark Mode Toggle)
     themeObserver = new MutationObserver((mutations) => {
-        // Prüfen, ob sich wirklich die Klasse geändert hat
         const isClassMutation = mutations.some(m => m.attributeName === 'class');
         if (isClassMutation) {
             const newColors = getThemeColors();
             instances.forEach(chart => {
                 applyThemeToChart(chart, newColors);
-                // Chart sicherheitshalber neu zeichnen lassen
-                chart.resize(); 
             });
         }
     });
     
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-    // Cleanup bei Seitenwechsel (Astro View Transitions)
     cleanupFns.push(() => {
       viewportObserver.disconnect();
       resizeObserver.disconnect();
