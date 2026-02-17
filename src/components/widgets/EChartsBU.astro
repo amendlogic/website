@@ -1,0 +1,120 @@
+---
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import Headline from '~/components/ui/Headline.astro';
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline,
+  content = await Astro.slots.render('content'),
+  options,
+  height = '400px',
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+
+const chartId = `echart-${Math.random().toString(36).slice(2, 11)}`;
+---
+
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+  <Headline title={title} subtitle={subtitle} tagline={tagline} />
+
+  {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
+
+  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
+    <div 
+      id={chartId} 
+      class="echart-container overflow-hidden w-full" 
+      data-chart-options={JSON.stringify(options)} 
+      style={`height:${height}; min-height:${height};`}
+    ></div>
+  </div>
+</WidgetWrapper>
+
+<script is:inline>
+  (function() {
+    // Singleton Check
+    if (window.echarts_optimized_init) return;
+    window.echarts_optimized_init = true;
+
+    let echartsLib = null;
+    let resizeObserver = null;
+    let cleanupFns = [];
+    const instances = new Map();
+
+    async function renderChart(container) {
+      if (instances.has(container.id)) return;
+
+      try {
+        // Library lazy laden
+        if (!echartsLib) {
+          const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
+          echartsLib = mod.default || mod;
+        }
+
+        const chart = echartsLib.init(container, null, { renderer: 'canvas' });
+        
+        // Optionen direkt übernehmen (keine Theme-Manipulation mehr hier)
+        const options = JSON.parse(container.dataset.chartOptions || '{}');
+        
+        chart.setOption(options);
+        instances.set(container.id, chart);
+
+        if (resizeObserver) resizeObserver.observe(container);
+
+      } catch (e) {
+        console.error("Chart Render Error:", e);
+      }
+    }
+
+    function init() {
+      const containers = document.querySelectorAll('.echart-container');
+      if (containers.length === 0) return;
+
+      // OPTIMIERTER RESIZE OBSERVER (gegen Scrollbars)
+      resizeObserver = new ResizeObserver((entries) => {
+        entries.forEach(entry => {
+          const chart = instances.get(entry.target.id);
+          if (chart && !chart.isDisposed()) {
+            chart.resize({
+              width: 'auto',
+              animation: { duration: 0 }
+            });
+          }
+        });
+      });
+
+      // VIEWPORT OBSERVER (Lazy Loading)
+      const viewportObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            renderChart(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '200px' });
+
+      containers.forEach(c => viewportObserver.observe(c));
+
+      // Cleanup registrieren
+      cleanupFns.push(() => {
+        viewportObserver.disconnect();
+        resizeObserver.disconnect();
+        instances.forEach(c => c.dispose());
+        instances.clear();
+      });
+    }
+
+    const run = () => {
+      cleanupFns.forEach(fn => fn());
+      cleanupFns = [];
+      if (window.requestIdleCallback) window.requestIdleCallback(init);
+      else setTimeout(init, 100);
+    };
+
+    document.addEventListener('astro:page-load', run);
+    
+  })();
+</script>
