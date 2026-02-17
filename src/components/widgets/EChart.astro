@@ -56,7 +56,7 @@ if (csvPath) {
       ],
       series: [
         { name: 'Equity', type: 'line', sampling: 'lttb', showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: data.equity },
-        { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.5 }, data: data.dd }
+        { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.25 }, data: data.dd }
       ]
     };
   } catch (e) { console.error(`CSV Error: ${e.message}`); }
