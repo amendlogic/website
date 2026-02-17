@@ -67,13 +67,13 @@ if (csvPath) {
 
     baseOptions = {
       // Abstand oben auf 80 erhöht für maximale Klarheit
-      grid: { left: 15, right: 15, bottom: '15', top: 80, containLabel: true },
+      grid: { containLabel: true },
       
       tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
       
       legend: { 
         data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'],
-        top: 10 // Legende etwas vom absoluten Rand wegrücken
+        // Legende etwas vom absoluten Rand wegrücken
       },
 
       xAxis: { type: 'time', boundaryGap: false },
@@ -86,7 +86,7 @@ if (csvPath) {
           scale: true, 
           splitLine: { show: true },
           alignTicks: true,
-          nameGap: 25, // Abstand Titel zu Achse
+          // Abstand Titel zu Achse
           nameTextStyle: { align: 'left', fontWeight: 'bold' } 
         },
         { 
@@ -96,7 +96,7 @@ if (csvPath) {
           max: 0, 
           axisLabel: { formatter: '{value}%' }, 
           splitLine: { show: false },
-          nameGap: 25, // Abstand Titel zu Achse
+          // Abstand Titel zu Achse
           nameTextStyle: { align: 'right', fontWeight: 'bold' }
         }
       ],
