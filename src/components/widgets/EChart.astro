@@ -69,8 +69,7 @@ if (csvPath) {
     }
 
     baseOptions = {
-      // ÄNDERUNG: Manuelle Abstände entfernt. 
-      // containLabel: true sorgt für automatische Berechnung der Ränder.
+      // Deine Grid Einstellungen
       grid: { left: 0, right: 0, bottom: 0, containLabel: true },
       
       tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
@@ -90,6 +89,7 @@ if (csvPath) {
           splitLine: { show: true },
           alignTicks: true,
           nameTextStyle: { align: 'left', fontWeight: 'bold' } 
+          // axisLabel formatter wird unten im Script gesetzt
         },
         { 
           type: 'value', 
@@ -164,6 +164,19 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
 
     const baseOpts = JSON.parse(el.dataset.base || '{}');
     const userOpts = JSON.parse(el.dataset.user || '{}');
+
+    // --- NEU: FORMATTER LOGIK EINGEFÜGT ---
+    // Kürzt große Zahlen auf der Y-Achse (10.5k, 1.5M)
+    if (baseOpts.yAxis && baseOpts.yAxis[0]) {
+        baseOpts.yAxis[0].axisLabel = {
+            formatter: (value) => {
+                if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
+                if (value >= 1000) return (value / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+                return value;
+            }
+        };
+    }
+    // --------------------------------------
 
     if (baseOpts.tooltip) {
       baseOpts.tooltip.formatter = (params) => {
