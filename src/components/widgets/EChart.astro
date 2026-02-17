@@ -93,6 +93,7 @@ if (csvPath) {
           type: 'value', 
           name: 'Drawdown (%)', 
           position: 'right', 
+          min: -100,
           max: 0, 
           axisLabel: { formatter: '{value}%' }, 
           splitLine: { show: false } 
@@ -121,7 +122,7 @@ if (csvPath) {
           name: 'Drawdown %', 
           type: 'bar', 
           yAxisIndex: 1, 
-          itemStyle: { color: '#EF4444', opacity: 0.5 }, 
+          itemStyle: { color: '#EF4444', opacity: 0.9 }, 
           data: data.dd 
         }
       ]
