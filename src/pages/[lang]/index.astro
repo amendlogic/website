@@ -120,26 +120,24 @@ const metadata = {
     }}
   />
 
-  <EChart
-    tagline={t('home.chart.tagline')}
-    title={t('home.chart.title')}
-    subtitle={t('home.chart.subtitle')}
-    height="400px"
-    options={{
-      tooltip: { trigger: "axis", valueFormatter: v => `${v}%` },
-      legend: { data: ["AmendLogic", "Buy & Hold", "Drawdown"] },
-      xAxis: { type: "category", data: ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"] },
-      yAxis: [
-        { type: "value", name: "Equity %", position: "left", axisLabel: { formatter: "{value}%" } },
-        { type: "value", name: "Drawdown %", position: "right", min: -100, max: 0, axisLabel: { formatter: "{value}%" } }
-      ],
-      series: [
-        { name: "AmendLogic", type: "line", smooth: true, data: [0, 35, 120, 90, 160, 210, 210, 210, 210, 210, 210], lineStyle: { width: 3 } },
-        { name: "Buy & Hold", type: "line", smooth: true, data: [0, 20, 95, 40, 110, 180], lineStyle: { type: "dashed" } },
-        { name: "Drawdown", type: "bar", yAxisIndex: 1, data: [0, -12, -35, -55, -18, -10, -10, -10, -10, -10, -10], itemStyle: { color: "rgba(239,68,68,0.5)" } }
-      ]
-    }}
-  />
+<EChart
+  tagline={t('home.chart.tagline')}
+  title={t('home.chart.title')}
+  subtitle={t('home.chart.subtitle')}
+  height="400px"
+  csvPath="./src/assets/strategy_report.csv"  // <--- Hier Pfad zur CSV
+  options={{
+    // Nur STYLING-Optionen hier lassen, KEINE Daten!
+    tooltip: { trigger: "axis", valueFormatter: v => `${v}` }, // % entfernt, da Währung
+    legend: { data: ["Equity (Cum. Profit)", "Drawdown"] },    // Namen müssen zur CSV-Logik passen
+    yAxis: [
+      { type: "value", name: "Profit", position: "left" },
+      { type: "value", name: "Drawdown", position: "right", max: 0 }
+    ],
+    // KEIN xAxis
+    // KEIN series
+  }}
+/>
 
   <Testimonials
     tagline={t('home.testimonials.tagline')}
