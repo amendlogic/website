@@ -5,7 +5,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // --- CONFIG ---
-// Automatische Sprache oder Fallback
 const currentLocale = Astro.currentLocale || 'de';
 
 const {
@@ -25,11 +24,11 @@ const {
 
 const INITIAL_CAPITAL = 300;
 
-// Eindeutige IDs generieren
+// IDs generieren
 const uid = Math.random().toString(36).slice(2, 9);
 const wrapperId = id ?? `widget-${uid}`;
-const chartId = `chart-${uid}`; // Interne ID für den Container
-const dataId = `data-${uid}`;   // ID für das JSON Script
+const chartId = `chart-${uid}`;
+const dataId = `data-${uid}`;
 
 let baseOptions = {};
 
@@ -161,67 +160,55 @@ if (csvPath) {
   };
 
   const renderChart = async (el) => {
-    // Check ob schon gerendert
     if (el.getAttribute('data-loaded') === 'true') return;
 
-    // 1. Daten holen über die sichere ID-Verknüpfung
     const jsonId = el.getAttribute('data-json-id');
     const dataScript = document.getElementById(jsonId);
-    
-    if (!dataScript) {
-      console.error('[EChart] Data script not found for:', jsonId);
-      return;
-    }
+    if (!dataScript) return;
 
     let config;
-    try {
-      config = JSON.parse(dataScript.textContent);
-    } catch (e) {
-      console.error('[EChart] Invalid JSON data', e);
-      return;
-    }
+    try { config = JSON.parse(dataScript.textContent); } catch (e) { return; }
 
     const { baseOptions, userOptions, locale } = config;
+    if (!baseOptions || Object.keys(baseOptions).length === 0) return;
 
-    // Abbruch wenn keine Daten (z.B. CSV leer)
-    if (!baseOptions || Object.keys(baseOptions).length === 0) {
-      console.warn('[EChart] No options provided. Chart will not render.');
-      return;
-    }
-
-    // 2. ECharts laden
     const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js")
       .then(m => m.default || m);
 
     const chart = echarts.init(el);
 
-    // 3. Formatters (Client-Side Logic)
-    const numberFormatter = new Intl.NumberFormat(locale || 'de', {
+    // 1. ACHSEN FORMATTER (FIX: Nutzt 'en-US' für k/M Notation)
+    const axisFormatter = new Intl.NumberFormat('en-US', {
       notation: "compact",
       maximumFractionDigits: 1
     });
 
-    if (baseOptions.yAxis?.[0]) {
+    if (baseOptions.yAxis && baseOptions.yAxis[0]) {
+      // Wir müssen die Achse neu definieren, da JSON Funktionen löscht
       baseOptions.yAxis[0].axisLabel = {
-        formatter: val => numberFormatter.format(val)
+        formatter: (val) => axisFormatter.format(val)
       };
     }
 
+    // 2. TOOLTIP FORMATTER (Nutzt User-Locale für Datum)
     if (baseOptions.tooltip) {
       baseOptions.tooltip.formatter = (params) => {
         const date = new Date(params[0].value[0]).toLocaleDateString(locale);
         let html = `<strong>${date}</strong><br/>`;
         params.forEach(p => {
-          const val = p.seriesName.includes('Drawdown') 
-            ? Math.abs(p.value[1]).toFixed(2) + '%' 
-            : p.value[1].toLocaleString(locale, { minimumFractionDigits: 2 });
+          let val;
+          if (p.seriesName.includes('Drawdown')) {
+             val = Math.abs(p.value[1]).toFixed(2) + '%';
+          } else {
+             // Währung normal formatiert (de-DE macht 1.000,00)
+             val = p.value[1].toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          }
           html += `${p.marker} ${p.seriesName}: ${val}<br/>`;
         });
         return html;
       };
     }
 
-    // 4. Start
     chart.setOption(baseOptions);
     chart.setOption(userOptions);
     applyTheme(chart);
@@ -231,7 +218,6 @@ if (csvPath) {
   };
 
   const init = () => {
-    // Aufräumen falls nötig (bei Navigation)
     cleanup();
 
     resizeObserver = new ResizeObserver(entries => {
@@ -269,7 +255,6 @@ if (csvPath) {
     if (resizeObserver) resizeObserver.disconnect();
     if (intersectionObserver) intersectionObserver.disconnect();
     if (mutationObserver) mutationObserver.disconnect();
-    // Reset Markers
     document.querySelectorAll('.echart-container').forEach(el => el.removeAttribute('data-loaded'));
   };
 
