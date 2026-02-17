@@ -1,0 +1,4 @@
+Trade #,Type,Signal,Date/Time,Price,Contracts,Profit,Profit %,Cum. Profit,Cum. Profit %,Run-up,Run-up %,Drawdown,Drawdown %
+1,Entry Long,Buy Signal,2024-01-15T09:00:00Z,42500.5,1.0,,,0.0,0.0,,,
+,Exit Long,Take Profit,2024-01-15T15:30:00Z,43100.0,1.0,599.5,1.41,599.5,0.6,700.0,1.65,50.0,0.12
+2,Entry Short,Sell Signal,2024-01-16T10:00:00Z,43000.0,1.0,,,599.5,0.6,,,
