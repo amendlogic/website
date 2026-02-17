@@ -4,6 +4,10 @@ import Headline from '~/components/ui/Headline.astro';
 import fs from 'node:fs';
 import path from 'node:path';
 
+// --- CONFIG ---
+// Automatische Sprache oder Fallback
+const currentLocale = Astro.currentLocale || 'de';
+
 const {
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
@@ -13,7 +17,7 @@ const {
   csvPath,
   height = '450px',
   id,
-  locale = 'de-DE', // Locale Übergabe
+  locale = currentLocale,
   isDark = false,
   classes = {},
   bg = await Astro.slots.render('bg'),
@@ -21,10 +25,11 @@ const {
 
 const INITIAL_CAPITAL = 300;
 
-// IDs generieren
-const wrapperId = id ?? `widget-${Math.random().toString(36).slice(2, 9)}`;
-const chartId = `chart-${wrapperId}`;
-const dataId = `data-${wrapperId}`;
+// Eindeutige IDs generieren
+const uid = Math.random().toString(36).slice(2, 9);
+const wrapperId = id ?? `widget-${uid}`;
+const chartId = `chart-${uid}`; // Interne ID für den Container
+const dataId = `data-${uid}`;   // ID für das JSON Script
 
 let baseOptions = {};
 
@@ -52,7 +57,6 @@ if (csvPath) {
       let initialContracts = 1;
 
       for (let i = 1; i < lines.length; i++) {
-        // Robuster Split
         const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/"/g, '').trim());
         if (!row[idx.date]) continue;
 
@@ -79,8 +83,7 @@ if (csvPath) {
       }
 
       baseOptions = {
-        // HIER: Farben wiederhergestellt für AstroWind Look
-        grid: { left: 0, right: 0, bottom: 0, containLabel: true },
+        grid: { left: 0, right: 0, bottom: 0, top: 40, containLabel: true },
         tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
         legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], top: 0 },
         xAxis: { type: 'time', boundaryGap: false },
@@ -92,18 +95,18 @@ if (csvPath) {
           { 
             name: 'Portfolio Value', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, 
             areaStyle: { opacity: 0.1 }, 
-            itemStyle: { color: '#10B981' }, // Grün
+            itemStyle: { color: '#10B981' }, 
             data: equity 
           },
           { 
             name: 'Buy & Hold', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, 
             lineStyle: { type: 'dashed' }, 
-            itemStyle: { color: '#94a3b8' }, // Grau
+            itemStyle: { color: '#94a3b8' }, 
             data: bnh 
           },
           { 
             name: 'Drawdown %', type: 'bar', yAxisIndex: 1, 
-            itemStyle: { color: '#EF4444', opacity: 0.9 }, // Rot Transparent
+            itemStyle: { color: '#EF4444', opacity: 0.5 }, 
             data: drawdown 
           }
         ]
@@ -118,17 +121,19 @@ if (csvPath) {
   {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
 
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
-    <div id={chartId} class="echart-container w-full overflow-hidden" style={`height:${height};`}></div>
+    <div 
+      id={chartId} 
+      data-json-id={dataId}
+      class="echart-container w-full overflow-hidden" 
+      style={`height:${height};`}
+    ></div>
   </div>
 </WidgetWrapper>
 
-<script type="application/json" id={dataId}>
-  {JSON.stringify({ baseOptions, userOptions, locale })}
-</script>
+<script type="application/json" id={dataId} set:html={JSON.stringify({ baseOptions, userOptions, locale })} />
 
 <script is:inline>
 (() => {
-  // Map statt Set, um Element -> Chart zuzuordnen (Wichtig für Resize!)
   const chartMap = new Map();
   let resizeObserver;
   let intersectionObserver;
@@ -156,22 +161,42 @@ if (csvPath) {
   };
 
   const renderChart = async (el) => {
-    if (el.dataset.initialized) return;
+    // Check ob schon gerendert
+    if (el.getAttribute('data-loaded') === 'true') return;
 
-    // ID Logik um Script zu finden
-    const currentId = el.id.replace('chart-', '');
-    const dataScript = document.getElementById(`data-${currentId}`);
-    if (!dataScript) return;
+    // 1. Daten holen über die sichere ID-Verknüpfung
+    const jsonId = el.getAttribute('data-json-id');
+    const dataScript = document.getElementById(jsonId);
+    
+    if (!dataScript) {
+      console.error('[EChart] Data script not found for:', jsonId);
+      return;
+    }
 
-    const { baseOptions, userOptions, locale } = JSON.parse(dataScript.textContent);
+    let config;
+    try {
+      config = JSON.parse(dataScript.textContent);
+    } catch (e) {
+      console.error('[EChart] Invalid JSON data', e);
+      return;
+    }
 
+    const { baseOptions, userOptions, locale } = config;
+
+    // Abbruch wenn keine Daten (z.B. CSV leer)
+    if (!baseOptions || Object.keys(baseOptions).length === 0) {
+      console.warn('[EChart] No options provided. Chart will not render.');
+      return;
+    }
+
+    // 2. ECharts laden
     const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js")
       .then(m => m.default || m);
 
     const chart = echarts.init(el);
 
-    // Number Formatter (10k, 1.5M)
-    const numberFormatter = new Intl.NumberFormat(locale || 'en-US', {
+    // 3. Formatters (Client-Side Logic)
+    const numberFormatter = new Intl.NumberFormat(locale || 'de', {
       notation: "compact",
       maximumFractionDigits: 1
     });
@@ -181,74 +206,75 @@ if (csvPath) {
         formatter: val => numberFormatter.format(val)
       };
     }
-    
-    // Tooltip Formatter wiederherstellen
+
     if (baseOptions.tooltip) {
       baseOptions.tooltip.formatter = (params) => {
-        const date = new Date(params[0].value[0]).toLocaleDateString();
+        const date = new Date(params[0].value[0]).toLocaleDateString(locale);
         let html = `<strong>${date}</strong><br/>`;
         params.forEach(p => {
           const val = p.seriesName.includes('Drawdown') 
             ? Math.abs(p.value[1]).toFixed(2) + '%' 
-            : p.value[1].toLocaleString(undefined, { minimumFractionDigits: 2 });
+            : p.value[1].toLocaleString(locale, { minimumFractionDigits: 2 });
           html += `${p.marker} ${p.seriesName}: ${val}<br/>`;
         });
         return html;
       };
     }
 
+    // 4. Start
     chart.setOption(baseOptions);
     chart.setOption(userOptions);
     applyTheme(chart);
 
-    // In Map speichern: DOM Element -> ECharts Instanz
     chartMap.set(el, chart);
-    el.dataset.initialized = "true";
+    el.setAttribute('data-loaded', 'true');
   };
 
   const init = () => {
-    // 1. Resize Observer: Korrigiert für mehrere Charts & Mobile
+    // Aufräumen falls nötig (bei Navigation)
+    cleanup();
+
     resizeObserver = new ResizeObserver(entries => {
       entries.forEach(e => {
-        const chart = chartMap.get(e.target); // Hole GENAU den Chart für dieses Element
-        if (chart) chart.resize({ width: 'auto' }); // Fix für Mobile Landscape
+        const chart = chartMap.get(e.target);
+        if (chart) chart.resize({ width: 'auto' });
       });
     });
 
-    // 2. Intersection Observer (Lazy Load)
     intersectionObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           renderChart(e.target);
           obs.unobserve(e.target);
-          resizeObserver.observe(e.target); // Erst beobachten wenn sichtbar
+          resizeObserver.observe(e.target);
         }
       });
     }, { rootMargin: "200px" });
 
-    document.querySelectorAll('.echart-container').forEach(el => {
-      intersectionObserver.observe(el);
-    });
-
-    // 3. Mutation Observer (Live Dark Mode Switch)
     mutationObserver = new MutationObserver((m) => {
       if (m.some(x => x.attributeName === 'class')) {
         chartMap.forEach(chart => applyTheme(chart));
       }
     });
     mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+    document.querySelectorAll('.echart-container').forEach(el => {
+      intersectionObserver.observe(el);
+    });
   };
 
-  document.addEventListener('astro:page-load', init);
-  
-  // Cleanup für View Transitions
-  document.addEventListener('astro:before-swap', () => {
+  const cleanup = () => {
     chartMap.forEach(c => c.dispose());
     chartMap.clear();
     if (resizeObserver) resizeObserver.disconnect();
     if (intersectionObserver) intersectionObserver.disconnect();
     if (mutationObserver) mutationObserver.disconnect();
-  });
+    // Reset Markers
+    document.querySelectorAll('.echart-container').forEach(el => el.removeAttribute('data-loaded'));
+  };
+
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', cleanup);
 
   if (document.readyState !== 'loading') init();
 
