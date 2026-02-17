@@ -71,7 +71,7 @@ if (csvPath) {
     baseOptions = {
       // ÄNDERUNG: Manuelle Abstände entfernt. 
       // containLabel: true sorgt für automatische Berechnung der Ränder.
-      grid: { left: 10, right: 10, bottom: 10, top: 60, containLabel: true },
+      grid: { left: 0, right: 0, bottom: 0, containLabel: true },
       
       tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
       
@@ -118,7 +118,7 @@ const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
   
   {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
   
-  <div class="p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
+  <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
     <div 
       id={chartId} 
       class="echart-container w-full overflow-hidden" 
