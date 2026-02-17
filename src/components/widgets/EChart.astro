@@ -82,7 +82,7 @@ if (csvPath) {
       }
 
       baseOptions = {
-        grid: { left: 0, right: 0, bottom: 0, top: 40, containLabel: true },
+        grid: { left: 0, right: 0, bottom: 0, containLabel: true },
         tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
         legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], top: 0 },
         xAxis: { type: 'time', boundaryGap: false },
@@ -105,7 +105,7 @@ if (csvPath) {
           },
           { 
             name: 'Drawdown %', type: 'bar', yAxisIndex: 1, 
-            itemStyle: { color: '#EF4444', opacity: 0.5 }, 
+            itemStyle: { color: '#EF4444', opacity: 0.9 }, 
             data: drawdown 
           }
         ]
