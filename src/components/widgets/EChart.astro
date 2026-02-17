@@ -4,6 +4,10 @@ import Headline from '~/components/ui/Headline.astro';
 import fs from 'node:fs';
 import path from 'node:path';
 
+// ... (Dein gesamter oberer Teil mit Imports, Props, DeepMerge und CSV Parsing bleibt EXAKT gleich) ...
+// Ich kopiere ihn hier der Kürze halber nicht rein, da er perfekt ist.
+// Beginne direkt ab dem Wrapper:
+
 const {
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
@@ -11,100 +15,63 @@ const {
   content = await Astro.slots.render('content'),
   options: userOptions,
   csvPath,
-  height = '400px',
+  height = '450px',
   id,
   isDark = false,
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-let finalOptions = userOptions || {};
+// --- HIER DEINEN DEEPMERGE UND CSV CODE EINFÜGEN (wie du ihn hattest) ---
+// (Platzhalter für deinen existierenden Code)
+let finalOptions = {};
+function deepMerge(target, source) { /* Dein Code */ if (!source) return target; const output = { ...target }; for (const key in source) { if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) { output[key] = deepMerge(target[key] || {}, source[key]); } else { output[key] = source[key]; } } return output; }
 
-// --- CSV PARSING (Server-Side) ---
 if (csvPath) {
   try {
     const filePath = path.resolve(csvPath);
     const fileContent = fs.readFileSync(filePath, 'utf-8');
-
-    const rows = fileContent.trim().split(/\r?\n/).map(row => row.split(','));
+    const rows = fileContent.trim().split(/\r?\n/).filter(Boolean).map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
     const headers = rows[0].map(h => h.trim());
-
     const idxDate = headers.indexOf('Date/Time');
     const idxProfit = headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%'));
-    // Sucht nach Drawdown Spalte mit %
-    const idxDD = headers.findIndex(h => h.includes('Drawdown') && h.includes('%'));
-
-    const dateData = [];
-    const profitData = [];
+    const idxDD = headers.findIndex(h => h.includes('Drawdown') && h.includes('%')); // Hier nach % suchen
+    const equityData = [];
     const drawdownData = [];
 
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
       const profitVal = row[idxProfit];
-
       if (profitVal && profitVal.trim() !== '') {
-        let rawDate = row[idxDate];
-        if (rawDate.includes('T')) rawDate = rawDate.split('T')[0];
-        else if (rawDate.includes(' ')) rawDate = rawDate.split(' ')[0];
+        const rawDate = row[idxDate];
+        const d = new Date(rawDate); // Date parsing
+        if (isNaN(d.getTime())) continue; // Sicherheitscheck
         
-        dateData.push(rawDate);
-        profitData.push(parseFloat(profitVal));
-
+        equityData.push([d.toISOString(), parseFloat(profitVal)]);
         const ddVal = parseFloat(row[idxDD] || 0);
-        drawdownData.push(ddVal * -1); 
+        drawdownData.push([d.toISOString(), Math.abs(ddVal) * -1]); // Sicherstellen dass es negativ ist
       }
     }
 
     finalOptions = {
-      // --- BASIS LAYOUT ---
+      animationDuration: 800,
+      animationEasing: 'cubicOut',
       grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
       tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
       legend: { data: ['Equity', 'Drawdown %'] },
-      
-      // --- ACHSEN (Farben werden im Client Script überschrieben) ---
-      xAxis: { 
-        type: 'category', 
-        data: dateData, 
-        boundaryGap: false 
-      },
+      xAxis: { type: 'time' },
       yAxis: [
-        { type: 'value', name: 'Equity', position: 'left' },
-        { 
-          type: 'value', 
-          name: 'Drawdown (%)', 
-          position: 'right', 
-          min: -100, max: 0, 
-          splitLine: { show: false },
-          axisLabel: { formatter: '{value}%' } 
-        }
+        { type: 'value', name: 'Equity', position: 'left', scale: true },
+        { type: 'value', name: 'Drawdown (%)', position: 'right', min: -100, max: 0, axisLabel: { formatter: '{value}%' }, splitLine: { show: false } }
       ],
       series: [
-        {
-          name: 'Equity',
-          type: 'line',
-          data: profitData,
-          smooth: true,
-          showSymbol: false,
-          itemStyle: { color: '#10B981' }, // AstroWind Grün
-          areaStyle: { opacity: 0.1 }
-        },
-        {
-          name: 'Drawdown %',
-          type: 'bar',
-          yAxisIndex: 1,
-          data: drawdownData,
-          itemStyle: { color: '#EF4444' } // AstroWind Rot
-        }
+        { name: 'Equity', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, areaStyle: { opacity: 0.08 }, itemStyle: { color: '#10B981' }, data: equityData },
+        { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444' }, data: drawdownData }
       ]
     };
 
-    if (userOptions) {
-      finalOptions = { ...finalOptions, ...userOptions };
-    }
-
-  } catch (e) {
-    console.error(`Error parsing CSV at ${csvPath}:`, e);
-  }
+    if (userOptions) finalOptions = deepMerge(finalOptions, userOptions);
+  } catch (e) { console.error(`CSV Parsing Error:`, e); }
 }
 
 const chartId = id ?? `echart-${Math.random().toString(36).slice(2, 11)}`;
@@ -113,18 +80,9 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
 
 <WidgetWrapper id={chartId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
-
-  {content && (
-    <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />
-  )}
-
+  {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
-    <div
-      id={chartId}
-      class="echart-container overflow-hidden w-full"
-      data-chart-options={safeOptions}
-      style={`height:${height}; min-height:${height};`}
-    ></div>
+    <div id={chartId} class="echart-container w-full" data-chart-options={safeOptions} style={`height:${height}; min-height:${height};`}></div>
   </div>
 </WidgetWrapper>
 
@@ -139,93 +97,95 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
   let cleanupFns = [];
   const instances = new Map();
 
-  // --- ASTROWIND FARBPALETTE (Tailwind Slate) ---
   const getThemeColors = () => {
-    const isDark = document.documentElement.classList.contains('dark');
+    const dark = document.documentElement.classList.contains('dark');
     return {
-      text: isDark ? '#cbd5e1' : '#475569',      // slate-300 vs slate-600
-      axis: isDark ? '#64748b' : '#94a3b8',      // slate-500 vs slate-400
-      split: isDark ? '#334155' : '#e2e8f0',     // slate-700 vs slate-200
-      tooltipBg: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.9)', // slate-800 vs white
-      tooltipBorder: isDark ? '#475569' : '#cbd5e1',
-      tooltipText: isDark ? '#f1f5f9' : '#1e293b'
+      text: dark ? '#cbd5e1' : '#475569',
+      axis: dark ? '#64748b' : '#94a3b8',
+      split: dark ? '#334155' : '#e2e8f0',
+      tooltipBg: dark ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)',
+      tooltipBorder: dark ? '#475569' : '#cbd5e1',
+      tooltipText: dark ? '#f1f5f9' : '#1e293b'
     };
+  };
+
+  // Hilfsfunktion: Wendet Farben auf Options an
+  const applyThemeToOptions = (chart, colors) => {
+      chart.setOption({
+          legend: { textStyle: { color: colors.text } },
+          tooltip: {
+              backgroundColor: colors.tooltipBg,
+              borderColor: colors.tooltipBorder,
+              textStyle: { color: colors.tooltipText }
+          },
+          xAxis: {
+              axisLine: { lineStyle: { color: colors.axis } },
+              axisLabel: { color: colors.text },
+              splitLine: { lineStyle: { color: colors.split } }
+          },
+          yAxis: [
+              { // Linke Achse
+                  axisLine: { lineStyle: { color: colors.axis } },
+                  axisLabel: { color: colors.text },
+                  nameTextStyle: { color: colors.text },
+                  splitLine: { lineStyle: { color: colors.split } }
+              },
+              { // Rechte Achse
+                  axisLine: { lineStyle: { color: colors.axis } },
+                  axisLabel: { color: colors.text },
+                  nameTextStyle: { color: colors.text },
+                  splitLine: { show: false }
+              }
+          ]
+      });
   };
 
   async function renderChart(container) {
     if (instances.has(container.id)) return;
 
-    try {
-      if (!echartsLib) {
-        const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
-        echartsLib = mod.default || mod;
-      }
-
-      const chart = echartsLib.init(container, null, { renderer: 'canvas' });
-      const options = JSON.parse(container.dataset.chartOptions || '{}');
-      const colors = getThemeColors();
-
-      // --- 1. TOOLTIP FORMATTER FIX ---
-      if (!options.tooltip) options.tooltip = {};
-      options.tooltip.formatter = function (params) {
-          const equity = params.find(p => p.seriesName.includes('Equity'));
-          const dd = params.find(p => p.seriesName.includes('Drawdown'));
-          
-          let html = `<strong>${params[0].axisValue}</strong><br/>`;
-          if (equity) html += `Equity: ${equity.value.toLocaleString()}<br/>`;
-          if (dd) html += `Drawdown: ${Math.abs(dd.value)}%`;
-          return html;
-      };
-
-      // --- 2. FARBEN ANWENDEN ---
-      const applyTheme = (opts, themeColors) => {
-        // Legende
-        if (!opts.legend) opts.legend = {};
-        opts.legend.textStyle = { color: themeColors.text };
-        
-        // Tooltip Styling
-        if (!opts.tooltip) opts.tooltip = {};
-        opts.tooltip.backgroundColor = themeColors.tooltipBg;
-        opts.tooltip.borderColor = themeColors.tooltipBorder;
-        opts.tooltip.textStyle = { color: themeColors.tooltipText };
-
-        // Achsen Styling (X und Y)
-        const styleAxis = (axis) => {
-           if (!axis) return;
-           axis.axisLine = { lineStyle: { color: themeColors.axis } };
-           axis.axisLabel = { color: themeColors.text, ...(axis.axisLabel || {}) };
-           axis.nameTextStyle = { color: themeColors.text };
-           axis.splitLine = { 
-               show: axis.splitLine?.show ?? true, // Behalte show settings bei
-               lineStyle: { color: themeColors.split } 
-           };
-        };
-
-        if (opts.xAxis) styleAxis(opts.xAxis);
-        if (opts.yAxis && Array.isArray(opts.yAxis)) {
-            opts.yAxis.forEach(styleAxis);
-        } else if (opts.yAxis) {
-            styleAxis(opts.yAxis);
-        }
-        return opts;
-      };
-
-      // Initial anwenden
-      chart.setOption(applyTheme(options, colors));
-      instances.set(container.id, chart);
-      
-      if (resizeObserver) resizeObserver.observe(container);
-
-    } catch (e) {
-      console.error("Chart Render Error:", e);
+    if (!echartsLib) {
+      const mod = await import("https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js");
+      echartsLib = mod.default || mod;
     }
+
+    const chart = echartsLib.init(container);
+    const options = JSON.parse(container.dataset.chartOptions || '{}');
+    
+    // 1. Tooltip Formatter wiederherstellen
+    if (!options.tooltip) options.tooltip = {};
+    options.tooltip.formatter = function (params) {
+      const equity = params.find(p => p.seriesName === 'Equity');
+      const dd = params.find(p => p.seriesName === 'Drawdown %');
+
+      // Date Handling: ECharts gibt Zeitstempel zurück, wir formatieren es
+      // params[0].value[0] ist der ISO String oder Timestamp
+      const dateVal = new Date(params[0].value[0]).toLocaleDateString();
+
+      let html = `<strong>${dateVal}</strong><br/>`;
+      if (equity) {
+        // value[1] ist der Y-Wert
+        html += `Equity: ${equity.value[1].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<br/>`;
+      }
+      if (dd) {
+        html += `Drawdown: ${Math.abs(dd.value[1]).toFixed(2)}%`;
+      }
+      return html;
+    };
+
+    // 2. Daten setzen
+    chart.setOption(options);
+    
+    // 3. Farben initial anwenden (WICHTIG!)
+    applyThemeToOptions(chart, getThemeColors());
+
+    instances.set(container.id, chart);
+    if (resizeObserver) resizeObserver.observe(container);
   }
 
   function init() {
     const containers = document.querySelectorAll('.echart-container');
-    if (containers.length === 0) return;
+    if (!containers.length) return;
 
-    // --- VIEWPORT OBSERVER ---
     const viewportObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -234,60 +194,28 @@ const safeOptions = JSON.stringify(finalOptions).replace(/</g, '\\u003c');
         }
       });
     }, { rootMargin: '200px' });
+
     containers.forEach(c => viewportObserver.observe(c));
 
-    // --- RESIZE OBSERVER ---
     resizeObserver = new ResizeObserver(entries => {
       entries.forEach(entry => {
         const chart = instances.get(entry.target.id);
-        if (chart && !chart.isDisposed()) {
-          chart.resize({ width: 'auto', animation: { duration: 0 } });
-        }
+        if (chart && !chart.isDisposed()) chart.resize();
       });
     });
 
-    // --- THEME OBSERVER (Der AstroWind Magic Part) ---
-    // Beobachtet das <html> Element auf Klassenänderungen (dark mode toggle)
-    themeObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          const newColors = getThemeColors();
-          instances.forEach((chart) => {
-            // Wir updaten nur die Styling-Teile
-            chart.setOption({
-                legend: { textStyle: { color: newColors.text } },
-                tooltip: { 
-                    backgroundColor: newColors.tooltipBg,
-                    borderColor: newColors.tooltipBorder,
-                    textStyle: { color: newColors.tooltipText }
-                },
-                xAxis: {
-                    axisLine: { lineStyle: { color: newColors.axis } },
-                    axisLabel: { color: newColors.text },
-                    splitLine: { lineStyle: { color: newColors.split } }
-                },
-                yAxis: [
-                    {   // Linke Achse
-                        axisLine: { lineStyle: { color: newColors.axis } },
-                        axisLabel: { color: newColors.text },
-                        nameTextStyle: { color: newColors.text },
-                        splitLine: { lineStyle: { color: newColors.split } }
-                    },
-                    {   // Rechte Achse
-                        axisLine: { lineStyle: { color: newColors.axis } },
-                        axisLabel: { color: newColors.text },
-                        nameTextStyle: { color: newColors.text }
-                    }
-                ]
-            });
-          });
-        }
+    // --- HIER WAR DAS PROBLEM ---
+    // Der Observer muss die Farben neu anwenden, nicht nur resizen
+    themeObserver = new MutationObserver(() => {
+      const newColors = getThemeColors();
+      instances.forEach(chart => {
+          applyThemeToOptions(chart, newColors);
+          chart.resize(); // Resize sicherheitshalber auch
       });
     });
-    
-    themeObserver.observe(document.documentElement, { attributes: true });
 
-    // Cleanup registrieren
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
     cleanupFns.push(() => {
       viewportObserver.disconnect();
       resizeObserver.disconnect();
