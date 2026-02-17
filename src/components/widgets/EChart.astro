@@ -83,7 +83,7 @@ if (csvPath) {
       xAxis: { type: 'time', boundaryGap: false },
       yAxis: [
         { type: 'value', name: 'Equity', position: 'left', scale: true, splitLine: { show: true } },
-        { type: 'value', name: 'Drawdown (%)', position: 'right', min: -100, max: 0, axisLabel: { formatter: '{value}%' }, splitLine: { show: false } }
+        { type: 'value', name: 'Drawdown (%)', position: 'right', max: 0, axisLabel: { formatter: '{value}%' }, splitLine: { show: false } }
       ],
       series: [
         { 
@@ -111,7 +111,7 @@ if (csvPath) {
           name: 'Drawdown %', 
           type: 'bar', 
           yAxisIndex: 1, 
-          itemStyle: { color: '#EF4444', opacity: 0.5 }, 
+          itemStyle: { color: '#EF4444', opacity: 0.75 }, 
           data: data.dd 
         }
       ]
