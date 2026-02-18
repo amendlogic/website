@@ -20,16 +20,13 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-// IDs
 const uid = Math.random().toString(36).slice(2, 9);
 const wrapperId = id ?? `widget-${uid}`;
 const chartId = `chart-${uid}`;
 const dataId = `data-${uid}`;
 
-// --- SERVER SIDE ---
-// Daten holen
+// Server Side Logic
 const parsedData = await parseCsvData(csvPath, Number(initialCapital));
-// Config erstellen
 const baseOptions = getBaseChartOptions(parsedData);
 ---
 
@@ -58,12 +55,17 @@ const baseOptions = getBaseChartOptions(parsedData);
 )}
 
 <script>
-  import { initChartWidget, cleanup } from '/lib/chart-widget';
+  // Pfad muss exakt stimmen! 
+  // Wenn die Datei in src/scripts/ liegt, ist das hier richtig:
+  import { initChartWidget, cleanup } from '~/lib/chart-widget';
 
-  // Astro Lifecycle Events
-  document.addEventListener('astro:page-load', initChartWidget);
-  document.addEventListener('astro:before-swap', cleanup);
+  // Debugging: Falls das Chart leer bleibt, schau in die Konsole
+  console.log('Chart Widget Script loaded');
+
+  document.addEventListener('astro:page-load', () => {
+    // console.log('Astro Page Load: Init Chart');
+    initChartWidget();
+  });
   
-  // Falls Skript inline ausgeführt wird (ohne View Transitions)
-  if (document.readyState !== 'loading') initChartWidget();
+  document.addEventListener('astro:before-swap', cleanup);
 </script>
