@@ -1,9 +1,7 @@
 <script type="module">
-import CookieConsent from 'https://cdn.jsdelivr.net/npm/vanilla-cookie@latest/dist/vanilla-cookie.esm.js';
-import { config } from '/libs/cookieconsent-config.js';
+import { initCookie } from '../libs/cookie-banner.js'; // relativer Pfad!
 
 document.addEventListener('astro:page-load', () => {
-  CookieConsent.reset();
-  CookieConsent.run(config);
+  initCookie();
 });
 </script>
