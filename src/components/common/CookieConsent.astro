@@ -1,81 +1,122 @@
----
-// src/components/common/CookieConsent.astro
----
-
 <script>
-import CookieConsent from 'vanilla-cookie';
-import { config } from '/libs/cookieconsent-config.js';
+  // Wir importieren die Library hier NICHT statisch oben, 
+  // um Namenskonflikte beim Bündeln zu vermeiden.
 
-(() => {
-  // -----------------------------
-  // 1️⃣ Cookie Banner Initialisierung
-  // -----------------------------
-  const initCookieBanner = async () => {
-    if (!CookieConsent) {
-      console.warn("CookieConsent nicht verfügbar, Retry in 100ms");
-      setTimeout(initCookieBanner, 100);
-      return;
+  const TRANSLATIONS = {
+    de: {
+      consent_modal: {
+        title: 'Wir verwenden Cookies',
+        description: 'Cookies helfen uns bei der Bereitstellung unserer Dienste.',
+        primary_btn: { text: 'Alle akzeptieren', role: 'accept_all' },
+        secondary_btn: { text: 'Einstellungen', role: 'settings' }
+      },
+      preferences_modal: {
+        title: 'Cookie Einstellungen',
+        accept_all_btn: 'Alle akzeptieren',
+        reject_all_btn: 'Alle ablehnen',
+        save_btn: 'Speichern',
+        close_btn_label: 'Schließen',
+        sections: [
+          { title: 'Notwendig', description: 'Technisch erforderlich.', linked_category: 'necessary' },
+          { title: 'Analytics', description: 'Besucher-Statistiken.', linked_category: 'analytics' }
+        ]
+      }
+    },
+    en: {
+      consent_modal: {
+        title: 'We use cookies',
+        description: 'Cookies help us provide our services.',
+        primary_btn: { text: 'Accept all', role: 'accept_all' },
+        secondary_btn: { text: 'Settings', role: 'settings' }
+      },
+      preferences_modal: {
+        title: 'Cookie Settings',
+        accept_all_btn: 'Accept all',
+        reject_all_btn: 'Reject all',
+        save_btn: 'Save',
+        close_btn_label: 'Close',
+        sections: [
+          { title: 'Necessary', description: 'Technically essential.', linked_category: 'necessary' },
+          { title: 'Analytics', description: 'Visitor statistics.', linked_category: 'analytics' }
+        ]
+      }
     }
+  };
 
-    const currentLang = document.documentElement.lang?.split('-')[0] || 'de';
+  async function runConsent() {
+    try {
+      // 1. Dynamischer Import direkt in der Funktion
+      const CC = await import('vanilla-cookieconsent');
+      const CookieConsent = CC.default || CC;
 
-    // Reset für Astro View Transitions
-    // ⚠ KEIN true übergeben → Cookies bleiben erhalten
-    CookieConsent.reset();
+      // 2. DOM-Cleanup
+      const old = document.getElementById('cc-main');
+      if (old) old.remove();
 
-    CookieConsent.run({
-      ...config,
-      language: {
-        ...config.language,
-        current: currentLang
+      // 3. Sprache ermitteln
+      const htmlLang = document.documentElement.lang?.split('-')[0] || 'de';
+      const activeLang = TRANSLATIONS[htmlLang] ? htmlLang : 'de';
+
+      // 4. Initialisierung
+      await CookieConsent.run({
+        auto_detect: false,
+        mode: 'opt-in',
+        gui_options: {
+          consent_modal: { layout: 'box', position: 'bottom right' },
+          preferences_modal: { layout: 'box', position: 'right' }
+        },
+        categories: {
+          necessary: { readOnly: true, enabled: true },
+          analytics: { enabled: false }
+        },
+        language: {
+          default: 'de',
+          current: activeLang,
+          translations: TRANSLATIONS
+        }
+      });
+
+      // 5. Globales Objekt für Klick-Handler verfügbar machen
+      window.CC_INSTANCE = CookieConsent;
+      
+    } catch (err) {
+      console.error("Fatal CC Error:", err);
+    }
+  }
+
+  // Zentraler Click-Listener (einmalig)
+  if (!window.CC_LISTENER_SET) {
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+      if (!target) return;
+
+      if (target.closest('[data-cc="show-preferencesModal"]')) {
+        e.preventDefault();
+        if (window.CC_INSTANCE) {
+          window.CC_INSTANCE.showPreferences();
+        } else {
+          runConsent().then(() => window.CC_INSTANCE?.showPreferences());
+        }
+      }
+
+      const langLink = target.closest("[data-lang]");
+      if (langLink) {
+        e.preventDefault();
+        const lang = langLink.dataset.lang;
+        document.cookie = `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
+        window.location.href = `/${lang}/${window.location.search}${window.location.hash}`;
       }
     });
-  };
-
-  document.addEventListener('astro:page-load', initCookieBanner);
-
-  // -----------------------------
-  // 2️⃣ Preferences Modal Handler
-  // -----------------------------
-  const handlePreferencesClick = (e) => {
-    const trigger = e.target.closest('[data-cc="show-preferencesModal"]');
-    if (!trigger) return;
-
-    e.preventDefault();
-    CookieConsent?.showPreferences();
-  };
-
-  if (!window.__cookieClickListener__) {
-    document.addEventListener('click', handlePreferencesClick);
-    window.__cookieClickListener__ = true;
+    window.CC_LISTENER_SET = true;
   }
 
-  // -----------------------------
-  // 3️⃣ Language Switcher
-  // -----------------------------
-  const handleLangSwitch = (e) => {
-    const link = e.target.closest('[data-lang]');
-    if (!link) return;
+  // Astro Integration mit Sicherheitsabstand
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(runConsent, 200);
+  });
 
-    e.preventDefault();
-    const lang = link.dataset.lang;
-    if (!['de','en'].includes(lang)) return;
-
-    const isProd = location.protocol === "https:";
-
-    document.cookie =
-      `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${isProd ? '; Secure' : ''}`;
-
-    const query = window.location.search || "";
-    const hash = window.location.hash || "";
-
-    window.location.href = `/${lang}/${query}${hash}`;
-  };
-
-  if (!window.__langSwitchListener__) {
-    document.addEventListener('click', handleLangSwitch);
-    window.__langSwitchListener__ = true;
+  // Initialer Start
+  if (document.readyState !== 'loading') {
+    setTimeout(runConsent, 500);
   }
-
-})();
 </script>
