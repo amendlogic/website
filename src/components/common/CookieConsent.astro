@@ -1,142 +1,81 @@
 ---
-/* src/components/common/CookieConsent.astro */
-import 'vanilla-cookieconsent/dist/cookieconsent.css';
+// src/components/common/CookieConsent.astro
 ---
 
-<style is:global>
-  :root {
-    --cc-bg: #ffffff;
-    --cc-text: #1e293b;
-    --cc-btn-primary-bg: #10B981;
-    --cc-btn-primary-text: #ffffff;
-    --cc-btn-secondary-bg: #e2e8f0;
-    --cc-btn-secondary-text: #475569;
-  }
-  
-  .dark {
-    --cc-bg: #0f172a;
-    --cc-text: #cbd5e1;
-    --cc-btn-primary-bg: #10B981;
-    --cc-btn-secondary-bg: #334155;
-    --cc-btn-secondary-text: #cbd5e1;
-  }
-</style>
+<script type="module" is:inline>
+import CookieConsent from 'vanilla-cookie';
+import { config } from '/libs/cookieconsent-config.js';
 
-<script>
-  import * as CookieConsent from 'vanilla-cookieconsent';
-
-  /**
-   * Wir definieren die Übersetzung global außerhalb der Funktion,
-   * damit sie beim Re-Init sofort im Speicher bereitsteht.
-   */
-  const TRANSLATIONS = {
-    de: {
-      consent_modal: {
-        title: 'Wir verwenden Cookies',
-        description: 'Cookies helfen uns bei der Bereitstellung unserer Dienste.',
-        primary_btn: { text: 'Alle akzeptieren', role: 'accept_all' },
-        secondary_btn: { text: 'Einstellungen', role: 'settings' }
-      },
-      preferences_modal: {
-        title: 'Cookie Einstellungen',
-        accept_all_btn: 'Alle akzeptieren',
-        reject_all_btn: 'Alle ablehnen',
-        save_btn: 'Speichern',
-        close_btn_label: 'Schließen',
-        sections: [
-          { title: 'Notwendig', description: 'Technisch erforderlich.', linked_category: 'necessary' },
-          { title: 'Analytics', description: 'Besucher-Statistiken.', linked_category: 'analytics' }
-        ]
-      }
-    },
-    en: {
-      consent_modal: {
-        title: 'We use cookies',
-        description: 'Cookies help us provide our services.',
-        primary_btn: { text: 'Accept all', role: 'accept_all' },
-        secondary_btn: { text: 'Settings', role: 'settings' }
-      },
-      preferences_modal: {
-        title: 'Cookie Settings',
-        accept_all_btn: 'Accept all',
-        reject_all_btn: 'Reject all',
-        save_btn: 'Save',
-        close_btn_label: 'Close',
-        sections: [
-          { title: 'Necessary', description: 'Technically essential.', linked_category: 'necessary' },
-          { title: 'Analytics', description: 'Visitor statistics.', linked_category: 'analytics' }
-        ]
-      }
+(() => {
+  // -----------------------------
+  // 1️⃣ Cookie Banner Initialisierung
+  // -----------------------------
+  const initCookieBanner = async () => {
+    if (!CookieConsent) {
+      console.warn("CookieConsent nicht verfügbar, Retry in 100ms");
+      setTimeout(initCookieBanner, 100);
+      return;
     }
-  };
 
-  const startConsent = async () => {
-    // 1. DOM-Bereinigung: Aggressiver
-    const modal = document.getElementById('cc-main');
-    if (modal) modal.remove();
-    document.documentElement.classList.remove('cc--active');
+    const currentLang = document.documentElement.lang?.split('-')[0] || 'de';
 
-    // 2. Warte auf Idle (Browser hat nichts mehr zu tun)
-    if ('requestIdleCallback' in window) {
-      // @ts-ignore
-      window.requestIdleCallback(runLib);
-    } else {
-      setTimeout(runLib, 200);
-    }
-  };
+    // Reset für Astro View Transitions
+    // ⚠ KEIN true übergeben → Cookies bleiben erhalten
+    CookieConsent.reset();
 
-  const runLib = async () => {
-    try {
-      const htmlLang = document.documentElement.lang?.split('-')[0] || 'de';
-      const activeLang = TRANSLATIONS[htmlLang] ? htmlLang : 'de';
-
-      await CookieConsent.run({
-        root: 'body', // Explizit auf Body setzen
-        auto_detect: false,
-        mode: 'opt-in',
-        gui_options: {
-          consent_modal: { layout: 'box', position: 'bottom right' },
-          preferences_modal: { layout: 'box', position: 'right' }
-        },
-        categories: {
-          necessary: { readOnly: true, enabled: true },
-          analytics: { enabled: false }
-        },
-        language: {
-          default: 'de',
-          current: activeLang,
-          translations: TRANSLATIONS
-        }
-      });
-    } catch (err) {
-      // Wenn es hier kracht, dann liegt es an einem Library-Konflikt
-      console.error("Critical CC Error:", err);
-    }
-  };
-
-  // Click-Delegation (Einmalig auf Document)
-  if (!(window as any).cc_listener_attached) {
-    document.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (!target) return;
-
-      if (target.closest('[data-cc="show-preferencesModal"]')) {
-        e.preventDefault();
-        try { CookieConsent.showPreferences(); } catch { startConsent(); }
-      }
-
-      const langLink = target.closest("[data-lang]") as HTMLElement;
-      if (langLink) {
-        e.preventDefault();
-        const lang = langLink.dataset.lang;
-        document.cookie = `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
-        window.location.href = `/${lang}/${window.location.search}${window.location.hash}`;
+    CookieConsent.run({
+      ...config,
+      language: {
+        ...config.language,
+        current: currentLang
       }
     });
-    (window as any).cc_listener_attached = true;
+  };
+
+  document.addEventListener('astro:page-load', initCookieBanner);
+
+  // -----------------------------
+  // 2️⃣ Preferences Modal Handler
+  // -----------------------------
+  const handlePreferencesClick = (e) => {
+    const trigger = e.target.closest('[data-cc="show-preferencesModal"]');
+    if (!trigger) return;
+
+    e.preventDefault();
+    CookieConsent?.showPreferences();
+  };
+
+  if (!window.__cookieClickListener__) {
+    document.addEventListener('click', handlePreferencesClick);
+    window.__cookieClickListener__ = true;
   }
 
-  // Astro Integration
-  document.addEventListener('astro:page-load', startConsent);
-  if (document.readyState !== 'loading') startConsent();
+  // -----------------------------
+  // 3️⃣ Language Switcher
+  // -----------------------------
+  const handleLangSwitch = (e) => {
+    const link = e.target.closest('[data-lang]');
+    if (!link) return;
+
+    e.preventDefault();
+    const lang = link.dataset.lang;
+    if (!['de','en'].includes(lang)) return;
+
+    const isProd = location.protocol === "https:";
+
+    document.cookie =
+      `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${isProd ? '; Secure' : ''}`;
+
+    const query = window.location.search || "";
+    const hash = window.location.hash || "";
+
+    window.location.href = `/${lang}/${query}${hash}`;
+  };
+
+  if (!window.__langSwitchListener__) {
+    document.addEventListener('click', handleLangSwitch);
+    window.__langSwitchListener__ = true;
+  }
+
+})();
 </script>
