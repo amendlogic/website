@@ -1,9 +1,11 @@
 ---
-/* src/components/widgets/ChartWidget.astro */
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Headline from '~/components/ui/Headline.astro';
-// Importiere die Server-Funktionen aus dem lib-Ordner
-import { parseCsvData, getBaseChartOptions } from '~/lib/chart-data';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import crypto from 'node:crypto'; // 1️⃣ Sicherere IDs
+
+const currentLocale = Astro.currentLocale || 'de';
 
 const {
   title = await Astro.slots.render('title'),
@@ -15,20 +17,135 @@ const {
   csvPath,
   height = '450px',
   id,
-  locale = Astro.currentLocale || 'de',
+  locale = currentLocale,
   isDark = false,
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-const uid = Math.random().toString(36).slice(2, 9);
-const wrapperId = id ?? `widget-${uid}`;
+// 1️⃣ Deterministische/Sichere ID
+const uid = id ?? `widget-${crypto.randomUUID().slice(0, 8)}`;
 const chartId = `chart-${uid}`;
 const dataId = `data-${uid}`;
 
-// Server Side Parsing
+// --- SERVER SIDE PROCESSING (Node.js) ---
+
+// 2️⃣ Cache für CSV-Dateien (Beschleunigt den Build massiv bei vielen Charts)
+if (!globalThis.csvCache) globalThis.csvCache = new Map();
+
+const round2 = (n) => Math.round(n * 100) / 100;
+
+async function parseCsvData(filePath, initialCap) {
+  if (!filePath) return null;
+
+  // Cache Check
+  const cacheKey = `${filePath}-${initialCap}`;
+  if (globalThis.csvCache.has(cacheKey)) return globalThis.csvCache.get(cacheKey);
+
+  try {
+    // 3️⃣ Security: Path Traversal Prevention
+    const projectRoot = process.cwd(); // oder path.resolve('./src/data') für strikteren Schutz
+    const absolutePath = path.resolve(projectRoot, filePath);
+
+    if (!absolutePath.startsWith(projectRoot)) {
+       throw new Error(`Security Error: Zugriff auf ${absolutePath} verweigert.`);
+    }
+
+    const fileContent = await fs.readFile(absolutePath, 'utf-8');
+    const lines = fileContent.trim().split(/\r?\n/);
+
+    if (lines.length <= 1) return null;
+
+    const headers = lines[0].split(',').map(h => h.trim());
+    const idx = {
+      date: headers.indexOf('Date/Time'),
+      profit: headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%')),
+      dd: headers.findIndex(h => h.includes('Drawdown') && h.includes('%')),
+      price: headers.indexOf('Price'),
+      contracts: headers.indexOf('Contracts')
+    };
+
+    if (idx.date < 0 || idx.profit < 0) return null;
+
+    const equity = [];
+    const drawdown = [];
+    const bnh = [];
+
+    let firstPrice = null;
+    let initialContracts = 1;
+    const csvSplitRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+
+    for (let i = 1; i < lines.length; i++) {
+      const rawRow = lines[i];
+      if (!rawRow) continue;
+      const row = rawRow.split(csvSplitRegex).map(r => r.replace(/"/g, '').trim());
+      
+      // 4️⃣ Robusteres Date Parsing (Versuch ISO, Fallback Date.parse)
+      let timestamp = Date.parse(row[idx.date]);
+      if (isNaN(timestamp)) {
+         // Fallback für DD.MM.YYYY HH:MM falls nötig, hier vereinfacht:
+         timestamp = +new Date(row[idx.date]);
+      }
+      if (isNaN(timestamp)) continue;
+
+      const profit = parseFloat(row[idx.profit]);
+      const price = idx.price !== -1 ? parseFloat(row[idx.price]) : NaN;
+      const dd = idx.dd !== -1 ? parseFloat(row[idx.dd]) : NaN;
+
+      if (!isNaN(profit)) equity.push([timestamp, round2(initialCap + profit)]);
+      if (!isNaN(dd)) drawdown.push([timestamp, -Math.abs(dd)]);
+
+      if (!isNaN(price)) {
+        if (firstPrice === null) {
+          firstPrice = price;
+          const c = idx.contracts !== -1 ? parseFloat(row[idx.contracts]) : NaN;
+          if (!isNaN(c)) initialContracts = c;
+          bnh.push([timestamp, initialCap]);
+        } else {
+          const bnhProfit = (price - firstPrice) * initialContracts;
+          bnh.push([timestamp, round2(initialCap + bnhProfit)]);
+        }
+      }
+    }
+    
+    const result = { equity, drawdown, bnh };
+    // In Cache speichern
+    globalThis.csvCache.set(cacheKey, result);
+    return result;
+
+  } catch (e) {
+    if (e.code !== 'ENOENT') console.error(`[Chart Widget Error]: ${e.message}`);
+    return null;
+  }
+}
+
+let baseOptions = null;
 const parsedData = await parseCsvData(csvPath, Number(initialCapital));
-const baseOptions = getBaseChartOptions(parsedData);
+
+if (parsedData && parsedData.equity.length > 0) {
+  const dataCount = parsedData.equity.length;
+  
+  baseOptions = {
+    animation: true,
+    // 5️⃣ Performance: Progressive Rendering nur bei großen Datenmengen
+    progressive: dataCount > 2000 ? 5000 : 0, 
+    progressiveThreshold: 5000,
+    hoverLayerThreshold: 3000,
+    grid: { left: 0, right: 0, bottom: 0, containLabel: true },
+    legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], top: 0 },
+    tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
+    xAxis: { type: 'time', boundaryGap: false },
+    yAxis: [
+      { type: 'value', scale: true, splitLine: { show: true } },
+      { type: 'value', max: 0, splitLine: { show: false } }
+    ],
+    series: [
+      { name: 'Portfolio Value', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: parsedData.equity },
+      { name: 'Buy & Hold', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, lineStyle: { type: 'dashed' }, itemStyle: { color: '#94a3b8' }, data: parsedData.bnh },
+      { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.6 }, data: parsedData.drawdown }
+    ]
+  };
+}
 ---
 
 <WidgetWrapper id={wrapperId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
@@ -56,13 +173,199 @@ const baseOptions = getBaseChartOptions(parsedData);
 )}
 
 <script>
-  // Importiere die Client-Logik aus dem lib-Ordner
-  import { initChartWidget, cleanup } from '~/lib/chart-widget';
+// --- TREE SHAKING IMPORTS ---
+import * as echarts from 'echarts/core';
+import { LineChart, BarChart } from 'echarts/charts';
+import { GridComponent, TooltipComponent, LegendComponent, DatasetComponent } from 'echarts/components';
+import { CanvasRenderer } from 'echarts/renderers';
 
-  // Astro Lifecycle Events
-  document.addEventListener('astro:page-load', initChartWidget);
+echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendComponent, DatasetComponent, CanvasRenderer]);
+
+// --- CLIENT LOGIK ---
+(() => {
+  const chartStore = new Map(); 
+  let resizeObserver;
+  let intersectionObserver;
+  let mutationObserver;
+  let resizeRaf = null;
+
+  const isObject = (item) => (item && typeof item === 'object' && !Array.isArray(item));
+
+  // Rekursiver Merge (bleibt, da sehr robust)
+  const deepMerge = (target, source) => {
+    const output = Array.isArray(target) ? [...target] : { ...target };
+    if (Array.isArray(target) && Array.isArray(source)) {
+      source.forEach((item, index) => {
+        if (index < output.length && isObject(output[index]) && isObject(item)) {
+          output[index] = deepMerge(output[index], item);
+        } else {
+          output[index] = item;
+        }
+      });
+      return output;
+    }
+    if (isObject(target) && isObject(source)) {
+      Object.keys(source).forEach(key => {
+        if (isObject(source[key])) {
+          if (!(key in target)) Object.assign(output, { [key]: source[key] });
+          else output[key] = deepMerge(target[key], source[key]);
+        } else if (Array.isArray(source[key]) && Array.isArray(target[key])) {
+           output[key] = deepMerge(target[key], source[key]);
+        } else {
+          Object.assign(output, { [key]: source[key] });
+        }
+      });
+    }
+    return output;
+  };
+
+  const getThemeConfig = () => {
+    const dark = document.documentElement.classList.contains('dark');
+    const text = dark ? '#cbd5e1' : '#475569';
+    const split = dark ? '#334155' : '#e2e8f0';
+    const bg = dark ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)';
+    const border = dark ? '#475569' : '#cbd5e1';
+    return {
+       textStyle: { color: text },
+       legend: { textStyle: { color: text } },
+       tooltip: { backgroundColor: bg, borderColor: border, textStyle: { color: text } },
+       xAxis: { splitLine: { lineStyle: { color: split } } },
+       yAxis: [{ splitLine: { lineStyle: { color: split } } }, { splitLine: { show: false } }]
+    };
+  };
+
+  // 6️⃣ XSS Prevention Helper
+  const escapeHtml = (unsafe) => {
+    return String(unsafe)
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+  };
+
+  const render = (el) => {
+    if (el.getAttribute('data-loaded') === 'true') return;
+    
+    const jsonId = el.getAttribute('data-json-id');
+    const script = document.getElementById(jsonId);
+    if (!script) return;
+
+    let config;
+    try { config = JSON.parse(script.textContent); } catch { return; }
+    if (!config.baseOptions) return;
+
+    const chart = echarts.init(el, null, { renderer: 'canvas' });
+    el.setAttribute('data-loaded', 'true');
+
+    const { baseOptions, userOptions, locale } = config;
+
+    const axisFormat = new Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 });
+    const currencyFormat = new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const dateFormat = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' });
+
+    // 7️⃣ Optimierung: Deep Merge nur wenn nötig
+    let finalOptions = baseOptions;
+    if (userOptions && Object.keys(userOptions).length > 0) {
+        finalOptions = deepMerge(baseOptions, userOptions);
+    }
+    
+    finalOptions = deepMerge(finalOptions, getThemeConfig());
+
+    if (finalOptions.yAxis && finalOptions.yAxis[0]) {
+        finalOptions.yAxis[0].axisLabel = { 
+            ...finalOptions.yAxis[0].axisLabel, 
+            formatter: val => axisFormat.format(val) 
+        };
+    }
+
+    if (finalOptions.tooltip) {
+        finalOptions.tooltip.formatter = (params) => {
+            const items = Array.isArray(params) ? params : [params];
+            if (!items.length) return '';
+            let html = `<div class="font-bold mb-1">${dateFormat.format(new Date(items[0].value[0]))}</div>`;
+            items.forEach(p => {
+                const val = p.seriesName === 'Drawdown %'
+                  ? Math.abs(p.value[1]).toFixed(2) + '%'
+                  : currencyFormat.format(p.value[1]);
+                
+                // XSS Protection angewendet
+                const safeName = escapeHtml(p.seriesName);
+                
+                html += `<div class="flex justify-between gap-4">
+                           <span>${p.marker} ${safeName}</span>
+                           <span class="font-mono font-bold">${val}</span>
+                         </div>`;
+            });
+            return html;
+        };
+    }
+
+    chart.setOption(finalOptions);
+    chartStore.set(el, { chart });
+  };
+
+  const init = () => {
+    cleanup();
+    const elements = document.querySelectorAll('[data-json-id]');
+
+    intersectionObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          render(e.target);
+          intersectionObserver.unobserve(e.target);
+          if (resizeObserver) resizeObserver.observe(e.target);
+        }
+      });
+    }, { rootMargin: '400px 0px', threshold: 0.01 });
+
+    resizeObserver = new ResizeObserver(entries => {
+        if (resizeRaf !== null) {
+           cancelAnimationFrame(resizeRaf);
+           resizeRaf = null;
+        }
+        resizeRaf = requestAnimationFrame(() => {
+          entries.forEach(e => {
+              const item = chartStore.get(e.target);
+              if (item?.chart) item.chart.resize();
+          });
+        });
+    });
+
+    mutationObserver = new MutationObserver((mutations) => {
+        if (mutations.some(m => m.attributeName === 'class')) {
+            const themeConfig = getThemeConfig();
+            chartStore.forEach(({ chart }) => {
+                // Theme Update ist leichtgewichtig, merge ist hier sicher
+                chart.setOption(themeConfig);
+            });
+        }
+    });
+    mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+    elements.forEach(el => intersectionObserver.observe(el));
+  };
+
+  const cleanup = () => {
+    chartStore.forEach(({ chart }) => {
+       if (!chart.isDisposed()) chart.dispose();
+    });
+    chartStore.clear();
+    
+    if (resizeRaf !== null) {
+       cancelAnimationFrame(resizeRaf);
+       resizeRaf = null;
+    }
+    if (resizeObserver) resizeObserver.disconnect();
+    if (intersectionObserver) intersectionObserver.disconnect();
+    if (mutationObserver) mutationObserver.disconnect();
+    
+    document.querySelectorAll('[data-json-id]').forEach(el => el.removeAttribute('data-loaded'));
+  };
+
+  document.addEventListener('astro:page-load', init);
   document.addEventListener('astro:before-swap', cleanup);
-  
-  // Falls Skript direkt ausgeführt wird (z.B. initial Load ohne View Transitions)
-  if (document.readyState !== 'loading') initChartWidget();
+  if (document.readyState !== 'loading') init();
+
+})();
 </script>
