@@ -82,7 +82,7 @@ export const getFooterData = (lang = 'en') => {
         links: [
           { text: t('nav.docs'), href: '#' },
           { text: t('nav.community'), href: '#', icon: 'tabler:external-link' },
-          { text: 't('nav.github')', href: '#', icon: 'tabler:external-link' },
+          { text: t('nav.github'), href: '#', icon: 'tabler:external-link' },
           { text: t('nav.help'), href: '#' },
         ],
       },
