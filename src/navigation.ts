@@ -11,11 +11,11 @@ export const getHeaderData = (lang = 'en') => {
         text: t('nav.product'), // War: nav.header.product
         links: [
           {
-            text: t('nav.features'),
+            text: t('nav.benefits'),
             href: getPermalink('/#features', 'page', lang),
           },
           {
-            text: t('nav.howItWorks'),
+            text: t('nav.system'),
             href: getPermalink('/homes/startup', 'page', lang),
           },
           {
@@ -70,8 +70,8 @@ export const getFooterData = (lang = 'en') => {
       {
         title: t('nav.product'), // Wiederverwendet
         links: [
-          { text: t('nav.features'), href: '#' },
-          { text: t('nav.howItWorks'), href: '#' },
+          { text: t('nav.benefits'), href: '#' },
+          { text: t('nav.system'), href: '#' },
           { text: t('nav.performance'), href: '#' },
           { text: t('nav.pricing'), href: '#' },
           { text: t('nav.changelog'), href: '#' },
