@@ -104,7 +104,7 @@ if (csvPath) {
         }
 
         baseOptions = {
-          grid: { left: 10, right: 10, bottom: 0, containLabel: true },
+          grid: { left: 0, right: 0, bottom: 0, containLabel: true },
           tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
           legend: { 
             data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], 
@@ -125,7 +125,7 @@ if (csvPath) {
             },
             { 
               name: 'Buy & Hold', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, 
-              lineStyle: { type: 'dashed', width: 1 }, 
+              lineStyle: { type: 'dashed' }, 
               itemStyle: { color: '#94a3b8' }, 
               data: bnh 
             },
