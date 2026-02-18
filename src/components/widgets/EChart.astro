@@ -161,10 +161,10 @@ if (parsedData && parsedData.equity.length > 0) {
   let echartsPromise = null;
   const loadEcharts = () => {
     if (!echartsPromise) {
-      echartsPromise = import(
-        /* @vite-ignore */
-        "https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.esm.min.js"
-      ).then(m => m.default || m);
+      // Vite bundled das jetzt automatisch aus node_modules
+      // Der dynamische Import (await import) sorgt dafür, dass es erst lädt,
+      // wenn das Chart sichtbar wird (Lazy Loading bleibt erhalten!)
+      echartsPromise = import("echarts").then(m => m.default || m);
     }
     return echartsPromise;
   };
