@@ -12,23 +12,23 @@ export const getHeaderData = (lang = 'en') => {
         links: [
           {
             text: t('nav.benefits'),
-            href: getPermalink('/#features', 'page', lang),
+            href: getPermalink('/#benefits', 'page', lang),
           },
           {
             text: t('nav.system'),
-            href: getPermalink('/homes/startup', 'page', lang),
+            href: getPermalink('/#system', 'page', lang),
           },
           {
             text: t('nav.performance'),
-            href: getPermalink('/homes/mobile-app', 'page', lang),
+            href: getPermalink('/#performance', 'page', lang),
           },
           {
             text: t('nav.testimonials'),
-            href: getPermalink('/homes/personal', 'page', lang),
+            href: getPermalink('/#testimonials', 'page', lang),
           },
           {
             text: t('nav.faqs'),
-            href: getPermalink('/homes/personal', 'page', lang),
+            href: getPermalink('/#faqs', 'page', lang),
           },
         ],
       },
@@ -70,9 +70,9 @@ export const getFooterData = (lang = 'en') => {
       {
         title: t('nav.product'), // Wiederverwendet
         links: [
-          { text: t('nav.benefits'), href: '#' },
-          { text: t('nav.system'), href: '#' },
-          { text: t('nav.performance'), href: '#' },
+          { text: t('nav.benefits'), href: getPermalink('/#benefits', 'page', lang) },
+          { text: t('nav.system'), href: getPermalink('/#system', 'page', lang) },
+          { text: t('nav.performance'), href: getPermalink('/#performance', 'page', lang) },
           { text: t('nav.pricing'), href: '#' },
           { text: t('nav.changelog'), href: '#' },
         ],
@@ -89,9 +89,9 @@ export const getFooterData = (lang = 'en') => {
       {
         title: t('nav.company'),
         links: [
-          { text: t('nav.about'), href: '#' },
+          { text: t('nav.about'), href: getPermalink('/about', 'page', lang) },
           { text: t('nav.team'), href: '#' },
-          { text: t('nav.blog'), href: '#' },
+          { text: t('nav.blog'), href: getBlogPermalink(lang) },
           { text: t('nav.contact'), href: '#' },
         ],
       },
@@ -99,8 +99,8 @@ export const getFooterData = (lang = 'en') => {
         title: t('nav.legal'),
         links: [
           { text: t('nav.imprint'), href: '#' },
-          { text: t('nav.terms'), href: '#' },
-          { text: t('nav.privacy'), href: '#' },
+          { text: t('nav.terms'), href: getPermalink('/terms', 'page', lang) },
+          { text: t('nav.privacy'), href: getPermalink('/privacy', 'page', lang) },
           { text: t('nav.cookie'), href: '#' },
           { text: t('nav.risk'), href: '#' },
         ],
@@ -124,7 +124,7 @@ export const getFooterData = (lang = 'en') => {
       { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
     ],
     footNote: `
-    © ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">${SITE?.name}</a> · ${t('nav.rights')} · <a href="#" data-cc="show-preferencesModal" class="text-blue-600 underline dark:text-muted">Cookie Settings</a>
+    © ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">${SITE?.name}</a> · ${t('nav.rights')} · <a href="#" data-cc="show-preferencesModal" class="text-blue-600 underline dark:text-muted">t('nav.cookieSettings')</a>
   `,
   };
 };
