@@ -101,10 +101,10 @@
     }
   ],
 
-  "faqs.tagline": "FAQs",
-  "faqs.title": "Good to Know",
-  "faqs.subtitle": "Answers to the most common questions.",
-  "faqs.items": [
+  "faq.tagline": "FAQ",
+  "faq.title": "Good to Know",
+  "faq.subtitle": "Answers to the most common questions.",
+  "faq.items": [
     {
       "title": "Which markets and timeframes are supported?",
       "description": "Our strategy is optimized for Bitcoin but can be applied to other volatile assets and timeframes above 4 hours."
