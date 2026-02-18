@@ -101,10 +101,10 @@
     }
   ],
 
-  "faqs.tagline": "FAQs",
-  "faqs.title": "Gut zu wissen",
-  "faqs.subtitle": "Antworten auf die häufigsten Fragen.",
-  "faqs.items": [
+  "faq.tagline": "FAQ",
+  "faq.title": "Gut zu wissen",
+  "faq.subtitle": "Antworten auf die häufigsten Fragen.",
+  "faq.items": [
     {
       "title": "Welche Märkte und Zeitrahmen werden unterstützt?",
       "description": "Optimiert für Bitcoin, aber anwendbar auf andere volatile Assets und Zeitrahmen ab 4 Stunden."
