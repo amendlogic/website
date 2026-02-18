@@ -1,3 +1,5 @@
+export const SUPPORTED_LANGUAGES = ['de', 'en'];
+
 export const config = {
   // 1. WICHTIG: Cookie-Einstellungen explizit setzen
   cookie: {
