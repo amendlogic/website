@@ -1,91 +1,167 @@
 ---
 /* src/components/common/CookieConsent.astro */
+
+// 1. CSS direkt aus dem npm-Paket importieren
+import 'vanilla-cookieconsent/dist/cookieconsent.css';
 ---
 
-<link rel="stylesheet" href="/libs/cookieconsent.css" />
-<link rel="stylesheet" href="/libs/cookie-custom.css" />
+<script>
+  // 2. Javascript direkt importieren (Vite bündelt das jetzt)
+  import * as CookieConsent from 'vanilla-cookieconsent';
 
-<script is:inline src="/libs/cookieconsent.umd.js"></script>
-
-<script is:inline>
-// 1. Der Klick-Handler (Event Delegation)
-// Dieser kümmert sich um das Abfangen des Klicks
-function handleCookieClick(e) {
-  const trigger = e.target.closest('[data-cc="show-preferencesModal"]');
-  
-  if (trigger) {
-    e.preventDefault(); // Stoppt das "Springen"
-    
-    // Sicherheitscheck: Existiert das Modal im DOM?
-    if (window.CookieConsent && document.getElementById('cc-main')) {
-        window.CookieConsent.showPreferences();
-    } else {
-        console.warn("CookieConsent noch nicht bereit oder GUI fehlt.");
-        // Fallback: Versuchen wir es in 100ms nochmal, falls das Skript noch lädt
-        setTimeout(() => window.CookieConsent?.showPreferences(), 100);
+  // --- KONFIGURATION ---
+  // Hier definieren wir die Config direkt im Code. 
+  // Das ist stabiler als ein externer Import.
+  const config = {
+    gui_options: {
+      consent_modal: {
+        layout: 'box',
+        position: 'bottom right',
+        equal_weight_buttons: true,
+        flip_buttons: false
+      },
+      preferences_modal: {
+        layout: 'box',
+        position: 'right',
+        equal_weight_buttons: true,
+        flip_buttons: false
+      }
+    },
+    categories: {
+      necessary: {
+        readOnly: true,
+        enabled: true
+      },
+      analytics: {
+        enabled: false,
+        autoClear: {
+          cookies: [
+            {
+              name: /^_ga/,   // Löscht Google Analytics Cookies, wenn abgelehnt
+            },
+            {
+              name: '_gid',
+            }
+          ]
+        }
+      }
+    },
+    language: {
+      default: 'de',
+      translations: {
+        de: {
+          consent_modal: {
+            title: 'Wir verwenden Cookies',
+            description: 'Wir nutzen Cookies, um das Nutzererlebnis zu verbessern.',
+            primary_btn: { text: 'Alle akzeptieren', role: 'accept_all' },
+            secondary_btn: { text: 'Einstellungen', role: 'settings' }
+          },
+          preferences_modal: {
+            title: 'Cookie Einstellungen',
+            accept_all_btn: 'Alle akzeptieren',
+            reject_all_btn: 'Alle ablehnen',
+            save_btn: 'Speichern',
+            close_btn_label: 'Schließen',
+            sections: [
+              { title: 'Notwendige Cookies', description: 'Technisch essenziell.', linked_category: 'necessary' },
+              { title: 'Analyse Cookies', description: 'Besucher-Statistiken.', linked_category: 'analytics' }
+            ]
+          }
+        },
+        en: {
+          consent_modal: {
+            title: 'We use cookies',
+            description: 'We use cookies to enhance your user experience.',
+            primary_btn: { text: 'Accept all', role: 'accept_all' },
+            secondary_btn: { text: 'Settings', role: 'settings' }
+          },
+          preferences_modal: {
+            title: 'Cookie Settings',
+            accept_all_btn: 'Accept all',
+            reject_all_btn: 'Reject all',
+            save_btn: 'Save',
+            close_btn_label: 'Close',
+            sections: [
+              { title: 'Necessary', description: 'Technically essential.', linked_category: 'necessary' },
+              { title: 'Analytics', description: 'Visitor statistics.', linked_category: 'analytics' }
+            ]
+          }
+        }
+      }
     }
-  }
-}
+  };
 
-// Listener nur einmal global registrieren
-if (!window.cookieListenerAttached) {
-  document.addEventListener('click', handleCookieClick);
-  window.cookieListenerAttached = true;
-}
+  // --- CLICK HANDLER (Preferences) ---
+  const handleCookieClick = (e) => {
+    // Prüfen, ob das Element oder ein Elternteil das data-Attribut hat
+    const trigger = e.target.closest('[data-cc="show-preferencesModal"]');
+    
+    if (trigger) {
+      e.preventDefault();
+      if (CookieConsent && CookieConsent.showPreferences) {
+          CookieConsent.showPreferences();
+      }
+    }
+  };
 
-// 2. Die Initialisierung (Muss bei JEDEM Seitenwechsel laufen)
-async function initCookieBanner() {
-  if (!window.CookieConsent) {
-    setTimeout(initCookieBanner, 100);
-    return;
-  }
+  // --- SPRACH-UMSCHALTER (Language Switcher) ---
+  const handleLanguageSwitch = (event) => {
+    const link = event.target.closest("[data-lang]");
+    if (!link) return;
 
-  try {
-    const { config } = await import('/libs/cookieconsent-config.js');
+    event.preventDefault();
+
+    const lang = link.dataset.lang;
+    if (lang !== "de" && lang !== "en") return;
+
+    const isProd = location.protocol === "https:";
+
+    // Cookie setzen
+    document.cookie =
+      "preferred_language=" + lang +
+      "; path=/; max-age=31536000; SameSite=Lax" +
+      (isProd ? "; Secure" : "");
+
+    // Redirect
+    const query = window.location.search || "";
+    const hash = window.location.hash || "";
+    window.location.href = "/" + lang + "/" + query + hash;
+  };
+
+
+  // --- INIT FUNKTION (Astro Lifecycle) ---
+  const init = () => {
+    // 1. Sprache ermitteln (vom HTML Tag)
     const currentLang = document.documentElement.lang?.split('-')[0] || 'de';
 
-    // --- WICHTIG: Reset für Astro View Transitions ---
-    // Wir resetten den internen State, damit das Skript merkt, 
-    // dass das HTML neu gebaut werden muss.
-    // KEIN "true" übergeben, sonst sind die User-Cookies weg!
-    window.CookieConsent.reset(); 
-
-    window.CookieConsent.run({
+    // 2. CookieConsent starten
+    // Wir nutzen reset(true) nicht, da es Cookies löscht. 
+    // Wir lassen run() einfach erneut laufen, das Library managed das intern.
+    CookieConsent.run({
       ...config,
       language: {
         ...config.language,
-        current: currentLang
+        current: currentLang // Dynamische Sprache setzen
       }
     });
 
-  } catch (e) {
-    console.error("CookieConsent Fehler:", e);
+    // 3. Event Listener aufräumen & neu setzen (gegen Duplikate)
+    document.removeEventListener('click', handleCookieClick);
+    document.addEventListener('click', handleCookieClick);
+
+    document.removeEventListener('click', handleLanguageSwitch);
+    document.addEventListener('click', handleLanguageSwitch);
+  };
+
+  // --- ASTRO HOOKS ---
+  // Startet bei jedem Seitenwechsel (View Transitions)
+  document.addEventListener('astro:page-load', init);
+  
+  // Startet beim allerersten Laden (falls astro:page-load nicht feuert)
+  if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+  } else {
+      init();
   }
-}
 
-document.addEventListener('astro:page-load', initCookieBanner);
-</script>
-
-<script is:inline>
-document.addEventListener("click", function (event) {
-  const link = event.target.closest("[data-lang]");
-  if (!link) return;
-
-  event.preventDefault();
-
-  const lang = link.dataset.lang;
-  if (lang !== "de" && lang !== "en") return;
-
-  const isProd = location.protocol === "https:";
-
-  document.cookie =
-    "preferred_language=" + lang +
-    "; path=/; max-age=31536000; SameSite=Lax" +
-    (isProd ? "; Secure" : "");
-
-  const query = window.location.search || "";
-  const hash = window.location.hash || "";
-
-  window.location.href = "/" + lang + "/" + query + hash;
-});
 </script>
