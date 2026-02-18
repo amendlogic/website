@@ -1,9 +1,10 @@
 ---
+/* src/components/widgets/ChartWidget.astro */
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Headline from '~/components/ui/Headline.astro';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import crypto from 'node:crypto'; // 1️⃣ Sicherere IDs
+import crypto from 'node:crypto';
 
 const currentLocale = Astro.currentLocale || 'de';
 
@@ -23,37 +24,28 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-// 1️⃣ Deterministische/Sichere ID
-const uid = id ?? `widget-${crypto.randomUUID().slice(0, 8)}`;
-const chartId = `chart-${uid}`;
-const dataId = `data-${uid}`;
+// --- FIX: IDs korrekt definieren ---
+const uniqueKey = crypto.randomUUID().slice(0, 8);
+const wrapperId = id ?? `widget-${uniqueKey}`; // <--- Hier war der Fehler
+const chartId = `chart-${uniqueKey}`;
+const dataId = `data-${uniqueKey}`;
 
-// --- SERVER SIDE PROCESSING (Node.js) ---
-
-// 2️⃣ Cache für CSV-Dateien (Beschleunigt den Build massiv bei vielen Charts)
+// --- SERVER SIDE PROCESSING ---
 if (!globalThis.csvCache) globalThis.csvCache = new Map();
-
 const round2 = (n) => Math.round(n * 100) / 100;
 
 async function parseCsvData(filePath, initialCap) {
   if (!filePath) return null;
-
-  // Cache Check
   const cacheKey = `${filePath}-${initialCap}`;
   if (globalThis.csvCache.has(cacheKey)) return globalThis.csvCache.get(cacheKey);
 
   try {
-    // 3️⃣ Security: Path Traversal Prevention
-    const projectRoot = process.cwd(); // oder path.resolve('./src/data') für strikteren Schutz
+    const projectRoot = process.cwd();
     const absolutePath = path.resolve(projectRoot, filePath);
-
-    if (!absolutePath.startsWith(projectRoot)) {
-       throw new Error(`Security Error: Zugriff auf ${absolutePath} verweigert.`);
-    }
+    if (!absolutePath.startsWith(projectRoot)) throw new Error(`Security Error`);
 
     const fileContent = await fs.readFile(absolutePath, 'utf-8');
     const lines = fileContent.trim().split(/\r?\n/);
-
     if (lines.length <= 1) return null;
 
     const headers = lines[0].split(',').map(h => h.trim());
@@ -70,7 +62,6 @@ async function parseCsvData(filePath, initialCap) {
     const equity = [];
     const drawdown = [];
     const bnh = [];
-
     let firstPrice = null;
     let initialContracts = 1;
     const csvSplitRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
@@ -80,12 +71,8 @@ async function parseCsvData(filePath, initialCap) {
       if (!rawRow) continue;
       const row = rawRow.split(csvSplitRegex).map(r => r.replace(/"/g, '').trim());
       
-      // 4️⃣ Robusteres Date Parsing (Versuch ISO, Fallback Date.parse)
       let timestamp = Date.parse(row[idx.date]);
-      if (isNaN(timestamp)) {
-         // Fallback für DD.MM.YYYY HH:MM falls nötig, hier vereinfacht:
-         timestamp = +new Date(row[idx.date]);
-      }
+      if (isNaN(timestamp)) timestamp = +new Date(row[idx.date]);
       if (isNaN(timestamp)) continue;
 
       const profit = parseFloat(row[idx.profit]);
@@ -107,12 +94,9 @@ async function parseCsvData(filePath, initialCap) {
         }
       }
     }
-    
     const result = { equity, drawdown, bnh };
-    // In Cache speichern
     globalThis.csvCache.set(cacheKey, result);
     return result;
-
   } catch (e) {
     if (e.code !== 'ENOENT') console.error(`[Chart Widget Error]: ${e.message}`);
     return null;
@@ -124,10 +108,8 @@ const parsedData = await parseCsvData(csvPath, Number(initialCapital));
 
 if (parsedData && parsedData.equity.length > 0) {
   const dataCount = parsedData.equity.length;
-  
   baseOptions = {
     animation: true,
-    // 5️⃣ Performance: Progressive Rendering nur bei großen Datenmengen
     progressive: dataCount > 2000 ? 5000 : 0, 
     progressiveThreshold: 5000,
     hoverLayerThreshold: 3000,
@@ -173,7 +155,6 @@ if (parsedData && parsedData.equity.length > 0) {
 )}
 
 <script>
-// --- TREE SHAKING IMPORTS ---
 import * as echarts from 'echarts/core';
 import { LineChart, BarChart } from 'echarts/charts';
 import { GridComponent, TooltipComponent, LegendComponent, DatasetComponent } from 'echarts/components';
@@ -181,7 +162,6 @@ import { CanvasRenderer } from 'echarts/renderers';
 
 echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendComponent, DatasetComponent, CanvasRenderer]);
 
-// --- CLIENT LOGIK ---
 (() => {
   const chartStore = new Map(); 
   let resizeObserver;
@@ -191,7 +171,6 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
 
   const isObject = (item) => (item && typeof item === 'object' && !Array.isArray(item));
 
-  // Rekursiver Merge (bleibt, da sehr robust)
   const deepMerge = (target, source) => {
     const output = Array.isArray(target) ? [...target] : { ...target };
     if (Array.isArray(target) && Array.isArray(source)) {
@@ -234,7 +213,6 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
     };
   };
 
-  // 6️⃣ XSS Prevention Helper
   const escapeHtml = (unsafe) => {
     return String(unsafe)
          .replace(/&/g, "&amp;")
@@ -264,7 +242,6 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
     const currencyFormat = new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const dateFormat = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' });
 
-    // 7️⃣ Optimierung: Deep Merge nur wenn nötig
     let finalOptions = baseOptions;
     if (userOptions && Object.keys(userOptions).length > 0) {
         finalOptions = deepMerge(baseOptions, userOptions);
@@ -288,8 +265,6 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
                 const val = p.seriesName === 'Drawdown %'
                   ? Math.abs(p.value[1]).toFixed(2) + '%'
                   : currencyFormat.format(p.value[1]);
-                
-                // XSS Protection angewendet
                 const safeName = escapeHtml(p.seriesName);
                 
                 html += `<div class="flex justify-between gap-4">
@@ -306,7 +281,15 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
   };
 
   const init = () => {
-    cleanup();
+    // Cleanup first
+    chartStore.forEach(({ chart }) => !chart.isDisposed() && chart.dispose());
+    chartStore.clear();
+    if (resizeRaf) cancelAnimationFrame(resizeRaf);
+    if (resizeObserver) resizeObserver.disconnect();
+    if (intersectionObserver) intersectionObserver.disconnect();
+    if (mutationObserver) mutationObserver.disconnect();
+    document.querySelectorAll('[data-json-id]').forEach(el => el.removeAttribute('data-loaded'));
+
     const elements = document.querySelectorAll('[data-json-id]');
 
     intersectionObserver = new IntersectionObserver(entries => {
@@ -320,10 +303,7 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
     }, { rootMargin: '400px 0px', threshold: 0.01 });
 
     resizeObserver = new ResizeObserver(entries => {
-        if (resizeRaf !== null) {
-           cancelAnimationFrame(resizeRaf);
-           resizeRaf = null;
-        }
+        if (resizeRaf) cancelAnimationFrame(resizeRaf);
         resizeRaf = requestAnimationFrame(() => {
           entries.forEach(e => {
               const item = chartStore.get(e.target);
@@ -335,10 +315,7 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
     mutationObserver = new MutationObserver((mutations) => {
         if (mutations.some(m => m.attributeName === 'class')) {
             const themeConfig = getThemeConfig();
-            chartStore.forEach(({ chart }) => {
-                // Theme Update ist leichtgewichtig, merge ist hier sicher
-                chart.setOption(themeConfig);
-            });
+            chartStore.forEach(({ chart }) => chart.setOption(themeConfig));
         }
     });
     mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
@@ -346,25 +323,10 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
     elements.forEach(el => intersectionObserver.observe(el));
   };
 
-  const cleanup = () => {
-    chartStore.forEach(({ chart }) => {
-       if (!chart.isDisposed()) chart.dispose();
-    });
-    chartStore.clear();
-    
-    if (resizeRaf !== null) {
-       cancelAnimationFrame(resizeRaf);
-       resizeRaf = null;
-    }
-    if (resizeObserver) resizeObserver.disconnect();
-    if (intersectionObserver) intersectionObserver.disconnect();
-    if (mutationObserver) mutationObserver.disconnect();
-    
-    document.querySelectorAll('[data-json-id]').forEach(el => el.removeAttribute('data-loaded'));
-  };
-
   document.addEventListener('astro:page-load', init);
-  document.addEventListener('astro:before-swap', cleanup);
+  document.addEventListener('astro:before-swap', () => {
+      if (resizeObserver) resizeObserver.disconnect();
+  });
   if (document.readyState !== 'loading') init();
 
 })();
