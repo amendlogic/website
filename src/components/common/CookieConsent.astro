@@ -1,17 +1,7 @@
 ---
-/* * 1. CSS IMPORT 
- * Wir importieren das CSS direkt aus dem Node-Module. 
- * Astro bündelt und optimiert es automatisch.
- */
 import 'vanilla-cookieconsent/dist/cookieconsent.css';
-
-/* * Importieren der Custom-Styles. 
- * Hinweis: '/libs/cookie-custom.css' funktioniert weiterhin, wenn die Datei in 'public' liegt.
- * Besser wäre es jedoch, diese auch nach 'src' zu verschieben (z.B. import '../styles/cookie-custom.css').
- */
+import '~/assets/styles/cookie-custom.css').
 ---
-
-<link rel="stylesheet" href="/libs/cookie-custom.css" />
 
 <script>
     // 1. JS IMPORT (NPM)
