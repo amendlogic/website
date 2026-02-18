@@ -1,7 +1,7 @@
 {
   "product": "Produkt",
-  "features": "Funktionen",
-  "howItWorks": "Funktionsweise",
+  "benefits": "Vorteile",
+  "system": "System",
   "performance": "Performance",
   "testimonials": "Kundenstimmen",
   "faqs": "FAQ",
@@ -11,7 +11,7 @@
   "docs": "Dokumentation",
   "blog": "Blog",
   "pricing": "Preise",
-  "actionBtn": "Zugang erhalten",
+  "actionBtn": "Zugang sichern",
   "changelog": "Änderungsprotokoll",
   "resources": "Ressourcen",
   "community": "Community (Discord)",
