@@ -111,7 +111,7 @@ const parsedData = await parseCsvData(csvPath, Number(initialCapital));
 if (parsedData && parsedData.equity.length > 0) {
   baseOptions = {
     // ⚡ High-End Performance Settings
-    animation: false, 
+    animation: true, 
     progressive: 5000, 
     progressiveThreshold: 10000,
     hoverLayerThreshold: 3000, // 🚀 Separater Layer für Tooltip bei vielen Daten
