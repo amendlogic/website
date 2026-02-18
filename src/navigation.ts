@@ -27,8 +27,8 @@ export const getHeaderData = (lang = 'en') => {
             href: getPermalink('/#testimonials', 'page', lang),
           },
           {
-            text: t('nav.faqs'),
-            href: getPermalink('/#faqs', 'page', lang),
+            text: t('nav.faq'),
+            href: getPermalink('/#faq', 'page', lang),
           },
         ],
       },
