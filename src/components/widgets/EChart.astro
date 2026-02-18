@@ -1,11 +1,10 @@
 ---
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Headline from '~/components/ui/Headline.astro';
-import fs from 'node:fs/promises'; // Async FS nutzen
-import { existsSync } from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
+import { existsSync } from 'node:fs';
 
-// --- CONFIG ---
 const currentLocale = Astro.currentLocale || 'de';
 
 const {
@@ -25,7 +24,7 @@ const {
 
 const INITIAL_CAPITAL = 300;
 
-// Eindeutige IDs generieren
+// IDs
 const uid = Math.random().toString(36).slice(2, 9);
 const wrapperId = id ?? `widget-${uid}`;
 const chartId = `chart-${uid}`;
@@ -33,19 +32,17 @@ const dataId = `data-${uid}`;
 
 let baseOptions = {};
 
-// --- SERVER SIDE PARSING (ASYNC & ROBUST) ---
+// --- SERVER SIDE PARSING ---
 if (csvPath) {
   try {
     const absolutePath = path.resolve(csvPath);
-
+    
     if (existsSync(absolutePath)) {
       const fileContent = await fs.readFile(absolutePath, 'utf-8');
       const lines = fileContent.trim().split(/\r?\n/);
 
       if (lines.length > 1) {
-        // Robustere Header-Erkennung
         const headers = lines[0].split(',').map(h => h.trim());
-        
         const idx = {
           date: headers.indexOf('Date/Time'),
           profit: headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%')),
@@ -54,94 +51,64 @@ if (csvPath) {
           contracts: headers.indexOf('Contracts')
         };
 
-        const equity = [];
-        const drawdown = [];
-        const bnh = [];
+        if (idx.date !== -1 && idx.profit !== -1) {
+            const equity = [];
+            const drawdown = [];
+            const bnh = [];
+            let firstPrice = null;
+            let initialContracts = 1;
+            const csvSplitRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
 
-        let firstPrice = null;
-        let initialContracts = 1;
+            for (let i = 1; i < lines.length; i++) {
+                const rawRow = lines[i];
+                if (!rawRow) continue;
+                // CSV Split logic
+                const row = rawRow.split(csvSplitRegex).map(v => v.replace(/"/g, '').trim());
 
-        // Regex für CSV-Split (behandelt Kommas in Anführungszeichen)
-        const csvSplitRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+                const d = new Date(row[idx.date]);
+                if (isNaN(d.getTime())) continue;
+                const isoDate = d.toISOString();
 
-        for (let i = 1; i < lines.length; i++) {
-          const rawRow = lines[i];
-          if (!rawRow) continue;
+                const profit = parseFloat(row[idx.profit]);
+                const price = idx.price !== -1 ? parseFloat(row[idx.price]) : NaN;
+                const dd = idx.dd !== -1 ? parseFloat(row[idx.dd]) : NaN;
 
-          const row = rawRow.split(csvSplitRegex).map(v => v.replace(/"/g, '').trim());
-          
-          if (!row[idx.date]) continue;
+                if (!isNaN(profit)) equity.push([isoDate, +(INITIAL_CAPITAL + profit).toFixed(2)]);
+                if (!isNaN(dd)) drawdown.push([isoDate, -Math.abs(dd)]);
 
-          const d = new Date(row[idx.date]);
-          if (isNaN(d.getTime())) continue;
-
-          const isoDate = d.toISOString();
-          // Nummerische Werte parsen
-          const profit = parseFloat(row[idx.profit]);
-          const price = parseFloat(row[idx.price]);
-          const dd = parseFloat(row[idx.dd]);
-
-          // Equity Curve
-          if (!isNaN(profit)) {
-            equity.push([isoDate, parseFloat((INITIAL_CAPITAL + profit).toFixed(2))]);
-          }
-          
-          // Drawdown Chart
-          if (!isNaN(dd)) {
-            drawdown.push([isoDate, -Math.abs(dd)]);
-          }
-
-          // Buy & Hold Berechnung
-          if (firstPrice === null && !isNaN(price)) {
-            firstPrice = price;
-            const c = parseFloat(row[idx.contracts]);
-            if (!isNaN(c)) initialContracts = c;
-            bnh.push([isoDate, INITIAL_CAPITAL]);
-          } else if (!isNaN(price) && firstPrice !== null) {
-            const bnhProfit = (price - firstPrice) * initialContracts;
-            bnh.push([isoDate, parseFloat((INITIAL_CAPITAL + bnhProfit).toFixed(2))]);
-          }
-        }
-
-        baseOptions = {
-          grid: { left: 0, right: 0, bottom: 0, containLabel: true },
-          tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
-          legend: { 
-            data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], 
-            top: 0,
-            icon: 'circle' 
-          },
-          xAxis: { type: 'time', boundaryGap: false },
-          yAxis: [
-            { type: 'value', scale: true, splitLine: { show: true } },
-            { type: 'value', max: 0, splitLine: { show: false }, axisLabel: { formatter: '{value}%' } }
-          ],
-          series: [
-            { 
-              name: 'Portfolio Value', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, 
-              areaStyle: { opacity: 0.1 }, 
-              itemStyle: { color: '#10B981' }, 
-              data: equity 
-            },
-            { 
-              name: 'Buy & Hold', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, 
-              lineStyle: { type: 'dashed' }, 
-              itemStyle: { color: '#94a3b8' }, 
-              data: bnh 
-            },
-            { 
-              name: 'Drawdown %', type: 'bar', yAxisIndex: 1, 
-              itemStyle: { color: '#EF4444', opacity: 0.6 }, 
-              data: drawdown 
+                if (!isNaN(price)) {
+                    if (firstPrice === null) {
+                        firstPrice = price;
+                        const c = idx.contracts !== -1 ? parseFloat(row[idx.contracts]) : NaN;
+                        if (!isNaN(c)) initialContracts = c;
+                        bnh.push([isoDate, INITIAL_CAPITAL]);
+                    } else {
+                        const bnhProfit = (price - firstPrice) * initialContracts;
+                        bnh.push([isoDate, +(INITIAL_CAPITAL + bnhProfit).toFixed(2)]);
+                    }
+                }
             }
-          ]
-        };
+
+            baseOptions = {
+                grid: { left: 0, right: 0, bottom: 0, containLabel: true },
+                legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], top: 0 },
+                tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
+                xAxis: { type: 'time', boundaryGap: false },
+                yAxis: [
+                    { type: 'value', scale: true, splitLine: { show: true } },
+                    { type: 'value', max: 0, splitLine: { show: false } }
+                ],
+                series: [
+                    { name: 'Portfolio Value', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: equity },
+                    { name: 'Buy & Hold', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, lineStyle: { type: 'dashed' }, itemStyle: { color: '#94a3b8' }, data: bnh },
+                    { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.5 }, data: drawdown }
+                ]
+            };
+        }
       }
-    } else {
-      console.warn(`[WidgetWrapper] CSV File not found: ${absolutePath}`);
     }
   } catch (e) {
-    console.error(`[EChart CSV Error]: ${e.message}`);
+    console.error('[EChart CSV Error]:', e.message);
   }
 }
 ---
@@ -160,168 +127,133 @@ if (csvPath) {
   </div>
 </WidgetWrapper>
 
-{/* Datenübergabe: baseOptions und locale sicher an Client übergeben */}
 <script type="application/json" id={dataId} set:html={JSON.stringify({ baseOptions, userOptions, locale })} />
 
 <script is:inline>
 (() => {
   const chartMap = new Map();
   let resizeObserver;
-  let intersectionObserver;
   let mutationObserver;
 
-  // Theme Definitionen zentralisiert
-  const getThemeColors = () => {
-    const isDark = document.documentElement.classList.contains('dark');
+  // Theme Logik ausgelagert für Wiederverwendbarkeit
+  const getThemeConfig = () => {
+    const dark = document.documentElement.classList.contains('dark');
+    const text = dark ? '#cbd5e1' : '#475569';
+    const split = dark ? '#334155' : '#e2e8f0';
+    const bg = dark ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)';
+    const border = dark ? '#475569' : '#cbd5e1';
+    
     return {
-      text: isDark ? '#cbd5e1' : '#475569',
-      split: isDark ? '#334155' : '#e2e8f0',
-      bg: isDark ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)',
-      border: isDark ? '#475569' : '#cbd5e1'
+       textStyle: { color: text },
+       legend: { textStyle: { color: text } },
+       tooltip: { backgroundColor: bg, borderColor: border, textStyle: { color: text } },
+       xAxis: { splitLine: { lineStyle: { color: split } } },
+       yAxis: [{ splitLine: { lineStyle: { color: split } } }, { splitLine: { show: false } }]
     };
   };
 
-  const applyTheme = (chart) => {
-    if (!chart) return;
-    const c = getThemeColors();
-    chart.setOption({
-      textStyle: { color: c.text },
-      legend: { textStyle: { color: c.text } },
-      tooltip: { backgroundColor: c.bg, borderColor: c.border, textStyle: { color: c.text } },
-      xAxis: { splitLine: { lineStyle: { color: c.split } } },
-      yAxis: [{ splitLine: { lineStyle: { color: c.split } } }, {}] // 2. Achse beachten
-    });
-  };
-
-  const renderChart = async (el) => {
+  const render = async (el) => {
     if (el.getAttribute('data-loaded') === 'true') return;
 
     const jsonId = el.getAttribute('data-json-id');
-    const dataScript = document.getElementById(jsonId);
-    if (!dataScript) return;
+    const script = document.getElementById(jsonId);
+    if (!script) return;
 
     let config;
-    try { config = JSON.parse(dataScript.textContent); } catch (e) { return; }
+    try { config = JSON.parse(script.textContent); } catch { return; }
+    
+    if (!config.baseOptions || !Object.keys(config.baseOptions).length) return;
 
-    const { baseOptions, userOptions, locale } = config;
-    if (!baseOptions || Object.keys(baseOptions).length === 0) return;
-
-    // 1. PINNED VERSION Import (Wichtig für Stabilität)
     const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.esm.min.js")
       .then(m => m.default || m);
 
     const chart = echarts.init(el);
+    const { baseOptions, userOptions, locale } = config;
 
-    // 2. PERFORMANCE: Formatter instanziieren (nicht in jedem Loop neu erstellen)
-    const axisNumberFormat = new Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 });
-    const tooltipNumberFormat = new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    const tooltipDateFormat = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' });
+    // Formatters einmalig erstellen
+    const axisFormat = new Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 });
+    const currencyFormat = new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const dateFormat = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' });
 
-    // Helper für Formatter
-    const formatters = {
-      compact: (val) => axisNumberFormat.format(val),
-      currency: (val) => tooltipNumberFormat.format(val),
-      percent: (val) => Math.abs(val).toFixed(2) + '%',
-      date: (val) => tooltipDateFormat.format(new Date(val))
-    };
-
-    // Achsen-Formatter wiederherstellen
+    // Formatters injizieren
     if (baseOptions.yAxis && baseOptions.yAxis[0]) {
-      baseOptions.yAxis[0].axisLabel = {
-        formatter: formatters.compact
-      };
+        baseOptions.yAxis[0].axisLabel = { formatter: val => axisFormat.format(val) };
     }
 
-    // Tooltip-Formatter wiederherstellen
     if (baseOptions.tooltip) {
-      baseOptions.tooltip.formatter = (params) => {
-        // Sicherstellen, dass Params ein Array ist
-        const items = Array.isArray(params) ? params : [params];
-        if (!items.length) return '';
-
-        const dateVal = items[0].value[0];
-        let html = `<div class="font-bold mb-1">${formatters.date(dateVal)}</div>`;
-        
-        items.forEach(p => {
-          let valStr;
-          // Logik: Drawdown ist Prozent, Rest ist Währung
-          if (p.seriesName && p.seriesName.includes('Drawdown')) {
-             valStr = formatters.percent(p.value[1]);
-          } else {
-             valStr = formatters.currency(p.value[1]);
-          }
-          
-          // Marker Styles
-          html += `<div class="flex items-center justify-between gap-4">
-                    <span>${p.marker} ${p.seriesName}</span>
-                    <span class="font-mono font-bold">${valStr}</span>
-                   </div>`;
-        });
-        return html;
-      };
+        baseOptions.tooltip.formatter = (params) => {
+            const items = Array.isArray(params) ? params : [params];
+            if (!items.length) return '';
+            const dateVal = items[0].value[0];
+            let html = `<div class="font-bold mb-1">${dateFormat.format(new Date(dateVal))}</div>`;
+            items.forEach(p => {
+                const val = p.seriesName.includes('Drawdown')
+                  ? Math.abs(p.value[1]).toFixed(2) + '%'
+                  : currencyFormat.format(p.value[1]);
+                html += `<div class="flex justify-between gap-4">
+                           <span>${p.marker} ${p.seriesName}</span>
+                           <span class="font-mono font-bold">${val}</span>
+                         </div>`;
+            });
+            return html;
+        };
     }
 
-    // Optionen setzen
+    // Optionen setzen (ECharts merged automatisch shallow)
     chart.setOption(baseOptions);
     if (userOptions) chart.setOption(userOptions);
     
-    // Initiales Theme anwenden
-    applyTheme(chart);
+    // Theme anwenden
+    chart.setOption(getThemeConfig());
 
-    // Speichern & Markieren
     chartMap.set(el, chart);
     el.setAttribute('data-loaded', 'true');
   };
 
   const init = () => {
-    // Vorheriges aufräumen, falls vorhanden
     cleanup();
 
-    resizeObserver = new ResizeObserver(entries => {
-      entries.forEach(e => {
-        const chart = chartMap.get(e.target);
-        if (chart) chart.resize(); // width: 'auto' ist default
-      });
-    });
-
-    intersectionObserver = new IntersectionObserver((entries, obs) => {
+    // 1. IntersectionObserver (Lazy Load)
+    const observer = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          renderChart(e.target);
-          obs.unobserve(e.target);
-          resizeObserver.observe(e.target);
+          render(e.target);
+          observer.unobserve(e.target);
+          // Wenn geladen, starte Resize Beobachtung
+          if(resizeObserver) resizeObserver.observe(e.target);
         }
       });
-    }, { rootMargin: "200px" });
+    }, { rootMargin: '200px' });
 
-    // Dark Mode Toggle Überwachung
-    mutationObserver = new MutationObserver((m) => {
-      if (m.some(x => x.attributeName === 'class')) {
-        chartMap.forEach(chart => applyTheme(chart));
-      }
+    // 2. ResizeObserver (Responsiveness)
+    resizeObserver = new ResizeObserver(entries => {
+        entries.forEach(e => {
+            const chart = chartMap.get(e.target);
+            if (chart) chart.resize();
+        });
+    });
+
+    // 3. MutationObserver (Dark Mode Live-Update)
+    mutationObserver = new MutationObserver((mutations) => {
+        if (mutations.some(m => m.attributeName === 'class')) {
+            const themeOptions = getThemeConfig();
+            chartMap.forEach(chart => chart.setOption(themeOptions));
+        }
     });
     mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-    // Observer starten
-    document.querySelectorAll('.echart-container').forEach(el => {
-      intersectionObserver.observe(el);
-    });
+    document.querySelectorAll('.echart-container').forEach(el => observer.observe(el));
   };
 
   const cleanup = () => {
     chartMap.forEach(c => c.dispose());
     chartMap.clear();
     if (resizeObserver) resizeObserver.disconnect();
-    if (intersectionObserver) intersectionObserver.disconnect();
     if (mutationObserver) mutationObserver.disconnect();
-    document.querySelectorAll('.echart-container').forEach(el => el.removeAttribute('data-loaded'));
   };
 
-  // Astro View Transitions Hooks
   document.addEventListener('astro:page-load', init);
   document.addEventListener('astro:before-swap', cleanup);
-
-  // Fallback für initialen Load ohne View Transitions
   if (document.readyState !== 'loading') init();
 
 })();
