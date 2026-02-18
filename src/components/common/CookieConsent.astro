@@ -1,9 +1,9 @@
 ---
 // src/components/common/CookieConsent.astro
 ---
-<script type="module" src="/libs/cookie-banner.js"></script>
+<script type="module" src="./libs/cookie-banner.js"></script>
 <script type="module" is:inline>
 document.addEventListener('astro:page-load', () => {
-  import('/libs/cookie-banner.js').then(mod => mod.initCookie());
+  import('./libs/cookie-banner.js').then(mod => mod.initCookie());
 });
 </script>
