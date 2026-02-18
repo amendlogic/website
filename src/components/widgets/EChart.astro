@@ -291,7 +291,7 @@ if (parsedData && parsedData.equity.length > 0) {
           if (resizeObserver) resizeObserver.observe(e.target);
         }
       });
-    }, { rootMargin: '100px 0px', threshold: 0.1 });
+    }, { rootMargin: '200px 0px', threshold: 0.1 });
 
     resizeObserver = new ResizeObserver(entries => {
         if (resizeRaf !== null) {
