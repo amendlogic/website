@@ -24,9 +24,9 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-// --- FIX: IDs korrekt definieren ---
+// ID Generation
 const uniqueKey = crypto.randomUUID().slice(0, 8);
-const wrapperId = id ?? `widget-${uniqueKey}`; // <--- Hier war der Fehler
+const wrapperId = id ?? `widget-${uniqueKey}`;
 const chartId = `chart-${uniqueKey}`;
 const dataId = `data-${uniqueKey}`;
 
@@ -36,7 +36,13 @@ const round2 = (n) => Math.round(n * 100) / 100;
 
 async function parseCsvData(filePath, initialCap) {
   if (!filePath) return null;
-  const cacheKey = `${filePath}-${initialCap}`;
+
+  // 1️⃣ Verbesserter Cache Key (MD5)
+  const cacheKey = crypto
+    .createHash('md5')
+    .update(`${filePath}-${initialCap}`)
+    .digest('hex');
+
   if (globalThis.csvCache.has(cacheKey)) return globalThis.csvCache.get(cacheKey);
 
   try {
@@ -247,6 +253,7 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
         finalOptions = deepMerge(baseOptions, userOptions);
     }
     
+    // Theme Initial anwenden
     finalOptions = deepMerge(finalOptions, getThemeConfig());
 
     if (finalOptions.yAxis && finalOptions.yAxis[0]) {
@@ -266,7 +273,6 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
                   ? Math.abs(p.value[1]).toFixed(2) + '%'
                   : currencyFormat.format(p.value[1]);
                 const safeName = escapeHtml(p.seriesName);
-                
                 html += `<div class="flex justify-between gap-4">
                            <span>${p.marker} ${safeName}</span>
                            <span class="font-mono font-bold">${val}</span>
@@ -277,18 +283,31 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
     }
 
     chart.setOption(finalOptions);
-    chartStore.set(el, { chart });
+    
+    // 2️⃣ Store Upgrade: Wir speichern base & user options für sauberen Theme-Switch
+    chartStore.set(el, { chart, baseOptions, userOptions: userOptions || {} });
   };
 
-  const init = () => {
-    // Cleanup first
-    chartStore.forEach(({ chart }) => !chart.isDisposed() && chart.dispose());
-    chartStore.clear();
+  const cleanup = () => {
+    // 3️⃣ Fix: Echter Deep Cleanup bei Navigation
+    chartStore.forEach(({ chart }) => {
+       if (!chart.isDisposed()) {
+         chart.dispose(); // WICHTIG: WebGL/Canvas Ressourcen freigeben
+       }
+    });
+    chartStore.clear(); // Map leeren
+    
     if (resizeRaf) cancelAnimationFrame(resizeRaf);
     if (resizeObserver) resizeObserver.disconnect();
     if (intersectionObserver) intersectionObserver.disconnect();
     if (mutationObserver) mutationObserver.disconnect();
+    
     document.querySelectorAll('[data-json-id]').forEach(el => el.removeAttribute('data-loaded'));
+  };
+
+  const init = () => {
+    // Cleanup alter Reste, falls vorhanden
+    cleanup();
 
     const elements = document.querySelectorAll('[data-json-id]');
 
@@ -300,7 +319,7 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
           if (resizeObserver) resizeObserver.observe(e.target);
         }
       });
-    }, { rootMargin: '400px 0px', threshold: 0.01 });
+    }, { rootMargin: '300px 0px', threshold: 0.01 }); // 4️⃣ RootMargin angepasst
 
     resizeObserver = new ResizeObserver(entries => {
         if (resizeRaf) cancelAnimationFrame(resizeRaf);
@@ -312,10 +331,23 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
         });
     });
 
+    // 5️⃣ Enterprise Theme Switcher
     mutationObserver = new MutationObserver((mutations) => {
         if (mutations.some(m => m.attributeName === 'class')) {
             const themeConfig = getThemeConfig();
-            chartStore.forEach(({ chart }) => chart.setOption(themeConfig));
+            
+            chartStore.forEach(({ chart, baseOptions, userOptions }) => {
+                // Wir berechnen die Config komplett neu
+                let merged = baseOptions;
+                if (Object.keys(userOptions).length > 0) {
+                    merged = deepMerge(baseOptions, userOptions);
+                }
+                // Dann Theme drauf
+                const finalWithTheme = deepMerge(merged, themeConfig);
+                
+                // true = notMerge (Replace Mode), damit alte Farben sicher weg sind
+                chart.setOption(finalWithTheme, { notMerge: false }); 
+            });
         }
     });
     mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
@@ -324,9 +356,7 @@ echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendCompone
   };
 
   document.addEventListener('astro:page-load', init);
-  document.addEventListener('astro:before-swap', () => {
-      if (resizeObserver) resizeObserver.disconnect();
-  });
+  document.addEventListener('astro:before-swap', cleanup); // Cleanup VOR dem Swap
   if (document.readyState !== 'loading') init();
 
 })();
