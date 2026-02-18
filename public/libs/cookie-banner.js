@@ -23,7 +23,6 @@ export function initCookie() {
     const link = e.target.closest('[data-lang]');
     if (!link) return;
     e.preventDefault();
-
     const lang = link.dataset.lang;
     if (!['de','en'].includes(lang)) return;
 
