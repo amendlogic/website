@@ -1,19 +1,37 @@
 ---
 /* src/components/common/CookieConsent.astro */
-
-// 1. CSS direkt aus dem npm-Paket importieren
 import 'vanilla-cookieconsent/dist/cookieconsent.css';
 ---
 
-<div id="cc-container"></div>
+<style is:global>
+  :root {
+    --cc-bg: #ffffff;
+    --cc-text: #1e293b;
+    --cc-btn-primary-bg: #10B981;
+    --cc-btn-primary-text: #ffffff;
+    --cc-btn-secondary-bg: #e2e8f0;
+    --cc-btn-secondary-text: #475569;
+    --cc-font-family: inherit;
+  }
+  
+  .dark {
+    --cc-bg: #0f172a;
+    --cc-text: #cbd5e1;
+    --cc-btn-primary-bg: #10B981;
+    --cc-btn-primary-text: #ffffff;
+    --cc-btn-secondary-bg: #334155;
+    --cc-btn-secondary-text: #cbd5e1;
+    --cc-toggle-bg-on: #10B981;
+    --cc-footer-bg: #0f172a;
+  }
+</style>
 
 <script>
   import * as CookieConsent from 'vanilla-cookieconsent';
 
-  // --- KONFIGURATION ---
   const config = {
-    // FIX 1: Wir nutzen einen expliziten Container statt document.body
-    root: '#cc-container',
+    // FIX: 'root' entfernt. Standardverhalten (Body) ist stabiler.
+    // root: '#cc-container', 
 
     gui_options: {
       consent_modal: {
@@ -38,7 +56,7 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
         enabled: false,
         autoClear: {
           cookies: [
-            { name: /^_ga/ }, // Google Analytics Regex
+            { name: /^_ga/ },
             { name: '_gid' }
           ]
         }
@@ -46,7 +64,7 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
     },
     language: {
       default: 'de',
-      auto_detect: false, // FIX 2: Manuelle Kontrolle, um Abstürze bei unbekannten Sprachen zu verhindern
+      auto_detect: false,
       translations: {
         de: {
           consent_modal: {
@@ -62,8 +80,8 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
             save_btn: 'Speichern',
             close_btn_label: 'Schließen',
             sections: [
-              { title: 'Notwendige Cookies', description: 'Technisch essenziell für die Webseite.', linked_category: 'necessary' },
-              { title: 'Analyse Cookies', description: 'Helfen uns zu verstehen, wie Besucher die Seite nutzen.', linked_category: 'analytics' }
+              { title: 'Notwendige Cookies', description: 'Technisch essenziell.', linked_category: 'necessary' },
+              { title: 'Analyse Cookies', description: 'Statistiken.', linked_category: 'analytics' }
             ]
           }
         },
@@ -90,9 +108,6 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
     }
   };
 
-  // --- EVENT HANDLERS ---
-  
-  // Handler 1: Klick auf "Cookie Einstellungen" Link im Footer/Menü
   const handlePreferencesClick = (e) => {
     const trigger = e.target.closest('[data-cc="show-preferencesModal"]');
     if (trigger) {
@@ -101,48 +116,32 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
     }
   };
 
-  // Handler 2: Sprachumschalter Logik (Deine Custom Logik)
   const handleLanguageSwitch = (event) => {
     const link = event.target.closest("[data-lang]");
     if (!link) return;
-
     event.preventDefault();
     const lang = link.dataset.lang;
-    
-    // Sicherheitscheck: Nur erlaubte Sprachen
     if (lang !== "de" && lang !== "en") return;
-
     const isProd = location.protocol === "https:";
-
-    // Cookie setzen
     document.cookie = `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${isProd ? "; Secure" : ""}`;
-
-    // Redirect mit Query Params & Hash
     const query = window.location.search || "";
     const hash = window.location.hash || "";
     window.location.href = `/${lang}/${query}${hash}`;
   };
 
-
-  // --- INITIALISIERUNG ---
   const init = async () => {
-    // FIX 3: Prüfen, ob der Container existiert (verhindert Fehler beim Hydration)
-    const container = document.getElementById('cc-container');
-    if (!container) return;
-
-    // Sprache sicher ermitteln (Fallback auf 'de', wenn unbekannt)
+    // Sprache ermitteln
     const htmlLang = document.documentElement.lang?.split('-')[0];
     const supportedLangs = ['de', 'en'];
     const currentLang = supportedLangs.includes(htmlLang) ? htmlLang : 'de';
 
     try {
-      // FIX 4: Altes Banner entfernen (Zombie-Elemente von Astro Transitions löschen)
-      // Das löst den "Cannot read properties of undefined"-Fehler oft aus.
-      if(document.getElementById('cc-main')) {
-          document.getElementById('cc-main').remove();
+      // Clean Up: Falls durch Navigation noch Reste da sind
+      if(document.body.classList.contains('c_darkmode')) {
+          // Manchmal bleibt die Klasse hängen
       }
-
-      // Banner starten
+      
+      // CookieConsent starten
       await CookieConsent.run({
         ...config,
         language: {
@@ -155,23 +154,20 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
       console.error("CookieConsent Init Error:", e);
     }
 
-    // Event Listener aufräumen und neu setzen (verhindert doppelte Listener)
+    // Listener (neu) binden
     document.removeEventListener('click', handlePreferencesClick);
     document.addEventListener('click', handlePreferencesClick);
-
     document.removeEventListener('click', handleLanguageSwitch);
     document.addEventListener('click', handleLanguageSwitch);
   };
 
-  // --- ASTRO LIFECYCLE HOOKS ---
-  // Feuert bei jedem Seitenwechsel (View Transitions)
+  // Astro Lifecycle
   document.addEventListener('astro:page-load', init);
   
-  // Fallback für den allerersten Load, falls astro:page-load zu spät kommt
+  // Safety Fallback: Falls astro:page-load nicht feuert oder wir beim ersten Load sind
   if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
   } else {
-      // Falls das Skript nachträglich geladen wird
       init();
   }
 </script>
