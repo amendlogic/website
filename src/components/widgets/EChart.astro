@@ -156,7 +156,7 @@ if (parsedData && parsedData.equity.length > 0) {
   <script type="application/json" id={dataId} set:html={JSON.stringify({ baseOptions, userOptions, locale })} />
 )}
 
-<script is:inline>
+<script>
 (() => {
   let echartsPromise = null;
   const loadEcharts = () => {
