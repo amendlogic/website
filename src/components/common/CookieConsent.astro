@@ -25,100 +25,134 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
 <script>
   import * as CookieConsent from 'vanilla-cookieconsent';
 
+  // State-Variable, um Mehrfach-Initialisierungen zu verhindern
+  let isInitialized = false;
+
   const init = () => {
-    // 1. Gründlicher Reset für Astro View Transitions
-    const existingModal = document.getElementById('cc-main');
-    if (existingModal) existingModal.remove();
+    // 1. EXISTIERENDE ELEMENTE ENTFERNEN
+    // Wir löschen das Modal physisch aus dem DOM, falls Astro es beim Swap behalten hat
+    const modal = document.getElementById('cc-main');
+    if (modal) {
+      modal.remove();
+    }
     document.documentElement.classList.remove('cc--active');
+    
+    // 2. TIMING FIX
+    // Wir nutzen requestAnimationFrame, um sicherzustellen, dass der Browser das DOM-Update 
+    // von Astro abgeschlossen hat, bevor wir die Library starten.
+    window.requestAnimationFrame(() => {
+      setTimeout(async () => {
+        try {
+          const htmlLang = document.documentElement.lang?.split('-')[0] || 'de';
+          const activeLang = ['de', 'en'].includes(htmlLang) ? htmlLang : 'de';
 
-    // 2. Timeout für stabiles DOM
-    setTimeout(async () => {
-      try {
-        const htmlLang = document.documentElement.lang?.split('-')[0] || 'de';
-        const activeLang = ['de', 'en'].includes(htmlLang) ? htmlLang : 'de';
-
-        await CookieConsent.run({
-          auto_detect: false,
-          // ⚡ WICHTIG: Die Sprache wird hier direkt definiert
-          language: {
-            default: 'de',
-            current: activeLang,
-            translations: {
-              de: {
-                consent_modal: {
-                  title: 'Wir verwenden Cookies',
-                  description: 'Cookies helfen uns bei der Bereitstellung unserer Dienste.',
-                  primary_btn: { text: 'Alle akzeptieren', role: 'accept_all' },
-                  secondary_btn: { text: 'Einstellungen', role: 'settings' }
+          // Reset der Library Instanz (wichtig bei v3)
+          // Wir führen kein komplettes Reset(true) aus, um die Cookie-Wahl nicht zu löschen,
+          // aber wir initialisieren die UI neu.
+          await CookieConsent.run({
+            auto_detect: false,
+            // Mode 'opt-in' ist Standard für DSGVO
+            mode: 'opt-in',
+            language: {
+              default: 'de',
+              current: activeLang,
+              translations: {
+                de: {
+                  consent_modal: {
+                    title: 'Wir verwenden Cookies',
+                    description: 'Cookies helfen uns bei der Bereitstellung unserer Dienste.',
+                    primary_btn: { text: 'Alle akzeptieren', role: 'accept_all' },
+                    secondary_btn: { text: 'Einstellungen', role: 'settings' }
+                  },
+                  preferences_modal: {
+                    title: 'Cookie Einstellungen',
+                    accept_all_btn: 'Alle akzeptieren',
+                    reject_all_btn: 'Alle ablehnen',
+                    save_btn: 'Speichern',
+                    close_btn_label: 'Schließen',
+                    sections: [
+                      { title: 'Notwendig', description: 'Technisch erforderlich.', linked_category: 'necessary' },
+                      { title: 'Analytics', description: 'Besucher-Statistiken.', linked_category: 'analytics' }
+                    ]
+                  }
                 },
-                preferences_modal: {
-                  title: 'Cookie Einstellungen',
-                  accept_all_btn: 'Alle akzeptieren',
-                  reject_all_btn: 'Alle ablehnen',
-                  save_btn: 'Speichern',
-                  close_btn_label: 'Schließen',
-                  sections: [
-                    { title: 'Notwendig', description: 'Technisch erforderlich.', linked_category: 'necessary' },
-                    { title: 'Analytics', description: 'Besucher-Statistiken.', linked_category: 'analytics' }
-                  ]
-                }
-              },
-              en: {
-                consent_modal: {
-                  title: 'We use cookies',
-                  description: 'Cookies help us provide our services.',
-                  primary_btn: { text: 'Accept all', role: 'accept_all' },
-                  secondary_btn: { text: 'Settings', role: 'settings' }
-                },
-                preferences_modal: {
-                  title: 'Cookie Settings',
-                  accept_all_btn: 'Accept all',
-                  reject_all_btn: 'Reject all',
-                  save_btn: 'Save',
-                  close_btn_label: 'Close',
-                  sections: [
-                    { title: 'Necessary', description: 'Technically essential.', linked_category: 'necessary' },
-                    { title: 'Analytics', description: 'Visitor statistics.', linked_category: 'analytics' }
-                  ]
+                en: {
+                  consent_modal: {
+                    title: 'We use cookies',
+                    description: 'Cookies help us provide our services.',
+                    primary_btn: { text: 'Accept all', role: 'accept_all' },
+                    secondary_btn: { text: 'Settings', role: 'settings' }
+                  },
+                  preferences_modal: {
+                    title: 'Cookie Settings',
+                    accept_all_btn: 'Accept all',
+                    reject_all_btn: 'Reject all',
+                    save_btn: 'Save',
+                    close_btn_label: 'Close',
+                    sections: [
+                      { title: 'Necessary', description: 'Technically essential.', linked_category: 'necessary' },
+                      { title: 'Analytics', description: 'Visitor statistics.', linked_category: 'analytics' }
+                    ]
+                  }
                 }
               }
+            },
+            categories: {
+              necessary: { readOnly: true, enabled: true },
+              analytics: { enabled: false }
+            },
+            gui_options: {
+              consent_modal: { layout: 'box', position: 'bottom right' },
+              preferences_modal: { layout: 'box', position: 'right' }
             }
-          },
-          categories: {
-            necessary: { readOnly: true, enabled: true },
-            analytics: { enabled: false }
-          },
-          gui_options: {
-            consent_modal: { layout: 'box', position: 'bottom right' },
-            preferences_modal: { layout: 'box', position: 'right' }
-          }
-        });
-      } catch (err) {
-        console.warn("CookieConsent Error:", err);
-      }
-    }, 100); // 100ms ist sicherer für Netlify/Build-Umgebungen
+          });
+          
+          isInitialized = true;
+        } catch (err) {
+          // Falls die Library beim addEventListener scheitert, 
+          // versuchen wir es nach einer längeren Pause noch einmal.
+          console.warn("CookieConsent retry in 500ms due to DOM instability.");
+          setTimeout(init, 500);
+        }
+      }, 150); // Erhöhter Delay für Netlify / langsame Verbindungen
+    });
   };
 
-  // Click Handlers (Delegation)
+  // Click Handlers mit Error-Handling
   document.addEventListener('click', (e) => {
-    const target = e.target;
-    
+    const target = e.target as HTMLElement;
+    if (!target) return;
+
     // Preferences Modal
     if (target.closest('[data-cc="show-preferencesModal"]')) {
       e.preventDefault();
-      CookieConsent.showPreferences();
+      try {
+        CookieConsent.showPreferences();
+      } catch (err) {
+        // Falls das Modal noch nicht gebaut wurde
+        init();
+      }
     }
 
     // Language Switcher
-    const langLink = target.closest("[data-lang]");
+    const langLink = target.closest("[data-lang]") as HTMLElement;
     if (langLink) {
       e.preventDefault();
       const lang = langLink.dataset.lang;
-      document.cookie = `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
+      const isProd = location.protocol === "https:";
+      document.cookie = `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${isProd ? "; Secure" : ""}`;
       window.location.href = `/${lang}/${window.location.search}${window.location.hash}`;
     }
   });
 
-  document.addEventListener('astro:page-load', init);
-  if (document.readyState !== 'loading') init();
+  // Astro Integration
+  document.addEventListener('astro:page-load', () => {
+    isInitialized = false;
+    init();
+  });
+
+  // Fallback
+  if (document.readyState !== 'loading') {
+    if (!isInitialized) init();
+  }
 </script>
