@@ -124,7 +124,7 @@ export const getFooterData = (lang = 'en') => {
       { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
     ],
     footNote: `
-    © ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">${SITE?.name}</a> · ${t('nav.rights')} · <a href="#" data-cc="show-preferencesModal" class="text-blue-600 underline dark:text-muted">t('nav.cookieSettings')</a>
+    © ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo">${SITE?.name}</a> · ${t('nav.rights')} · <a href="#" data-cc="show-preferencesModal" class="text-blue-600 underline dark:text-muted">${t('nav.cookieSettings')}</a>
   `,
   };
 };
