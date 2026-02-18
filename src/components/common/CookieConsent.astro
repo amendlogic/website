@@ -1,7 +1,100 @@
-<script type="module">
-import { initCookie } from '../../src/lib/cookie-banner.js';
+---
+/* * 1. CSS IMPORT 
+ * Wir importieren das CSS direkt aus dem Node-Module. 
+ * Astro bündelt und optimiert es automatisch.
+ */
+import 'vanilla-cookieconsent/dist/cookieconsent.css';
 
-document.addEventListener('astro:page-load', () => {
-  initCookie();
+/* * Importieren der Custom-Styles. 
+ * Hinweis: '/libs/cookie-custom.css' funktioniert weiterhin, wenn die Datei in 'public' liegt.
+ * Besser wäre es jedoch, diese auch nach 'src' zu verschieben (z.B. import '../styles/cookie-custom.css').
+ */
+---
+
+<link rel="stylesheet" href="/libs/cookie-custom.css" />
+
+<script>
+    // 1. JS IMPORT (NPM)
+    import * as CookieConsent from 'vanilla-cookieconsent';
+    
+    // 2. CONFIG IMPORT
+    // WICHTIG: Verschieben Sie Ihre 'cookieconsent-config.js' am besten nach 'src/lib/' oder 'src/config/'
+    // Damit wir sie hier sauber importieren können.
+    // Beispielpfad:
+    import { config } from '../../lib/cookieconsent-config'; 
+
+    // Globale Referenz setzen (für Inline-Click-Handler oder Debugging in der Konsole)
+    window.CookieConsent = CookieConsent;
+
+    // --- LOGIK START ---
+
+    // Handler für das "Einstellungen ändern"-Event
+    function handleCookieClick(e) {
+        const trigger = e.target.closest('[data-cc="show-preferencesModal"]');
+        
+        if (trigger) {
+            e.preventDefault();
+            
+            if (CookieConsent && document.getElementById('cc-main')) {
+                CookieConsent.showPreferences();
+            } else {
+                console.warn("CookieConsent noch nicht bereit.");
+            }
+        }
+    }
+
+    // Event Listener global registrieren (nur einmal)
+    if (!window.cookieListenerAttached) {
+        document.addEventListener('click', handleCookieClick);
+        window.cookieListenerAttached = true;
+    }
+
+    // Initialisierungs-Funktion
+    function initCookieBanner() {
+        try {
+            const currentLang = document.documentElement.lang?.split('-')[0] || 'de';
+
+            // Reset für Astro View Transitions (State bereinigen)
+            // Hinweis: Reset löscht NICHT die User-Auswahl, sondern nur den internen UI-State des Skripts
+            CookieConsent.reset(true); 
+
+            CookieConsent.run({
+                ...config,
+                language: {
+                    ...config.language,
+                    current: currentLang
+                }
+            });
+
+        } catch (e) {
+            console.error("CookieConsent Fehler:", e);
+        }
+    }
+
+    // Astro View Transitions Hook
+    document.addEventListener('astro:page-load', initCookieBanner);
+</script>
+
+<script is:inline>
+document.addEventListener("click", function (event) {
+  const link = event.target.closest("[data-lang]");
+  if (!link) return;
+
+  event.preventDefault();
+
+  const lang = link.dataset.lang;
+  if (lang !== "de" && lang !== "en") return;
+
+  const isProd = location.protocol === "https:";
+
+  document.cookie =
+    "preferred_language=" + lang +
+    "; path=/; max-age=31536000; SameSite=Lax" +
+    (isProd ? "; Secure" : "");
+
+  const query = window.location.search || "";
+  const hash = window.location.hash || "";
+
+  window.location.href = "/" + lang + "/" + query + hash;
 });
 </script>
