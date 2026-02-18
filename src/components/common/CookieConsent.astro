@@ -11,65 +11,33 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
     --cc-btn-primary-text: #ffffff;
     --cc-btn-secondary-bg: #e2e8f0;
     --cc-btn-secondary-text: #475569;
-    --cc-font-family: inherit;
   }
   
   .dark {
     --cc-bg: #0f172a;
     --cc-text: #cbd5e1;
     --cc-btn-primary-bg: #10B981;
-    --cc-btn-primary-text: #ffffff;
     --cc-btn-secondary-bg: #334155;
     --cc-btn-secondary-text: #cbd5e1;
-    --cc-toggle-bg-on: #10B981;
-    --cc-footer-bg: #0f172a;
   }
 </style>
 
 <script>
   import * as CookieConsent from 'vanilla-cookieconsent';
 
-  const config = {
-    // FIX: 'root' entfernt. Standardverhalten (Body) ist stabiler.
-    // root: '#cc-container', 
-
-    gui_options: {
-      consent_modal: {
-        layout: 'box',
-        position: 'bottom right',
-        equal_weight_buttons: true,
-        flip_buttons: false
-      },
-      preferences_modal: {
-        layout: 'box',
-        position: 'right',
-        equal_weight_buttons: true,
-        flip_buttons: false
-      }
-    },
+  const getConfig = (lang) => ({
+    auto_detect: false,
     categories: {
-      necessary: {
-        readOnly: true,
-        enabled: true
-      },
-      analytics: {
-        enabled: false,
-        autoClear: {
-          cookies: [
-            { name: /^_ga/ },
-            { name: '_gid' }
-          ]
-        }
-      }
+      necessary: { readOnly: true, enabled: true },
+      analytics: { enabled: false }
     },
     language: {
       default: 'de',
-      auto_detect: false,
       translations: {
         de: {
           consent_modal: {
             title: 'Wir verwenden Cookies',
-            description: 'Wir nutzen Cookies, um das Nutzererlebnis zu verbessern.',
+            description: 'Cookies helfen uns bei der Bereitstellung unserer Dienste.',
             primary_btn: { text: 'Alle akzeptieren', role: 'accept_all' },
             secondary_btn: { text: 'Einstellungen', role: 'settings' }
           },
@@ -80,15 +48,15 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
             save_btn: 'Speichern',
             close_btn_label: 'Schließen',
             sections: [
-              { title: 'Notwendige Cookies', description: 'Technisch essenziell.', linked_category: 'necessary' },
-              { title: 'Analyse Cookies', description: 'Statistiken.', linked_category: 'analytics' }
+              { title: 'Notwendig', description: 'Technisch erforderlich.', linked_category: 'necessary' },
+              { title: 'Analytics', description: 'Besucher-Statistiken.', linked_category: 'analytics' }
             ]
           }
         },
         en: {
           consent_modal: {
             title: 'We use cookies',
-            description: 'We use cookies to enhance your user experience.',
+            description: 'Cookies help us provide our services.',
             primary_btn: { text: 'Accept all', role: 'accept_all' },
             secondary_btn: { text: 'Settings', role: 'settings' }
           },
@@ -106,9 +74,38 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
         }
       }
     }
+  });
+
+  const init = () => {
+    // 1. Gewalt-Reset: Wir löschen ALLES, was die Library jemals erzeugt hat
+    const existingModal = document.getElementById('cc-main');
+    if (existingModal) {
+      existingModal.remove();
+    }
+    document.documentElement.classList.remove('cc--active');
+
+    // 2. Timeout nutzen, um dem DOM Zeit zum Atmen zu geben
+    setTimeout(async () => {
+      try {
+        const htmlLang = document.documentElement.lang?.split('-')[0] || 'de';
+        const currentLang = ['de', 'en'].includes(htmlLang) ? htmlLang : 'de';
+
+        // 3. Library komplett frisch starten
+        await CookieConsent.run({
+          ...getConfig(currentLang),
+          language: {
+            current: currentLang
+          }
+        });
+      } catch (err) {
+        // Falls es immer noch knallt, loggen wir es leise
+        console.warn("CookieConsent silent fail:", err);
+      }
+    }, 50); // Ein kleiner Delay wirkt oft Wunder
   };
 
-  const handlePreferencesClick = (e) => {
+  // Click-Handler für den Footer-Link (bleibt gleich)
+  const handlePrefs = (e) => {
     const trigger = e.target.closest('[data-cc="show-preferencesModal"]');
     if (trigger) {
       e.preventDefault();
@@ -116,58 +113,20 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
     }
   };
 
-  const handleLanguageSwitch = (event) => {
-    const link = event.target.closest("[data-lang]");
+  const handleLang = (e) => {
+    const link = e.target.closest("[data-lang]");
     if (!link) return;
-    event.preventDefault();
+    e.preventDefault();
     const lang = link.dataset.lang;
-    if (lang !== "de" && lang !== "en") return;
-    const isProd = location.protocol === "https:";
-    document.cookie = `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${isProd ? "; Secure" : ""}`;
-    const query = window.location.search || "";
-    const hash = window.location.hash || "";
-    window.location.href = `/${lang}/${query}${hash}`;
+    document.cookie = `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
+    window.location.href = `/${lang}/${window.location.search}${window.location.hash}`;
   };
 
-  const init = async () => {
-    // Sprache ermitteln
-    const htmlLang = document.documentElement.lang?.split('-')[0];
-    const supportedLangs = ['de', 'en'];
-    const currentLang = supportedLangs.includes(htmlLang) ? htmlLang : 'de';
-
-    try {
-      // Clean Up: Falls durch Navigation noch Reste da sind
-      if(document.body.classList.contains('c_darkmode')) {
-          // Manchmal bleibt die Klasse hängen
-      }
-      
-      // CookieConsent starten
-      await CookieConsent.run({
-        ...config,
-        language: {
-          ...config.language,
-          current: currentLang
-        }
-      });
-      
-    } catch (e) {
-      console.error("CookieConsent Init Error:", e);
-    }
-
-    // Listener (neu) binden
-    document.removeEventListener('click', handlePreferencesClick);
-    document.addEventListener('click', handlePreferencesClick);
-    document.removeEventListener('click', handleLanguageSwitch);
-    document.addEventListener('click', handleLanguageSwitch);
-  };
+  // Event Listener binden
+  document.addEventListener('click', handlePrefs);
+  document.addEventListener('click', handleLang);
 
   // Astro Lifecycle
   document.addEventListener('astro:page-load', init);
-  
-  // Safety Fallback: Falls astro:page-load nicht feuert oder wir beim ersten Load sind
-  if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-  } else {
-      init();
-  }
+  if (document.readyState !== 'loading') init();
 </script>
