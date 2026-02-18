@@ -1,80 +1,12 @@
 ---
 // src/components/common/CookieConsent.astro
 ---
-
 <script type="module" is:inline>
-import CookieConsent from 'vanilla-cookie';
-import { config } from '~/libs/cookieconsent-config.js';
+import { initCookieBanner, handlePreferencesModal, handleLangSwitcher } from '~/lib/cookie.js';
 
-(() => {
-  // -----------------------------
-  // 1️⃣ Cookie Banner Initialisierung
-  // -----------------------------
-  const initCookieBanner = () => {
-    if (!CookieConsent) {
-      console.warn("CookieConsent noch nicht verfügbar, retry in 100ms");
-      setTimeout(initCookieBanner, 100);
-      return;
-    }
-
-    const currentLang = document.documentElement.lang?.split('-')[0] || 'de';
-
-    // Reset für Astro View Transitions
-    CookieConsent.reset();
-
-    CookieConsent.run({
-      ...config,
-      language: {
-        ...config.language,
-        current: currentLang
-      }
-    });
-  };
-
-  document.addEventListener('astro:page-load', initCookieBanner);
-
-  // -----------------------------
-  // 2️⃣ Preferences Modal Handler
-  // -----------------------------
-  const handlePreferencesClick = (e) => {
-    const trigger = e.target.closest('[data-cc="show-preferencesModal"]');
-    if (!trigger) return;
-
-    e.preventDefault();
-    CookieConsent?.showPreferences();
-  };
-
-  if (!window.__cookieClickListener__) {
-    document.addEventListener('click', handlePreferencesClick);
-    window.__cookieClickListener__ = true;
-  }
-
-  // -----------------------------
-  // 3️⃣ Language Switcher
-  // -----------------------------
-  const handleLangSwitch = (e) => {
-    const link = e.target.closest('[data-lang]');
-    if (!link) return;
-
-    e.preventDefault();
-    const lang = link.dataset.lang;
-    if (!['de', 'en'].includes(lang)) return;
-
-    const isProd = location.protocol === "https:";
-
-    document.cookie =
-      `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${isProd ? '; Secure' : ''}`;
-
-    const query = window.location.search || "";
-    const hash = window.location.hash || "";
-
-    window.location.href = `/${lang}/${query}${hash}`;
-  };
-
-  if (!window.__langSwitchListener__) {
-    document.addEventListener('click', handleLangSwitch);
-    window.__langSwitchListener__ = true;
-  }
-
-})();
+document.addEventListener('astro:page-load', () => {
+  initCookieBanner();
+  handlePreferencesModal();
+  handleLangSwitcher();
+});
 </script>
