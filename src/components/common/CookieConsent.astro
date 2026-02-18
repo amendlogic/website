@@ -3,64 +3,55 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
 import '~/assets/styles/cookie-custom.css';
 ---
 
+<link rel="stylesheet" href="/libs/cookie-custom.css" />
+
 <script>
   import * as CookieConsent from 'vanilla-cookieconsent';
-  import { config } from '../../lib/cookieconsent-config';
+  // Importiere Config UND die Sprachen
+  import { config, SUPPORTED_LANGUAGES } from '../../lib/cookieconsent-config';
 
-  // Debugging-Helper: Nur im Dev-Modus verfügbar machen
-  if (import.meta.env.DEV) {
-    window.CookieConsent = CookieConsent;
-  }
+  // Dev-Mode Helper
+  if (import.meta.env.DEV) window.CookieConsent = CookieConsent;
 
-  // --- LOGIK: SPRACHWECHSEL ---
+  // --- LOGIK ---
+
   const handleLanguageSwitch = (target) => {
-    const lang = target.dataset.lang;
-    const allowedLangs = ["de", "en"]; 
+    const newLang = target.dataset.lang;
+    
+    // 1. Sicherheitscheck mit zentraler Liste
+    if (!SUPPORTED_LANGUAGES.includes(newLang)) return;
 
-    if (!allowedLangs.includes(lang)) return;
-
-    // Cookie setzen (Lax ist besser für UX als Strict, damit die Sprache beim Link von extern stimmt)
+    // 2. Cookie setzen
     const isProd = location.protocol === "https:";
-    document.cookie = `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${isProd ? "; Secure" : ""}`;
+    document.cookie = `preferred_language=${newLang}; path=/; max-age=31536000; SameSite=Lax${isProd ? "; Secure" : ""}`;
 
-    // URL Manipulation (Sicherste Methode)
+    // 3. URL Umbau (Die optimierte Kurzform)
     const url = new URL(window.location.href);
     const segments = url.pathname.split('/').filter(Boolean);
+    
+    // Prüfen, ob das erste Segment eine bekannte Sprache ist
+    const firstSegmentIsLang = SUPPORTED_LANGUAGES.includes(segments[0]);
+    
+    // Neue Segmente bauen: Entweder Sprache ersetzen oder vorne anfügen
+    const newSegments = firstSegmentIsLang 
+        ? [newLang, ...segments.slice(1)] 
+        : [newLang, ...segments];
 
-    // Sprache im Pfad ersetzen oder hinzufügen
-    if (allowedLangs.includes(segments[0])) {
-      segments[0] = lang;
-    } else {
-      segments.unshift(lang);
-    }
-
-    url.pathname = '/' + segments.join('/');
+    url.pathname = '/' + newSegments.join('/');
     window.location.href = url.toString();
   };
 
-  // --- LOGIK: COOKIE SETTINGS ---
-  const handleCookieSettings = (e) => {
-    e.preventDefault(); // Springen verhindern
-    
-    // Checken ob GUI bereit ist
-    if (CookieConsent && document.getElementById('cc-main')) {
-        CookieConsent.showPreferences();
-    } else {
-        console.warn("CookieConsent GUI noch nicht geladen.");
-    }
-  };
-
-  // --- GLOBALER CLICK DELEGATOR ---
-  // Dieser eine Handler kümmert sich um ALLES.
-  const globalClickHandler = (e) => {
-    // 1. Check: Ist es der Cookie-Button?
-    const cookieTrigger = e.target.closest('[data-cc="show-preferencesModal"]');
-    if (cookieTrigger) {
-        handleCookieSettings(e);
-        return; // Fertig, nicht weiter prüfen
+  const handleGlobalClick = (e) => {
+    // A. Cookie Einstellungen öffnen
+    // closest() ist wichtig, falls der User auf ein Icon im Button klickt
+    if (e.target.closest('[data-cc="show-preferencesModal"]')) {
+        e.preventDefault();
+        // Die kurze, sichere Variante:
+        CookieConsent?.showPreferences(); 
+        return;
     }
 
-    // 2. Check: Ist es der Sprach-Umschalter?
+    // B. Sprachwechsel
     const langTrigger = e.target.closest('[data-lang]');
     if (langTrigger) {
         e.preventDefault();
@@ -69,39 +60,33 @@ import '~/assets/styles/cookie-custom.css';
     }
   };
 
-// --- INIT FUNKTION (Astro Page Load) ---
-  const initCookieBanner = () => {
+  const initBanner = () => {
     try {
-      const currentLang = document.documentElement.lang?.split('-')[0] || 'en';
+        const currentLang = document.documentElement.lang?.split('-')[0] || 'de';
 
-      // ✅ DIE LÖSUNG: reset(false)
-      // false bedeutet: Internen Status zurücksetzen (damit das HTML neu gebaut wird),
-      // aber den COOKIE (die Entscheidung des Users) NICHT löschen.
-      CookieConsent.reset(false);
+        // WICHTIG: reset(false) löst dein Problem!
+        // true = Löscht alles (auch User-Entscheidung) -> Banner kommt immer wieder (BÖSE)
+        // false = Löscht nur internen UI-State -> Banner kommt nicht, wenn Cookie da ist (GUT)
+        CookieConsent.reset(false);
 
-      CookieConsent.run({
-        ...config,
-        language: {
-          ...config.language,
-          current: currentLang
-        }
-      });
+        CookieConsent.run({
+            ...config,
+            language: { ...config.language, current: currentLang }
+        });
+        
     } catch (err) {
-      console.error("CookieConsent Init Fehler:", err);
+        console.error("CookieConsent Init Error:", err);
     }
   };
 
-  // --- EVENT LISTENER REGISTRIERUNG (HMR Safe) ---
+  // --- EVENT LISTENER (Singleton Pattern) ---
   
-  // Wir nutzen window, damit der Status auch bei Modul-Reloads (Dev) erhalten bleibt
-  if (!window._globalClickAttached) {
-    document.addEventListener('click', globalClickHandler);
-    window._globalClickAttached = true; // Flag setzen
-    
-    // Optional: Log nur im Dev-Mode
-    if (import.meta.env.DEV) console.log('Global Click Listener attached.');
+  // Verhindert doppelte Listener im Dev-Modus (HMR)
+  if (!window._ccListenerAttached) {
+      document.addEventListener('click', handleGlobalClick);
+      window._ccListenerAttached = true;
   }
 
-  // Astro Navigation Event
-  document.addEventListener('astro:page-load', initCookieBanner);
+  // Astro Navigation Support
+  document.addEventListener('astro:page-load', initBanner);
 </script>
