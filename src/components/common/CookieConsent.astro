@@ -2,7 +2,7 @@
 // src/components/common/CookieConsent.astro
 ---
 <script type="module" is:inline>
-import { initCookieBanner, handlePreferencesModal, handleLangSwitcher } from '~/lib/cookie.js';
+import { initCookieBanner, handlePreferencesModal, handleLangSwitcher } from '~/libs/cookie.js';
 
 document.addEventListener('astro:page-load', () => {
   initCookieBanner();
