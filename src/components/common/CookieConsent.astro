@@ -69,11 +69,15 @@ import '~/assets/styles/cookie-custom.css';
     }
   };
 
-  // --- INIT FUNKTION (Astro Page Load) ---
+// --- INIT FUNKTION (Astro Page Load) ---
   const initCookieBanner = () => {
     try {
-      // Sprache ermitteln
-      const currentLang = document.documentElement.lang?.split('-')[0] || 'de';
+      const currentLang = document.documentElement.lang?.split('-')[0] || 'en';
+
+      // ✅ DIE LÖSUNG: reset(false)
+      // false bedeutet: Internen Status zurücksetzen (damit das HTML neu gebaut wird),
+      // aber den COOKIE (die Entscheidung des Users) NICHT löschen.
+      CookieConsent.reset(false);
 
       CookieConsent.run({
         ...config,
