@@ -25,108 +25,100 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css';
 <script>
   import * as CookieConsent from 'vanilla-cookieconsent';
 
-  const getConfig = (lang) => ({
-    auto_detect: false,
-    categories: {
-      necessary: { readOnly: true, enabled: true },
-      analytics: { enabled: false }
-    },
-    language: {
-      default: 'de',
-      translations: {
-        de: {
-          consent_modal: {
-            title: 'Wir verwenden Cookies',
-            description: 'Cookies helfen uns bei der Bereitstellung unserer Dienste.',
-            primary_btn: { text: 'Alle akzeptieren', role: 'accept_all' },
-            secondary_btn: { text: 'Einstellungen', role: 'settings' }
-          },
-          preferences_modal: {
-            title: 'Cookie Einstellungen',
-            accept_all_btn: 'Alle akzeptieren',
-            reject_all_btn: 'Alle ablehnen',
-            save_btn: 'Speichern',
-            close_btn_label: 'Schließen',
-            sections: [
-              { title: 'Notwendig', description: 'Technisch erforderlich.', linked_category: 'necessary' },
-              { title: 'Analytics', description: 'Besucher-Statistiken.', linked_category: 'analytics' }
-            ]
-          }
-        },
-        en: {
-          consent_modal: {
-            title: 'We use cookies',
-            description: 'Cookies help us provide our services.',
-            primary_btn: { text: 'Accept all', role: 'accept_all' },
-            secondary_btn: { text: 'Settings', role: 'settings' }
-          },
-          preferences_modal: {
-            title: 'Cookie Settings',
-            accept_all_btn: 'Accept all',
-            reject_all_btn: 'Reject all',
-            save_btn: 'Save',
-            close_btn_label: 'Close',
-            sections: [
-              { title: 'Necessary', description: 'Technically essential.', linked_category: 'necessary' },
-              { title: 'Analytics', description: 'Visitor statistics.', linked_category: 'analytics' }
-            ]
-          }
-        }
-      }
-    }
-  });
-
   const init = () => {
-    // 1. Gewalt-Reset: Wir löschen ALLES, was die Library jemals erzeugt hat
+    // 1. Gründlicher Reset für Astro View Transitions
     const existingModal = document.getElementById('cc-main');
-    if (existingModal) {
-      existingModal.remove();
-    }
+    if (existingModal) existingModal.remove();
     document.documentElement.classList.remove('cc--active');
 
-    // 2. Timeout nutzen, um dem DOM Zeit zum Atmen zu geben
+    // 2. Timeout für stabiles DOM
     setTimeout(async () => {
       try {
         const htmlLang = document.documentElement.lang?.split('-')[0] || 'de';
-        const currentLang = ['de', 'en'].includes(htmlLang) ? htmlLang : 'de';
+        const activeLang = ['de', 'en'].includes(htmlLang) ? htmlLang : 'de';
 
-        // 3. Library komplett frisch starten
         await CookieConsent.run({
-          ...getConfig(currentLang),
+          auto_detect: false,
+          // ⚡ WICHTIG: Die Sprache wird hier direkt definiert
           language: {
-            current: currentLang
+            default: 'de',
+            current: activeLang,
+            translations: {
+              de: {
+                consent_modal: {
+                  title: 'Wir verwenden Cookies',
+                  description: 'Cookies helfen uns bei der Bereitstellung unserer Dienste.',
+                  primary_btn: { text: 'Alle akzeptieren', role: 'accept_all' },
+                  secondary_btn: { text: 'Einstellungen', role: 'settings' }
+                },
+                preferences_modal: {
+                  title: 'Cookie Einstellungen',
+                  accept_all_btn: 'Alle akzeptieren',
+                  reject_all_btn: 'Alle ablehnen',
+                  save_btn: 'Speichern',
+                  close_btn_label: 'Schließen',
+                  sections: [
+                    { title: 'Notwendig', description: 'Technisch erforderlich.', linked_category: 'necessary' },
+                    { title: 'Analytics', description: 'Besucher-Statistiken.', linked_category: 'analytics' }
+                  ]
+                }
+              },
+              en: {
+                consent_modal: {
+                  title: 'We use cookies',
+                  description: 'Cookies help us provide our services.',
+                  primary_btn: { text: 'Accept all', role: 'accept_all' },
+                  secondary_btn: { text: 'Settings', role: 'settings' }
+                },
+                preferences_modal: {
+                  title: 'Cookie Settings',
+                  accept_all_btn: 'Accept all',
+                  reject_all_btn: 'Reject all',
+                  save_btn: 'Save',
+                  close_btn_label: 'Close',
+                  sections: [
+                    { title: 'Necessary', description: 'Technically essential.', linked_category: 'necessary' },
+                    { title: 'Analytics', description: 'Visitor statistics.', linked_category: 'analytics' }
+                  ]
+                }
+              }
+            }
+          },
+          categories: {
+            necessary: { readOnly: true, enabled: true },
+            analytics: { enabled: false }
+          },
+          gui_options: {
+            consent_modal: { layout: 'box', position: 'bottom right' },
+            preferences_modal: { layout: 'box', position: 'right' }
           }
         });
       } catch (err) {
-        // Falls es immer noch knallt, loggen wir es leise
-        console.warn("CookieConsent silent fail:", err);
+        console.warn("CookieConsent Error:", err);
       }
-    }, 50); // Ein kleiner Delay wirkt oft Wunder
+    }, 100); // 100ms ist sicherer für Netlify/Build-Umgebungen
   };
 
-  // Click-Handler für den Footer-Link (bleibt gleich)
-  const handlePrefs = (e) => {
-    const trigger = e.target.closest('[data-cc="show-preferencesModal"]');
-    if (trigger) {
+  // Click Handlers (Delegation)
+  document.addEventListener('click', (e) => {
+    const target = e.target;
+    
+    // Preferences Modal
+    if (target.closest('[data-cc="show-preferencesModal"]')) {
       e.preventDefault();
       CookieConsent.showPreferences();
     }
-  };
 
-  const handleLang = (e) => {
-    const link = e.target.closest("[data-lang]");
-    if (!link) return;
-    e.preventDefault();
-    const lang = link.dataset.lang;
-    document.cookie = `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
-    window.location.href = `/${lang}/${window.location.search}${window.location.hash}`;
-  };
+    // Language Switcher
+    const langLink = target.closest("[data-lang]");
+    if (langLink) {
+      e.preventDefault();
+      const lang = langLink.dataset.lang;
+      document.cookie = `preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
+      window.location.href = `/${lang}/${window.location.search}${window.location.hash}`;
+    }
+  });
 
-  // Event Listener binden
-  document.addEventListener('click', handlePrefs);
-  document.addEventListener('click', handleLang);
-
-  // Astro Lifecycle
   document.addEventListener('astro:page-load', init);
   if (document.readyState !== 'loading') init();
 </script>
