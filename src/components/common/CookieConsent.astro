@@ -75,9 +75,6 @@ import '~/assets/styles/cookie-custom.css';
       // Sprache ermitteln
       const currentLang = document.documentElement.lang?.split('-')[0] || 'de';
 
-      // Reset für View Transitions (UI State cleanen)
-      CookieConsent.reset(true);
-
       CookieConsent.run({
         ...config,
         language: {
