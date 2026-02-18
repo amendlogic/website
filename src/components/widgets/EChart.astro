@@ -3,7 +3,6 @@ import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Headline from '~/components/ui/Headline.astro';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { existsSync } from 'node:fs';
 
 const currentLocale = Astro.currentLocale || 'de';
 
@@ -13,6 +12,7 @@ const {
   tagline,
   content = await Astro.slots.render('content'),
   options: userOptions = {},
+  initialCapital = 300,
   csvPath,
   height = '450px',
   id,
@@ -22,94 +22,113 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-const INITIAL_CAPITAL = 300;
-
 // IDs
 const uid = Math.random().toString(36).slice(2, 9);
 const wrapperId = id ?? `widget-${uid}`;
 const chartId = `chart-${uid}`;
 const dataId = `data-${uid}`;
 
-let baseOptions = {};
+// --- SERVER SIDE PROCESSING ---
+const round2 = (n) => Math.round(n * 100) / 100;
 
-// --- SERVER SIDE PARSING ---
-if (csvPath) {
+async function parseCsvData(filePath, initialCap) {
+  if (!filePath) return null;
+
   try {
-    const absolutePath = path.resolve(csvPath);
-    
-    if (existsSync(absolutePath)) {
-      const fileContent = await fs.readFile(absolutePath, 'utf-8');
-      const lines = fileContent.trim().split(/\r?\n/);
+    const absolutePath = path.resolve(filePath);
+    const fileContent = await fs.readFile(absolutePath, 'utf-8');
+    const lines = fileContent.trim().split(/\r?\n/);
 
-      if (lines.length > 1) {
-        const headers = lines[0].split(',').map(h => h.trim());
-        const idx = {
-          date: headers.indexOf('Date/Time'),
-          profit: headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%')),
-          dd: headers.findIndex(h => h.includes('Drawdown') && h.includes('%')),
-          price: headers.indexOf('Price'),
-          contracts: headers.indexOf('Contracts')
-        };
+    if (lines.length <= 1) return null;
 
-        if (idx.date !== -1 && idx.profit !== -1) {
-            const equity = [];
-            const drawdown = [];
-            const bnh = [];
-            let firstPrice = null;
-            let initialContracts = 1;
-            const csvSplitRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+    const headers = lines[0].split(',').map(h => h.trim());
+    const idx = {
+      date: headers.indexOf('Date/Time'),
+      profit: headers.findIndex(h => h.includes('Cum. Profit') && !h.includes('%')),
+      dd: headers.findIndex(h => h.includes('Drawdown') && h.includes('%')),
+      price: headers.indexOf('Price'),
+      contracts: headers.indexOf('Contracts')
+    };
 
-            for (let i = 1; i < lines.length; i++) {
-                const rawRow = lines[i];
-                if (!rawRow) continue;
-                // CSV Split logic
-                const row = rawRow.split(csvSplitRegex).map(v => v.replace(/"/g, '').trim());
+    if (idx.date < 0 || idx.profit < 0) {
+      console.warn(`[Chart Widget] CSV "${filePath}" unvollständig.`);
+      return null;
+    }
 
-                const d = new Date(row[idx.date]);
-                if (isNaN(d.getTime())) continue;
-                const isoDate = d.toISOString();
+    const equity = [];
+    const drawdown = [];
+    const bnh = [];
 
-                const profit = parseFloat(row[idx.profit]);
-                const price = idx.price !== -1 ? parseFloat(row[idx.price]) : NaN;
-                const dd = idx.dd !== -1 ? parseFloat(row[idx.dd]) : NaN;
+    let firstPrice = null;
+    let initialContracts = 1;
+    const csvSplitRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
 
-                if (!isNaN(profit)) equity.push([isoDate, +(INITIAL_CAPITAL + profit).toFixed(2)]);
-                if (!isNaN(dd)) drawdown.push([isoDate, -Math.abs(dd)]);
+    // 🚀 High-Speed Parsing Loop
+    for (let i = 1; i < lines.length; i++) {
+      const rawRow = lines[i];
+      if (!rawRow) continue;
 
-                if (!isNaN(price)) {
-                    if (firstPrice === null) {
-                        firstPrice = price;
-                        const c = idx.contracts !== -1 ? parseFloat(row[idx.contracts]) : NaN;
-                        if (!isNaN(c)) initialContracts = c;
-                        bnh.push([isoDate, INITIAL_CAPITAL]);
-                    } else {
-                        const bnhProfit = (price - firstPrice) * initialContracts;
-                        bnh.push([isoDate, +(INITIAL_CAPITAL + bnhProfit).toFixed(2)]);
-                    }
-                }
-            }
+      const row = rawRow.split(csvSplitRegex);
+      for (let j = 0; j < row.length; j++) {
+        row[j] = row[j].replace(/"/g, '').trim();
+      }
+      
+      const timestamp = +new Date(row[idx.date]);
+      if (isNaN(timestamp)) continue;
 
-            baseOptions = {
-                grid: { left: 0, right: 0, bottom: 0, containLabel: true },
-                legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], top: 0 },
-                tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
-                xAxis: { type: 'time', boundaryGap: false },
-                yAxis: [
-                    { type: 'value', scale: true, splitLine: { show: true } },
-                    { type: 'value', max: 0, splitLine: { show: false } }
-                ],
-                series: [
-                    { name: 'Portfolio Value', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: equity },
-                    { name: 'Buy & Hold', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, lineStyle: { type: 'dashed' }, itemStyle: { color: '#94a3b8' }, data: bnh },
-                    { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.5 }, data: drawdown }
-                ]
-            };
+      const profit = parseFloat(row[idx.profit]);
+      const price = idx.price !== -1 ? parseFloat(row[idx.price]) : NaN;
+      const dd = idx.dd !== -1 ? parseFloat(row[idx.dd]) : NaN;
+
+      if (!isNaN(profit)) equity.push([timestamp, round2(initialCap + profit)]);
+      if (!isNaN(dd)) drawdown.push([timestamp, -Math.abs(dd)]);
+
+      if (!isNaN(price)) {
+        if (firstPrice === null) {
+          firstPrice = price;
+          const c = idx.contracts !== -1 ? parseFloat(row[idx.contracts]) : NaN;
+          if (!isNaN(c)) initialContracts = c;
+          bnh.push([timestamp, initialCap]);
+        } else {
+          const bnhProfit = (price - firstPrice) * initialContracts;
+          bnh.push([timestamp, round2(initialCap + bnhProfit)]);
         }
       }
     }
+    
+    return { equity, drawdown, bnh };
+
   } catch (e) {
-    console.error('[EChart CSV Error]:', e.message);
+    if (e.code !== 'ENOENT') console.error(`[Chart CSV Error]: ${e.message}`);
+    return null;
   }
+}
+
+// Init & Load
+let baseOptions = null;
+const parsedData = await parseCsvData(csvPath, Number(initialCapital));
+
+if (parsedData && parsedData.equity.length > 0) {
+  baseOptions = {
+    // ⚡ High-End Performance Settings
+    animation: false, 
+    progressive: 5000, 
+    progressiveThreshold: 10000,
+    hoverLayerThreshold: 3000, // 🚀 Separater Layer für Tooltip bei vielen Daten
+    grid: { left: 0, right: 0, bottom: 0, containLabel: true },
+    legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], top: 0 },
+    tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
+    xAxis: { type: 'time', boundaryGap: false },
+    yAxis: [
+      { type: 'value', scale: true, splitLine: { show: true } },
+      { type: 'value', max: 0, splitLine: { show: false } }
+    ],
+    series: [
+      { name: 'Portfolio Value', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: parsedData.equity },
+      { name: 'Buy & Hold', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, lineStyle: { type: 'dashed' }, itemStyle: { color: '#94a3b8' }, data: parsedData.bnh },
+      { name: 'Drawdown %', type: 'bar', yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.6 }, data: parsedData.drawdown }
+    ]
+  };
 }
 ---
 
@@ -118,24 +137,73 @@ if (csvPath) {
   {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
 
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
-    <div 
-      id={chartId} 
-      data-json-id={dataId}
-      class="echart-container w-full overflow-hidden" 
-      style={`height:${height};`}
-    ></div>
+    {baseOptions ? (
+      <div 
+        id={chartId} 
+        data-json-id={dataId}
+        class="w-full overflow-hidden" 
+        style={`height:${height};`}
+      ></div>
+    ) : (
+      <div class="flex items-center justify-center h-64 text-slate-400 bg-slate-50 dark:bg-slate-800/50 rounded border border-dashed border-slate-300 dark:border-slate-700">
+        <span class="text-sm">Keine Daten verfügbar.</span>
+      </div>
+    )}
   </div>
 </WidgetWrapper>
 
-<script type="application/json" id={dataId} set:html={JSON.stringify({ baseOptions, userOptions, locale })} />
+{baseOptions && (
+  <script type="application/json" id={dataId} set:html={JSON.stringify({ baseOptions, userOptions, locale })} />
+)}
 
 <script is:inline>
 (() => {
-  const chartMap = new Map();
-  let resizeObserver;
-  let mutationObserver;
+  let echartsPromise = null;
+  const loadEcharts = () => {
+    if (!echartsPromise) {
+      echartsPromise = import(
+        /* @vite-ignore */
+        "https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.esm.min.js"
+      ).then(m => m.default || m);
+    }
+    return echartsPromise;
+  };
 
-  // Theme Logik ausgelagert für Wiederverwendbarkeit
+  const chartStore = new Map(); 
+  let resizeObserver;
+  let intersectionObserver;
+  let mutationObserver;
+  let resizeRaf = null;
+
+  const isObject = (item) => (item && typeof item === 'object' && !Array.isArray(item));
+
+  const deepMerge = (target, source) => {
+    const output = Array.isArray(target) ? [...target] : { ...target };
+    if (Array.isArray(target) && Array.isArray(source)) {
+      source.forEach((item, index) => {
+        if (index < output.length && isObject(output[index]) && isObject(item)) {
+          output[index] = deepMerge(output[index], item);
+        } else {
+          output[index] = item;
+        }
+      });
+      return output;
+    }
+    if (isObject(target) && isObject(source)) {
+      Object.keys(source).forEach(key => {
+        if (isObject(source[key])) {
+          if (!(key in target)) Object.assign(output, { [key]: source[key] });
+          else output[key] = deepMerge(target[key], source[key]);
+        } else if (Array.isArray(source[key]) && Array.isArray(target[key])) {
+           output[key] = deepMerge(target[key], source[key]);
+        } else {
+          Object.assign(output, { [key]: source[key] });
+        }
+      });
+    }
+    return output;
+  };
+
   const getThemeConfig = () => {
     const dark = document.documentElement.classList.contains('dark');
     const text = dark ? '#cbd5e1' : '#475569';
@@ -161,35 +229,42 @@ if (csvPath) {
 
     let config;
     try { config = JSON.parse(script.textContent); } catch { return; }
-    
-    if (!config.baseOptions || !Object.keys(config.baseOptions).length) return;
+    if (!config.baseOptions) return;
 
-    const echarts = await import("https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.esm.min.js")
-      .then(m => m.default || m);
-
-    const chart = echarts.init(el);
+    const echarts = await loadEcharts();
+    const chart = echarts.init(el, null, { renderer: 'canvas' });
     const { baseOptions, userOptions, locale } = config;
 
-    // Formatters einmalig erstellen
     const axisFormat = new Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 });
     const currencyFormat = new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const dateFormat = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' });
 
+    // Merged Options (Base + User)
+    // Wir nutzen deepMerge für die initiale Konfiguration
+    let finalOptions = deepMerge(baseOptions, userOptions || {});
+    
+    // Theme Initial anwenden (Merge)
+    finalOptions = deepMerge(finalOptions, getThemeConfig());
+
     // Formatters injizieren
-    if (baseOptions.yAxis && baseOptions.yAxis[0]) {
-        baseOptions.yAxis[0].axisLabel = { formatter: val => axisFormat.format(val) };
+    if (finalOptions.yAxis && finalOptions.yAxis[0]) {
+        finalOptions.yAxis[0].axisLabel = { 
+            ...finalOptions.yAxis[0].axisLabel, 
+            formatter: val => axisFormat.format(val) 
+        };
     }
 
-    if (baseOptions.tooltip) {
-        baseOptions.tooltip.formatter = (params) => {
+    if (finalOptions.tooltip) {
+        finalOptions.tooltip.formatter = (params) => {
             const items = Array.isArray(params) ? params : [params];
             if (!items.length) return '';
-            const dateVal = items[0].value[0];
-            let html = `<div class="font-bold mb-1">${dateFormat.format(new Date(dateVal))}</div>`;
+            let html = `<div class="font-bold mb-1">${dateFormat.format(new Date(items[0].value[0]))}</div>`;
+            
             items.forEach(p => {
-                const val = p.seriesName.includes('Drawdown')
+                const val = p.seriesName === 'Drawdown %'
                   ? Math.abs(p.value[1]).toFixed(2) + '%'
                   : currencyFormat.format(p.value[1]);
+                  
                 html += `<div class="flex justify-between gap-4">
                            <span>${p.marker} ${p.seriesName}</span>
                            <span class="font-mono font-bold">${val}</span>
@@ -199,57 +274,71 @@ if (csvPath) {
         };
     }
 
-    // Optionen setzen (ECharts merged automatisch shallow)
-    chart.setOption(baseOptions);
-    if (userOptions) chart.setOption(userOptions);
-    
-    // Theme anwenden
-    chart.setOption(getThemeConfig());
-
-    chartMap.set(el, chart);
+    chart.setOption(finalOptions);
+    chartStore.set(el, { chart });
     el.setAttribute('data-loaded', 'true');
   };
 
   const init = () => {
     cleanup();
+    const elements = document.querySelectorAll('[data-json-id]');
 
-    // 1. IntersectionObserver (Lazy Load)
-    const observer = new IntersectionObserver(entries => {
+    intersectionObserver = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           render(e.target);
-          observer.unobserve(e.target);
-          // Wenn geladen, starte Resize Beobachtung
-          if(resizeObserver) resizeObserver.observe(e.target);
+          intersectionObserver.unobserve(e.target);
+          if (resizeObserver) resizeObserver.observe(e.target);
         }
       });
-    }, { rootMargin: '200px' });
+    }, { rootMargin: '100px 0px', threshold: 0.1 });
 
-    // 2. ResizeObserver (Responsiveness)
     resizeObserver = new ResizeObserver(entries => {
-        entries.forEach(e => {
-            const chart = chartMap.get(e.target);
-            if (chart) chart.resize();
+        if (resizeRaf !== null) {
+           cancelAnimationFrame(resizeRaf);
+           resizeRaf = null;
+        }
+        resizeRaf = requestAnimationFrame(() => {
+          entries.forEach(e => {
+              const item = chartStore.get(e.target);
+              if (item?.chart) item.chart.resize();
+          });
         });
     });
 
-    // 3. MutationObserver (Dark Mode Live-Update)
+    // 🚀 Performance-Update beim Theme-Switch
     mutationObserver = new MutationObserver((mutations) => {
         if (mutations.some(m => m.attributeName === 'class')) {
-            const themeOptions = getThemeConfig();
-            chartMap.forEach(chart => chart.setOption(themeOptions));
+            const themeConfig = getThemeConfig();
+            chartStore.forEach(({ chart }) => {
+                // Partial Update: Nur Styling ändern, Daten behalten (Merge: true)
+                chart.setOption(themeConfig);
+            });
         }
     });
     mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-    document.querySelectorAll('.echart-container').forEach(el => observer.observe(el));
+    elements.forEach(el => intersectionObserver.observe(el));
   };
 
   const cleanup = () => {
-    chartMap.forEach(c => c.dispose());
-    chartMap.clear();
+    // 🛡️ Clean Sweep Disposal
+    chartStore.forEach(({ chart }) => {
+       if (!chart.isDisposed()) {
+          chart.dispose();
+       }
+    });
+    chartStore.clear(); // Map leeren nach Loop
+    
+    if (resizeRaf !== null) {
+       cancelAnimationFrame(resizeRaf);
+       resizeRaf = null;
+    }
     if (resizeObserver) resizeObserver.disconnect();
+    if (intersectionObserver) intersectionObserver.disconnect();
     if (mutationObserver) mutationObserver.disconnect();
+    
+    document.querySelectorAll('[data-json-id]').forEach(el => el.removeAttribute('data-loaded'));
   };
 
   document.addEventListener('astro:page-load', init);
