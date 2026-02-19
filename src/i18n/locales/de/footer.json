@@ -16,7 +16,7 @@
       "text": "5. <b>Quellenangabe:</b> Die auf dieser Website verwendeten Charts und Marktdaten werden von <a class=\"underline\" href=\"https://www.tradingview.com/\" target=\"_blank\">TradingView</a> bereitgestellt. TradingView® ist eine eingetragene Marke der TradingView, Inc. Diese Strategie steht in keiner Verbindung zu TradingView und wird weder von TradingView unterstützt noch gesponsert."
     },
     {
-      "text": "Ausführliche Informationen zu Haftung, Risiken und Datenverarbeitung finden Sie in unseren <a href=\"/terms\">Nutzungsbedingungen</a> sowie in der vollständigen <a href=\"/risk-disclosure\">Risikodarstellung</a>."
+      "text": "Ausführliche Informationen zu Haftung, Risiken und Datenverarbeitung finden Sie in unseren <a class=\"underline\" href=\"/terms\">Nutzungsbedingungen</a> sowie in der vollständigen <a class=\"underline\" href=\"/risk-disclosure\">Risikodarstellung</a>."
     }
   ]
 }
