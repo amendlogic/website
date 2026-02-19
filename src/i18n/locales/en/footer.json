@@ -5,6 +5,6 @@
     { "text": "3. <b>Testimonials:</b> Testimonials appearing on this website may not be representative of the experience of other clients or customers and is not a guarantee of future performance or success." },
     { "text": "4. <b>Software Provider:</b> We are a provider of technical analysis tools and automated strategies. We do not have access to your personal trading accounts or funds. We are not a registered financial advisor or broker-dealer." },
     { "text": "5. <b>Attribution:</b> Charts and data used on this website are powered by <a class=\"underline\" href=\"https://www.tradingview.com/\" target=\"_blank\">TradingView</a>. TradingView® is a registered trademark of TradingView, Inc. This strategy is not affiliated with, endorsed by, or sponsored by TradingView." },
-    { "text": "For full details regarding liability, risks, and data usage, please refer to our <a href=\"/terms\">Terms of Service</a> and full <a href=\"/risk-disclosure\">Risk Disclosure</a>." }
+    { "text": "For full details regarding liability, risks, and data usage, please refer to our <a class=\"underline\" href=\"/terms\">Terms of Service</a> and full <a class=\"underline\" href=\"/risk-disclosure\">Risk Disclosure</a>." }
   ]
 }
