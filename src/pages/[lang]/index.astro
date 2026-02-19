@@ -24,6 +24,20 @@ export async function getStaticPaths() {
 const { lang } = Astro.params;
 const t = useTranslations(lang);
 
+const gettingStarted = t('home.faq.gettingStarted.items');
+const security = t('home.faq.security.items');
+const pricing = t('home.faq.pricing.items');
+
+// gezielt einzelne Items zusammenstellen
+// Beispiel: 2. Punkt Security + 3. Punkt Getting Started + 1. Punkt Pricing
+const selectedFAQItems = [
+  started[1],
+  performance[2],
+  security[0],
+  billing[0],
+  support[0]
+];
+
 // 4. Footer zusammenbauen
 const baseFooterData = getFooterData(lang);
 const disclaimerItems = t('footer.footerDisclaimer');
@@ -148,11 +162,11 @@ const metadata = {
 
   <FAQs
     id="faq"
-    title={t('home.faq.title')}
-    subtitle={t('home.faq.subtitle')}
-    tagline={t('home.faq.tagline')}
+    title={t('faq.faq.title')}
+    subtitle={t('faq.faq.subtitle')}
+    tagline={t('faq.faq.tagline')}
     classes={{ container: 'max-w-6xl' }}
-    items={t('home.faq.items')}
+    items={selectedFAQItems}
   />
 
   <CallToAction
