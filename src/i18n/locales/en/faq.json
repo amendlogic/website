@@ -13,6 +13,10 @@
     {
       "title": "How do I access the strategy?",
       "description": "After subscribing, you can run and manage the strategy directly through your account — quick and straightforward."
+    },
+    {
+      "title": "Which platforms are supported?",
+      "description": "Our strategy currently supports **Bidget** — integration is simple and secure."
     }
   ],
 
@@ -34,6 +38,10 @@
     {
       "title": "Can I customize the strategy?",
       "description": "Yes. Key parameters such as risk profile and trading behavior can be adjusted to match your preferences."
+    },
+    {
+      "title": "How do I interpret performance metrics?",
+      "description": "We provide clear dashboards and charts so you can track returns, drawdowns, and risk metrics at a glance."
     }
   ],
 
@@ -43,6 +51,14 @@
     {
       "title": "Is my capital safe?",
       "description": "Yes. The system does not access your wallet or funds. You retain full control over your investments at all times."
+    },
+    {
+      "title": "How secure are API keys?",
+      "description": "Your API keys are never shared or stored outside your own account. The strategy operates securely via read/write permissions only."
+    },
+    {
+      "title": "Can I stop the strategy anytime?",
+      "description": "Yes. You can pause or stop the strategy immediately via your dashboard at any time."
     }
   ],
 
@@ -55,7 +71,15 @@
     },
     {
       "title": "Is there a trial version?",
-      "description": "Yes. You can test the strategy free for 7 days to evaluate its performance. After the trial, you can choose a subscription that fits your trading style."
+      "description": "Yes. You can test the strategy free for 7 days to evaluate its performance before choosing a subscription."
+    },
+    {
+      "title": "Can I cancel anytime?",
+      "description": "Absolutely. You can cancel your subscription at any time without penalties."
+    },
+    {
+      "title": "What payment methods are accepted?",
+      "description": "We accept major credit cards and payment services depending on your region."
     }
   ],
 
@@ -63,8 +87,16 @@
   "legal.subtitle": "Important information about trading risks, limitations, and regulatory considerations.",
   "legal.items": [
     {
-      "title": "Which markets and timeframes are supported?",
-      "description": "Our strategy is optimized for Bitcoin but can be applied to other volatile assets and timeframes above 4 hours."
+      "title": "What risks are involved?",
+      "description": "Trading always carries risk. Our strategy focuses on risk management but cannot eliminate losses."
+    },
+    {
+      "title": "Is this financial advice?",
+      "description": "No. Our platform provides tools and strategies, but you make all trading decisions independently."
+    },
+    {
+      "title": "Who should not use this system?",
+      "description": "This system may not be suitable for those with low risk tolerance or without sufficient understanding of trading."
     }
   ],
 
@@ -74,6 +106,14 @@
     {
       "title": "What kind of support is provided?",
       "description": "Our support team is available 24/7 via chat and email to assist you whenever needed."
+    },
+    {
+      "title": "How can I contact support?",
+      "description": "You can reach us directly through your account dashboard or by emailing support@example.com."
+    },
+    {
+      "title": "What is the response time?",
+      "description": "Most inquiries are answered within a few hours; urgent issues are prioritized immediately."
     }
   ]
 }
