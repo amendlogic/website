@@ -83,7 +83,7 @@ export const getFooterData = (lang = 'en') => {
           { text: t('nav.docs'), href: '#' },
           { text: t('nav.community'), href: '#', icon: 'tabler:external-link' },
           { text: t('nav.github'), href: '#', icon: 'tabler:external-link' },
-          { text: t('nav.help'), href: '#' },
+          { text: t('nav.help'), href: getPermalink('/help-center', 'page', lang) },
         ],
       },
       {
@@ -92,7 +92,7 @@ export const getFooterData = (lang = 'en') => {
           { text: t('nav.about'), href: getPermalink('/about', 'page', lang) },
           { text: t('nav.team'), href: '#' },
           { text: t('nav.blog'), href: getBlogPermalink(lang) },
-          { text: t('nav.contact'), href: '#' },
+          { text: t('nav.contact'), href: getPermalink('/contact', 'page', lang) },
         ],
       },
       {
