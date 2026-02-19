@@ -6,8 +6,19 @@ import HeroText from '~/components/widgets/HeroText.astro';
 import ContactUs from '~/components/widgets/Contact.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 
+// 2. Pfade generieren (SSOT für [lang])
+export async function getStaticPaths() {
+  return getI18nPaths();
+}
+
+// 3. Sprache & Content laden
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+// 4. Metadaten
 const metadata = {
-  title: 'Contact',
+  title: `${t('home.hero.titleStart')} ${t('home.hero.titleAccent')} — AmendLogic`,
+  ignoreTitleTemplate: true,
 };
 ---
 
