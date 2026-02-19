@@ -1,22 +1,45 @@
 {
   "footerDisclaimer": [
     {
-      "text": "1. <b>Risikohinweis:</b> Der Handel mit Finanzinstrumenten ist mit erheblichen Risiken verbunden und kann zum vollständigen Verlust des eingesetzten Kapitals führen. Investieren Sie nur Kapital, dessen Verlust Sie sich leisten können. Die bereitgestellten Inhalte dienen ausschließlich zu Informations- und Bildungszwecken und stellen keine Finanzberatung dar."
+      "parts": [
+        { "type": "text", "value": "1. " },
+        { "type": "text", "value": "Risk Warning: Trading involves significant risk and can result in the loss of your invested capital. You should not invest more than you can afford to lose. The content provided is for educational and informational purposes only and does not constitute financial advice." }
+      ]
     },
     {
-      "text": "2. <b>Hypothetische Performance:</b> Die auf dieser Website dargestellten Ergebnisse basieren auf simulierten oder hypothetischen Performance-Daten, die bestimmten Einschränkungen unterliegen. Im Gegensatz zu realen Handelsergebnissen spiegeln diese Resultate keinen tatsächlichen Handel wider. Da die dargestellten Trades nicht real ausgeführt wurden, können die Ergebnisse die Auswirkungen bestimmter Marktfaktoren – wie beispielsweise Liquiditätsengpässe – unter- oder überbewerten. Es wird keine Zusicherung gegeben, dass ein Konto Gewinne oder Verluste erzielen wird, die den dargestellten Ergebnissen entsprechen oder ähneln."
+      "parts": [
+        { "type": "text", "value": "2. " },
+        { "type": "text", "value": "Hypothetical Performance: The results presented on this website are based on simulated or hypothetical performance results that have certain inherent limitations. Unlike the results shown in an actual performance record, these results do not represent actual trading. Also, because these trades have not actually been executed, these results may have under-or over-compensated for the impact, if any, of certain market factors, such as lack of liquidity. No representation is being made that any account will or is likely to achieve profits or losses similar to those shown." }
+      ]
     },
     {
-      "text": "3. <b>Erfahrungsberichte:</b> Auf dieser Website veröffentlichte Erfahrungsberichte sind möglicherweise nicht repräsentativ für die Erfahrungen anderer Kunden und stellen keine Garantie für zukünftige Ergebnisse oder Erfolge dar."
+      "parts": [
+        { "type": "text", "value": "3. " },
+        { "type": "text", "value": "Testimonials: Testimonials appearing on this website may not be representative of the experience of other clients or customers and is not a guarantee of future performance or success." }
+      ]
     },
     {
-      "text": "4. <b>Software-Anbieter:</b> Wir sind Anbieter von technischen Analysewerkzeugen und automatisierten Handelsstrategien. Wir haben keinen Zugriff auf Ihre persönlichen Handelskonten oder Ihr Kapital. Wir sind weder als Finanzberater noch als Broker oder Wertpapierhändler registriert."
+      "parts": [
+        { "type": "text", "value": "4. " },
+        { "type": "text", "value": "Software Provider: We are a provider of technical analysis tools and automated strategies. We do not have access to your personal trading accounts or funds. We are not a registered financial advisor or broker-dealer." }
+      ]
     },
     {
-      "text": "5. <b>Quellenangabe:</b> Die auf dieser Website verwendeten Charts und Marktdaten werden von <a class=\"underline\" href=\"https://www.tradingview.com/\" target=\"_blank\">TradingView</a> bereitgestellt. TradingView® ist eine eingetragene Marke der TradingView, Inc. Diese Strategie steht in keiner Verbindung zu TradingView und wird weder von TradingView unterstützt noch gesponsert."
+      "parts": [
+        { "type": "text", "value": "5. " },
+        { "type": "text", "value": "Attribution: Charts and data used on this website are powered by " },
+        { "type": "link", "label": "TradingView", "href": "https://www.tradingview.com/" },
+        { "type": "text", "value": ". TradingView® is a registered trademark of TradingView, Inc. This strategy is not affiliated with, endorsed by, or sponsored by TradingView." }
+      ]
     },
     {
-      "text": "Ausführliche Informationen zu Haftung, Risiken und Datenverarbeitung finden Sie in unseren <a class=\"underline\" href=\"/terms\">Nutzungsbedingungen</a> sowie in der vollständigen <a class=\"underline\" href=\"/risk-disclosure\">Risikodarstellung</a>."
+      "parts": [
+        { "type": "text", "value": "For full details regarding liability, risks, and data usage, please refer to our " },
+        { "type": "link", "label": "Terms of Service", "slug": "terms" },
+        { "type": "text", "value": " and full " },
+        { "type": "link", "label": "Risk Disclosure", "slug": "risk-disclosure" },
+        { "type": "text", "value": "." }
+      ]
     }
   ]
 }
