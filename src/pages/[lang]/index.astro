@@ -24,14 +24,14 @@ export async function getStaticPaths() {
 const { lang } = Astro.params;
 const t = useTranslations(lang);
 
-const gettingStarted = t('home.faq.gettingStarted.items');
-const security = t('home.faq.security.items');
-const pricing = t('home.faq.pricing.items');
+const gettingStarted = t('faq.started.items');
+const performance = t('faq.performance.items');
+const security = t('faq.security.items');
+const billing = t('faq.billing.items');
+const billing = t('faq.support.items');
 
-// gezielt einzelne Items zusammenstellen
-// Beispiel: 2. Punkt Security + 3. Punkt Getting Started + 1. Punkt Pricing
 const selectedFAQItems = [
-  started[1],
+  gettingStarted[1],
   performance[2],
   security[0],
   billing[0],
