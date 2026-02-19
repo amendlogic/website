@@ -73,7 +73,7 @@ export const getFooterData = (lang = 'en') => {
           { text: t('nav.benefits'), href: getPermalink('/#benefits', 'page', lang) },
           { text: t('nav.system'), href: getPermalink('/#system', 'page', lang) },
           { text: t('nav.performance'), href: getPermalink('/#performance', 'page', lang) },
-          { text: t('nav.pricing'), href: '#' },
+          { text: t('nav.pricing'), href: getPermalink('/pricing', 'page', lang) },
           { text: t('nav.changelog'), href: '#' },
         ],
       },
