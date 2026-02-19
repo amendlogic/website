@@ -40,9 +40,18 @@ const metadata = {
   <!-- FAQs Widget ******************* -->
 
   <FAQs
+    title={t('home.faq.title')}
+    subtitle={t('home.faq.subtitle')}
+    tagline={t('home.faq.tagline')}
+    columns={1}
+    classes={{ container: 'max-w-6xl' }}
+    items={t('home.faq.items')}
+  />
+
+  <FAQs
     title="Pricing FAQs"
     subtitle="Choosing the right plan is important, and we're here to answer your questions. If you have queries about our pricing options, you're in the right place."
-    columns={1}
+    columns={2}
     items={[
       {
         title: 'Do the plans come with customer support?',
