@@ -62,13 +62,10 @@ export const getHeaderData = (lang = 'en') => {
   };
 };
 
-export const getFooterData = (lang = 'en', disclaimer: FooterDisclaimer = null) => {
+export const getFooterData = (lang = 'en') => {
   const t = useTranslations(lang);
-  const disclaimerMap: Record<Exclude<FooterDisclaimer, null>, string> = {
-    home: t('footer.footerDisclaimer'),
-  };
-  
-  return = {
+
+  return {
     links: [
       {
         title: t('nav.product'), // Wiederverwendet
@@ -119,7 +116,6 @@ export const getFooterData = (lang = 'en', disclaimer: FooterDisclaimer = null) 
         href: getHomePermalink('de'), 
       },
     ],
-    disclaimer: disclaimer ? disclaimerMap[disclaimer] : null,
     socialLinks: [
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
