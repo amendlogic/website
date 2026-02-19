@@ -1,23 +1,33 @@
 {
-  "about.hero.title": "Structure Over Speculation",
+  "hero.title": "Structure Over Speculation.",
+  "hero.subtitle": "A rule-based Bitcoin trading framework built on defined logic, disciplined execution, and structured risk management.",
+  "hero.tagline": "Markets fluctuate. Structure endures.",
 
-  "about.story.title": "From Discretion to Defined Rules",
-  "about.story.content": "In the early stages of trading, decisions often felt influenced by emotion, market noise, and hindsight bias. Over time, one principle became clear: sustainable performance is not built on prediction — it is built on structure, discipline, and repeatable processes. This realization led to the development of a rule-based framework designed to standardize decisions and maintain consistency across different market conditions.",
+  "story.title": "From Discretion to Defined Rules",
+  "story.content": "Early trading decisions are often influenced by emotion, market noise, and hindsight bias. Even experienced participants can fall into reactive behavior when structure is missing. Over time, one principle became clear: sustainable performance is not built on prediction — it is built on process. This realization led to the development of a systematic framework designed to standardize decisions, remove discretion, and maintain consistency across different market environments.",
 
-  "about.definition.title": "A Framework — Not a Black Box",
-  "about.definition.content": "This is not a hype-driven trading bot or an opaque black-box system. It is a structured rule set built on objective market logic. Every signal is generated through predefined criteria, evaluated systematically, and executed according to strict parameters. Transparency and clarity are core principles of its design.",
+  "framework.title": "A Framework — Not a Black Box",
+  "framework.content": "This is not a hype-driven trading bot and not an opaque black-box system. It is a defined rule set built on objective market structure and systematic evaluation. Operating directly within TradingView, the framework evaluates predefined conditions before any execution occurs. Every signal follows structured criteria — from market assessment to risk validation and rule-based exit logic. No impulse. No subjective overrides. No discretionary guesswork.",
 
-  "about.philosophy.title": "Selective Execution, Not Constant Activity",
-  "about.philosophy.content": "Professional trading is not about reacting to every price movement. It is about acting only when conditions align with a defined edge — and then executing without hesitation or emotional interference. The objective is not maximum trade frequency, but controlled, repeatable performance over time.",
+  "philosophy.title": "Selective Execution, Not Constant Activity",
+  "philosophy.content": "Professional trading is not about reacting to every price movement. It is about acting only when conditions align with a defined edge — and then executing without hesitation. The objective is not maximum trade frequency, but controlled and repeatable performance. The system is designed to remain patient during structurally weak phases and act decisively when probability and structure align.",
 
-  "about.methodology.title": "Objective Market Structure & Trend Logic",
-  "about.methodology.content": "The strategy is built around structured market analysis. It evaluates trend behavior and structural shifts directly from price data, avoiding subjective interpretation. Rather than remaining rigid, the framework adapts to changing volatility and evolving market dynamics. Less discretion. More defined logic.",
+  "methodology.title": "Objective Market Structure & Trend Logic",
+  "methodology.content": "The strategy evaluates market structure directly from price behavior — not opinion. It focuses on trend confirmation, structural shifts, volatility-adaptive positioning, and context-aware signal filtering. Rather than remaining rigid, the framework adjusts systematically to evolving volatility and changing market dynamics. The goal is not prediction. The goal is systematic market participation.",
 
-  "about.risk.title": "Risk Management as the Foundation",
-  "about.risk.content": "Capital protection is prioritized over aggressive returns. The system integrates safeguards designed to limit drawdowns, reduce exposure during structurally weak phases, and prevent uncontrolled position sizing. Key parameters can be configured to align with individual risk tolerance while maintaining structural integrity.",
+  "risk.title": "Risk Management as the Foundation",
+  "risk.content": "Capital protection is prioritized over aggressive return targets. The system integrates structured safeguards designed to limit drawdowns, reduce exposure in unstable market phases, and prevent uncontrolled position sizing. Clearly defined risk parameters can be configured to align with individual tolerance while maintaining the structural integrity of the framework. Return is the outcome. Risk control is the foundation.",
 
-  "about.transparency.title": "Founder-Led. Accountability-Driven.",
-  "about.transparency.content": "This is a focused, founder-led firm built around one core principle: long-term trust over short-term marketing. The strategy is continuously refined and monitored with direct accountability. Offering a structured system means standing behind its logic, methodology, and risk framework — transparently and responsibly.",
+  "transparency.title": "Founder-Led. Accountability-Driven.",
+  "transparency.content": "Amend-Trading is a focused, founder-led firm built around one core principle: long-term trust over short-term marketing. The strategy is continuously refined, monitored, and evaluated under direct responsibility. There is no outsourced signal logic, no anonymous development, and no inflated performance promises. Offering a structured system means standing behind its methodology — transparently and responsibly.",
 
-  "about.closing": "Markets will always fluctuate. Discipline should not. Structure your trading. Eliminate emotion."
+  "principles.title": "Core Principles",
+  "principles.items": [
+    "Objectivity over opinion.",
+    "Process over prediction.",
+    "Risk before return.",
+    "Consistency over excitement."
+  ],
+
+  "closing": "Markets will always fluctuate. Discipline should not. Structure your trading. Eliminate emotion. Define your edge."
 }
