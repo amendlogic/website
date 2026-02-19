@@ -101,43 +101,6 @@
     }
   ],
 
-  "faq.tagline": "FAQ",
-  "faq.title": "Gut zu wissen",
-  "faq.subtitle": "Antworten auf die häufigsten Fragen.",
-  "faq.items": [
-    {
-      "title": "Welche Märkte und Zeitrahmen werden unterstützt?",
-      "description": "Optimiert für Bitcoin, aber anwendbar auf andere volatile Assets und Zeitrahmen ab 4 Stunden."
-    },
-    {
-      "title": "Wie geht das System mit Volatilität um?",
-      "description": "Die Strategie passt sich dynamisch an wechselnde Marktbedingungen an und bewahrt auch in turbulenten Phasen Stabilität."
-    },
-    {
-      "title": "Sind alle Trades profitabel?",
-      "description": "Nein. Verluste gehören zu jeder Strategie. Das System fokussiert sich auf das Risikomanagement und einen langfristigen statistischen Edge."
-    },
-    {
-      "title": "Ist das System für Anfänger geeignet?",
-      "description": "Ja. Die automatisierte Bedienung und das intuitive Design machen den Einstieg leicht – keine Vorerfahrung nötig."
-    },
-    {
-      "title": "Wie erhalte ich Zugriff?",
-      "description": "Nach dem Abonnement kannst du die Strategie direkt über deinen Account verwalten – einfach und unkompliziert."
-    },
-    {
-      "title": "Kann ich die Strategie anpassen?",
-      "description": "Ja. Zentrale Parameter wie das Risikoprofil können an deine Präferenzen angepasst werden."
-    },
-    {
-      "title": "Ist mein Kapital sicher?",
-      "description": "Ja. Das System hat keinen Zugriff auf deine Wallet. Du behältst jederzeit die volle Kontrolle über deine Mittel."
-    },
-    { "title": "Was kostet das System?", "description": "Wir bieten verschiedene Abonnements an – transparent, fair und leistungsorientiert." },
-    { "title": "Gibt es eine Testversion?", "description": "Ja. Du kannst die Strategie 7 Tage kostenlos testen, um die Performance in deinem eigenen Umfeld zu prüfen." },
-    { "title": "Welcher Support wird angeboten?", "description": "Unser Team ist rund um die Uhr per Chat und E-Mail für dich da." }
-  ],
-
   "cta.title": "Strukturiere dein Trading, eliminiere Emotionen.",
   "cta.subtitle": "Nutze ein regelbasiertes Framework, das für Beständigkeit in volatilen Märkten entwickelt wurde.",
   "cta.btnText": "System aktivieren"
