@@ -144,4 +144,28 @@ const metadata = {
       },
     ]}
   />
+
+
+  <CallToAction
+    actions={[
+      {
+        variant: 'primary',
+        text: t('home.cta.btnText'),
+        href: 'https://github.com/arthelokyo/astrowind',
+        target: '_blank',
+        icon: 'tabler:download',
+      },
+    ]}
+  >
+    <Fragment slot="title">
+      {t('home.cta.title')}
+    </Fragment>
+    <Fragment slot="subtitle">
+      {t('home.cta.subtitle')}
+    </Fragment>
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </CallToAction>
+
 </Layout>
