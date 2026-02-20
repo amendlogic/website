@@ -63,7 +63,7 @@
     {
       "title": "Market Phase Identification",
       "description": "Distinguishes expansion, consolidation, and transition environments.",
-      "icon": "tabler:chart-candles"
+      "icon": "tabler:chart-candle"
     },
     {
       "title": "Trend Qualification",
