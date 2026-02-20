@@ -1,0 +1,16 @@
+---
+interface Props {
+  id: string;        // Ziel-ID im Footer (z.B. "footnote-1")
+  number: number;    // Angezeigte Zahl
+  class?: string;    // Optional Styling
+}
+
+const { id, number, class: className = '' } = Astro.props;
+---
+
+<a
+  href={`#${id}`}
+  class={`align-super text-xs underline ml-1 ${className}`}
+>
+  <sup>{number}</sup>
+</a>
