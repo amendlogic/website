@@ -52,9 +52,10 @@
     }
   ],
 
-  "philosophy.title": "Selective Execution, Not Constant Activity",
-  "philosophy.highlight": "The goal is not to trade more. The goal is to trade correctly.",
-  "philosophy.content": "Professional trading is not about reacting to every price movement. It is about acting only when conditions align with a defined edge — and then executing without hesitation. The objective is not maximum trade frequency, but controlled and repeatable performance. The system remains inactive during structurally weak phases and becomes active only when probability and structure align.",
+  "philosophy.tagline": "Selective Execution, Not Constant Activity",
+  "philosophy.title.start": "Selective Execution, Not Constant Activity",
+  "philosophy.title.end": "The goal is not to trade more. The goal is to trade correctly.",
+  "philosophy.subtitle": "Professional trading is not about reacting to every price movement. It is about acting only when conditions align with a defined edge — and then executing without hesitation. The objective is not maximum trade frequency, but controlled and repeatable performance. The system remains inactive during structurally weak phases and becomes active only when probability and structure align.",
 
   "methodology.tagline": "Methodology",
   "methodology.title": "Objective Market Structure & Trend Logic",
