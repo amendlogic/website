@@ -36,19 +36,23 @@
   "framework.items": [
     {
       "title": "Signal Logic",
-      "description": "Predefined entry and exit conditions derived from objective market structure."
+      "description": "Predefined entry and exit conditions derived from objective market structure.",
+      "icon": "flat-color-icons:flow-chart"
     },
     {
       "title": "Risk Protocol",
-      "description": "Exposure limits and capital allocation rules applied before execution."
+      "description": "Exposure limits and capital allocation rules applied before execution.",
+      "icon": "flat-color-icons:safe"
     },
     {
       "title": "Execution Discipline",
-      "description": "Automated order placement strictly aligned with validated criteria."
+      "description": "Automated order placement strictly aligned with validated criteria.",
+      "icon": "flat-color-icons:process"
     },
     {
       "title": "Structural Monitoring",
-      "description": "Continuous evaluation of market phases to ensure contextual alignment."
+      "description": "Continuous evaluation of market phases to ensure contextual alignment.",
+      "icon": "flat-color-icons:statistics"
     }
   ],
 
@@ -58,15 +62,18 @@
   "methodology.items": [
     {
       "title": "Market Phase Identification",
-      "description": "Distinguishes expansion, consolidation, and transition environments."
+      "description": "Distinguishes expansion, consolidation, and transition environments.",
+      "icon": "tabler:chart-candles"
     },
     {
       "title": "Trend Qualification",
-      "description": "Deploys capital only when predefined structural conditions confirm directional bias."
+      "description": "Deploys capital only when predefined structural conditions confirm directional bias.",
+      "icon": "tabler:list-check"
     },
     {
       "title": "Volatility-Calibrated Exposure",
-      "description": "Systematically adjusts risk allocation based on prevailing volatility."
+      "description": "Systematically adjusts risk allocation based on prevailing volatility.",
+      "icon": "tabler:adjustments-horizontal"
     }
   ],
 
@@ -76,19 +83,23 @@
   "risk.items": [
     {
       "title": "Controlled Position Sizing",
-      "description": "Exposure is determined by predefined risk parameters."
+      "description": "Exposure is determined by predefined risk parameters.",
+      "icon": "tabler:chart-pie"
     },
     {
       "title": "Drawdown Mitigation",
-      "description": "Systematic reduction of activity during unstable market conditions."
+      "description": "Systematic reduction of activity during unstable market conditions.",
+      "icon": "tabler:shield-lock"
     },
     {
       "title": "Volatility-Based Risk Scaling",
-      "description": "Dynamic exposure adjustment based on structural stability."
+      "description": "Dynamic exposure adjustment based on structural stability.",
+      "icon": "tabler:activity"
     },
     {
       "title": "Configurable Risk Profiles",
-      "description": "Parameters can align with individual tolerance while preserving system integrity."
+      "description": "Parameters can align with individual tolerance while preserving system integrity.",
+      "icon": "tabler:settings"
     }
   ],
 
