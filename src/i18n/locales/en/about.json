@@ -12,22 +12,19 @@
   "framework.items": [
     {
       "title": "Signal Logic",
-      "description": "Evaluates price structure and trend behavior using rule-based logic — removing subjective interpretation.",
+      "description": "Evaluates price structure and trend behavior using rule-based logic — removing subjective interpretation."
     },
     {
       "title": "Risk Parameters",
-      "description": "Adjusts systematically to shifting volatility and structural changes without constant manual intervention.",
-      "icon": "tabler:activity"
+      "description": "Adjusts systematically to shifting volatility and structural changes without constant manual intervention."
     },
     {
       "title": "Execution Protocol",
-      "description": "Predefined criteria are executed instantly and consistently, eliminating hesitation and emotional interference.",
-      "icon": "tabler:settings-automation"
+      "description": "Predefined criteria are executed instantly and consistently, eliminating hesitation and emotional interference."
     },
     {
       "title": "Ongoing Evaluation",
-      "description": "Predefined criteria are executed instantly and consistently, eliminating hesitation and emotional interference.",
-      "icon": "tabler:settings-automation"
+      "description": "Predefined criteria are executed instantly and consistently, eliminating hesitation and emotional interference."
     }
   ],
   
