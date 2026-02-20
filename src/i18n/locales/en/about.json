@@ -60,6 +60,7 @@
     }
   ],
 
+  "risk.tagline": "Risk",
   "risk.title": "Risk Management as the Foundation",
   "risk.subtitle": "Capital protection is prioritized over aggressive return targets. The framework integrates structured safeguards designed to limit drawdowns, reduce exposure in unstable market phases, and prevent uncontrolled position sizing. Clearly defined risk parameters can be configured to align with individual tolerance while maintaining structural integrity. Return is the outcome. Risk control is the foundation.",
   "risk.items": [
