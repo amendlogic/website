@@ -37,7 +37,7 @@
     {
       "title": "Signal Logic",
       "description": "Predefined entry and exit conditions derived from objective market structure.",
-      "icon": "flat-color-icons:flow-chart"
+      "icon": "flat-color-icons:line-chart"
     },
     {
       "title": "Risk Protocol",
