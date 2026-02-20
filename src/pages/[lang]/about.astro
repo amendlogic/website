@@ -47,19 +47,6 @@ const metadata = {
   </Hero>
 
 
-  <!-- Stats Widget ****************** -->
-
-  <Stats
-    title="Statistics about us"
-    stats={[
-      { title: 'Offices', amount: '4' },
-      { title: 'Employees', amount: '248' },
-      { title: 'Templates', amount: '12' },
-      { title: 'Awards', amount: '24' },
-    ]}
-  />
-
-
   <!-- Features3 Widget ************** -->
 
   <Features3
@@ -83,7 +70,20 @@ const metadata = {
     }}
   />
 
-  <!-- Content Widget ************** -->
+  <!-- Stats Widget ****************** -->
+
+  <Stats
+    tagline={t('about.philosophy.tagline')}
+    title={t('about.philosophy.title')}
+    subtitle={t('about.philosophy.subtitle')}
+    stats={[
+      { title: 'Offices', amount: '4' },
+      { title: 'Employees', amount: '248' },
+      { title: 'Templates', amount: '12' },
+      { title: 'Awards', amount: '24' },
+    ]}
+  />
+
 
   <Content
     tagline={t('about.philosophy.tagline')}
