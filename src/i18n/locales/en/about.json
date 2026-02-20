@@ -11,10 +11,16 @@
   "story.items": [
     {
       "title": "Emotion",
-      "description": "→ Predefined Logic"
+      "description": "Replaced by predefined decision logic."
     },
-    { "title": "Impulse → Structured Parameters" },
-    { "title": "Hindsight → Systematic Criteria" }
+    {
+      "title": "Impulse",
+      "description": "Replaced by structured and validated parameters."
+    },
+    {
+      "title": "Hindsight",
+      "description": "Replaced by systematic, forward-defined criteria."
+    }
   ],
 
 
