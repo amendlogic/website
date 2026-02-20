@@ -36,9 +36,18 @@
       "title": "Signal Logic",
       "icon": "flat-color-icons:document"
     },
-    { "title": "Risk Parameters" },
-    { "title": "Execution Protocol" },
-    { "title": "Ongoing Evaluation" }
+    { 
+      "title": "Risk Parameters",
+      "icon": "flat-color-icons:document"
+    },
+    { 
+      "title": "Execution Protocol",
+      "icon": "flat-color-icons:document"
+    },
+    { 
+      "title": "Ongoing Evaluation",
+      "icon": "flat-color-icons:document"
+    }
   ],
 
   "philosophy.title": "Selective Execution, Not Constant Activity",
