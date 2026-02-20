@@ -11,7 +11,8 @@
   "story.items": [
     {
       "title": "Emotion",
-      "description": "Replaced by predefined decision logic."
+      "description": "Replaced by predefined decision logic.",
+      "icon": "tabler:device-analytics"
     },
     {
       "title": "Impulse",
