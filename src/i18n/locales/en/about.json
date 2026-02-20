@@ -37,22 +37,22 @@
     {
       "title": "Signal Logic",
       "description": "Predefined entry and exit conditions derived from objective market structure.",
-      "icon": "flat-color-icons:line-chart"
+      "icon": "tabler:logic-and"
     },
     {
       "title": "Risk Protocol",
       "description": "Exposure limits and capital allocation rules applied before execution.",
-      "icon": "flat-color-icons:safe"
+      "icon": "tabler:shield-check"
     },
     {
       "title": "Execution Discipline",
       "description": "Automated order placement strictly aligned with validated criteria.",
-      "icon": "flat-color-icons:process"
+      "icon": "tabler:settings-automation"
     },
     {
       "title": "Structural Monitoring",
       "description": "Continuous evaluation of market phases to ensure contextual alignment.",
-      "icon": "flat-color-icons:statistics"
+      "icon": "tabler:chart-radar"
     }
   ],
 
