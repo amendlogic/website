@@ -1,22 +1,17 @@
 {
   "footerDisclaimer": [
-    {
-      "text": "1. <b>Risikohinweis:</b> Der Handel mit Finanzinstrumenten ist mit erheblichen Risiken verbunden und kann zum vollständigen Verlust des eingesetzten Kapitals führen. Investieren Sie nur Kapital, dessen Verlust Sie sich leisten können. Die bereitgestellten Inhalte dienen ausschließlich zu Informations- und Bildungszwecken und stellen keine Finanzberatung dar."
-    },
-    {
-      "text": "2. <b>Hypothetische Performance:</b> Die auf dieser Website dargestellten Ergebnisse basieren auf simulierten oder hypothetischen Performance-Daten, die bestimmten Einschränkungen unterliegen. Im Gegensatz zu realen Handelsergebnissen spiegeln diese Resultate keinen tatsächlichen Handel wider. Da die dargestellten Trades nicht real ausgeführt wurden, können die Ergebnisse die Auswirkungen bestimmter Marktfaktoren – wie beispielsweise Liquiditätsengpässe – unter- oder überbewerten. Es wird keine Zusicherung gegeben, dass ein Konto Gewinne oder Verluste erzielen wird, die den dargestellten Ergebnissen entsprechen oder ähneln."
-    },
-    {
-      "text": "3. <b>Erfahrungsberichte:</b> Auf dieser Website veröffentlichte Erfahrungsberichte sind möglicherweise nicht repräsentativ für die Erfahrungen anderer Kunden und stellen keine Garantie für zukünftige Ergebnisse oder Erfolge dar."
-    },
-    {
-      "text": "4. <b>Software-Anbieter:</b> Wir sind Anbieter von technischen Analysewerkzeugen und automatisierten Handelsstrategien. Wir haben keinen Zugriff auf Ihre persönlichen Handelskonten oder Ihr Kapital. Wir sind weder als Finanzberater noch als Broker oder Wertpapierhändler registriert."
-    },
-    {
-      "text": "5. <b>Quellenangabe:</b> Die auf dieser Website verwendeten Charts und Marktdaten werden von <a class=\"underline\" href=\"https://www.tradingview.com/\" target=\"_blank\">TradingView</a> bereitgestellt. TradingView® ist eine eingetragene Marke der TradingView, Inc. Diese Strategie steht in keiner Verbindung zu TradingView und wird weder von TradingView unterstützt noch gesponsert."
-    },
-    {
-      "text": "Ausführliche Informationen zu Haftung, Risiken und Datenverarbeitung finden Sie in unseren <a class=\"underline\" href=\"/terms\">Nutzungsbedingungen</a> sowie in der vollständigen <a class=\"underline\" href=\"/risk-disclosure\">Risikodarstellung</a>."
-    }
+    { "text": "1. <b>Risikohinweis:</b> Der Handel mit Kryptowährungen, Derivaten und anderen Finanzinstrumenten ist mit erheblichen Risiken verbunden und kann zum vollständigen Verlust des eingesetzten Kapitals führen. Vergangene Wertentwicklungen sind kein verlässlicher Indikator für zukünftige Ergebnisse. Bitte prüfen Sie sorgfältig, ob der Handel unter Berücksichtigung Ihrer finanziellen Situation, Kenntnisse und Erfahrungen für Sie geeignet ist. Die auf dieser Website bereitgestellten Inhalte dienen ausschließlich Informations- und Bildungszwecken und stellen keine Finanz-, Anlage-, Rechts- oder Steuerberatung dar." },
+
+    { "text": "2. <b>Hypothetische & Simulierte Ergebnisse:</b> Auf dieser Website dargestellte Performance-Ergebnisse können simulierte, rückgerechnete (Backtests) oder hypothetische Resultate enthalten. Solche Ergebnisse unterliegen wesentlichen Einschränkungen und spiegeln keinen tatsächlichen Handel wider. Simulierte Ergebnisse berücksichtigen möglicherweise nicht realistische Marktbedingungen wie Liquiditätsengpässe, Slippage, Gebühren oder psychologische Faktoren. Es wird keine Zusicherung abgegeben, dass ein Konto Gewinne oder Verluste erzielt, die den dargestellten Ergebnissen entsprechen oder ähneln." },
+
+    { "text": "3. <b>Kundenstimmen:</b> Auf dieser Website veröffentlichte Erfahrungsberichte oder Kundenstimmen spiegeln möglicherweise nicht die typischen Erfahrungen anderer Nutzer wider. Individuelle Ergebnisse können abweichen und stellen keine Garantie für zukünftige Performance oder Erfolg dar." },
+
+    { "text": "4. <b>Kein Anlageberatungsverhältnis:</b> Wir stellen technische Analysewerkzeuge, Schulungsinhalte sowie automatisierte Handelsstrategien zur Verfügung. Wir verwalten keine Kundengelder, führen keine Transaktionen im Namen von Nutzern aus und geben keine individuellen Anlageempfehlungen. Wir sind kein zugelassenes Finanzdienstleistungsinstitut, keine Anlageberatung und kein Wertpapierinstitut im Sinne der gesetzlichen Vorschriften. Die Nutzung unserer Software begründet kein Beratungs- oder Treuhandverhältnis." },
+
+    { "text": "5. <b>Regulatorischer Hinweis:</b> Nutzer sind selbst dafür verantwortlich sicherzustellen, dass die Nutzung unserer Produkte mit den in ihrem jeweiligen Land geltenden Gesetzen und regulatorischen Anforderungen vereinbar ist. Der Handel mit Kryptowährungen kann in bestimmten Ländern eingeschränkt oder reguliert sein." },
+
+    { "text": "6. <b>Drittanbieter & Markenrechte:</b> Auf dieser Website dargestellte Charts und Marktdaten werden von <a class=\"underline\" href=\"https://www.tradingview.com/\" target=\"_blank\" rel=\"noopener noreferrer\">TradingView</a> bereitgestellt. TradingView® ist eine eingetragene Marke der TradingView, Inc. Zwischen uns und TradingView besteht keine Verbindung, Empfehlung oder Partnerschaft. Alle weiteren Marken sind Eigentum der jeweiligen Rechteinhaber." },
+
+    { "text": "Weitere Informationen zu Risiken, Haftungsbeschränkungen, Datenverarbeitung und Nutzerpflichten finden Sie in unseren <a class=\"underline\" href=\"/terms\">Allgemeinen Geschäftsbedingungen</a>, der <a class=\"underline\" href=\"/risk-disclosure\">Risikoffenlegung</a> sowie in unserer <a class=\"underline\" href=\"/privacy-policy\">Datenschutzerklärung</a>." }
   ]
 }
