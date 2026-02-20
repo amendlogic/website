@@ -32,7 +32,10 @@
   "framework.title": "A Framework — Not a Black Box",
   "framework.subtitle": "This is not AI magic and not a secret indicator. It is a defined rule set built on objective market structure and systematic evaluation. Operating directly within TradingView, the framework validates predefined conditions before execution occurs. Every signal follows structured criteria — from market assessment to risk validation and rule-based exit logic. No impulse. No subjective overrides. No discretionary guesswork.",
   "framework.items": [
-    { "title": "Signal Logic" },
+    { 
+      "title": "Signal Logic",
+      "icon": "flat-color-icons:document",
+    },
     { "title": "Risk Parameters" },
     { "title": "Execution Protocol" },
     { "title": "Ongoing Evaluation" }
