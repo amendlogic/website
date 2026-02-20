@@ -137,29 +137,6 @@ const metadata = {
     }}
   />
 
-  <!-- Steps2 Widget ****************** -->
-
-  <Steps2
-    title="Our values"
-    subtitle="Maecenas eu tellus eget est scelerisque lacinia et a diam. Aliquam velit lorem, vehicula id fermentum et, rhoncus et purus. Nulla facilisi. Vestibulum malesuada lacus."
-    items={[
-      {
-        title: 'Customer-centric approach',
-        description:
-          'Donec id nibh neque. Quisque et fermentum tortor. Fusce vitae dolor a mauris dignissim commodo. Ut eleifend luctus condimentum.',
-      },
-      {
-        title: 'Constant Improvement',
-        description:
-          'Phasellus laoreet fermentum venenatis. Vivamus dapibus pulvinar arcu eget mattis. Fusce eget mauris leo.',
-      },
-      {
-        title: 'Ethical Practices',
-        description:
-          'Vestibulum imperdiet libero et lectus molestie, et maximus augue porta. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
-      },
-    ]}
-  />
 
   <!-- Steps2 Widget ****************** -->
 
@@ -191,6 +168,16 @@ const metadata = {
       },
     ]}
   />
+
+  <!-- Steps2 Widget ****************** -->
+
+  <Steps2
+    tagline={t('about.story.tagline')}
+    title={t('about.story.title')}
+    subtitle={t('about.story.subtitle')}
+    items={t('about.story.items')}
+  />
+
 
   <!-- Features2 Widget ************** -->
 
