@@ -10,8 +10,8 @@ const { id, number, class: className = '' } = Astro.props;
 
 <a
   href={`#${id}`}
-  aria-label={`Footnote ${number}`}
-  class={`ml-1 text-xs no-underline hover:underline ${className}`}
+  aria-describedby={id}
+  class={`ml-1 text-[0.7em] align-super hover:opacity-70 transition ${className}`}
 >
-  <sup class="align-super">{number}</sup>
+  {number}
 </a>
