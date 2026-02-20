@@ -7,6 +7,7 @@
   "story.content": "Early trading decisions are often influenced by emotion, market noise, and hindsight bias. Even experienced participants can fall into reactive behavior when structure is missing. Over time, one principle became clear: sustainable performance is not built on prediction — it is built on process. This realization led to the development of a systematic framework designed to standardize decisions, remove discretion, and maintain consistency across different market environments.",
 
   "framework.title": "A Framework — Not a Black Box",
+  "framework.tagline": "Framework",
   "framework.content": "This is not a hype-driven trading bot and not an opaque black-box system. It is a defined rule set built on objective market structure and systematic evaluation. Operating directly within TradingView, the framework evaluates predefined conditions before any execution occurs. Every signal follows structured criteria — from market assessment to risk validation and rule-based exit logic. No impulse. No subjective overrides. No discretionary guesswork.",
 
   "philosophy.title": "Selective Execution, Not Constant Activity",
