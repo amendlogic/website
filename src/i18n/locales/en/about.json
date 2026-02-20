@@ -34,7 +34,7 @@
   "framework.items": [
     { 
       "title": "Signal Logic",
-      "icon": "flat-color-icons:document",
+      "icon": "flat-color-icons:document"
     },
     { "title": "Risk Parameters" },
     { "title": "Execution Protocol" },
