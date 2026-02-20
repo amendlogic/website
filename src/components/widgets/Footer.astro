@@ -99,18 +99,16 @@ const {
       }
     </div>
 
-<div class="border-t border-gray-200 py-6 text-xs text-muted">
-  {disclaimer.map((item, idx) => (
-    <p id={`footnote-${idx + 1}`} class="mb-2 last:mb-0">
-      <sup>{idx + 1}</sup> {/* optional */}
-      {item.parts.map(part =>
-        part.type === 'text'
-          ? part.value
-          : <a href={part.href || getPermalink(part.slug)} class="underline">{part.label}</a>
-      )}
-    </p>
-  ))}
-</div>
+    {/* DISCLAIMER BEREICH */}
+    {
+      disclaimer && disclaimer.length > 0 && (
+        <div class="border-t border-gray-200 dark:border-slate-800 py-6 text-xs text-muted dark:text-slate-400 leading-relaxed">
+          {disclaimer.map((item) => (
+            <p class="mb-2 last:mb-0" set:html={item.text} />
+          ))}
+        </div>
+      )
+    }
 
     <div class="md:flex md:items-center md:justify-between py-6 md:py-8 border-t border-gray-200 dark:border-slate-800">
       {
