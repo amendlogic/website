@@ -29,23 +29,21 @@ const metadata = {
   <!-- Hero Widget ******************* -->
 
   <Hero
-    tagline="About us"
+    tagline={t('about.hero.tagline')}
     image={{
       src: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
       alt: 'Caos Image',
     }}
   >
     <Fragment slot="title">
-      Elevate your online presence with our <br />
-      <span class="text-accent dark:text-white"> Beautiful Website Templates</span>
+      {t('about.hero.title')}
     </Fragment>
 
     <Fragment slot="subtitle">
-      Donec efficitur, ipsum quis congue luctus, mauris magna convallis mauris, eu auctor nisi lectus non augue. Donec
-      quis lorem non massa vulputate efficitur ac at turpis. Sed tincidunt ex a nunc convallis, et lobortis nisi tempus.
-      Suspendisse vitae nisi eget tortor luctus maximus sed non lectus.
+      {t('about.hero.subtitle')}
     </Fragment>
   </Hero>
+
 
   <!-- Stats Widget ****************** -->
 
@@ -58,6 +56,29 @@ const metadata = {
       { title: 'Awards', amount: '24' },
     ]}
   />
+
+
+  <!-- Steps2 Widget ****************** -->
+
+  <Steps2
+    tagline={t('about.story.tagline')}
+    title={t('about.story.title')}
+    subtitle={t('about.story.subtitle')}
+    items={t('about.story.items')}
+  />
+
+
+  <!-- Features2 Widget ************** -->
+
+  <Features2
+    tagline={t('about.framework.tagline')}
+    title={t('about.framework.title')}
+    subtitle={t('about.framework.subtitle')}
+    columns={4}
+    items={t('about.framework.items')}
+  />
+
+
 
   <!-- Features3 Widget ************** -->
 
@@ -169,25 +190,7 @@ const metadata = {
     ]}
   />
 
-  <!-- Steps2 Widget ****************** -->
 
-  <Steps2
-    tagline={t('about.story.tagline')}
-    title={t('about.story.title')}
-    subtitle={t('about.story.subtitle')}
-    items={t('about.story.items')}
-  />
-
-
-  <!-- Features2 Widget ************** -->
-
-  <Features2
-    tagline={t('about.framework.tagline')}
-    title={t('about.framework.title')}
-    subtitle={t('about.framework.subtitle')}
-    columns={4}
-    items={t('about.framework.items')}
-  />
 
 
   <!-- Steps2 Widget ****************** -->
