@@ -8,7 +8,6 @@ import Hero from '~/components/widgets/Hero.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import Steps2 from '~/components/widgets/Steps2.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import Footnote from '~/components/ui/Footnote.astro';
 
 // 2. Pfade generieren (SSOT für [lang])
 export async function getStaticPaths() {
@@ -197,12 +196,12 @@ const metadata = {
 
   <Features2
     title="Our locations"
-    tagline="Find us"
+    tagline="framework.title"
     columns={4}
     items={[
       {
         title: 'EE.UU',
-        description: <>1234 Lorem Ipsum St, 12345, Miami <Footnote id="footnote-2" number={2} /></>,
+        description: '5678 Lorem Ipsum St, 56789, Madrid',
       },
       {
         title: 'Spain',
