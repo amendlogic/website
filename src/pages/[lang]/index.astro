@@ -153,12 +153,7 @@ const metadata = {
   <Testimonials
     id="testimonials"
     tagline={t('home.testimonials.tagline')}
-  title={
-    <>
-      {t('home.testimonials.title')}
-      <Footnote id="footnote-1" number={1} />
-    </>
-  }
+    title={t('home.testimonials.title')}
     testimonials={t('home.testimonials.items').map(item => ({
       ...item,
       image: { src: item.image, alt: item.name }
