@@ -1,8 +1,8 @@
 ---
 interface Props {
-  id: string;        // Ziel-ID im Footer (z.B. "footnote-1")
-  number: number;    // Angezeigte Zahl
-  class?: string;    // Optional Styling
+  id: string;
+  number: number;
+  class?: string;
 }
 
 const { id, number, class: className = '' } = Astro.props;
@@ -10,7 +10,8 @@ const { id, number, class: className = '' } = Astro.props;
 
 <a
   href={`#${id}`}
-  class={`align-super text-xs underline ml-1 ${className}`}
+  aria-label={`Footnote ${number}`}
+  class={`ml-1 text-xs no-underline hover:underline ${className}`}
 >
-  <sup>{number}</sup>
+  <sup class="align-super">{number}</sup>
 </a>
