@@ -61,12 +61,24 @@
   ],
 
   "risk.title": "Risk Management as the Foundation",
-  "risk.content": "Capital protection is prioritized over aggressive return targets. The framework integrates structured safeguards designed to limit drawdowns, reduce exposure in unstable market phases, and prevent uncontrolled position sizing. Clearly defined risk parameters can be configured to align with individual tolerance while maintaining structural integrity. Return is the outcome. Risk control is the foundation.",
-  "risk.points": [
-    "Controlled Position Sizing",
-    "Drawdown Safeguards",
-    "Volatility-Based Exposure",
-    "Configurable Risk Parameters"
+  "risk.subtitle": "Capital protection is prioritized over aggressive return targets. The framework integrates structured safeguards designed to limit drawdowns, reduce exposure in unstable market phases, and prevent uncontrolled position sizing. Clearly defined risk parameters can be configured to align with individual tolerance while maintaining structural integrity. Return is the outcome. Risk control is the foundation.",
+  "risk.items": [
+    {
+      "title": "Controlled Position Sizing",
+      "description": "Identifies shifts in market structure and distinguishes between expansion, consolidation, and transition phases."
+    },
+    {
+      "title": "Drawdown Safeguards",
+      "description": "Validates directional bias using predefined qualification criteria before capital is deployed."
+    },
+    {
+      "title": "Volatility-Based Exposure",
+      "description": "Adjusts exposure dynamically based on prevailing volatility and structural stability."
+    },
+    {
+      "title": "Configurable Risk Parameters",
+      "description": "Adjusts exposure dynamically based on prevailing volatility and structural stability."
+    }
   ],
 
   "transparency.title": "Founder-Led. Accountability-Driven.",
