@@ -12,15 +12,17 @@
     {
       "title": "Emotion",
       "description": "Replaced by predefined decision logic.",
-      "icon": "tabler:device-analytics"
+      "icon": "tabler:activity-heartbeat"
     },
     {
       "title": "Impulse",
-      "description": "Replaced by structured and validated parameters."
+      "description": "Replaced by structured and validated parameters.",
+      "icon": "tabler:activity-heartbeat"
     },
     {
       "title": "Hindsight",
-      "description": "Replaced by systematic, forward-defined criteria."
+      "description": "Replaced by systematic, forward-defined criteria.",
+      "icon": "tabler:activity-heartbeat"
     }
   ],
 
@@ -39,12 +41,22 @@
   "philosophy.highlight": "The goal is not to trade more. The goal is to trade correctly.",
   "philosophy.content": "Professional trading is not about reacting to every price movement. It is about acting only when conditions align with a defined edge — and then executing without hesitation. The objective is not maximum trade frequency, but controlled and repeatable performance. The system remains inactive during structurally weak phases and becomes active only when probability and structure align.",
 
+  "methodology.tagline": "Methodology",
   "methodology.title": "Objective Market Structure & Trend Logic",
-  "methodology.content": "The strategy evaluates market structure directly from price behavior — not opinion. It focuses on structured market formation, trend validation logic, and volatility-adaptive positioning. Rather than remaining rigid, the framework adjusts systematically to evolving volatility and structural shifts. No indicator stacking. No narrative bias. Defined logic applied consistently.",
-  "methodology.pillars": [
-    "Market Structure Recognition",
-    "Trend Validation Logic",
-    "Volatility-Adaptive Parameters"
+  "methodology.subtitle": "The strategy evaluates market structure directly from price behavior — not opinion. It focuses on structured market formation, trend validation logic, and volatility-adaptive positioning. Rather than remaining rigid, the framework adjusts systematically to evolving volatility and structural shifts. No indicator stacking. No narrative bias. Defined logic applied consistently.",
+  "methodology.items": [
+    {
+      "title": "Structured Market Phase Identification",
+      "description": "Identifies shifts in market structure and distinguishes between expansion, consolidation, and transition phases."
+    },
+    {
+      "title": "Systematic Trend Confirmation",
+      "description": "Validates directional bias using predefined qualification criteria before capital is deployed."
+    },
+    {
+      "title": "Volatility-Calibrated Position Sizing",
+      "description": "Adjusts exposure dynamically based on prevailing volatility and structural stability."
+    }
   ],
 
   "risk.title": "Risk Management as the Foundation",
