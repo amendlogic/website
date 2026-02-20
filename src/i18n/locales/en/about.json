@@ -8,7 +8,7 @@
 
   "framework.tagline": "Framework",
   "framework.title": "A Framework — Not a Black Box",
-  "framework.subtile": "This is not a hype-driven trading bot and not an opaque black-box system. It is a defined rule set built on objective market structure and systematic evaluation. Operating directly within TradingView, the framework evaluates predefined conditions before any execution occurs. Every signal follows structured criteria — from market assessment to risk validation and rule-based exit logic. No impulse. No subjective overrides. No discretionary guesswork.",
+  "framework.subtitle": "This is not a hype-driven trading bot and not an opaque black-box system. It is a defined rule set built on objective market structure and systematic evaluation. Operating directly within TradingView, the framework evaluates predefined conditions before any execution occurs. Every signal follows structured criteria — from market assessment to risk validation and rule-based exit logic. No impulse. No subjective overrides. No discretionary guesswork.",
   "framework.items": [
     {
       "title": "Signal Logic",
