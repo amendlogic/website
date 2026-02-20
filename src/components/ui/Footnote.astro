@@ -11,7 +11,7 @@ const { id, number, class: className = '' } = Astro.props;
 <a
   href={`#${id}`}
   aria-describedby={id}
-  class={`ml-1 text-[0.7em] align-super hover:opacity-70 transition ${className}`}
+  class={`ml-1 text-xs align-super hover:underline ${className}`}
 >
   {number}
 </a>
