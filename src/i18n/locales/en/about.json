@@ -2,7 +2,6 @@
   "hero.tagline": "Markets fluctuate. Structure endures.",
   "hero.title": "Structure Over Speculation.",
   "hero.subtitle": "Rule-based Bitcoin trading built on defined logic, disciplined execution, and structured risk management.",
-
   "hero.ctaPrimary": "Explore the Framework",
   "hero.ctaSecondary": "View the Performance Logic",
 
@@ -27,25 +26,28 @@
     }
   ],
 
-
   "framework.tagline": "Framework",
   "framework.title": "A Framework — Not a Black Box",
   "framework.subtitle": "This is not AI magic and not a secret indicator. It is a defined rule set built on objective market structure and systematic evaluation. Operating directly within TradingView, the framework validates predefined conditions before execution occurs. Every signal follows structured criteria — from market assessment to risk validation and rule-based exit logic. No impulse. No subjective overrides. No discretionary guesswork.",
   "framework.items": [
-    { 
+    {
       "title": "Signal Logic",
+      "description": "Predefined entry and exit conditions derived from objective market structure and validated trend behavior.",
       "icon": "flat-color-icons:document"
     },
-    { 
+    {
       "title": "Risk Parameters",
+      "description": "Clearly defined exposure limits and capital allocation rules applied before any position is initiated.",
       "icon": "flat-color-icons:document"
     },
-    { 
+    {
       "title": "Execution Protocol",
+      "description": "Automated order placement based strictly on validated criteria — eliminating hesitation and manual interference.",
       "icon": "flat-color-icons:document"
     },
-    { 
+    {
       "title": "Ongoing Evaluation",
+      "description": "Continuous monitoring of structural conditions to ensure alignment with the defined trading environment.",
       "icon": "flat-color-icons:document"
     }
   ],
@@ -78,19 +80,19 @@
   "risk.items": [
     {
       "title": "Controlled Position Sizing",
-      "description": "Identifies shifts in market structure and distinguishes between expansion, consolidation, and transition phases."
+      "description": "Position size is determined by predefined exposure rules rather than emotional conviction."
     },
     {
       "title": "Drawdown Safeguards",
-      "description": "Validates directional bias using predefined qualification criteria before capital is deployed."
+      "description": "Protective mechanisms reduce activity and exposure during structurally unstable phases."
     },
     {
       "title": "Volatility-Based Exposure",
-      "description": "Adjusts exposure dynamically based on prevailing volatility and structural stability."
+      "description": "Risk allocation adjusts in response to changing volatility conditions."
     },
     {
       "title": "Configurable Risk Parameters",
-      "description": "Adjusts exposure dynamically based on prevailing volatility and structural stability."
+      "description": "Key limits can be aligned with individual tolerance without altering the framework’s core logic."
     }
   ],
 
@@ -100,16 +102,16 @@
   "transparency.description.end": "long-term trust over short-term marketing. The framework is continuously refined, monitored, and evaluated under direct responsibility. There is no outsourced signal logic, no anonymous development, and no inflated performance promises. Offering a structured system means standing behind its methodology — transparently and responsibly.",
   "transparency.items": [
     {
-      "title": "",
-      "description": ""
+      "title": "Direct Responsibility",
+      "description": "Strategy development and refinement remain under direct founder oversight."
     },
     {
-      "title": "",
-      "description": ""
+      "title": "No Outsourced Logic",
+      "description": "All decision frameworks are built and maintained internally."
     },
     {
-      "title": "",
-      "description": ""
+      "title": "Long-Term Orientation",
+      "description": "The focus remains on sustainable consistency rather than short-term marketing narratives."
     }
   ],
 
