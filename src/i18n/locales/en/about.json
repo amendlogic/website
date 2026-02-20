@@ -9,7 +9,8 @@
   "story.title": "From Discretion to Defined Rules",
   "story.subtitle": "Discretionary trading often appears flexible — yet without structure, flexibility turns into inconsistency. Market noise influences perception, emotions distort timing, and hindsight reshapes decisions. Over time, one principle became clear: sustainable performance is not built on prediction — it is built on predefined process. This realization led to the development of a systematic framework designed to standardize decisions, remove discretion, and operate consistently across volatile market cycles.",
   "story.items": [
-    { "title": "Emotion → Predefined Logic" },
+    { "title": "Emotion",
+      "description": "→ Predefined Logic" },
     { "title": "Impulse → Structured Parameters" },
     { "title": "Hindsight → Systematic Criteria" }
   ],
