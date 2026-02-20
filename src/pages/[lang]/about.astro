@@ -83,13 +83,16 @@ const metadata = {
     }}
   />
 
-  <!-- HeroText Widget ************** -->
+  <!-- Content Widget ************** -->
 
   <Content
-    tagline={t('about.transparency.tagline')}
-    title={t('about.transparency.title')}
-    subtitle={t('about.transparency.title')}
-  />
+    tagline={t('about.philosophy.tagline')}
+    subtitle={t('about.philosophy.subtitle')}
+  >
+    <Fragment slot="title">
+      {t('about.transparency.title.start')} {t('about.transparency.title.end')}
+    </Fragment>
+</Content>
 
   <!-- Steps2 Widget ****************** -->
 
