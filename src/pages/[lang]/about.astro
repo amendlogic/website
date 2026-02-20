@@ -8,7 +8,6 @@ import Hero from '~/components/widgets/Hero.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import Steps2 from '~/components/widgets/Steps2.astro';
 import Content from '~/components/widgets/Content.astro';
-import DefaultText from '~/components/widgets/DefaultText.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import Layout from '~/layouts/PageLayout.astro';
 
@@ -86,10 +85,10 @@ const metadata = {
 
   <!-- HeroText Widget ************** -->
 
-  <DefaultText
-    tagline={t('about.story.tagline')}
-    title={t('about.story.title')}
-    subtitle={t('about.story.subtitle')}
+  <Content
+    tagline={t('about.transparency.tagline')}
+    title={t('about.transparency.title')}
+    subtitle={t('about.transparency.title')}
   />
 
   <!-- Steps2 Widget ****************** -->
