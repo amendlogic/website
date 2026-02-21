@@ -103,7 +103,7 @@ const {
       <div class="border-t border-gray-200 dark:border-slate-800 py-6 text-xs text-muted dark:text-slate-400 leading-relaxed">
         
         <ol class="list-decimal list-inside space-y-2">
-          {footnotes.map(([key]) => (
+          {footnotes.map(key => (
             <li id={`footnote-${key}`}>
               <Fragment set:html={t(`footnotes.${key}`)} />
             </li>
