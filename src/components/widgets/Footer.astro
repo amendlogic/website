@@ -1,5 +1,5 @@
 ---
-import { DEFAULT_LANG, useTranslations } from '~/i18n/utils';
+import { useTranslations } from '~/i18n/utils';
 import Logo from '~/components/Logo2.astro';
 import { Icon } from 'astro-icon/components';
 import { getPermalink, getHomePermalink } from '~/utils/permalinks';
@@ -38,7 +38,6 @@ const {
   socialLinks = [], 
   secondaryLinks = [], 
   links = [], 
-  disclaimer = [], 
   footNote = '', 
   theme = 'light' 
 } = Astro.props;
