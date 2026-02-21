@@ -114,7 +114,11 @@ const metadata = {
     title={t('about.risk.title')}
     subtitle={t('about.risk.subtitle')}
     items={t('about.risk.items')}
-  />
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+</Steps2>
 
 
 
