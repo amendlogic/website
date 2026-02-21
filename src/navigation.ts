@@ -116,7 +116,7 @@ export const getFooterData = (lang = 'en', footnotes: string[] = []) => {
         href: getHomePermalink('de'), 
       },
     ],
-    footnotes: [],
+    footnotes,
     socialLinks: [
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
