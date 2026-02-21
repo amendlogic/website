@@ -1,10 +1,9 @@
 ---
-import { useTranslations } from '~/i18n/utils';
 import Logo from '~/components/Logo2.astro';
 import { Icon } from 'astro-icon/components';
+import { useTranslations } from '~/i18n/utils';
 import { getPermalink, getHomePermalink } from '~/utils/permalinks';
 import { getFootnotes } from '~/utils/footnoteRegistry';
-const footnotes = getFootnotes();
 
 interface Link {
   text?: string;
@@ -27,12 +26,13 @@ export interface Props {
   links: Array<Links>;
   secondaryLinks: Array<Link>;
   socialLinks: Array<Link>;
-  disclaimer?: Array<DisclaimerItem>;
   footNote?: string;
   theme?: string;
 }
+
 const { lang } = Astro.params;
 const t = useTranslations(lang);
+const footnotes = getFootnotes();
 
 const { 
   socialLinks = [], 
@@ -104,23 +104,23 @@ const {
     </div>
 
     {/* DISCLAIMER BEREICH */}
-{footnotes.length > 0 && (
-  <div class="text-xs border-t mt-10 pt-6">
-    
-    <ol class="list-decimal pl-5 space-y-2">
-      {footnotes.map(([key]) => (
-        <li id={`footnote-${key}`}>
-          {t(`footnotes.${key}`)}
-        </li>
-      ))}
-    </ol>
-
-    <p class="mt-4 opacity-80">
-      {t('footnotes.closing')}
-    </p>
-
-  </div>
-)}
+    {footnotes.length > 0 && (
+      <div class="border-t border-gray-200 dark:border-slate-800 py-6 text-xs text-muted dark:text-slate-400 leading-relaxed">
+        
+        <ol class="list-decimal pl-5 space-y-2">
+          {footnotes.map(([key]) => (
+            <li id={`footnote-${key}`}>
+              {t(`footnotes.${key}`)}
+            </li>
+          ))}
+        </ol>
+        
+        <p class="mt-4 opacity-80">
+          {t('footnotes.closing')}
+        </p>
+        
+      </div>
+    )}
 
     <div class="md:flex md:items-center md:justify-between py-6 md:py-8 border-t border-gray-200 dark:border-slate-800">
       {
