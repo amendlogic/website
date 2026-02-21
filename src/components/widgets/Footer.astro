@@ -100,15 +100,23 @@ const {
     </div>
 
     {/* DISCLAIMER BEREICH */}
-    {
-      disclaimer && disclaimer.length > 0 && (
-        <div class="border-t border-gray-200 dark:border-slate-800 py-6 text-xs text-muted dark:text-slate-400 leading-relaxed">
-          {disclaimer.map((item) => (
-            <p class="mb-2 last:mb-0" set:html={item.text} />
-          ))}
-        </div>
-      )
-    }
+{footnotes.length > 0 && (
+  <div class="text-xs border-t mt-10 pt-6">
+    
+    <ol class="list-decimal pl-5 space-y-2">
+      {footnotes.map(([key]) => (
+        <li id={`footnote-${key}`}>
+          {t(`footnotes.${key}`)}
+        </li>
+      ))}
+    </ol>
+
+    <p class="mt-4 opacity-80">
+      {t('footnotesClosing')}
+    </p>
+
+  </div>
+)}
 
     <div class="md:flex md:items-center md:justify-between py-6 md:py-8 border-t border-gray-200 dark:border-slate-800">
       {
