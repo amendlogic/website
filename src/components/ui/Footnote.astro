@@ -1,17 +1,20 @@
 ---
+import { registerFootnote } from '~/utils/footnoteRegistry';
+
 interface Props {
-  id: string;
-  number: number;
+  type: string;
   class?: string;
 }
 
-const { id, number, class: className = '' } = Astro.props;
+const { type, class: className = '' } = Astro.props;
+
+const number = registerFootnote(type);
 ---
 
 <a
-  href={`#${id}`}
-  aria-describedby={id}
-  class={`text-xs align-super hover:underline transition ${className}`}
+  href={`#footnote-${type}`}
+  aria-label={`Footnote ${number}`}
+  class={`text-xs align-super hover:underline ${className}`}
 >
   {number}
 </a>
