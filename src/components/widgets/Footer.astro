@@ -3,7 +3,6 @@ import Logo from '~/components/Logo2.astro';
 import { Icon } from 'astro-icon/components';
 import { useTranslations } from '~/i18n/utils';
 import { getPermalink, getHomePermalink } from '~/utils/permalinks';
-import { getFootnotes } from '~/utils/footnoteRegistry';
 
 interface Link {
   text?: string;
@@ -28,13 +27,13 @@ export interface Props {
 
 const { lang } = Astro.params;
 const t = useTranslations(lang);
-const footnotes = getFootnotes();
 
 const { 
   socialLinks = [], 
   secondaryLinks = [], 
   links = [], 
-  footNote = '', 
+  footNote = '',
+  footnotes = [],
   theme = 'light' 
 } = Astro.props;
 ---
