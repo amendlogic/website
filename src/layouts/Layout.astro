@@ -19,6 +19,7 @@ import type { MetaData as MetaDataType } from '~/types';
 
 export interface Props {
   metadata?: MetaDataType;
+}
 
 const { metadata = {} } = Astro.props;
 const { textDirection } = I18N;
