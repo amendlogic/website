@@ -2,7 +2,7 @@ import { SITE } from 'astrowind:config';
 import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './utils/permalinks';
 import { useTranslations } from '~/i18n/utils';
 
-export const getHeaderData = (lang = 'en') => {
+export const getHeaderData = (lang = 'en', footnotes: string[] = []) => {
   const t = useTranslations(lang);
 
   return {
@@ -116,6 +116,7 @@ export const getFooterData = (lang = 'en') => {
         href: getHomePermalink('de'), 
       },
     ],
+    footnotes,
     socialLinks: [
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
