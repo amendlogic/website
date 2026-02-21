@@ -2,8 +2,6 @@
 import { getI18nPaths, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
 
 // 1. Daten und Navigation importieren
-import { getFooterData } from '~/navigation';
-
 // Layout & Widgets
 import Layout from '~/layouts/PageLayout.astro';
 import Hero from '~/components/widgets/Hero.astro';
@@ -43,15 +41,6 @@ const selectedFAQItems = [
   billing[1],
   support[0]
 ].filter(Boolean);
-
-// 4. Footer zusammenbauen
-const baseFooterData = getFooterData(lang);
-const disclaimerItems = t('footer.footerDisclaimer');
-
-const homeFooterData = {
-  ...baseFooterData,
-  disclaimer: disclaimerItems
-};
 
 // 5. Metadaten
 const metadata = {
