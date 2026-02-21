@@ -22,6 +22,7 @@ export async function getStaticPaths() {
 
 // 3. Sprache & Content laden
 const { lang } = Astro.params;
+const currentLang = lang || 'en';
 const t = useTranslations(lang);
 
 const started = t('faq.started.items');
