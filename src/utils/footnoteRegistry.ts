@@ -1,16 +1,37 @@
-const footnoteMap = new Map<string, number>();
+const autoFootnotes = new Set<string>();
+let manualOrder: string[] = [];
 
 export function registerFootnote(key: string) {
-  if (!footnoteMap.has(key)) {
-    footnoteMap.set(key, footnoteMap.size + 1);
-  }
-  return footnoteMap.get(key);
+  autoFootnotes.add(key);
+}
+
+export function setManualFootnotes(keys: string[]) {
+  manualOrder = keys;
 }
 
 export function getFootnotes() {
-  return Array.from(footnoteMap.entries());
+  const result: string[] = [];
+
+  // 1️⃣ Zuerst manuelle Reihenfolge
+  manualOrder.forEach(key => {
+    if (!result.includes(key)) {
+      result.push(key);
+    }
+  });
+
+  // 2️⃣ Danach automatisch registrierte,
+  // die nicht manuell definiert wurden
+  autoFootnotes.forEach(key => {
+    if (!result.includes(key)) {
+      result.push(key);
+    }
+  });
+
+  // 3️⃣ Nummerierung erzeugen
+  return result.map((key, index) => [key, index + 1] as [string, number]);
 }
 
 export function resetFootnotes() {
-  footnoteMap.clear();
+  autoFootnotes.clear();
+  manualOrder = [];
 }
