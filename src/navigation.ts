@@ -2,7 +2,7 @@ import { SITE } from 'astrowind:config';
 import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './utils/permalinks';
 import { useTranslations } from '~/i18n/utils';
 
-export const getHeaderData = (lang = 'en', footnotes: string[] = []) => {
+export const getHeaderData = (lang = 'en') => {
   const t = useTranslations(lang);
 
   return {
@@ -62,7 +62,7 @@ export const getHeaderData = (lang = 'en', footnotes: string[] = []) => {
   };
 };
 
-export const getFooterData = (lang = 'en') => {
+export const getFooterData = (lang = 'en') footnotes: string[] = []) => {
   const t = useTranslations(lang);
 
   return {
