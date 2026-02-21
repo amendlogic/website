@@ -2,7 +2,7 @@
 import navEn from './locales/en/nav.json';
 import homeEn from './locales/en/home.json';
 import aboutEn from './locales/en/about.json';
-import footerEn from './locales/en/footer.json';
+import footnotesEn from './locales/en/footnotes.json';
 import fallbacksEn from './locales/en/fallbacks.json';
 import faqEn from './locales/en/faq.json';
 
@@ -10,7 +10,7 @@ import faqEn from './locales/en/faq.json';
 import navDe from './locales/de/nav.json';
 import homeDe from './locales/de/home.json';
 import aboutDe from './locales/de/about.json';
-import footerDe from './locales/de/footer.json';
+import footnotesDe from './locales/de/footnotes.json';
 import fallbacksDe from './locales/de/fallbacks.json';
 import faqDe from './locales/de/faq.json';
 
@@ -19,7 +19,7 @@ export const ui = {
     nav: navEn,
     home: homeEn,
     about: aboutEn,
-    footer: footerEn,
+    footnotes: footnotesEn,
     fallbacks: fallbacksEn,
     faq: faqEn,
   },
@@ -27,7 +27,7 @@ export const ui = {
     nav: navDe,
     home: homeDe,
     about: aboutDe,
-    footer: footerDe,
+    footnotes: footnotesDe,
     fallbacks: fallbacksDe,
     faq: faqDe,
   },
