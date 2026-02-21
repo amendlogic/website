@@ -1,4 +1,5 @@
 ---
+import { DEFAULT_LANG, useTranslations } from '~/i18n/utils';
 import Logo from '~/components/Logo2.astro';
 import { Icon } from 'astro-icon/components';
 import { getPermalink, getHomePermalink } from '~/utils/permalinks';
@@ -30,6 +31,8 @@ export interface Props {
   footNote?: string;
   theme?: string;
 }
+const { lang } = Astro.params;
+const t = useTranslations(lang);
 
 const { 
   socialLinks = [], 
