@@ -110,13 +110,13 @@ const {
         <ol class="list-decimal list-inside space-y-2">
           {footnotes.map(([key]) => (
             <li id={`footnote-${key}`}>
-              {t(`footnotes.${key}`)}
+              <Fragment set:html={t('footnotes.${key}')} />
             </li>
           ))}
         </ol>
         
         <p class="mt-2">
-          {t('footnotes.closing')}
+          <Fragment set:html={t('footnotes.closing')} />
         </p>
         
       </div>
