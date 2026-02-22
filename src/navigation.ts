@@ -8,7 +8,7 @@ export const DEFAULT_FOOTNOTES = ['risk', 'education'];
 // -----------------------------
 // Header
 // -----------------------------
-export function getHeaderData(lang = 'en') {
+export function getHeaderData(lang?: string) {
   const t = useTranslations(lang);
 
   return {
@@ -41,7 +41,10 @@ export function getHeaderData(lang = 'en') {
 // -----------------------------
 // Footer
 // -----------------------------
-export function getFooterData(lang = 'en', footnotes: string[] = DEFAULT_FOOTNOTES) {
+export function getFooterData(
+  lang?: string,
+  footnotes: string[] = DEFAULT_FOOTNOTES
+) {
   const t = useTranslations(lang);
 
   return {
