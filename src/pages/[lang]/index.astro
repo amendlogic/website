@@ -49,7 +49,7 @@ const metadata = {
 };
 
 // 5️⃣ Footer Data
-const footerData = getFooterData(lang); // nur lang übergeben, footnotes optional
+getFooterData(lang, ['risk', 'education', 'backtest']);
 ---
 
 <Layout metadata={metadata} footerData={footerData}>
