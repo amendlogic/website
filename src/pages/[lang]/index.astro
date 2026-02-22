@@ -1,7 +1,5 @@
 ---
-import { getI18nPaths, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
-
-// 1. Daten und Navigation importieren
+import { getI18nPaths, useTranslations } from '~/i18n/utils';
 import { getFooterData } from '~/navigation';
 
 // Layout & Widgets
@@ -15,42 +13,44 @@ import Testimonials from '~/components/widgets/Testimonials.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
-// 2. Pfade generieren (SSOT für [lang])
+// ---------------------
+// 1️⃣ Static Paths (SSG)
+// ---------------------
 export async function getStaticPaths() {
   return getI18nPaths();
 }
 
-// 3. Sprache & Content laden
+// ---------------------
+// 2️⃣ Sprache & Übersetzungen
+// ---------------------
 const { lang } = Astro.params;
-const currentLang = lang || 'en';
 const t = useTranslations(lang);
 
-const started = t('faq.started.items');
-const performance = t('faq.performance.items');
-const security = t('faq.security.items');
-const billing = t('faq.billing.items');
-const support = t('faq.support.items');
+// ---------------------
+// 3️⃣ FAQ Items zusammenstellen
+// ---------------------
+const faqKeys = [
+  'faq.performance.items',
+  'faq.started.items',
+  'faq.security.items',
+  'faq.billing.items',
+  'faq.support.items'
+];
 
-const selectedFAQItems = [
-  performance[0],
-  performance[1],
-  performance[2],
-  started[0],
-  started[1],
-  performance[3],
-  security[0],
-  billing[0],
-  billing[1],
-  support[0]
-].filter(Boolean);
+const selectedFAQItems = faqKeys.flatMap(key => t(key)).filter(Boolean);
 
-// 5. Metadaten
+// ---------------------
+// 4️⃣ Metadaten
+// ---------------------
 const metadata = {
   title: `${t('home.hero.titleStart')} ${t('home.hero.titleAccent')} — AmendLogic`,
   ignoreTitleTemplate: true,
 };
 
-const footerData = getFooterData(currentLang, ['risk', 'education', 'backtest']);
+// ---------------------
+// 5️⃣ Footer Data
+// ---------------------
+const footerData = getFooterData(lang, ['risk', 'education', 'backtest']);
 ---
 
 <Layout metadata={metadata} footerData={footerData}>
