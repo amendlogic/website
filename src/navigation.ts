@@ -2,7 +2,7 @@
 import { SITE } from 'astrowind:config';
 import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './utils/permalinks';
 import { useTranslations } from '~/i18n/utils';
-import footnotes from '~/i18n/locales/en/footnotes.json';
+import footnotesJson from '~/i18n/locales/en/footnotes.json';
 
 // -----------------------------
 // Header
