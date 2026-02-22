@@ -29,15 +29,23 @@ const t = useTranslations(lang);
 // ---------------------
 // 3️⃣ FAQ Items zusammenstellen
 // ---------------------
-const faqKeys = [
-  'faq.performance.items',
-  'faq.started.items',
-  'faq.security.items',
-  'faq.billing.items',
-  'faq.support.items'
+const faqOrderConfig = [
+  { key: 'faq.performance.items', index: 0 },
+  { key: 'faq.performance.items', index: 1 },
+  { key: 'faq.performance.items', index: 2 },
+  { key: 'faq.started.items', index: 0 },
+  { key: 'faq.started.items', index: 1 },
+  { key: 'faq.performance.items', index: 3 },
+  { key: 'faq.security.items', index: 0 },
+  { key: 'faq.billing.items', index: 0 },
+  { key: 'faq.billing.items', index: 1 },
+  { key: 'faq.support.items', index: 0 },
 ];
 
-const selectedFAQItems = faqKeys.flatMap(key => t(key)).filter(Boolean);
+const selectedFAQItems = faqOrderConfig.map(({ key, index }) => {
+  const items = t(key) || [];
+  return items[index];
+}).filter(Boolean);
 
 // ---------------------
 // 4️⃣ Metadaten
