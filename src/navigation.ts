@@ -62,7 +62,9 @@ export const getHeaderData = (lang = 'en') => {
   };
 };
 
-export const getFooterData = (lang = 'en', footnotes: string[] = []) => {
+export const DEFAULT_FOOTNOTES = ['risk', 'education'];
+
+export const getFooterData = (lang = 'en', footnotes: string[] = DEFAULT_FOOTNOTES) => {
   const t = useTranslations(lang);
 
   return {
@@ -116,9 +118,7 @@ export const getFooterData = (lang = 'en', footnotes: string[] = []) => {
         href: getHomePermalink('de'), 
       },
     ],
-    footnotes: footnotes.length > 0 ? footnotes : [
-      'risk'
-    ],
+    footnotes,
     socialLinks: [
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
