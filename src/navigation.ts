@@ -116,7 +116,7 @@ export const getFooterData = (lang = 'en', footnotes: string[] = []) => {
         href: getHomePermalink('de'), 
       },
     ],
-    footnotes.length > 0 ? footnotes : [
+    footnotes: footnotes.length > 0 ? footnotes : [
       'risk'
     ],
     socialLinks: [
