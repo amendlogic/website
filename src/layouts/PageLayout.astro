@@ -20,7 +20,16 @@ const { lang } = Astro.params;
 const currentLang = lang || 'en';
 
 const headerData = headerProps || getHeaderData(currentLang);
-const footerData = footerProps || getFooterData(currentLang);
+const defaultFooterData = getFooterData(currentLang);
+
+const footerData = {
+  ...defaultFooterData,
+  ...footerProps,
+  footnotes: [
+    ...(defaultFooterData.footnotes || []),
+    ...(footerProps?.footnotes || [])
+  ]
+};
 ---
 
 <Layout metadata={metadata}>
