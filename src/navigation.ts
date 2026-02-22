@@ -46,11 +46,18 @@ export function getFooterData(
   footnotes: string[] = DEFAULT_FOOTNOTES
 ) {
   const t = useTranslations(lang);
-  const sortedFootnotes = [...footnotes].sort(
-    (a, b) =>
-      FOOTNOTE_ORDER.indexOf(a) - FOOTNOTE_ORDER.indexOf(b)
-  );
 
+const sortedFootnotes = [...footnotes].sort((a, b) => {
+  const indexA = FOOTNOTE_ORDER.indexOf(a);
+  const indexB = FOOTNOTE_ORDER.indexOf(b);
+
+  if (indexA === -1) return 1;
+  if (indexB === -1) return -1;
+
+  return indexA - indexB;
+});
+
+ 
   return {
     links: [
       {
