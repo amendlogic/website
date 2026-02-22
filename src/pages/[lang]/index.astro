@@ -44,16 +44,16 @@ const selectedFAQItems = [
   support[0]
 ].filter(Boolean);
 
-const footerData = getFooterData(currentLang, ['footnotes.risk', 'education', 'backtest']);
-
 // 5. Metadaten
 const metadata = {
   title: `${t('home.hero.titleStart')} ${t('home.hero.titleAccent')} — AmendLogic`,
   ignoreTitleTemplate: true,
 };
+
+const footerData = getFooterData(currentLang, ['risk', 'education', 'backtest']);
 ---
 
-<Layout metadata={metadata}>
+<Layout metadata={metadata} footerData={footerData}>
 
   <Hero
     image={{ src: '~/assets/images/hero-image.png', alt: 'AstroWind Hero Image' }}
