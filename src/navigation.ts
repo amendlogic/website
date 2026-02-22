@@ -43,17 +43,9 @@ export function getHeaderData(lang?: string) {
 // -----------------------------
 export function getFooterData(
   lang?: string,
-  customFootnotes: string[] = [] // Wir nennen es absichtlich anders!
+  footnotes: string[] = DEFAULT_FOOTNOTES
 ) {
   const t = useTranslations(lang);
-
-  // 1. Kombiniere die Defaults mit deinen custom Footnotes von der Seite
-  const allFootnotes = [...DEFAULT_FOOTNOTES, ...customFootnotes];
-
-  // 2. Zwinge sie in die exakte Reihenfolge von FOOTNOTE_ORDER
-  const orderedFootnotes = FOOTNOTE_ORDER.filter((footnote) => 
-    allFootnotes.includes(footnote)
-  );
 
   return {
     links: [
@@ -100,7 +92,7 @@ export function getFooterData(
       { text: 'We speak English', href: getHomePermalink('en') },
       { text: 'Wir sprechen Deutsch', href: getHomePermalink('de') },
     ],
-    footnotes: orderedFootnotes,
+    footnotes,
     socialLinks: [
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
