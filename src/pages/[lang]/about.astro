@@ -1,5 +1,5 @@
 ---
-import { getI18nPaths, useTranslations } from '~/i18n/utils';
+import { getI18nPaths, useTranslations, DEFAULT_LANG } from '~/i18n/utils';
 
 // 1. Daten und Navigation importieren
 import Features2 from '~/components/widgets/Features2.astro';
@@ -18,7 +18,8 @@ export async function getStaticPaths() {
 
 // 2️⃣ Sprache & Übersetzungen
 const { lang } = Astro.params;
-const { t, currentLang } = useTranslations(lang);
+const currentLang = lang || DEFAULT_LANG;  // Fallback auf Englisch
+const t = useTranslations(currentLang);
 
 // 4. Metadaten
 const metadata = {
