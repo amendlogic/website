@@ -2,33 +2,20 @@
 import { getI18nPaths, useTranslations } from '~/i18n/utils';
 import { getFooterData } from '~/navigation';
 
-// Layout & Widgets
 import Layout from '~/layouts/PageLayout.astro';
 import Hero from '~/components/widgets/Hero.astro';
-import Note from '~/components/widgets/Note.astro';
-import Content from '~/components/widgets/Content.astro';
-import Steps from '~/components/widgets/Steps.astro';
-import EChart from '~/components/widgets/EChart.astro';
-import Testimonials from '~/components/widgets/Testimonials.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
 
-// ---------------------
-// 1️⃣ Static Paths (SSG)
-// ---------------------
+// 1️⃣ Static Paths
 export async function getStaticPaths() {
   return getI18nPaths();
 }
 
-// ---------------------
 // 2️⃣ Sprache & Übersetzungen
-// ---------------------
 const { lang } = Astro.params;
-const t = useTranslations(lang);
+const { t, currentLang } = useTranslations(lang);
 
-// ---------------------
-// 3️⃣ FAQ Items zusammenstellen
-// ---------------------
+// 3️⃣ FAQ Items mit exakter Reihenfolge
 const faqOrderConfig = [
   { key: 'faq.performance.items', index: 0 },
   { key: 'faq.performance.items', index: 1 },
@@ -47,18 +34,14 @@ const selectedFAQItems = faqOrderConfig.map(({ key, index }) => {
   return items[index];
 }).filter(Boolean);
 
-// ---------------------
-// 4️⃣ Metadaten
-// ---------------------
+// 4️⃣ Metadata
 const metadata = {
   title: `${t('home.hero.titleStart')} ${t('home.hero.titleAccent')} — AmendLogic`,
   ignoreTitleTemplate: true,
 };
 
-// ---------------------
 // 5️⃣ Footer Data
-// ---------------------
-const footerData = getFooterData(lang, ['risk', 'education', 'backtest']);
+const footerData = getFooterData(currentLang, ['risk', 'education', 'backtest']);
 ---
 
 <Layout metadata={metadata} footerData={footerData}>
