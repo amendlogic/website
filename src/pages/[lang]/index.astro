@@ -1,5 +1,5 @@
 ---
-import { getI18nPaths, useTranslations, DEFAULT_LANG } from '~/i18n/utils';
+import { getI18nPaths, useTranslations } from '~/i18n/utils';
 import { getFooterData } from '~/navigation';
 
 import Layout from '~/layouts/PageLayout.astro';
@@ -19,8 +19,7 @@ export async function getStaticPaths() {
 
 // 2️⃣ Sprache & Übersetzungen
 const { lang } = Astro.params;
-const currentLang = lang || DEFAULT_LANG;  // Fallback auf Englisch
-const t = useTranslations(currentLang);
+const t = useTranslations(lang); // intern fallback auf DEFAULT_LANG
 
 // 3️⃣ FAQ Items mit exakter Reihenfolge
 const faqOrderConfig = [
@@ -36,10 +35,12 @@ const faqOrderConfig = [
   { key: 'faq.support.items', index: 0 },
 ];
 
-const selectedFAQItems = faqOrderConfig.map(({ key, index }) => {
-  const items = t(key) || [];
-  return items[index];
-}).filter(Boolean);
+const selectedFAQItems = faqOrderConfig
+  .map(({ key, index }) => {
+    const items = t(key) || [];
+    return items[index];
+  })
+  .filter(Boolean);
 
 // 4️⃣ Metadata
 const metadata = {
@@ -48,7 +49,7 @@ const metadata = {
 };
 
 // 5️⃣ Footer Data
-const footerData = getFooterData(currentLang, ['risk', 'education', 'backtest']);
+const footerData = getFooterData(lang); // nur lang übergeben, footnotes optional
 ---
 
 <Layout metadata={metadata} footerData={footerData}>
