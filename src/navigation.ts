@@ -3,7 +3,7 @@ import { SITE } from 'astrowind:config';
 import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './utils/permalinks';
 import { useTranslations } from '~/i18n/utils';
 
-export const DEFAULT_FOOTNOTES = ['risk', 'education'];
+export const DEFAULT_FOOTNOTES = ['risk', 'performance', 'education', 'regulatory', 'third-party'];
 
 // -----------------------------
 // Header
