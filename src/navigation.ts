@@ -43,11 +43,17 @@ export function getHeaderData(lang?: string) {
 // -----------------------------
 export function getFooterData(
   lang?: string,
-  additionalFootnotes: string[] = [] // Standardmäßig ein leeres Array für Seiten ohne Extras
+  customFootnotes: string[] = [] // Wir nennen es absichtlich anders!
 ) {
   const t = useTranslations(lang);
-  const combinedFootnotes = Array.from(new Set([...DEFAULT_FOOTNOTES, ...additionalFootnotes]));
-  const finalFootnotes = FOOTNOTE_ORDER.filter((footnote) => combinedFootnotes.includes(footnote));
+
+  // 1. Kombiniere die Defaults mit deinen custom Footnotes von der Seite
+  const allFootnotes = [...DEFAULT_FOOTNOTES, ...customFootnotes];
+
+  // 2. Zwinge sie in die exakte Reihenfolge von FOOTNOTE_ORDER
+  const orderedFootnotes = FOOTNOTE_ORDER.filter((footnote) => 
+    allFootnotes.includes(footnote)
+  );
 
   return {
     links: [
@@ -94,7 +100,7 @@ export function getFooterData(
       { text: 'We speak English', href: getHomePermalink('en') },
       { text: 'Wir sprechen Deutsch', href: getHomePermalink('de') },
     ],
-    footnotes: finalFootnotes,
+    footnotes: orderedFootnotes,
     socialLinks: [
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
