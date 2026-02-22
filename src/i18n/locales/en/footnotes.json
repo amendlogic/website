@@ -1,42 +1,10 @@
-[
-  {
-    "key": "education",
-    "default": true,
-    "content": "..."
-  },
-  {
-    "key": "risk",
-    "default": true,
-    "content": "..."
-  },
-  {
-    "key": "backtest",
-    "default": false,
-    "content": "..."
-  },
-  {
-    "key": "testimonials",
-    "default": false,
-    "content": "..."
-  },
-  {
-    "key": "payments",
-    "default": false,
-    "content": "..."
-  },
-  {
-    "key": "third-party",
-    "default": false,
-    "content": "..."
-  },
-  {
-    "key": "regulatory",
-    "default": true,
-    "content": "..."
-  }
-]
-
-
-
-
-
+{
+  "risk": "<b>Risk Disclosure:</b> Trading cryptocurrencies, derivatives, and other financial instruments involves substantial risk and may result in the loss of your entire invested capital. Past performance is not indicative of future results. You should carefully consider whether trading is suitable for you in light of your financial condition, knowledge, and experience. The content provided on this website is for informational and educational purposes only and does not constitute financial, investment, legal, or tax advice.",
+  "backtest": "<b>Hypothetical & Simulated Performance:</b> Any performance results presented on this website may include simulated, backtested, or hypothetical results. Such results have inherent limitations and do not represent actual trading. Simulated results may not accurately reflect the impact of real market conditions, including liquidity constraints, slippage, fees, and emotional decision-making. No representation is being made that any account will or is likely to achieve profits or losses similar to those shown.",
+  "testimonials": "<b>Customer Testimonials:</b> Testimonials and user experiences displayed on this website may not reflect the typical experience of other clients. Individual results may vary and are not guarantees of future performance or success.",
+  "education": "<b>No Investment Advisory Relationship:</b> We provide technical analysis tools, educational resources, and automated strategy software. We do not manage client funds, execute trades on behalf of clients, or provide personalized investment recommendations. We are not a registered investment advisor, broker-dealer, or financial institution. Use of our software does not create any fiduciary or advisory relationship.",
+  "regulatory": "<b>Regulatory Notice:</b> Users are solely responsible for ensuring that the use of our products complies with the laws and regulations applicable in their jurisdiction. Cryptocurrency trading may be restricted or regulated in certain countries.",
+  "payments": "<b>Payments & Subscriptions:</b> Payments and recurring subscription charges are processed securely via Stripe, Inc. (“Stripe”), an independent third-party provider. By subscribing, you authorize automatic recurring billing according to your selected plan. You may cancel at any time before the next billing cycle. We do not store full payment details. Payment data is processed by Stripe in accordance with applicable data protection laws, including the GDPR.",
+  "third-party": "<b>Third-Party Services & Trademarks:</b> Charts and market data displayed on this website are powered by <a class=\"underline\" href=\"https://www.tradingview.com/\" target=\"_blank\" rel=\"noopener noreferrer\">TradingView</a>. TradingView® is a registered trademark of TradingView, Inc. This website and its products are not affiliated with, endorsed by, or sponsored by TradingView. All other trademarks belong to their respective owners.",
+  "closing": "For comprehensive information regarding risks, liability limitations, data processing, and user obligations, please review our <a class=\"underline\" href=\"/terms\">Terms of Service</a>, <a class=\"underline\" href=\"/risk-disclosure\">Risk Disclosure</a>, and <a class=\"underline\" href=\"/privacy-policy\">Privacy Policy</a>."
+}
