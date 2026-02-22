@@ -47,6 +47,9 @@ export function getFooterData(
   footnotes: string[] = DEFAULT_FOOTNOTES
 ) {
   const t = useTranslations(lang);
+  const sortedFootnotes = FOOTNOTE_ORDER.filter((key) =>
+    footnotes.includes(key)
+  );
 
   return {
     links: [
@@ -93,7 +96,7 @@ export function getFooterData(
       { text: 'We speak English', href: getHomePermalink('en') },
       { text: 'Wir sprechen Deutsch', href: getHomePermalink('de') },
     ],
-    footnotes,
+    footnotes: sortedFootnotes,
     socialLinks: [
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
