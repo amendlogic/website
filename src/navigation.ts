@@ -44,12 +44,12 @@ export function getHeaderData(lang?: string) {
 // -----------------------------
 export function getFooterData(
   lang?: string,
-  footnotes: string[] = DEFAULT_FOOTNOTES
+  overrides?: string[]
 ) {
-  const t = useTranslations(lang);
-  const sortedFootnotes = FOOTNOTE_ORDER.filter((key) =>
-    footnotes.includes(key)
-  );
+  const visible = footnotes.filter((item) => {
+    if (!overrides) return item.default;
+    return overrides.includes(item.key);
+  });
 
   return {
     links: [
@@ -96,7 +96,7 @@ export function getFooterData(
       { text: 'We speak English', href: getHomePermalink('en') },
       { text: 'Wir sprechen Deutsch', href: getHomePermalink('de') },
     ],
-    footnotes: sortedFootnotes,
+    footnotes: visible,
     socialLinks: [
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
