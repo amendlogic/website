@@ -2,9 +2,7 @@
 import { SITE } from 'astrowind:config';
 import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './utils/permalinks';
 import { useTranslations } from '~/i18n/utils';
-
-export const FOOTNOTE_ORDER = ['education', 'risk', 'backtest', 'testimonials', 'payments', 'third-party', 'regulatory'];
-export const DEFAULT_FOOTNOTES = ['education', 'risk', 'backtest', 'third-party', 'regulatory'];
+import footnotes from '~/i18n/locales/en/footnotes.json';
 
 // -----------------------------
 // Header
@@ -42,14 +40,19 @@ export function getHeaderData(lang?: string) {
 // -----------------------------
 // Footer
 // -----------------------------
-export function getFooterData(
-  lang?: string,
-  overrides?: string[]
-) {
-  const visible = footnotes.filter((item) => {
-    if (!overrides) return item.default;
-    return overrides.includes(item.key);
-  });
+export function getFooterData(lang?: string, overrides?: string[]) {
+  const t = useTranslations(lang);
+
+  // Filter: Standard oder Overrides
+  const visible = footnotesJson
+    .filter((item) => {
+      if (!overrides) return item.default;        // keine Overrides → nur default=true
+      return overrides.includes(item.key);        // Overrides angegeben → nur diese Keys
+    })
+    .map((item) => ({
+      key: item.key,
+      content: t(`footnotes.${item.key}`) || item.content, // Übersetzung falls vorhanden, sonst JSON
+    }));
 
   return {
     links: [
