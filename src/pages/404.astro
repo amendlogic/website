@@ -2,17 +2,18 @@
 import Layout from '~/layouts/Layout.astro';
 import { getHomePermalink } from '~/utils/permalinks';
 import { getHeaderData, getFooterData } from '~/navigation';
-import { DEFAULT_LANG } from '~/i18n/utils';
+import { useTranslations, DEFAULT_LANG } from '~/i18n/utils';
 
-// 1️⃣ Titel
-const title = `Error 404`;
+// Fallback auf DEFAULT_LANG
+const { lang } = Astro.params;
+const currentLang = lang || DEFAULT_LANG;
+const t = useTranslations(currentLang);
 
-// 2️⃣ Sprache Fallback (immer Default für statische 404)
-const currentLang = DEFAULT_LANG;
-
-// 3️⃣ Header & Footer Daten
+// Header/Footer
 const headerData = getHeaderData(currentLang);
 const footerData = getFooterData(currentLang);
+
+const title = t('404.title') || 'Error 404';
 ---
 <Layout metadata={{ title }} headerData={headerData} footerData={footerData}>
   <section class="flex items-center h-full p-16">
@@ -22,11 +23,11 @@ const footerData = getFooterData(currentLang);
           <span class="sr-only">Error</span>
           <span class="text-primary">404</span>
         </h2>
-        <p class="text-3xl font-semibold md:text-3xl">Sorry, we couldn't find this page.</p>
+        <p class="text-3xl font-semibold md:text-3xl">{t('404.message') || "Sorry, we couldn't find this page."}</p>
         <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
-          But don't worry, you can find plenty of other things on our homepage.
+          {t('404.suggestion') || "But don't worry, you can find plenty of other things on our homepage."}
         </p>
-        <a rel="noopener noreferrer" href={getHomePermalink()} class="btn ml-4">Back to homepage</a>
+        <a rel="noopener noreferrer" href={getHomePermalink(currentLang)} class="btn ml-4">{t('404.backHome') || 'Back to homepage'}</a>
       </div>
     </div>
   </section>
