@@ -1,51 +1,75 @@
+// src/i18n/utils.ts
 import { ui } from './ui';
 
+// -----------------------------
+// 1️⃣ Sprachen
+// -----------------------------
 export const LANGUAGES = {
   en: 'English',
   de: 'Deutsch',
 } as const;
 
-export const DEFAULT_LANG: keyof typeof LANGUAGES = 'en';
+export const DEFAULT_LANG = 'en';
 
-export const getI18nPaths = () =>
-  Object.keys(LANGUAGES).map((lang) => ({ params: { lang } }));
+// -----------------------------
+// 2️⃣ Generiere alle i18n Pfade (für getStaticPaths)
+// -----------------------------
+export const getI18nPaths = () => {
+  return Object.keys(LANGUAGES).map((lang) => ({
+    params: { lang },
+  }));
+};
 
-// ---------------------
-// useTranslations liefert jetzt t + currentLang
-// ---------------------
+// -----------------------------
+// 3️⃣ useTranslations Hook
+// -----------------------------
 export function useTranslations(lang?: string) {
-  const currentLang: keyof typeof LANGUAGES =
-    lang && lang in LANGUAGES ? (lang as keyof typeof LANGUAGES) : DEFAULT_LANG;
+  // 3a. sichere Sprache
+  const currentLang = lang && lang in LANGUAGES ? (lang as keyof typeof LANGUAGES) : DEFAULT_LANG;
+  const defaultLang = DEFAULT_LANG;
 
-  function t(keyString: string) {
-    const [namespace, ...rest] = keyString.split('.');
-    if (!namespace || rest.length === 0) {
-      console.warn(`[i18n] Key "${keyString}" invalid. Use namespace.key format.`);
+  // 3b. die eigentliche Übersetzungsfunktion
+  return function t(keyString: string): string {
+    // Sicherheitscheck: namespace vorhanden?
+    const firstDotIndex = keyString.indexOf('.');
+    if (firstDotIndex === -1) {
+      console.warn(`[i18n] Key "${keyString}" needs a namespace (e.g. 'home.title')`);
       return keyString;
     }
-    const specificKey = rest.join('.');
 
-    const langObj = ui[currentLang] || ui[DEFAULT_LANG];
-    const defaultObj = ui[DEFAULT_LANG];
+    const namespace = keyString.substring(0, firstDotIndex);
+    const specificKey = keyString.substring(firstDotIndex + 1);
 
-    const fileObj = (langObj as any)[namespace] || (defaultObj as any)[namespace];
+    // Zugriff auf Sprachobjekte
+    // @ts-ignore
+    const langObj = ui[currentLang];
+    // @ts-ignore
+    const defaultObj = ui[defaultLang];
+
+    // Zugriff auf Namespace
+    const fileObj = langObj?.[namespace] || defaultObj?.[namespace];
+
     if (!fileObj) {
       console.warn(`[i18n] Namespace "${namespace}" not found in ui.ts`);
       return keyString;
     }
 
+    // Text abrufen
     const text = fileObj[specificKey];
-    if (!text && currentLang !== DEFAULT_LANG) {
-      return (defaultObj as any)[namespace]?.[specificKey] || keyString;
+
+    // Fallback auf default
+    if (!text && currentLang !== defaultLang) {
+      return defaultObj?.[namespace]?.[specificKey] || keyString;
     }
 
     return text || keyString;
-  }
-
-  return { t, currentLang };
+  };
 }
 
-export function getLangFromUrl(url: URL) {
+// -----------------------------
+// 4️⃣ Sprache aus URL extrahieren
+// -----------------------------
+export function getLangFromUrl(url: URL): keyof typeof LANGUAGES {
   const [, lang] = url.pathname.split('/');
-  return lang in LANGUAGES ? (lang as keyof typeof LANGUAGES) : DEFAULT_LANG;
+  return lang && lang in LANGUAGES ? (lang as keyof typeof LANGUAGES) : DEFAULT_LANG;
 }
