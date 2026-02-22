@@ -8,8 +8,7 @@ import type { MetaData } from '~/types';
 
 export interface Props {
   metadata?: MetaData;
-  // Wir erlauben, dass headerData und footerData von außen reingegeben werden
-  headerData?: any; 
+  headerData?: any;
   footerData?: any;
 }
 
@@ -19,16 +18,22 @@ const { metadata, headerData: headerProps, footerData: footerProps } = Astro.pro
 const { lang } = Astro.params;
 const currentLang = lang || 'en';
 
+// Header-Daten laden
 const headerData = headerProps || getHeaderData(currentLang);
+
+// Standard Footer-Daten
 const defaultFooterData = getFooterData(currentLang);
 
+// Footer-Daten zusammenführen und Footnotes deduplizieren
 const footerData = {
   ...defaultFooterData,
   ...footerProps,
-  footnotes: [
-    ...(defaultFooterData.footnotes || []),
-    ...(footerProps?.footnotes || [])
-  ]
+  footnotes: Array.from(
+    new Set([
+      ...(defaultFooterData.footnotes || []),
+      ...(footerProps?.footnotes || [])
+    ])
+  )
 };
 ---
 
