@@ -96,7 +96,7 @@ export function getFooterData(
       { text: 'We speak English', href: getHomePermalink('en') },
       { text: 'Wir sprechen Deutsch', href: getHomePermalink('de') },
     ],
-    footnotes: visible,
+    footnotes: sortedFootnotes,
     socialLinks: [
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
