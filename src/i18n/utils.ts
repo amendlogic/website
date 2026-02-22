@@ -10,10 +10,14 @@ export const DEFAULT_LANG: keyof typeof LANGUAGES = 'en';
 export const getI18nPaths = () =>
   Object.keys(LANGUAGES).map((lang) => ({ params: { lang } }));
 
+// ---------------------
+// useTranslations liefert jetzt t + currentLang
+// ---------------------
 export function useTranslations(lang?: string) {
-  const currentLang = lang && lang in LANGUAGES ? (lang as keyof typeof LANGUAGES) : DEFAULT_LANG;
+  const currentLang: keyof typeof LANGUAGES =
+    lang && lang in LANGUAGES ? (lang as keyof typeof LANGUAGES) : DEFAULT_LANG;
 
-  return function t(keyString: string) {
+  function t(keyString: string) {
     const [namespace, ...rest] = keyString.split('.');
     if (!namespace || rest.length === 0) {
       console.warn(`[i18n] Key "${keyString}" invalid. Use namespace.key format.`);
@@ -32,12 +36,13 @@ export function useTranslations(lang?: string) {
 
     const text = fileObj[specificKey];
     if (!text && currentLang !== DEFAULT_LANG) {
-      // fallback auf default language
       return (defaultObj as any)[namespace]?.[specificKey] || keyString;
     }
 
     return text || keyString;
-  };
+  }
+
+  return { t, currentLang };
 }
 
 export function getLangFromUrl(url: URL) {
