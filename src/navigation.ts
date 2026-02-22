@@ -3,7 +3,7 @@ import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './ut
 import { useTranslations } from '~/i18n/utils';
 
 export const getHeaderData = (lang = 'en') => {
-  const t = useTranslations(lang);
+  const { t } = useTranslations(lang);
 
   return {
     links: [
@@ -65,7 +65,7 @@ export const getHeaderData = (lang = 'en') => {
 export const DEFAULT_FOOTNOTES = ['risk', 'education'];
 
 export const getFooterData = (lang = 'en', footnotes: string[] = DEFAULT_FOOTNOTES) => {
-  const t = useTranslations(lang);
+  const { t } = useTranslations(lang);
 
   return {
     links: [
