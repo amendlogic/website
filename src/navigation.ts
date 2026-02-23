@@ -1,4 +1,4 @@
-// src/navigation.ts
+// src/navigation.ts 
 import { SITE } from 'astrowind:config';
 import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './utils/permalinks';
 import { useTranslations } from '~/i18n/utils';
