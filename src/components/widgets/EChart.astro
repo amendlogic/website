@@ -18,23 +18,21 @@ export interface Props {
   classes?: { container?: string };
 }
 
-// Slots: title, subtitle, tagline, content, bg
-const title = Astro.slots.title ? await Astro.slots.title() : '';
-const subtitle = Astro.slots.subtitle ? await Astro.slots.subtitle() : '';
-const tagline = Astro.slots.tagline ? await Astro.slots.tagline() : '';
-const content = Astro.slots.content ? await Astro.slots.content() : '';
-const bg = Astro.slots.bg ? await Astro.slots.bg() : '';
-
 const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline,
   icon = 'tabler:info-square',
-  csvPath,
-  initialCapital = 300,
+  content = await Astro.slots.render('content'),
   options: userOptions = {},
-  id,
+  initialCapital = 300,
+  csvPath,
   height = '450px',
+  id,
   locale = Astro.currentLocale || 'de',
   isDark = false,
   classes = {},
+  bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
 // eindeutige IDs für Wrapper + Chart + JSON
