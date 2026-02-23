@@ -8,7 +8,9 @@ import { Icon } from 'astro-icon/components';
 import { parseCsvData, getBaseChartOptions } from '~/lib/chart-data';
 
 export interface Props {
-  icon?: string;
+  icon?: string
+  content?: string;
+}
 
 const {
   title = await Astro.slots.render('title'),
