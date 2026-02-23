@@ -8,6 +8,7 @@ import Hero from '~/components/widgets/Hero.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import Steps2 from '~/components/widgets/Steps2.astro';
 import Content from '~/components/widgets/Content.astro';
+import Content2 from '~/components/widgets/Content2.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import Layout from '~/layouts/PageLayout.astro';
 
@@ -128,8 +129,11 @@ const metadata = {
 
   <!-- Content Widget **************** -->
 
-  <Content
+  <Content2
     id="about"
+    tagline={t('about.transparency.tagline')}
+    title={t('about.transparency.title')}
+    subtitle={t('about.transparency.description')}
     columns={3}
     items={[
       {
@@ -162,12 +166,7 @@ const metadata = {
       alt: 'Colorful Image',
       loading: 'eager',
     }}
-  >
-    <Fragment slot="content">
-      <h2 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">{t('about.transparency.title')}</h2>
-      <p>{t('about.transparency.description')}</p>
-    </Fragment>
-  </Content>
+  />
 
 
 
