@@ -35,7 +35,7 @@ const {
       {items.map(({ title, description, icon, callToAction, classes: itemClasses = {} }) => (
         <div class="intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
           <div class={twMerge('flex flex-row max-w-md', panelClass, itemClasses?.panel)}>
-            <div class="flex justify-center">
+            <div class="flex justify-center content-center">
               {(icon || defaultIcon) && (
                 <Icon
                   name={icon || defaultIcon}
@@ -43,7 +43,7 @@ const {
                 />
               )}
             </div>
-            <div class="mt-0.5">
+            <div class="mt-0.5 content-center">
               {title && <h3 class={twMerge('text-xl font-bold', titleClass, itemClasses?.title)}>{title}</h3>}
               {description && (
                 <p
