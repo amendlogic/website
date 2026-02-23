@@ -140,7 +140,12 @@ const footerData = getFooterData(lang, ['testimonials']);
   subtitle={t('home.chart.subtitle')}
   height="400px"
   csvPath="./src/data/strategy.csv" 
-/>
+>
+    <Fragment slot="content">
+      {t('home.features2.contentDesc')}
+    </Fragment>
+  </Content>
+</EChart>
 
   <Testimonials
     id="testimonials"
