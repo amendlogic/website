@@ -1,23 +1,113 @@
 {
-  "about.hero.title": "Struktur statt Spekulation",
+  "hero.tagline": "Märkte schwanken. Struktur besteht.",
+  "hero.title": "Disziplin wird konstruiert — nicht vorausgesetzt.",
+  "hero.subtitle": "Definierte Struktur. Validierte Bedingungen. Kontrolliertes Risiko. Ein regelbasiertes Bitcoin-Framework, entwickelt für konsistente Performance über alle Marktzyklen hinweg.",
+  "hero.ctaPrimary": "Framework erkunden",
+  "hero.ctaSecondary": "Performance-Logik ansehen",
 
-  "about.story.title": "Von Intuition zu klar definierten Regeln",
-  "about.story.content": "In den frühen Phasen des Tradings waren Entscheidungen häufig von Emotionen, Marktgeräuschen und Rückschaufehlern geprägt. Mit zunehmender Erfahrung wurde jedoch eines deutlich: Nachhaltige Performance entsteht nicht durch Vorhersagen, sondern durch Struktur, Disziplin und wiederholbare Prozesse. Aus dieser Erkenntnis entstand ein regelbasiertes Framework, das Entscheidungen standardisiert und über unterschiedliche Marktphasen hinweg Konsistenz schafft.",
+  "story.tagline": "Ursprung",
+  "story.title": "Warum Struktur unverhandelbar wurde",
+  "story.subtitle": "Über mehrere Bitcoin-Marktzyklen hinweg — von aggressiven Expansionsphasen bis hin zu langanhaltenden Drawdowns — haben diskretionäre Entscheidungen immer wieder ihre Grenzen aufgezeigt. Flexibilität ohne Struktur wird zu Inkonsistenz. Marktrauschen beeinflusst die Wahrnehmung. Emotionen verfälschen das Timing. Rückschaufehler verzerren das Urteilsvermögen. Das wiederkehrende Muster war eindeutig: Nachhaltige Performance entsteht nicht durch bessere Vorhersagen. Sie entsteht durch vordefinierte Prozesse. Das Framework wurde als Antwort auf diese Erkenntnis entwickelt — um Entscheidungen zu standardisieren, subjektive Eingriffe zu eliminieren und unabhängig von emotionalen Störfaktoren zu agieren.",
+  "story.items": [
+    {
+      "title": "Emotionen",
+      "description": "Ersetzt durch vordefinierte Entscheidungslogik.",
+      "icon": "tabler:mood-empty"
+    },
+    {
+      "title": "Impulse",
+      "description": "Ersetzt durch strukturierte Validierungskriterien.",
+      "icon": "tabler:player-pause"
+    },
+    {
+      "title": "Hindsight Bias",
+      "description": "Ersetzt durch im Voraus definierte Regelausführung.",
+      "icon": "tabler:history-toggle"
+    }
+  ],
 
-  "about.definition.title": "Ein Framework – keine Black Box",
-  "about.definition.content": "Dieses System ist kein hype-getriebener Trading-Bot und keine undurchsichtige Black-Box-Lösung. Es handelt sich um ein strukturiertes Regelwerk, das den Markt objektiv analysiert. Signale entstehen ausschließlich auf Basis vordefinierter Kriterien, werden systematisch geprüft und nach klaren Parametern ausgeführt. Transparenz und Nachvollziehbarkeit stehen im Mittelpunkt der Entwicklung.",
+  "context.tagline": "Marktrealität",
+  "context.title": "Die meisten Systeme sind gebaut, um zu beeindrucken.",
+  "context.subtitle": "Der Krypto-Trading-Sektor ist übersättigt mit aggressiver Optimierung, kurzfristigen Performance-Screenshots und undurchsichtigen Signaldiensten. Viele Systeme sind so konstruiert, dass sie in isolierten Zeiträumen außergewöhnlich aussehen — aber es fehlt ihnen an struktureller Resilienz über wechselnde Volatilitätsregime hinweg. Dieses Framework wurde nicht entwickelt, um die Handelsfrequenz zu maximieren oder unrealistische kurzfristige Spitzen zu erzeugen. Es wurde entwickelt, um in unterschiedlichen Marktumfeldern strukturell intakt zu bleiben.",
 
-  "about.philosophy.title": "Selektives Handeln statt Daueraktivität",
-  "about.philosophy.content": "Professionelles Trading bedeutet nicht, auf jede Marktbewegung zu reagieren. Es bedeutet, nur dann zu handeln, wenn klar definierte Bedingungen erfüllt sind – und anschließend konsequent dem Plan zu folgen. Ziel ist nicht maximale Aktivität, sondern kontrollierbare und reproduzierbare Ergebnisse über einen längeren Zeitraum.",
+  "framework.tagline": "Framework",
+  "framework.title": "Ein definiertes Regelsystem — keine Blackbox",
+  "framework.subtitle": "Das Framework operiert direkt innerhalb von TradingView und folgt einem transparenten Protokoll. Es bewertet die objektive Marktstruktur, validiert vordefinierte Bedingungen und führt Trades strikt nach strukturierten Risikoparametern aus. Keine ausgelagerte Signallogik. Keine KI-Mystifizierung. Keine diskretionären Eingriffe.",
+  "framework.items": [
+    {
+      "title": "Signallogik",
+      "description": "Vordefinierte Einstiegs- und Ausstiegsbedingungen, abgeleitet aus der objektiven Marktstruktur.",
+      "icon": "tabler:logic-and"
+    },
+    {
+      "title": "Risikoprotokoll",
+      "description": "Positionslimits und Kapitalallokationsregeln, die vor der Ausführung angewendet werden.",
+      "icon": "tabler:shield-check"
+    },
+    {
+      "title": "Ausführungsdisziplin",
+      "description": "Automatisierte Orderplatzierung in strikter Übereinstimmung mit validierten Kriterien.",
+      "icon": "tabler:settings-automation"
+    },
+    {
+      "title": "Strukturüberwachung",
+      "description": "Kontinuierliche Auswertung von Marktphasen zur Sicherstellung der kontextuellen Ausrichtung.",
+      "icon": "tabler:chart-radar"
+    }
+  ],
 
-  "about.methodology.title": "Objektive Marktstruktur & Trendlogik",
-  "about.methodology.content": "Die Strategie basiert auf strukturierter Marktanalyse. Sie bewertet Trends und strukturelle Veränderungen direkt anhand von Preisdaten – ohne subjektive Interpretation. Das Framework passt sich verändernder Volatilität und dynamischen Marktphasen an, anstatt starr zu bleiben. Weniger Bauchgefühl. Mehr definierte Logik.",
+  "methodology.tagline": "Methodik",
+  "methodology.title": "Objektive Marktstruktur & Trendvalidierung",
+  "methodology.subtitle": "Das System bewertet ausschließlich das Preisverhalten — keine Narrative. Es identifiziert strukturierte Marktphasen, validiert die direktionale Neigung durch Qualifikationskriterien und passt das Exposure den Volatilitätsbedingungen an. Das Ziel ist keine ständige Aktivität, sondern konditioniertes Engagement, wenn Struktur und Wahrscheinrscheinlichkeit übereinstimmen.",
+  "methodology.items": [
+    {
+      "title": "Identifikation der Marktphase",
+      "description": "Unterscheidet zwischen Expansions-, Konsolidierungs- und Übergangsumgebungen.",
+      "icon": "tabler:chart-candle"
+    },
+    {
+      "title": "Trendqualifikation",
+      "description": "Setzt Kapital nur dann ein, wenn vordefinierte strukturelle Bedingungen die direktionale Ausrichtung bestätigen.",
+      "icon": "tabler:list-check"
+    },
+    {
+      "title": "Volatilitätskalibriertes Exposure",
+      "description": "Passt die Risikoallokation systematisch an die vorherrschende Volatilität an.",
+      "icon": "tabler:adjustments-horizontal"
+    }
+  ],
 
-  "about.risk.title": "Risikomanagement als Fundament",
-  "about.risk.content": "Kapitalerhalt steht über kurzfristiger Gewinnmaximierung. Integrierte Schutzmechanismen begrenzen Drawdowns, reduzieren Überaktivität in unklaren Marktphasen und kontrollieren das Gesamtrisiko. Wichtige Parameter lassen sich an individuelle Risikopräferenzen anpassen, ohne die strukturelle Integrität des Systems zu gefährden.",
+  "risk.tagline": "Risiko im Fokus",
+  "risk.title": "Gebaut, um Volatilität zu überstehen.",
+  "risk.subtitle": "Rendite ist das Ergebnis. Risikokontrolle ist das Fundament. Das Framework priorisiert Kapitalschutz vor aggressiven Wachstumszielen. Strukturierte Schutzmechanismen begrenzen Drawdowns, reduzieren das Exposure in instabilen Phasen und verhindern unkontrollierte Positionsgrößen. Langfristige Konsistenz erfordert strukturelle Verteidigung vor offensiver Positionierung.",
+  "risk.items": [
+    {
+      "title": "Kontrollierte Positionsgröße",
+      "description": "Das Exposure wird durch vordefinierte Risikoparameter bestimmt.",
+      "icon": "tabler:chart-pie"
+    },
+    {
+      "title": "Drawdown-Minimierung",
+      "description": "Systematische Reduzierung der Aktivität bei instabilen Marktbedingungen.",
+      "icon": "tabler:shield-lock"
+    },
+    {
+      "title": "Volatilitätsbasierte Risikoskalierung",
+      "description": "Dynamische Anpassung des Exposures basierend auf der strukturellen Stabilität.",
+      "icon": "tabler:activity"
+    },
+    {
+      "title": "Konfigurierbare Risikoprofile",
+      "description": "Parameter können an die individuelle Toleranz angepasst werden, während die Systemintegrität gewahrt bleibt.",
+      "icon": "tabler:settings"
+    }
+  ],
 
-  "about.transparency.title": "Gründergeführt. Verantwortungsvoll.",
-  "about.transparency.content": "Dieses Unternehmen ist bewusst als fokussierte, gründergeführte Firma aufgebaut. Langfristiges Vertrauen hat Vorrang vor kurzfristigem Marketing. Die Strategie wird kontinuierlich weiterentwickelt und verantwortungsvoll betreut. Ein strukturiertes System anzubieten bedeutet, hinter Methodik, Logik und Risikokonzept zu stehen – transparent und nachvollziehbar.",
+  "transparency.tagline": "Verantwortlichkeit",
+  "transparency.title": "Gründergeführt. Direkt verantwortlich.",
+  "transparency.description": "AmendLogic wird unter direkter Aufsicht des Gründers entwickelt und gepflegt. Es gibt keine anonymen Entwicklerteams, keine ausgelagerten Signalanbieter und keine Affiliate-gesteuerten Marketing-Narrative. Das Framework wird kontinuierlich über verschiedene Marktbedingungen hinweg evaluiert, mit Fokus auf struktureller Integrität statt werbewirksamen Performance-Metriken. Ein regelbasiertes System anzubieten bedeutet, hinter seiner Methodik zu stehen — transparent und verantwortungsbewusst.",
 
-  "about.closing": "Märkte bleiben volatil. Disziplin sollte es nicht sein. Strukturieren Sie Ihr Trading. Eliminieren Sie Emotionen."
+  "cta.title": "Märkte werden immer schwanken. Disziplin sollte es nicht.",
+  "cta.subtitle": "Strukturieren Sie Ihren Trading-Prozess. Eliminieren Sie Ermessensspielräume. Agieren Sie mit definierter Logik.",
+  "cta.btnText": "Zugang zum Framework"
 }
