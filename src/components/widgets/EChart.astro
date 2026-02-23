@@ -2,8 +2,13 @@
 /* src/components/widgets/ChartWidget.astro */
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Headline from '~/components/ui/Headline.astro';
+import { Icon } from 'astro-icon/components';
+
 // Importiere die Server-Funktionen aus dem lib-Ordner
 import { parseCsvData, getBaseChartOptions } from '~/lib/chart-data';
+
+export interface Props {
+  icon?: string;
 
 const {
   title = await Astro.slots.render('title'),
