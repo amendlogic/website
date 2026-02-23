@@ -43,7 +43,6 @@ const baseOptions = getBaseChartOptions(parsedData);
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
   {content && <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-md text-center font-medium">
     <Icon name={icon} class="w-5 h-5 inline-block align-text-bottom font-bold" />
-    <span class="font-bold" set:html={title} />
     <Fragment set:html={content} />
   </div>}
 
