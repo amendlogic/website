@@ -9,6 +9,7 @@ const {
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
   tagline,
+  icon = 'tabler:info-square',
   content = await Astro.slots.render('content'),
   options: userOptions = {},
   initialCapital = 300,
@@ -33,7 +34,11 @@ const baseOptions = getBaseChartOptions(parsedData);
 
 <WidgetWrapper id={wrapperId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
-  {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
+  {content && <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-md text-center font-medium">
+    <Icon name={icon} class="w-5 h-5 inline-block align-text-bottom font-bold" />
+    <span class="font-bold" set:html={title} />
+    <Fragment set:html={content} />
+  </div>}
 
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
     {baseOptions ? (
