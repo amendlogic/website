@@ -101,8 +101,8 @@ export function getFooterData(
       { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
     ],
     footNote: `
-      © ${new Date().getFullYear()} <a class="text-muted ..." href="https://github.com/arthelokyo">${SITE?.name}</a> · ${t('nav.rights')} · 
-      <a href="#" data-cc="show-preferencesModal" class="text-muted ...">${t('nav.cookieSettings')}</a>
+      © ${new Date().getFullYear()} <a class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out" href="https://github.com/arthelokyo">${SITE?.name}</a> · ${t('nav.rights')} · 
+      <a href="#" data-cc="show-preferencesModal" class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out">${t('nav.cookieSettings')}</a>
     `,
   };
 }
