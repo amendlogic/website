@@ -1,17 +1,17 @@
 {
   "hero.tagline": "Markets fluctuate. Structure endures.",
   "hero.title": "Discipline Is Engineered — Not Assumed.",
-  "hero.subtitle": "Defined Structure. Validated Conditions. Controlled Risk. A rule-based Bitcoin framework built to operate consistently across market cycles.",
+  "hero.subtitle": "Systematic Rules. Validated Conditions. Controlled Risk. A Bitcoin trading framework built for consistency across market cycles.",
   "hero.ctaPrimary": "Explore the Framework",
-  "hero.ctaSecondary": "View the Performance Logic",
+  "hero.ctaSecondary": "Examine the Performance Logic",
 
   "story.tagline": "Origin",
   "story.title": "Why Structure Became Non-Negotiable",
-  "story.subtitle": "Across multiple Bitcoin market cycles — from aggressive expansion phases to prolonged drawdowns — discretionary decision-making repeatedly revealed its limits. Flexibility without structure turns into inconsistency. Market noise influences perception. Emotions distort timing. Hindsight reshapes judgment. The recurring pattern was clear: sustainable performance does not come from better prediction. It comes from predefined process. The framework was developed as a response to that realization — to standardize decisions, eliminate subjective overrides, and operate independently of emotional interference.",
+  "story.subtitle": "Years of extreme Bitcoin volatility — from rapid expansion phases to prolonged drawdowns — repeatedly exposed the limits of discretionary decision-making. Flexibility without boundaries turns into inconsistency. Market noise distorts perception. Emotions influence timing. Hindsight reshapes judgment. The conclusion became clear: sustainable performance does not come from better prediction. It comes from a mechanical process. The framework was built to standardize execution, eliminate subjective overrides, and operate independently of emotional interference.",
   "story.items": [
     {
       "title": "Emotion",
-      "description": "Replaced by predefined decision logic.",
+      "description": "Replaced by absolute decision logic.",
       "icon": "tabler:mood-empty"
     },
     {
@@ -21,69 +21,69 @@
     },
     {
       "title": "Hindsight Bias",
-      "description": "Replaced by forward-defined rule execution.",
+      "description": "Replaced by forward-tested rule execution.",
       "icon": "tabler:history-toggle"
     }
   ],
 
   "context.tagline": "Market Reality",
   "context.title": "Most Systems Are Built to Impress.",
-  "context.subtitle": "The crypto trading space is saturated with aggressive optimization, short-term performance screenshots, and opaque signal services. Many systems are engineered to look exceptional in isolated periods — but lack structural resilience across changing volatility regimes. This framework was not designed to maximize trade frequency or produce unrealistic short-term spikes. It was designed to remain structurally intact under different market environments.",
+  "context.subtitle": "The crypto trading space is saturated with aggressive optimization, short-term performance snapshots, and opaque signal services. Many systems are engineered to look exceptional in isolated periods, yet lack resilience across changing volatility regimes. This framework was not designed to maximize trade frequency or create unrealistic short-term spikes. It was designed for structural robustness across market environments.",
 
   "framework.tagline": "Framework",
-  "framework.title": "A Defined Rule System — Not a Black Box",
-  "framework.subtitle": "The framework operates directly within TradingView and follows a transparent protocol. It evaluates objective market structure, validates predefined conditions, and executes trades strictly according to structured risk parameters. No outsourced signal logic. No AI mystification. No discretionary overrides.",
+  "framework.title": "A Mechanical Rule System — Not a Black Box",
+  "framework.subtitle": "The framework operates directly within TradingView under a transparent protocol. It evaluates price action, validates defined conditions, and executes trades strictly according to governed risk parameters. No outsourced signal logic. No AI mystification. No discretionary overrides.",
   "framework.items": [
     {
       "title": "Signal Logic",
-      "description": "Predefined entry and exit conditions derived from objective market structure.",
+      "description": "Explicit entry and exit criteria derived from empirical market behavior.",
       "icon": "tabler:logic-and"
     },
     {
       "title": "Risk Protocol",
-      "description": "Exposure limits and capital allocation rules applied before execution.",
+      "description": "Predefined exposure limits and capital allocation rules applied before execution.",
       "icon": "tabler:shield-check"
     },
     {
       "title": "Execution Discipline",
-      "description": "Automated order placement strictly aligned with validated criteria.",
+      "description": "Automated order placement aligned strictly with validated conditions.",
       "icon": "tabler:settings-automation"
     },
     {
-      "title": "Structural Monitoring",
-      "description": "Continuous evaluation of market phases to ensure contextual alignment.",
+      "title": "Regime Monitoring",
+      "description": "Continuous evaluation of market phases to maintain contextual alignment.",
       "icon": "tabler:chart-radar"
     }
   ],
 
   "methodology.tagline": "Methodology",
-  "methodology.title": "Objective Market Structure & Trend Validation",
-  "methodology.subtitle": "The system evaluates price behavior directly — not narrative. It identifies structured market phases, validates directional bias through qualification criteria, and adapts exposure according to volatility conditions. The objective is not constant activity, but conditional engagement when structure and probability align.",
+  "methodology.title": "Empirical Market Analysis & Trend Validation",
+  "methodology.subtitle": "The system evaluates price behavior — not narrative. It identifies distinct market regimes, qualifies directional bias through objective criteria, and adjusts exposure according to prevailing volatility. The goal is not constant activity, but conditional engagement when logic and probability align.",
   "methodology.items": [
     {
       "title": "Market Phase Identification",
-      "description": "Distinguishes expansion, consolidation, and transition environments.",
+      "description": "Distinguishes expansion, consolidation, and transitional environments.",
       "icon": "tabler:chart-candle"
     },
     {
       "title": "Trend Qualification",
-      "description": "Deploys capital only when predefined structural conditions confirm directional bias.",
+      "description": "Deploys capital only when technical conditions confirm directional bias.",
       "icon": "tabler:list-check"
     },
     {
       "title": "Volatility-Calibrated Exposure",
-      "description": "Systematically adjusts risk allocation based on prevailing volatility.",
+      "description": "Systematically adjusts risk allocation based on prevailing market stability.",
       "icon": "tabler:adjustments-horizontal"
     }
   ],
 
   "risk.tagline": "Risk First",
   "risk.title": "Built to Survive Volatility.",
-  "risk.subtitle": "Return is the outcome. Risk control is the foundation. The framework prioritizes capital protection over aggressive growth targets. Structured safeguards limit drawdowns, reduce exposure during unstable phases, and prevent uncontrolled position sizing. Long-term consistency requires structural defense before offensive positioning.",
+  "risk.subtitle": "Return is the outcome. Risk control is the foundation. The framework prioritizes capital preservation over aggressive growth targets. Safeguards limit drawdowns, reduce exposure during unstable phases, and prevent uncontrolled position sizing. Long-term consistency requires structural defense before offensive positioning.",
   "risk.items": [
     {
       "title": "Controlled Position Sizing",
-      "description": "Exposure is determined by predefined risk parameters.",
+      "description": "Exposure determined by predefined risk parameters.",
       "icon": "tabler:chart-pie"
     },
     {
@@ -93,21 +93,21 @@
     },
     {
       "title": "Volatility-Based Risk Scaling",
-      "description": "Dynamic exposure adjustment based on structural stability.",
+      "description": "Dynamic exposure adjustment aligned with market stability.",
       "icon": "tabler:activity"
     },
     {
       "title": "Configurable Risk Profiles",
-      "description": "Parameters can align with individual tolerance while preserving system integrity.",
+      "description": "Parameters align with individual tolerance while preserving system integrity.",
       "icon": "tabler:settings"
     }
   ],
 
   "transparency.tagline": "Accountability",
   "transparency.title": "Founder-Led. Directly Responsible.",
-  "transparency.description": "AmendLogic is developed and maintained under direct founder oversight. There are no anonymous development teams, no outsourced signal providers, and no affiliate-driven marketing narratives. The framework is continuously evaluated across market conditions with a focus on structural integrity rather than promotional performance metrics. Offering a rule-based system means standing behind its methodology — transparently and responsibly.",
+  "transparency.description": "AmendLogic is developed and maintained under direct founder oversight. No anonymous development teams. No outsourced signal providers. No affiliate-driven marketing narratives. The framework is continuously evaluated across market conditions with a focus on structural integrity rather than promotional performance metrics. Offering a rule-based system means standing behind its methodology — transparently and responsibly.",
 
   "cta.title": "Markets Will Always Fluctuate. Discipline Should Not.",
-  "cta.subtitle": "Structure your trading process. Remove discretion. Operate with defined logic.",
+  "cta.subtitle": "Designed for traders who value process over prediction. Systematize your execution. Remove discretion. Operate with objective logic.",
   "cta.btnText": "Access the Framework"
 }
