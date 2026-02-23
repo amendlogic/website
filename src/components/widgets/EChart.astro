@@ -41,34 +41,26 @@ const wrapperId = id ?? `widget-${uid}`;
 const chartId = `chart-${uid}`;
 const dataId = `data-${uid}`;
 
-// Server-side Parsing
-let parsedData = null;
-let baseOptions = null;
-
-if (csvPath) {
-  parsedData = await parseCsvData(csvPath, Number(initialCapital));
-  baseOptions = getBaseChartOptions(parsedData);
-}
+// Server Side Parsing
+const parsedData = await parseCsvData(csvPath, Number(initialCapital));
+const baseOptions = getBaseChartOptions(parsedData);
 ---
 
 <WidgetWrapper id={wrapperId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
-  {/* Headline */}
-  {(title || subtitle || tagline) && (
-    <Headline title={title} subtitle={subtitle} tagline={tagline} />
-  )}
+  <Headline title={title} subtitle={subtitle} tagline={tagline} />
+  {content && <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-md text-center font-medium">
+    <Icon name={icon} class="w-5 h-5 inline-block align-text-bottom font-bold" />
+    <Fragment set:html={content} />
+  </div>}
 
-  {/* Content */}
-  {content && (
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-md text-center font-medium">
-      <Icon name={icon} class="w-5 h-5 inline-block align-text-bottom font-bold" />
-      <Fragment set:html={content} />
-    </div>
-  )}
-
-  {/* Chart Container */}
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
-    {baseOptions && Object.keys(baseOptions).length > 0 ? (
-      <div id={chartId} data-json-id={dataId} class="w-full overflow-hidden" style={`height:${height};`}></div>
+    {baseOptions ? (
+      <div 
+        id={chartId} 
+        data-json-id={dataId}
+        class="w-full overflow-hidden" 
+        style={`height:${height};`}
+      ></div>
     ) : (
       <div class="flex items-center justify-center h-64 text-slate-400 bg-slate-50 dark:bg-slate-800/50 rounded border border-dashed border-slate-300 dark:border-slate-700">
         <span class="text-sm">Keine Daten verfügbar.</span>
@@ -77,19 +69,18 @@ if (csvPath) {
   </div>
 </WidgetWrapper>
 
-{/* JSON Daten für Client */}
-{baseOptions && Object.keys(baseOptions).length > 0 && (
+{baseOptions && (
   <script type="application/json" id={dataId} set:html={JSON.stringify({ baseOptions, userOptions, locale })} />
 )}
 
-{/* Client-Skript */}
-<script type="module" client:load>
+<script>
+  // Importiere die Client-Logik aus dem lib-Ordner
   import { initChartWidget, cleanup } from '~/lib/chart-widget';
 
   // Astro Lifecycle Events
   document.addEventListener('astro:page-load', initChartWidget);
   document.addEventListener('astro:before-swap', cleanup);
-
-  // Initial Load fallback
+  
+  // Falls Skript direkt ausgeführt wird (z.B. initial Load ohne View Transitions)
   if (document.readyState !== 'loading') initChartWidget();
 </script>
