@@ -126,20 +126,50 @@ const metadata = {
 
 
 
+  <!-- Content Widget **************** -->
 
   <Content
-    id="benefits"
-    tagline={t('about.transparency.tagline')}
-    title={t('about.transparency.title')}
+    id="about"
+    columns={3}
+    items={[
+      {
+        icon: 'tabler:brand-dribbble',
+        callToAction: {
+          target: '_blank',
+          text: 'Dribbble',
+          href: '#',
+        },
+      },
+      {
+        icon: 'tabler:brand-behance',
+        callToAction: {
+          target: '_blank',
+          text: 'Behance',
+          href: '#',
+        },
+      },
+      {
+        icon: 'tabler:brand-pinterest',
+        callToAction: {
+          target: '_blank',
+          text: 'Pinterest',
+          href: '#',
+        },
+      },
+    ]}
     image={{
-      src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      src: 'https://images.unsplash.com/photo-1491349174775-aaafddd81942?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
       alt: 'Colorful Image',
+      loading: 'eager',
     }}
   >
     <Fragment slot="content">
-      {t('about.transparency.description')}
+      <h2 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">{t('about.transparency.title')}</h2>
+      <p>{t('about.transparency.description')}</p>
     </Fragment>
   </Content>
+
+
 
 
 
