@@ -1,6 +1,7 @@
 ---
 import { getI18nPaths, useTranslations } from '~/i18n/utils';
 import { getFooterData } from '~/navigation';
+import { getPermalink } from '~/utils/permalinks';
 
 import Layout from '~/layouts/PageLayout.astro';
 import Hero from '~/components/widgets/Hero.astro';
@@ -143,7 +144,7 @@ const footerData = getFooterData(lang, ['testimonials']);
   callToAction={{
       target: '_self',
       text: t('home.chart.btnText'),
-      href: '/performance',
+      href: getPermalink('/performance', lang),
       icon: 'tabler:chevron-right',
     }}
 >
