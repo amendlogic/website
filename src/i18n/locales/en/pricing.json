@@ -1,0 +1,140 @@
+{
+  "hero.tagline": "Systematic Execution",
+  "hero.title": "Structured Bitcoin Execution. Transparent Terms.",
+  "hero.subtitle": "Deploy a rule-based Bitcoin trading framework designed for disciplined, emotion-free operation. Choose the subscription interval that aligns with your capital horizon.",
+
+  "title": "Structured Access. Transparent Terms.",
+  "subtitle": "Choose the subscription interval that aligns with your trading horizon and capital commitment.",
+
+  "prices": [
+    {
+      "title": "Monthly",
+      "subtitle": "Flexible short-term access",
+      "price": 99,
+      "period": "Billed monthly",
+      "items": [
+        { "description": "Full access to the systematic Bitcoin execution framework" },
+        { "description": "Complete signal logic & rule-based execution engine" },
+        { "description": "Continuous model refinement & system updates" },
+        { "description": "Adaptive risk configuration settings" },
+        { "description": "Email support" }
+      ],
+      "callToAction": {
+        "target": "_blank",
+        "text": "Activate Monthly Access",
+        "href": "#"
+      }
+    },
+    {
+      "title": "Quarterly",
+      "subtitle": "Optimized commitment",
+      "price": 249,
+      "period": "Billed every 3 months",
+      "items": [
+        { "description": "Full access to the systematic Bitcoin execution framework" },
+        { "description": "Complete signal logic & rule-based execution engine" },
+        { "description": "Continuous model refinement & system updates" },
+        { "description": "Adaptive risk configuration settings" },
+        { "description": "Priority email support" }
+      ],
+      "callToAction": {
+        "target": "_blank",
+        "text": "Activate Quarterly Access",
+        "href": "#"
+      },
+      "hasRibbon": true,
+      "ribbonTitle": "Save 16% vs Monthly"
+    },
+    {
+      "title": "Annual",
+      "subtitle": "Maximum structural efficiency",
+      "price": 899,
+      "period": "Billed annually",
+      "items": [
+        { "description": "Full access to the systematic Bitcoin execution framework" },
+        { "description": "Complete signal logic & rule-based execution engine" },
+        { "description": "Continuous model refinement & system updates" },
+        { "description": "Adaptive risk configuration settings" },
+        { "description": "Priority support" },
+        { "description": "Best value billing structure" }
+      ],
+      "callToAction": {
+        "target": "_blank",
+        "text": "Activate Annual Access",
+        "href": "#"
+      },
+      "hasRibbon": true,
+      "ribbonTitle": "Save 24% vs Monthly"
+    }
+  ],
+
+  "trust.title": "Transparent Billing. Institutional-Grade Processing.",
+  "trust.subtitle": "Secure infrastructure. Clearly defined terms. No hidden structures.",
+  "trust.columns": 2,
+  "trust.items": [
+    {
+      "title": "Secure Payments",
+      "description": "All transactions are securely processed via Stripe using industry-standard encryption and global payment infrastructure.",
+      "icon": "tabler:shield-lock"
+    },
+    {
+      "title": "No Hidden Fees",
+      "description": "No performance fees. No revenue share. No hidden execution costs.",
+      "icon": "tabler:receipt-off"
+    },
+    {
+      "title": "Subscription Control",
+      "description": "Manage, upgrade, or cancel your subscription at any time directly through the customer billing portal.",
+      "icon": "tabler:adjustments"
+    },
+    {
+      "title": "Instant Deployment",
+      "description": "Immediate authorization and access to the private TradingView execution script upon successful payment.",
+      "icon": "tabler:bolt"
+    }
+  ],
+
+  "steps.tagline": "Deployment Protocol",
+  "steps.title": "A structured integration process to activate the framework inside your TradingView environment within minutes.",
+  "steps.items": [
+    {
+      "title": "Step 1: Select Subscription Tier",
+      "description": "Choose the access structure aligned with your trading horizon.",
+      "icon": "tabler:box"
+    },
+    {
+      "title": "Step 2: Provide TradingView Username",
+      "description": "Enter your exact TradingView username during checkout to link the private execution script to your account.",
+      "icon": "tabler:user-scan"
+    },
+    {
+      "title": "Step 3: Secure Payment Processing",
+      "description": "Finalize your subscription securely via our Stripe-integrated payment gateway.",
+      "icon": "tabler:shield-lock"
+    },
+    {
+      "title": "Step 4: Automatic Authorization",
+      "description": "Upon successful payment, your TradingView account is automatically authorized, granting immediate access to the invite-only execution script.",
+      "icon": "tabler:server-cog"
+    },
+    {
+      "title": "Step 5: Initialize on Chart",
+      "description": "Open TradingView, navigate to your 'Invite-only scripts' folder, and apply the framework to your chart.",
+      "icon": "tabler:chart-candle"
+    },
+    {
+      "title": "Step 6: Configure Auto-Execution (Optional)",
+      "description": "Connect the framework to your exchange via webhooks for fully automated, rule-based trading. <a href='#' class='underline font-semibold'>Read the automation guide</a>.",
+      "icon": "tabler:settings-automation"
+    }
+  ],
+
+  "steps.image": {
+    "src": "~/assets/images/steps-image.jpg",
+    "alt": "Framework Deployment Process"
+  },
+
+  "cta.title": "Trade With Structure.",
+  "cta.subtitle": "Replace emotional decision-making with systematic, rule-based Bitcoin execution.",
+  "cta.btnText": "Activate Structured Access"
+}
