@@ -1,7 +1,7 @@
 {
   "hero.tagline": "Systematic Execution",
-  "hero.title": "Structured Bitcoin Trading. Transparent Terms.",
-  "hero.subtitle": "Start a rule-based Bitcoin trading framework designed for disciplined, emotion-free execution – ready to deploy immediately.",
+  "hero.title": "Structured Trading. Transparent Terms.",
+  "hero.subtitle": "Start a rule-based trading framework designed for disciplined, emotion-free execution – ready to deploy immediately.",
 
   "title": "Pricing",
   "subtitle": "Choose the billing structure that matches your trading horizon and capital commitment.",
@@ -13,7 +13,7 @@
       "price": 99,
       "period": "Billed monthly",
       "items": [
-        { "description": "Full access to the systematic Bitcoin framework" },
+        { "description": "Full access to the systematic framework" },
         { "description": "Complete signal logic & rule-based execution engine" },
         { "description": "Continuous model refinement & system updates" },
         { "description": "Adaptive risk configuration settings" },
@@ -31,7 +31,7 @@
       "price": 249,
       "period": "Billed every 3 months",
       "items": [
-        { "description": "Full access to the systematic Bitcoin framework" },
+        { "description": "Full access to the systematic framework" },
         { "description": "Complete signal logic & rule-based execution engine" },
         { "description": "Continuous model refinement & system updates" },
         { "description": "Adaptive risk configuration settings" },
@@ -51,7 +51,7 @@
       "price": 899,
       "period": "Billed annually",
       "items": [
-        { "description": "Full access to the systematic Bitcoin framework" },
+        { "description": "Full access to the systematic framework" },
         { "description": "Complete signal logic & rule-based execution engine" },
         { "description": "Continuous model refinement & system updates" },
         { "description": "Adaptive risk configuration settings" },
