@@ -55,7 +55,7 @@ export function getFooterData(
           { text: t('nav.benefits'), href: getPermalink('/#benefits', 'page', lang) },
           { text: t('nav.system'), href: getPermalink('/#system', 'page', lang) },
           { text: t('nav.backtest'), href: getPermalink('/#backtest', 'page', lang) },
-          { text: t('nav.pricing'), href: getPermalink('/pricing', 'page', lang) },
+          { text: t('nav.pricing'), href: getPermalink('/pricing#prices', 'page', lang) },
           { text: t('nav.changelog'), href: '#' },
         ],
       },
