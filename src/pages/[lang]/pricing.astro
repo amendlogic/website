@@ -47,7 +47,7 @@ const metadata = {
 };
 
 // 5️⃣ Footer Data
-const footerData = getFooterData(lang, ['pricing']);
+const footerData = getFooterData(lang, ['payments']);
 ---
 
 <Layout metadata={metadata} footerData={footerData}>
@@ -128,14 +128,25 @@ const footerData = getFooterData(lang, ['pricing']);
   <!-- CallToAction Widget *********** -->
 
   <CallToAction
-    title={t('pricing.cta.title')}
-    subtitle={t('pricing.cta.subtitle')}
     actions={[
       {
         variant: 'primary',
         text: t('pricing.cta.btnText'),
-        href: '/',
+        href: 'https://github.com/arthelokyo/astrowind',
+        target: '_blank',
+        icon: 'tabler:chevron-right',
       },
     ]}
-  />
+  >
+    <Fragment slot="title">
+      {t('pricing.cta.title')}
+    </Fragment>
+    <Fragment slot="subtitle">
+      {t('pricing.cta.subtitle')}
+    </Fragment>
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </CallToAction>
+
 </Layout>
