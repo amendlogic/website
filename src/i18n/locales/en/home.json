@@ -76,6 +76,7 @@
   "chart.tagline": "Performance Overview",
   "chart.title": "Built on Structured Testing",
   "chart.subtitle": "Backtested using realistic assumptions across multiple market cycles. Focused on stability, controlled risk, and sustainable performance rather than aggressive optimization.",
+  "chart.btnText": "Review Performance Details",
 
   "testimonials.tagline": "Testimonials",
   "testimonials.title": "Words from real traders",
