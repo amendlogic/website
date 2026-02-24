@@ -123,7 +123,7 @@
       "icon": "tabler:chart-candle"
     },
     {
-      "title": "Schritt 6: Automatisierung konfigurieren (Optional)",
+      "title": "Schritt 6: Automatisierung konfigurieren <span class=\"font-medium\">(Optional)</span>",
       "description": "Verbinde das Framework über Webhooks mit deiner Exchange für vollautomatisiertes, regelbasiertes Trading. <a href='#' class='underline font-semibold'>Jetzt Automatisierungs-Guide ansehen</a>.",
       "icon": "tabler:settings-automation"
     }
