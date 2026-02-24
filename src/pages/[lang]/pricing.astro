@@ -62,8 +62,9 @@ const footerData = getFooterData(lang, ['payments']);
   <!-- Pricing Widget ******************* -->
 
   <Prices
-    title="Our prices"
-    subtitle="Only pay for what you need"
+    id="prices'
+    title={t('pricing.title')}
+    subtitle="{t('pricing.subtitle')}
     prices={t('pricing.prices')}
   />
 
@@ -132,9 +133,9 @@ const footerData = getFooterData(lang, ['payments']);
       {
         variant: 'primary',
         text: t('pricing.cta.btnText'),
-        href: 'https://github.com/arthelokyo/astrowind',
-        target: '_blank',
-        icon: 'tabler:chevron-right',
+        href: '#prices',
+        target: '_self',
+        icon: 'tabler:chevron-up',
       },
     ]}
   >
