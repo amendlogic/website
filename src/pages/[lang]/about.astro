@@ -1,4 +1,5 @@
 ---
+import { SITE } from 'astrowind:config';
 import { getI18nPaths, useTranslations } from '~/i18n/utils';
 
 // 1. Daten und Navigation importieren
@@ -162,8 +163,11 @@ const metadata = {
     }}
   >
     <Fragment slot="content">
-      <h2 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">AmendLogic is...</h2>
-      <p>{t('about.transparency.description')}</p>
+      <h2 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">${SITE?.name}...</h2>
+      <p>{t('about.transparency.description1')}</p><br />
+      <p>{t('about.transparency.description2')}</p><br />
+      <p>{t('about.transparency.description3')}</p>
+
     </Fragment>
   </Content>
 
