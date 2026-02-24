@@ -1,0 +1,140 @@
+{
+  "hero.tagline": "Systematische Ausführung",
+  "hero.title": "Strukturierte Bitcoin-Ausführung. Transparente Konditionen.",
+  "hero.subtitle": "Implementiere ein regelbasiertes Bitcoin-Trading-Framework, entwickelt für diszipliniertes, emotionsloses Operieren. Wähle das Abonnement-Intervall, das deinem Kapitalhorizont entspricht.",
+
+  "title": "Strukturierter Zugang. Transparente Konditionen.",
+  "subtitle": "Wähle das Abonnement-Intervall, das deinem Trading-Horizont und Kapital-Commitment entspricht.",
+
+  "prices": [
+    {
+      "title": "Monatlich",
+      "subtitle": "Flexibler kurzfristiger Zugang",
+      "price": 99,
+      "period": "Monatliche Abrechnung",
+      "items": [
+        { "description": "Vollständiger Zugang zum systematischen Bitcoin-Execution-Framework" },
+        { "description": "Gesamte Signal-Logik & regelbasierte Execution-Engine" },
+        { "description": "Kontinuierliche Modellverfeinerung & System-Updates" },
+        { "description": "Adaptive Einstellungen zur Risiko-Konfiguration" },
+        { "description": "E-Mail-Support" }
+      ],
+      "callToAction": {
+        "target": "_blank",
+        "text": "Monatlichen Zugang aktivieren",
+        "href": "#"
+      }
+    },
+    {
+      "title": "Quartalsweise",
+      "subtitle": "Optimiertes Commitment",
+      "price": 249,
+      "period": "Abrechnung alle 3 Monate",
+      "items": [
+        { "description": "Vollständiger Zugang zum systematischen Bitcoin-Execution-Framework" },
+        { "description": "Gesamte Signal-Logik & regelbasierte Execution-Engine" },
+        { "description": "Kontinuierliche Modellverfeinerung & System-Updates" },
+        { "description": "Adaptive Einstellungen zur Risiko-Konfiguration" },
+        { "description": "Priority E-Mail-Support" }
+      ],
+      "callToAction": {
+        "target": "_blank",
+        "text": "Quartals-Zugang aktivieren",
+        "href": "#"
+      },
+      "hasRibbon": true,
+      "ribbonTitle": "16 % Ersparnis ggü. monatlich"
+    },
+    {
+      "title": "Jährlich",
+      "subtitle": "Maximale strukturelle Effizienz",
+      "price": 899,
+      "period": "Jährliche Abrechnung",
+      "items": [
+        { "description": "Vollständiger Zugang zum systematischen Bitcoin-Execution-Framework" },
+        { "description": "Gesamte Signal-Logik & regelbasierte Execution-Engine" },
+        { "description": "Kontinuierliche Modellverfeinerung & System-Updates" },
+        { "description": "Adaptive Einstellungen zur Risiko-Konfiguration" },
+        { "description": "Priority Support" },
+        { "description": "Effizienteste Konditionenstruktur" }
+      ],
+      "callToAction": {
+        "target": "_blank",
+        "text": "Jährlichen Zugang aktivieren",
+        "href": "#"
+      },
+      "hasRibbon": true,
+      "ribbonTitle": "24 % Ersparnis ggü. monatlich"
+    }
+  ],
+
+  "trust.title": "Transparente Abrechnung. Institutionelle Abwicklung.",
+  "trust.subtitle": "Sichere Infrastruktur. Klar definierte Konditionen. Keine versteckten Strukturen.",
+  "trust.columns": 2,
+  "trust.items": [
+    {
+      "title": "Sichere Zahlungen",
+      "description": "Alle Transaktionen werden sicher über Stripe abgewickelt, unter Nutzung von branchenüblicher Verschlüsselung und globaler Zahlungsinfrastruktur.",
+      "icon": "tabler:shield-lock"
+    },
+    {
+      "title": "Keine versteckten Gebühren",
+      "description": "Keine Performance Fees. Keine Umsatzbeteiligung. Keine versteckten Ausführungskosten.",
+      "icon": "tabler:receipt-off"
+    },
+    {
+      "title": "Abonnement-Kontrolle",
+      "description": "Verwalte, wechsle oder kündige dein Abonnement jederzeit direkt über das Kunden-Abrechnungsportal.",
+      "icon": "tabler:adjustments"
+    },
+    {
+      "title": "Sofortiges Deployment",
+      "description": "Unmittelbare Autorisierung und Zugang zum privaten TradingView-Execution-Script nach erfolgreicher Zahlung.",
+      "icon": "tabler:bolt"
+    }
+  ],
+
+  "steps.title": "Deployment-Protokoll",
+  "steps.subtitle": "Ein strukturierter Integrationsprozess, um das Framework innerhalb von Minuten in deiner TradingView-Umgebung zu aktivieren.",
+  "steps.items": [
+    {
+      "title": "Schritt 1: Zugangsstufe wählen",
+      "description": "Wähle die Zugangsstruktur, die deinem operativen Trading-Horizont entspricht.",
+      "icon": "tabler:box"
+    },
+    {
+      "title": "Schritt 2: TradingView-Nutzernamen angeben",
+      "description": "Gib während des Checkouts deinen exakten TradingView-Nutzernamen ein, um das private Execution-Script mit deinem Account zu verknüpfen.",
+      "icon": "tabler:user-scan"
+    },
+    {
+      "title": "Schritt 3: Sichere Zahlungsabwicklung",
+      "description": "Schließe dein Abonnement sicher über unser integriertes Stripe-Zahlungsgateway ab.",
+      "icon": "tabler:shield-lock"
+    },
+    {
+      "title": "Schritt 4: Automatische Autorisierung",
+      "description": "Nach erfolgreicher Zahlung wird dein TradingView-Account automatisch autorisiert und erhält sofortigen Zugriff auf das Invite-Only Execution-Script.",
+      "icon": "tabler:server-cog"
+    },
+    {
+      "title": "Schritt 5: Auf dem Chart initialisieren",
+      "description": "Öffne TradingView, navigiere zu deinem 'Invite-only scripts'-Ordner und wende das Framework auf deinen Chart an.",
+      "icon": "tabler:chart-candle"
+    },
+    {
+      "title": "Schritt 6: Auto-Execution konfigurieren (Optional)",
+      "description": "Verbinde das Framework über Webhooks mit deiner Exchange für vollautomatisiertes, regelbasiertes Trading. <a href='#' class='underline font-semibold'>Lies den Automatisierungs-Guide</a>.",
+      "icon": "tabler:settings-automation"
+    }
+  ],
+
+  "steps.image": {
+    "src": "~/assets/images/steps-image.jpg",
+    "alt": "Framework Deployment Process"
+  },
+
+  "cta.title": "Trade mit Struktur.",
+  "cta.subtitle": "Ersetze emotionale Entscheidungen durch systematische, regelbasierte Bitcoin-Execution.",
+  "cta.btnText": "Strukturierten Zugang aktivieren"
+}
