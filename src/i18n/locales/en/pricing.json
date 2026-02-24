@@ -98,32 +98,32 @@
   "steps.title": "A structured integration process to activate the framework in your TradingView environment within minutes.",
   "steps.items": [
     {
-      "title": "Step 1: <span class=\"font-medium\">Select Access Tier</span>",
+      "title": "Step 1: Select Access Tier",
       "description": "Choose the access plan that aligns with your operational trading horizon.",
       "icon": "tabler:box"
     },
     {
-      "title": "Step 2: <span class=\"font-medium\">Provide TradingView Username</span>",
+      "title": "Step 2: Provide TradingView Username",
       "description": "Enter your exact TradingView username during checkout to link the private script to your account.",
       "icon": "tabler:user-scan"
     },
     {
-      "title": "Step 3: <span class=\"font-medium\">Secure Payment Processing</span>",
+      "title": "Step 3: Secure Payment Processing",
       "description": "Finalize your subscription securely via our Stripe-integrated payment gateway.",
       "icon": "tabler:shield-lock"
     },
     {
-      "title": "Step 4: <span class=\"font-medium\">Automatic Authorization</span>",
+      "title": "Step 4: Automatic Authorization",
       "description": "After successful payment, your TradingView account is automatically authorized, granting immediate access to the invite-only system.",
       "icon": "tabler:server-cog"
     },
     {
-      "title": "Step 5: <span class=\"font-medium\">Initialize on Chart</span>",
+      "title": "Step 5: Initialize on Chart",
       "description": "Open TradingView, navigate to your 'Invite-only scripts' folder, and apply the framework to your chart.",
       "icon": "tabler:chart-candle"
     },
     {
-      "title": "Step 6: <span class=\"font-medium\">Configure Automation (Optional)</span>",
+      "title": "Step 6: Configure Automation <span class=\"font-medium\">(Optional)</span>",
       "description": "Connect the framework to your exchange via webhooks for fully automated, rule-based trading. <a href='#' class='underline font-semibold'>View the Automation Guide</a>.",
       "icon": "tabler:settings-automation"
     }
