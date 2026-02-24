@@ -105,7 +105,10 @@
 
   "transparency.tagline": "Verbindlichkeit",
   "transparency.title": "Gründergeführt. Direkt verantwortlich.",
-  "transparency.description": "AmendLogic wird unter direkter Aufsicht des Gründers entwickelt und gepflegt. Keine anonymen Entwicklerteams. Keine ausgelagerten Signal-Anbieter. Keine auf Affiliates ausgerichteten Marketing-Narrative. Das Framework wird kontinuierlich über alle Marktbedingungen hinweg evaluiert – mit Fokus auf struktureller Integrität statt auf werbewirksamen Performance-Metriken. Ein regelbasiertes System anzubieten bedeutet, voll und ganz hinter der eigenen Methodik zu stehen — transparent und verantwortungsvoll.",
+  "transparency.description1": "wird unter direkter Aufsicht des Gründers entwickelt und gepflegt. Keine anonymen Entwicklerteams. Keine ausgelagerten Signal-Anbieter. Keine auf Affiliates ausgerichteten Marketing-Narrative.",
+  "transparency.description2": "Das Framework wird kontinuierlich über alle Marktbedingungen hinweg evaluiert – mit Fokus auf struktureller Integrität statt auf werbewirksamen Performance-Metriken.",
+  "transparency.description3": "Ein regelbasiertes System anzubieten bedeutet, voll und ganz hinter der eigenen Methodik zu stehen — transparent und verantwortungsvoll.",
+
 
   "cta.title": "Märkte werden immer schwanken. Disziplin sollte es nicht.",
   "cta.subtitle": "Entwickelt für Trader, die Prozess über Vorhersage stellen. Systematisiere deine Ausführung. Eliminiere diskretionäre Eingriffe. Agiere mit objektiver Logik.",
