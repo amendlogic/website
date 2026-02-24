@@ -1,7 +1,7 @@
 {
   "hero.tagline": "Systematische Ausführung",
-  "hero.title": "Strukturiertes Bitcoin-Trading. Transparente Konditionen.",
-  "hero.subtitle": "Starte ein regelbasiertes Bitcoin-Trading-Framework, das diszipliniertes, emotionsfreies Handeln ermöglicht – sofort einsatzbereit.",
+  "hero.title": "Strukturiertes Trading. Transparente Konditionen.",
+  "hero.subtitle": "Starte ein regelbasiertes Trading-Framework, das diszipliniertes, emotionsfreies Handeln ermöglicht – sofort einsatzbereit.",
 
   "title": "Preise",
   "subtitle": "Wähle die Abrechnungsstruktur, die deinem Trading-Horizont und Kapital-Commitment entspricht.",
@@ -13,7 +13,7 @@
       "price": 99,
       "period": "Monatliche Abrechnung",
       "items": [
-        { "description": "Vollständiger Zugang zum systematischen Bitcoin-Framework" },
+        { "description": "Vollständiger Zugang zum systematischen Framework" },
         { "description": "Gesamte Signal-Logik & regelbasierte Execution-Engine" },
         { "description": "Kontinuierliche Modellverfeinerung & System-Updates" },
         { "description": "Adaptive Einstellungen zur Risiko-Konfiguration" },
@@ -31,7 +31,7 @@
       "price": 249,
       "period": "Abrechnung alle 3 Monate",
       "items": [
-        { "description": "Vollständiger Zugang zum systematischen Bitcoin-Framework" },
+        { "description": "Vollständiger Zugang zum systematischen Framework" },
         { "description": "Gesamte Signal-Logik & regelbasierte Execution-Engine" },
         { "description": "Kontinuierliche Modellverfeinerung & System-Updates" },
         { "description": "Adaptive Einstellungen zur Risiko-Konfiguration" },
@@ -51,7 +51,7 @@
       "price": 899,
       "period": "Jährliche Abrechnung",
       "items": [
-        { "description": "Vollständiger Zugang zum systematischen Bitcoin-Framework" },
+        { "description": "Vollständiger Zugang zum systematischen Framework" },
         { "description": "Gesamte Signal-Logik & regelbasierte Execution-Engine" },
         { "description": "Kontinuierliche Modellverfeinerung & System-Updates" },
         { "description": "Adaptive Einstellungen zur Risiko-Konfiguration" },
