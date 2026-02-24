@@ -23,6 +23,7 @@ const {
   subtitle = await Astro.slots.render('subtitle'),
   tagline,
   icon = 'tabler:info-square',
+  callToAction,
   content = await Astro.slots.render('content'),
   options: userOptions = {},
   initialCapital = 300,
@@ -67,6 +68,13 @@ const baseOptions = getBaseChartOptions(parsedData);
       </div>
     )}
   </div>
+  {
+    callToAction && (
+      <div class="flex justify-center mx-auto w-fit mt-8 md:mt-12 font-medium">
+        <Button {...callToAction} />
+      </div>
+    )
+  }
 </WidgetWrapper>
 
 {baseOptions && (
