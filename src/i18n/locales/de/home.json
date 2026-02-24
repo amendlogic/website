@@ -76,7 +76,8 @@
   "chart.tagline": "Performance-Übersicht",
   "chart.title": "Gefestigt durch strukturierte Tests",
   "chart.subtitle": "Backtesting unter realistischen Annahmen über mehrere Marktzyklen hinweg. Fokus auf Stabilität und Nachhaltigkeit statt aggressiver Optimierung.",
-
+  "chart.btnText": "Performance-Details prüfen",
+  
   "testimonials.tagline": "Testimonials",
   "testimonials.title": "Das sagen echte Trader",
   "testimonials.btnText": "Mehr Erfahrungsberichte...",
