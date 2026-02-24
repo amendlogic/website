@@ -1,10 +1,10 @@
 {
   "hero.tagline": "Systematic Execution",
   "hero.title": "Structured Bitcoin Trading. Transparent Terms.",
-  "hero.subtitle": "Deploy a rule-based Bitcoin trading framework designed for disciplined, emotion-free operation.",
+  "hero.subtitle": "Start a rule-based Bitcoin trading framework designed for disciplined, emotion-free execution – ready to deploy immediately.",
 
-  "title": "Our Prices",
-  "subtitle": "Select the billing structure that aligns with your trading horizon and capital commitment.",
+  "title": "Pricing",
+  "subtitle": "Choose the billing structure that matches your trading horizon and capital commitment.",
 
   "prices": [
     {
@@ -56,7 +56,7 @@
         { "description": "Continuous model refinement & system updates" },
         { "description": "Adaptive risk configuration settings" },
         { "description": "Priority support" },
-        { "description": "Best value billing structure" }
+        { "description": "Most cost-efficient billing structure" }
       ],
       "callToAction": {
         "target": "_blank",
@@ -69,7 +69,7 @@
   ],
 
   "trust.title": "Transparent Billing. Institutional-Grade Processing.",
-  "trust.subtitle": "Secure infrastructure. Clearly defined terms. No hidden structures.",
+  "trust.subtitle": "Secure infrastructure. Clearly defined terms. No hidden fees or structures.",
   "trust.columns": 2,
   "trust.items": [
     {
@@ -79,27 +79,27 @@
     },
     {
       "title": "No Hidden Fees",
-      "description": "No performance fees. No revenue share. No hidden transaction costs.",
+      "description": "No performance fees. No revenue share. No hidden execution costs.",
       "icon": "tabler:receipt-off"
     },
     {
       "title": "Subscription Control",
-      "description": "Manage, upgrade, or cancel your subscription at any time directly through the customer billing portal.",
+      "description": "Manage, upgrade, or cancel your subscription anytime directly through the customer billing portal.",
       "icon": "tabler:adjustments"
     },
     {
       "title": "Instant Deployment",
-      "description": "Immediate authorization and access to the proprietary TradingView script upon successful payment.",
+      "description": "Immediate authorization and access to the proprietary TradingView script after successful payment.",
       "icon": "tabler:bolt"
     }
   ],
 
   "steps.tagline": "Deployment Protocol",
-  "steps.title": "A structured integration process to activate the framework inside your TradingView environment within minutes.",
+  "steps.title": "A structured integration process to activate the framework in your TradingView environment within minutes.",
   "steps.items": [
     {
-      "title": "Step 1: Select Subscription Tier",
-      "description": "Choose the access structure aligned with your trading horizon.",
+      "title": "Step 1: Select Access Tier",
+      "description": "Choose the access plan that aligns with your operational trading horizon.",
       "icon": "tabler:box"
     },
     {
@@ -114,7 +114,7 @@
     },
     {
       "title": "Step 4: Automatic Authorization",
-      "description": "Upon successful payment, your TradingView account is automatically authorized, granting immediate access to the invite-only system.",
+      "description": "After successful payment, your TradingView account is automatically authorized, granting immediate access to the invite-only system.",
       "icon": "tabler:server-cog"
     },
     {
@@ -124,12 +124,12 @@
     },
     {
       "title": "Step 6: Configure Automation (Optional)",
-      "description": "Connect the framework to your exchange via webhooks for fully automated, rule-based trading. <a href='#' class='underline font-semibold'>Read the automation guide</a>.",
+      "description": "Connect the framework to your exchange via webhooks for fully automated, rule-based trading. <a href='#' class='underline font-semibold'>View the Automation Guide</a>.",
       "icon": "tabler:settings-automation"
     }
   ],
 
-  "cta.title": "Trade With Structure.",
-  "cta.subtitle": "Replace emotional decision-making with systematic, rule-based market engagement.",
+  "cta.title": "Trade with Structure.",
+  "cta.subtitle": "Take control: systematic rules instead of spontaneous decisions.",
   "cta.btnText": "Activate Structured Access"
 }
