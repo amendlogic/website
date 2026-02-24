@@ -1,7 +1,7 @@
 ---
-import { getI18nPaths, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
+import { getI18nPaths, useTranslations } from '~/i18n/utils';
+import { getFooterData } from '~/navigation';
 
-// 1. Daten und Navigation importieren
 import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
 import Prices from '~/components/widgets/Pricing.astro';
@@ -10,29 +10,53 @@ import Steps from '~/components/widgets/Steps.astro';
 import Features3 from '~/components/widgets/Features3.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
-// 2. Pfade generieren (SSOT für [lang])
+// 1️⃣ Static Paths
 export async function getStaticPaths() {
   return getI18nPaths();
 }
 
-// 3. Sprache & Content laden
+// 2️⃣ Sprache & Übersetzungen
 const { lang } = Astro.params;
-const t = useTranslations(lang);
+const t = useTranslations(lang); // intern fallback auf DEFAULT_LANG
 
-// 4. Metadaten
+// 3️⃣ FAQ Items mit exakter Reihenfolge
+const faqOrderConfig = [
+  { key: 'faq.performance.items', index: 0 },
+  { key: 'faq.performance.items', index: 1 },
+  { key: 'faq.performance.items', index: 2 },
+  { key: 'faq.started.items', index: 0 },
+  { key: 'faq.started.items', index: 1 },
+  { key: 'faq.performance.items', index: 3 },
+  { key: 'faq.security.items', index: 0 },
+  { key: 'faq.billing.items', index: 0 },
+  { key: 'faq.billing.items', index: 1 },
+  { key: 'faq.support.items', index: 0 },
+];
+
+const selectedFAQItems = faqOrderConfig
+  .map(({ key, index }) => {
+    const items = t(key) || [];
+    return items[index];
+  })
+  .filter(Boolean);
+
+// 4️⃣ Metadata
 const metadata = {
   title: `${t('home.hero.titleStart')} ${t('home.hero.titleAccent')} — AmendLogic`,
   ignoreTitleTemplate: true,
 };
+
+// 5️⃣ Footer Data
+const footerData = getFooterData(lang, ['pricing']);
 ---
 
-<Layout metadata={metadata}>
+<Layout metadata={metadata} footerData={footerData}>
   <!-- HeroText Widget ******************* -->
 
   <HeroText
-    tagline="Pricing"
-    title="Stellar Pricing for Every Journey"
-    subtitle="Choose the perfect plan that aligns with your cosmic goals."
+    tagline={t('pricing.hero.tagline')}
+    title={t('pricing.hero.title')}
+    subtitle={t('pricing.hero.subtitle')}
   />
 
   <!-- Pricing Widget ******************* -->
@@ -40,167 +64,26 @@ const metadata = {
   <Prices
     title="Our prices"
     subtitle="Only pay for what you need"
-    prices={[
-      {
-        title: 'basic',
-        subtitle: 'Optimal choice for personal use',
-        price: 29,
-        period: 'per month',
-        items: [
-          {
-            description: 'Etiam in libero, et volutpat',
-          },
-          {
-            description: 'Aenean ac nunc dolor tristique',
-          },
-          {
-            description: 'Cras scelerisque accumsan lib',
-          },
-          {
-            description: 'In hac habitasse',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'Get started',
-          href: '#',
-        },
-      },
-      {
-        title: 'standard',
-        subtitle: 'Optimal choice for small teams',
-        price: 69,
-        period: 'Per Month',
-        items: [
-          {
-            description: 'Proin vel laoreet',
-          },
-          {
-            description: 'Ut efficitur habitasse egestas',
-          },
-          {
-            description: 'Volutpat hac curabitur',
-          },
-          {
-            description: 'Pellentesque blandit ut nibh',
-          },
-          {
-            description: 'Donec fringilla sem',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'Get started',
-          href: '#',
-        },
-        hasRibbon: true,
-        ribbonTitle: 'popular',
-      },
-      {
-        title: 'premium',
-        subtitle: 'Optimal choice for companies',
-        price: 199,
-        period: 'Per Month',
-        items: [
-          {
-            description: 'Curabitur suscipit risus',
-          },
-          {
-            description: 'Aliquam habitasse malesuada',
-          },
-          {
-            description: 'Suspendisse sit amet blandit',
-          },
-          {
-            description: 'Suspendisse auctor blandit dui',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'Get started',
-          href: '#',
-        },
-      },
-    ]}
+    prices={t('pricing.prices')}
   />
 
   <!-- Features3 Widget ************** -->
 
   <Features3
-    title="Price-related features"
-    subtitle="Discover the advantages of choosing our plans"
+    title={t('pricing.trust.title')}
+    subtitle={t('pricing.trust.subtitle')}
     columns={2}
-    items={[
-      {
-        title: 'Tiered Pricing Plans',
-        description: 'Choose from a range of pricing plans designed to accommodate different budgets and requirements.',
-        icon: 'tabler:stairs',
-      },
-      {
-        title: 'Transparent Pricing',
-        description: 'Clearly displayed pricing details for each plan, with no hidden costs or unexpected charges.',
-        icon: 'tabler:flip-vertical',
-      },
-      {
-        title: 'Secure Payment Methods',
-        description: 'Secure payment gateways to protect your financial information during transactions.',
-        icon: 'tabler:shield-lock',
-      },
-      {
-        title: 'Instant Access',
-        description: `Immediate access to your chosen plan's features and templates upon subscription.`,
-        icon: 'tabler:accessible',
-      },
-      {
-        title: 'Upgrade Value',
-        description: 'Upgrade to higher-tier plans to unlock more features and benefits for an enhanced experience.',
-        icon: 'tabler:chevrons-up',
-      },
-      {
-        title: '24H support',
-        description: 'Questions answered via live chat, email or phone, every calendar day.',
-        icon: 'tabler:headset',
-      },
-    ]}
+    items={t('pricing.trust.items')}
     classes={{ container: 'max-w-5xl' }}
   />
 
   <!-- Steps Widget ****************** -->
 
   <Steps
-    title="A guided journey from plans to creativity"
-    tagline="simplified process"
+    tagline={t('pricing.steps.tagline')}
+    title={t('pricing.steps.title')}
     isReversed={true}
-    items={[
-      {
-        title: 'Explore plans',
-        icon: 'tabler:number-1',
-      },
-      {
-        title: 'Select a plan',
-        icon: 'tabler:number-2',
-      },
-      {
-        title: 'Sign Up / Log In',
-        icon: 'tabler:number-3',
-      },
-      {
-        title: 'Review order',
-        icon: 'tabler:number-4',
-      },
-      {
-        title: 'Enter payment details',
-        icon: 'tabler:number-5',
-      },
-      {
-        title: 'Confirmation',
-        icon: 'tabler:number-6',
-      },
-      {
-        title: 'Download and start using the template(s)',
-        icon: 'tabler:number-7',
-      },
-    ]}
+    items={t('pricing.steps.items')}
     image={{
       src: 'https://images.unsplash.com/photo-1536816579748-4ecb3f03d72a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
       alt: 'Steps image',
@@ -245,12 +128,12 @@ const metadata = {
   <!-- CallToAction Widget *********** -->
 
   <CallToAction
-    title="Ready to boost your projects?"
-    subtitle="Join our community of satisfied customers who have transformed their work with our templates."
+    title={t('pricing.cta.title')}
+    subtitle={t('pricing.cta.subtitle')}
     actions={[
       {
         variant: 'primary',
-        text: 'Get started now',
+        text: {t('pricing.cta.btnText')},
         href: '/',
       },
     ]}
