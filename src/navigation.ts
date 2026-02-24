@@ -18,7 +18,7 @@ export function getHeaderData(lang?: string) {
         links: [
           { text: t('nav.benefits'), href: getPermalink('/#benefits', 'page', lang) },
           { text: t('nav.system'), href: getPermalink('/#system', 'page', lang) },
-          { text: t('nav.performance'), href: getPermalink('/#performance', 'page', lang) },
+          { text: t('nav.backtest'), href: getPermalink('/#backtest', 'page', lang) },
           { text: t('nav.testimonials'), href: getPermalink('/#testimonials', 'page', lang) },
           { text: t('nav.faq'), href: getPermalink('/#faq', 'page', lang) },
         ],
