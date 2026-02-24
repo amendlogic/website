@@ -1,10 +1,10 @@
 {
   "hero.tagline": "Systematic Execution",
-  "hero.title": "Structured Bitcoin Execution. Transparent Terms.",
-  "hero.subtitle": "Deploy a rule-based Bitcoin trading framework designed for disciplined, emotion-free operation. Choose the subscription interval that aligns with your capital horizon.",
+  "hero.title": "Structured Bitcoin Trading. Transparent Terms.",
+  "hero.subtitle": "Deploy a rule-based Bitcoin trading framework designed for disciplined, emotion-free operation.",
 
-  "title": "Structured Access. Transparent Terms.",
-  "subtitle": "Choose the subscription interval that aligns with your trading horizon and capital commitment.",
+  "title": "Our Prices",
+  "subtitle": "Select the billing structure that aligns with your trading horizon and capital commitment.",
 
   "prices": [
     {
@@ -13,7 +13,7 @@
       "price": 99,
       "period": "Billed monthly",
       "items": [
-        { "description": "Full access to the systematic Bitcoin execution framework" },
+        { "description": "Full access to the systematic Bitcoin framework" },
         { "description": "Complete signal logic & rule-based execution engine" },
         { "description": "Continuous model refinement & system updates" },
         { "description": "Adaptive risk configuration settings" },
@@ -31,7 +31,7 @@
       "price": 249,
       "period": "Billed every 3 months",
       "items": [
-        { "description": "Full access to the systematic Bitcoin execution framework" },
+        { "description": "Full access to the systematic Bitcoin framework" },
         { "description": "Complete signal logic & rule-based execution engine" },
         { "description": "Continuous model refinement & system updates" },
         { "description": "Adaptive risk configuration settings" },
@@ -43,7 +43,7 @@
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "Save 16% vs Monthly"
+      "ribbonTitle": "Save 16%"
     },
     {
       "title": "Annual",
@@ -51,7 +51,7 @@
       "price": 899,
       "period": "Billed annually",
       "items": [
-        { "description": "Full access to the systematic Bitcoin execution framework" },
+        { "description": "Full access to the systematic Bitcoin framework" },
         { "description": "Complete signal logic & rule-based execution engine" },
         { "description": "Continuous model refinement & system updates" },
         { "description": "Adaptive risk configuration settings" },
@@ -64,7 +64,7 @@
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "Save 24% vs Monthly"
+      "ribbonTitle": "Save 24%"
     }
   ],
 
@@ -79,7 +79,7 @@
     },
     {
       "title": "No Hidden Fees",
-      "description": "No performance fees. No revenue share. No hidden execution costs.",
+      "description": "No performance fees. No revenue share. No hidden transaction costs.",
       "icon": "tabler:receipt-off"
     },
     {
@@ -89,7 +89,7 @@
     },
     {
       "title": "Instant Deployment",
-      "description": "Immediate authorization and access to the private TradingView execution script upon successful payment.",
+      "description": "Immediate authorization and access to the proprietary TradingView script upon successful payment.",
       "icon": "tabler:bolt"
     }
   ],
@@ -104,7 +104,7 @@
     },
     {
       "title": "Step 2: Provide TradingView Username",
-      "description": "Enter your exact TradingView username during checkout to link the private execution script to your account.",
+      "description": "Enter your exact TradingView username during checkout to link the private script to your account.",
       "icon": "tabler:user-scan"
     },
     {
@@ -114,7 +114,7 @@
     },
     {
       "title": "Step 4: Automatic Authorization",
-      "description": "Upon successful payment, your TradingView account is automatically authorized, granting immediate access to the invite-only execution script.",
+      "description": "Upon successful payment, your TradingView account is automatically authorized, granting immediate access to the invite-only system.",
       "icon": "tabler:server-cog"
     },
     {
@@ -123,18 +123,13 @@
       "icon": "tabler:chart-candle"
     },
     {
-      "title": "Step 6: Configure Auto-Execution (Optional)",
+      "title": "Step 6: Configure Automation (Optional)",
       "description": "Connect the framework to your exchange via webhooks for fully automated, rule-based trading. <a href='#' class='underline font-semibold'>Read the automation guide</a>.",
       "icon": "tabler:settings-automation"
     }
   ],
 
-  "steps.image": {
-    "src": "~/assets/images/steps-image.jpg",
-    "alt": "Framework Deployment Process"
-  },
-
   "cta.title": "Trade With Structure.",
-  "cta.subtitle": "Replace emotional decision-making with systematic, rule-based Bitcoin execution.",
+  "cta.subtitle": "Replace emotional decision-making with systematic, rule-based market engagement.",
   "cta.btnText": "Activate Structured Access"
 }
