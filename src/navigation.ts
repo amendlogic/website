@@ -54,7 +54,7 @@ export function getFooterData(
         links: [
           { text: t('nav.benefits'), href: getPermalink('/#benefits', 'page', lang) },
           { text: t('nav.system'), href: getPermalink('/#system', 'page', lang) },
-          { text: t('nav.performance'), href: getPermalink('/#performance', 'page', lang) },
+          { text: t('nav.backtest'), href: getPermalink('/#backtest', 'page', lang) },
           { text: t('nav.pricing'), href: getPermalink('/pricing', 'page', lang) },
           { text: t('nav.changelog'), href: '#' },
         ],
@@ -62,10 +62,10 @@ export function getFooterData(
       {
         title: t('nav.resources'),
         links: [
+          { text: t('nav.performance'), href: getPermalink('/#performance', 'page', lang) },
           { text: t('nav.docs'), href: '#' },
           { text: t('nav.community'), href: '#', icon: 'tabler:external-link' },
           { text: t('nav.github'), href: '#', icon: 'tabler:external-link' },
-          { text: t('nav.portal'), href: '#', icon: 'tabler:external-link' },
           { text: t('nav.help'), href: getPermalink('/help-center', 'page', lang) },
         ],
       },
@@ -76,6 +76,7 @@ export function getFooterData(
           { text: t('nav.team'), href: '#' },
           { text: t('nav.blog'), href: getBlogPermalink(lang) },
           { text: t('nav.contact'), href: getPermalink('/contact', 'page', lang) },
+          { text: t('nav.portal'), href: '#', icon: 'tabler:external-link' },
         ],
       },
       {
