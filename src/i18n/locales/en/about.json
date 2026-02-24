@@ -105,7 +105,9 @@
 
   "transparency.tagline": "Accountability",
   "transparency.title": "Founder-Led. Directly Responsible.",
-  "transparency.description": "AmendLogic is developed and maintained under direct founder oversight. No anonymous development teams. No outsourced signal providers. No affiliate-driven marketing narratives. The framework is continuously evaluated across market conditions with a focus on structural integrity rather than promotional performance metrics. Offering a rule-based system means standing behind its methodology — transparently and responsibly.",
+  "transparency.description1": "is developed and maintained under direct founder oversight. No anonymous development teams. No outsourced signal providers. No affiliate-driven marketing narratives.",
+  "transparency.description2": "The framework is continuously evaluated across market conditions with a focus on structural integrity rather than promotional performance metrics.",
+  "transparency.description3": "Offering a rule-based system means standing behind its methodology — transparently and responsibly.",
 
   "cta.title": "Markets Will Always Fluctuate. Discipline Should Not.",
   "cta.subtitle": "Designed for traders who value process over prediction. Systematize your execution. Remove discretion. Operate with objective logic.",
