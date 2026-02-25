@@ -1,6 +1,6 @@
 // Englisch Imports
 import navEn from './locales/en/ui/nav.json';
-import homeEn from './locales/en/home.json';
+import indexEn from './locales/en/index.json';
 import aboutEn from './locales/en/about.json';
 import pricingEn from './locales/en/pricing.json';
 import performanceEn from './locales/en/performance.json';
@@ -10,7 +10,7 @@ import faqEn from './locales/en/faq.json';
 
 // Deutsch Imports
 import navDe from './locales/de/ui/nav.json';
-import homeDe from './locales/de/home.json';
+import indexDe from './locales/de/index.json';
 import aboutDe from './locales/de/about.json';
 import pricingDe from './locales/de/pricing.json';
 import performanceDe from './locales/de/performance.json';
@@ -21,7 +21,7 @@ import faqDe from './locales/de/faq.json';
 export const ui = {
   en: {
     nav: navEn,
-    home: homeEn,
+    index: indexEn,
     about: aboutEn,
     pricing: pricingEn,
     performance: performanceEn,
@@ -31,7 +31,7 @@ export const ui = {
   },
   de: {
     nav: navDe,
-    home: homeDe,
+    index: indexDe,
     about: aboutDe,
     pricing: pricingDe,
     performance: performanceDe,
