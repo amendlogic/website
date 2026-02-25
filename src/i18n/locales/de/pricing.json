@@ -21,7 +21,7 @@
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "Monatlichen Zugang aktivieren",
+        "text": "7-Tage-Test starten",
         "href": "#"
       }
     },
@@ -39,7 +39,7 @@
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "Quartals-Zugang aktivieren",
+        "text": "7-Tage-Test starten",
         "href": "#"
       },
       "hasRibbon": true,
@@ -60,7 +60,7 @@
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "Jährlichen Zugang aktivieren",
+        "text": "7-Tage-Test starten",
         "href": "#"
       },
       "hasRibbon": true,
