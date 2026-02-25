@@ -117,14 +117,6 @@ const metadata = {
   />
 
 
-  <!-- Note Widget ************** -->
-
-  <Note 
-    title={t('performance.limitations.title')}
-    description={t('performance.limitations.desc')} 
-  />
-
-
   <!-- EChart Widget *************** -->
 
   <EChart
@@ -166,5 +158,33 @@ const metadata = {
     </Fragment>
   </EChart>
 
+
+  <!-- Note Widget ************** -->
+
+  <Note 
+    title={t('performance.limitations.title')}
+    description={t('performance.limitations.desc')} 
+  />
+
+
+  <!-- CTA Widget ************** -->
+
+  <CallToAction
+    title={t('performance.cta.title')}
+    actions={[
+      {
+        variant: 'primary',
+        text: t('performance.cta.btnText'),
+        href: 'https://github.com/arthelokyo/astrowind',
+        target: '_blank',
+        icon: 'tabler:chevron-right',
+      },
+    ]}
+  >
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </CallToAction>
 
 </Layout>
