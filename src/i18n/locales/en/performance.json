@@ -117,7 +117,9 @@
   "chart.tagline": "Risk Profiles",
   "chart.title": "Alternative Backtests",
   "chart.subtitle": "Performance under different risk settings or alternative configurations.",
-  "chart.setting1": "Review Performance Details"
+  "chart.setting1": "Review Performance Details",
 
 
+  "cta.title": "Ready to Evaluate the Framework Yourself?",
+  "cta.btnText": "Start 7-Day Trial"
 }
