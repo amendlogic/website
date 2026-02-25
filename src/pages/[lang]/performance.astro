@@ -39,13 +39,17 @@ const metadata = {
   <!-- Hero Widget ******************* -->
 
   <Hero
-    tagline={t('performance.hero.tagline')} 
+    tagline={t('performance.hero.tagline')}
+    actions={[
+      {
+        variant: 'secondary',
+        text: t('performance.hero.btnSecondary'),
+        href: '#backtest',
+        target: '_self',
+        icon: 'tabler:chevron-down',
+      },
+    ]}
   >
-    <Fragment slot="actions">
-      <a href="#backtests" class="btn btn-secondary">
-        {t('performance.hero.btnSecondary')}
-      </a>
-    </Fragment>
 
     <Fragment slot="title">
       {t('performance.hero.title')} 
@@ -133,7 +137,6 @@ const metadata = {
 
   <EChart
     isAfterContent
-    id="backtests"
     height="400px"
     csvPath="./src/data/strategy.csv" 
   >
@@ -147,7 +150,6 @@ const metadata = {
 
   <EChart
     isAfterContent
-    id="backtest"
     height="400px"
     csvPath="./src/data/strategy.csv" 
   >
