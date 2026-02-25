@@ -2,6 +2,7 @@
   "hero.tagline": "Performance",
   "hero.title": "Historical Simulation Under Defined Parameters.",
   "hero.subtitle": "The following results reflect rule-based historical backtesting conducted within the TradingView Strategy Tester environment.",
+  "hero.btnSecondary": "View Additional Backtests",
 
   "overview.title": "Overview",
   "overview.desc": "The performance data presented below is derived from systematic backtesting using predefined strategy rules. The objective of this section is to illustrate how the strategy would have behaved under historical market conditions, given specific execution and cost assumptions.",
