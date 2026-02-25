@@ -41,9 +41,7 @@ const metadata = {
     tagline={t('performance.hero.tagline')} 
   >
     <Fragment slot="title">
-      Improve <span class="hidden sm:inline">the online presence of</span> your <span
-        class="text-accent dark:text-white">Startup</span
-      > with Astrowind templates
+      {t('performance.hero.title')} 
     </Fragment>
 
     <Fragment slot="subtitle">
@@ -73,8 +71,8 @@ const metadata = {
   <!-- Features2 Widget ************** -->
 
   <Features2
+    tagline={t('performance.metrics.tagline')} 
     title={t('performance.metrics.title')} 
-    subtitle={t('performance.metrics.subtitle')}
     columns={3}
     items={t('performance.metrics.items')}
   />
@@ -94,7 +92,6 @@ const metadata = {
     id="features"
     tagline={t('performance.methodology.tagline')}
     title={t('performance.methodology.title')}
-    subtitle={t('performance.methodology.subtitle')}
     columns={2}
     items={t('performance.methodology.items')}
   />
