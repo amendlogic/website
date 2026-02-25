@@ -71,7 +71,7 @@ const footerData = getFooterData(lang, ['testimonials']);
     </Fragment>
 
     <Fragment slot="title" set:html={t('index.hero.text', {
-      accent: `${t('index.hero.accent')}`,
+      accent: `<span class="text-accent dark:text-white">${t('index.hero.accent')}</span>`,
     })} />
 
     <Fragment slot="subtitle">
