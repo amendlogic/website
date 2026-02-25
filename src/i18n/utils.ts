@@ -24,45 +24,51 @@ export const getI18nPaths = () => {
 // 3️⃣ useTranslations Hook
 // -----------------------------
 export function useTranslations(lang?: string) {
-  // 3a. sichere Sprache
-  const currentLang = lang && lang in LANGUAGES ? (lang as keyof typeof LANGUAGES) : DEFAULT_LANG;
+  const currentLang =
+    lang && lang in LANGUAGES
+      ? (lang as keyof typeof LANGUAGES)
+      : DEFAULT_LANG;
+
   const defaultLang = DEFAULT_LANG;
 
-  // 3b. die eigentliche Übersetzungsfunktion
-  return function t(keyString: string): string {
-    // Sicherheitscheck: namespace vorhanden?
+  return function t(
+    keyString: string,
+    vars?: Record<string, string>
+  ): string {
     const firstDotIndex = keyString.indexOf('.');
     if (firstDotIndex === -1) {
-      console.warn(`[i18n] Key "${keyString}" needs a namespace (e.g. 'home.title')`);
+      console.warn(`[i18n] Key "${keyString}" needs a namespace`);
       return keyString;
     }
 
     const namespace = keyString.substring(0, firstDotIndex);
     const specificKey = keyString.substring(firstDotIndex + 1);
 
-    // Zugriff auf Sprachobjekte
     // @ts-ignore
     const langObj = ui[currentLang];
     // @ts-ignore
     const defaultObj = ui[defaultLang];
 
-    // Zugriff auf Namespace
     const fileObj = langObj?.[namespace] || defaultObj?.[namespace];
 
     if (!fileObj) {
-      console.warn(`[i18n] Namespace "${namespace}" not found in ui.ts`);
+      console.warn(`[i18n] Namespace "${namespace}" not found`);
       return keyString;
     }
 
-    // Text abrufen
-    const text = fileObj[specificKey];
+    let text =
+      fileObj[specificKey] ||
+      defaultObj?.[namespace]?.[specificKey] ||
+      keyString;
 
-    // Fallback auf default
-    if (!text && currentLang !== defaultLang) {
-      return defaultObj?.[namespace]?.[specificKey] || keyString;
+    // ✅ Interpolation
+    if (vars) {
+      Object.entries(vars).forEach(([key, value]) => {
+        text = text.replace(new RegExp(`{${key}}`, 'g'), value);
+      });
     }
 
-    return text || keyString;
+    return text;
   };
 }
 
