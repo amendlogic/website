@@ -36,9 +36,13 @@ const footerData = getFooterData(lang, ['payments']);
 
   <HeroText
     tagline={t('pricing.hero.tagline')}
-    title={t('pricing.hero.title')}
     subtitle={t('pricing.hero.subtitle')}
-  />
+  >
+
+    <Fragment slot="title" set:html={t('pricing.hero.text', {
+      accent: `<span class="text-accent dark:text-white">${t('pricing.hero.accent')}</span>`,
+    })} />
+  </HeroText>
 
   <!-- Pricing Widget ******************* -->
 
