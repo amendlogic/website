@@ -57,17 +57,17 @@
   "steps.subtitle": "Die Strategie arbeitet direkt auf TradingView. Sie bewertet kontinuierlich Marktdaten, validiert Bedingungen und führt Trades nach strikten Parametern aus.",
   "steps.items": [
     {
-      "title": "Signalgenerierung <span class=\"font-medium\">— Objektive Kriterien</span>",
+      "title": "Signalgenerierung — Objektive Kriterien",
       "description": "Der proprietäre Indikator überwacht die Marktstruktur rund um die Uhr und generiert Signale nur bei Übereinstimmung vordefinierter Bedingungen.",
       "icon": "tabler:number-1"
     },
     {
-      "title": "Validierung <span class=\"font-medium\">— Risiko & Richtung</span>",
+      "title": "Validierung — Risiko & Richtung",
       "description": "Jedes Signal wird automatisch gegen Risikoregeln und Parameter zur Positionsgröße geprüft.",
       "icon": "tabler:number-2"
     },
     {
-      "title": "Ausführung <span class=\"font-medium\">— Konsistente Platzierung</span>",
+      "title": "Ausführung — Konsistente Platzierung",
       "description": "Orders werden sofort und präzise innerhalb deines konfigurierten Risiko-Frameworks platziert.",
       "icon": "tabler:number-3"
     }
