@@ -21,7 +21,7 @@
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "Activate Monthly Access",
+        "text": "Start 7-Day Trial",
         "href": "#"
       }
     },
@@ -39,7 +39,7 @@
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "Activate Quarterly Access",
+        "text": "Start 7-Day Trial",
         "href": "#"
       },
       "hasRibbon": true,
@@ -60,7 +60,7 @@
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "Activate Annual Access",
+        "text": "Start 7-Day Trial",
         "href": "#"
       },
       "hasRibbon": true,
