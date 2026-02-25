@@ -110,14 +110,13 @@
     }
   ],
 
+  "limitations.title": "Limitations",
+  "limitations.desc": "Backtesting is a method of evaluating a strategy using historical data. Simulated results have inherent limitations and do not reflect real-time market conditions, liquidity constraints, order book dynamics, latency, funding rates, psychological decision-making, or structural market changes."
+
   "chart.tagline": "Risk Profiles",
   "chart.title": "Alternative Backtests",
   "chart.subtitle": "Performance under different risk settings or alternative configurations.",
   "chart.setting1": "Review Performance Details",
-
-  
-  "limitations.title": "Limitations of Backtesting",
-  "limitations.desc": "Backtesting is a method of evaluating a strategy using historical data. Simulated results have inherent limitations and do not reflect real-time market conditions, liquidity constraints, order book dynamics, latency, funding rates, psychological decision-making, or structural market changes."
 
 
 }
