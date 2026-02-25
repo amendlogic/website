@@ -1,6 +1,7 @@
 {
   "hero.tagline": "Märkte schwanken. Struktur hat Bestand.",
-  "hero.title": "Disziplin wird konstruiert — nicht vorausgesetzt.",
+  "hero.text": "Disziplin wird {accent} — nicht vorausgesetzt.",
+  "hero.accent": "konstruiert",
   "hero.subtitle": "Systematische Regeln. Validierte Bedingungen. Kontrolliertes Risiko. Ein Bitcoin-Trading-Framework, entwickelt für Konstanz über alle Marktzyklen hinweg.",
   "hero.ctaPrimary": "Framework erkunden",
   "hero.ctaSecondary": "Performance-Logik prüfen",
