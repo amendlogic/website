@@ -37,8 +37,37 @@
     }
   ],
 
-  "limitations.title": "Limitations of Backtesting",
-  "limitations.desc": "Backtesting is a method of evaluating a strategy using historical data. Simulated results have inherent limitations and do not reflect real-time market conditions, liquidity constraints, order book dynamics, latency, funding rates, psychological decision-making, or structural market changes.",
+  "strategy.tagline": "Strategy Settings",
+  "strategy.title": "Strategy Settings",
+  "strategy.subtitle": "Parameters and configuration used during the backtest.",
+  "strategy.items": [
+    {
+      "title": "Net Return",
+      "description": "Total percentage return generated during the selected backtest period.",
+      "icon": "tabler:chart-line"
+    },
+    {
+      "title": "Max Drawdown",
+      "description": "Largest peak-to-trough equity decline observed during the simulation.",
+      "icon": "tabler:chart-area-line"
+    },
+    {
+      "title": "Profit Factor",
+      "description": "Gross profit divided by gross loss across all simulated trades.",
+      "icon": "tabler:scale"
+    },
+    {
+      "title": "Win Rate",
+      "description": "Percentage of trades closed in profit.",
+      "icon": "tabler:percentage"
+    },
+    {
+      "title": "Total Trades",
+      "description": "Number of executed trades within the backtest period.",
+      "icon": "tabler:repeat"
+    }
+  ],
+  
 
   "methodology.tagline": "Methodology",
   "methodology.title": "Backtesting Methodology & Execution Assumptions",
@@ -79,7 +108,13 @@
       "description": "No repainting indicators are used. All signals are generated from non-forward-looking data.",
       "icon": "tabler:shield-check"
     }
-  ]
+  ],
+
+
+
+  
+  "limitations.title": "Limitations of Backtesting",
+  "limitations.desc": "Backtesting is a method of evaluating a strategy using historical data. Simulated results have inherent limitations and do not reflect real-time market conditions, liquidity constraints, order book dynamics, latency, funding rates, psychological decision-making, or structural market changes."
 
 
 }
