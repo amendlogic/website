@@ -79,7 +79,7 @@
       "description": "No repainting indicators are used. All signals are generated from non-forward-looking data.",
       "icon": "tabler:shield-check"
     }
-  ],
+  ]
 
 
 }
