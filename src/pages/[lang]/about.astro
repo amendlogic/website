@@ -176,6 +176,8 @@ const metadata = {
 
 
   <CallToAction
+    title={t('about.cta.title')}
+    subtitle={t('about.cta.subtitle')}
     actions={[
       {
         variant: 'primary',
@@ -186,12 +188,7 @@ const metadata = {
       },
     ]}
   >
-    <Fragment slot="title">
-      {t('about.cta.title')}
-    </Fragment>
-    <Fragment slot="subtitle">
-      {t('about.cta.subtitle')}
-    </Fragment>
+
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
