@@ -1,6 +1,7 @@
 {
   "hero.tagline": "Markets fluctuate. Structure endures.",
-  "hero.title": "Discipline Is Engineered — Not Assumed.",
+  "hero.text": "Discipline Is {accent} — Not Assumed.",
+  "hero.accent": "Engineered",
   "hero.subtitle": "Systematic Rules. Validated Conditions. Controlled Risk. A Bitcoin trading framework built for consistency across market cycles.",
   "hero.ctaPrimary": "Explore the Framework",
   "hero.ctaSecondary": "Examine the Performance Logic",
