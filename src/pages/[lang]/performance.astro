@@ -51,9 +51,9 @@ const metadata = {
     ]}
   >
 
-    <Fragment slot="title">
-      {t('performance.hero.title')} 
-    </Fragment>
+    <Fragment slot="title" set:html={t('performance.hero.text', {
+      accent: `<span class="text-accent dark:text-white">${t('performance.hero.accent')}</span>`,
+    })} />
 
     <Fragment slot="subtitle">
       {t('performance.hero.subtitle')} 
