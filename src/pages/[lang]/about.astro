@@ -38,9 +38,9 @@ const metadata = {
       alt: 'Caos Image',
     }}
   >
-    <Fragment slot="title">
-      {t('about.hero.title')}
-    </Fragment>
+    <Fragment slot="title" set:html={t('about.hero.text', {
+      accent: `<span class="text-accent dark:text-white">${t('about.hero.accent')}</span>`,
+    })} />
 
     <Fragment slot="subtitle">
       {t('about.hero.subtitle')}
