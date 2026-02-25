@@ -131,5 +131,8 @@
       "title": "Wie lang ist die Reaktionszeit?",
       "description": "Die meisten Anfragen werden innerhalb weniger Stunden beantwortet; dringende Anliegen werden umgehend priorisiert."
     }
-  ]
+  ],
+  
+  "cta.title": "Noch Fragen offen?",
+  "cta.btnText": "Support kontaktieren"
 }
