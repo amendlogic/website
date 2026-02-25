@@ -12,6 +12,8 @@ import Content from '~/components/widgets/Content.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import Layout from '~/layouts/PageLayout.astro';
 
+import { YouTube } from 'astro-embed';
+
 // 2. Pfade generieren (SSOT für [lang])
 export async function getStaticPaths() {
   return getI18nPaths();
