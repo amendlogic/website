@@ -45,7 +45,7 @@ const selectedFAQItems = faqOrderConfig
 
 // 4️⃣ Metadata
 const metadata = {
-  title: `${t('home.hero.titleStart')} ${t('home.hero.titleAccent')} — AmendLogic`,
+  title: `${t('index.hero.titleStart')} ${t('index.hero.titleAccent')} — AmendLogic`,
   ignoreTitleTemplate: true,
 };
 
@@ -60,38 +60,38 @@ const footerData = getFooterData(lang, ['testimonials']);
   >
     <Fragment slot="actions">
       <a href="https://github.com/arthelokyo/astrowind" target="_blank" class="btn btn-primary inline-flex items-center gap-2">
-        {t('home.hero.btnPrimary')}
+        {t('index.hero.btnPrimary')}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 1 59 59" class="w-9 h-10 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block">
           <path d="M33 17c-3.5 0-6.3 2.85-6.35 6.35 0 3.5 2.85 6.35 6.35 6.35s6.35-2.85 6.35-6.35S36.5 17 33 17ZM45.7 45.5 57.6 17H44.95L33.05 45.5H45.7Zm-22.25 0V17H1.3V28.1H12.4V45.5H23.5Z" fill="#FFFFFF"/>
         </svg>
       </a>
       <a href="#benefits" class="btn btn-secondary">
-        {t('home.hero.btnSecondary')}
+        {t('index.hero.btnSecondary')}
       </a>
     </Fragment>
 
     <Fragment slot="title">
-      {t('home.hero.titleStart')}
-      <span class="text-accent dark:text-white"> {t('home.hero.titleAccent')}</span> {t('home.hero.titleEnd')}
+      {t('index.hero.titleStart')}
+      <span class="text-accent dark:text-white"> {t('index.hero.titleAccent')}</span> {t('index.hero.titleEnd')}
     </Fragment>
 
     <Fragment slot="subtitle">
-      <span class="block mb-1 font-bold text-blue-600">{t('home.hero.tagline')}</span>
-      {t('home.hero.subtitle')}
+      <span class="block mb-1 font-bold text-blue-600">{t('index.hero.tagline')}</span>
+      {t('index.hero.subtitle')}
     </Fragment>
   </Hero>
 
   <Note 
-    title={t('home.note.title')} 
-    description={t('home.note.desc')} 
+    title={t('index.note.title')} 
+    description={t('index.note.desc')} 
   />
 
   <Content
     isReversed
     id="benefits"
-    tagline={t('home.features1.tagline')}
-    title={t('home.features1.title')}
-    items={t('home.features1.items')} 
+    tagline={t('index.features1.tagline')}
+    title={t('index.features1.title')}
+    items={t('index.features1.items')} 
     image={{
       src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       alt: 'Colorful Image',
@@ -99,15 +99,15 @@ const footerData = getFooterData(lang, ['testimonials']);
   >
     <Fragment slot="content">
       <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-        {t('home.features1.contentTitle')}
+        {t('index.features1.contentTitle')}
       </h3>
-      {t('home.features1.contentDesc')}
+      {t('index.features1.contentDesc')}
     </Fragment>
   </Content>
 
   <Content
     isAfterContent
-    items={t('home.features2.items')}
+    items={t('index.features2.items')}
     image={{
       src: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2194&q=80',
       alt: 'Blueprint Image',
@@ -115,19 +115,19 @@ const footerData = getFooterData(lang, ['testimonials']);
   >
     <Fragment slot="content">
       <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-        {t('home.features2.contentTitle')}
+        {t('index.features2.contentTitle')}
       </h3>
-      {t('home.features2.contentDesc')}
+      {t('index.features2.contentDesc')}
     </Fragment>
   </Content>
 
   <Steps
     id="system"
-    tagline={t('home.steps.tagline')}
-    title={t('home.steps.title')}
-    subtitle={t('home.steps.subtitle')}
+    tagline={t('index.steps.tagline')}
+    title={t('index.steps.title')}
+    subtitle={t('index.steps.subtitle')}
     isReversed={true}
-    items={t('home.steps.items')}
+    items={t('index.steps.items')}
     image={{
       src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&auto=format&fit=crop&w=987&q=80',
       alt: 'Steps image',
@@ -136,34 +136,34 @@ const footerData = getFooterData(lang, ['testimonials']);
 
 <EChart
   id="backtest"
-  tagline={t('home.chart.tagline')}
-  title={t('home.chart.title')}
-  subtitle={t('home.chart.subtitle')}
+  tagline={t('index.chart.tagline')}
+  title={t('index.chart.title')}
+  subtitle={t('index.chart.subtitle')}
   height="400px"
   csvPath="./src/data/strategy.csv" 
   callToAction={{
       target: '_self',
-      text: t('home.chart.btnText'),
+      text: t('index.chart.btnText'),
       href: getPermalink('/performance', lang),
       icon: 'tabler:chevron-right',
     }}
 >
   <Fragment slot="content">
-    {t('home.features2.contentDesc')}
+    {t('index.features2.contentDesc')}
   </Fragment>
 </EChart>
 
   <Testimonials
     id="testimonials"
-    tagline={t('home.testimonials.tagline')}
-    title={t('home.testimonials.title')}
-    testimonials={t('home.testimonials.items').map(item => ({
+    tagline={t('index.testimonials.tagline')}
+    title={t('index.testimonials.title')}
+    testimonials={t('index.testimonials.items').map(item => ({
       ...item,
       image: { src: item.image, alt: item.name }
     }))}
     callToAction={{
       target: '_blank',
-      text: t('home.testimonials.btnText'),
+      text: t('index.testimonials.btnText'),
       href: 'https://github.com/arthelokyo/astrowind',
       icon: 'tabler:external-link',
     }}
@@ -182,7 +182,7 @@ const footerData = getFooterData(lang, ['testimonials']);
     actions={[
       {
         variant: 'primary',
-        text: t('home.cta.btnText'),
+        text: t('index.cta.btnText'),
         href: 'https://github.com/arthelokyo/astrowind',
         target: '_blank',
         icon: 'tabler:chevron-right',
@@ -190,10 +190,10 @@ const footerData = getFooterData(lang, ['testimonials']);
     ]}
   >
     <Fragment slot="title">
-      {t('home.cta.title')}
+      {t('index.cta.title')}
     </Fragment>
     <Fragment slot="subtitle">
-      {t('home.cta.subtitle')}
+      {t('index.cta.subtitle')}
     </Fragment>
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
