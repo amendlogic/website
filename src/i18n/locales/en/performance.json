@@ -6,9 +6,9 @@
   "overview.title": "Overview",
   "overview.desc": "The performance data presented below is derived from systematic backtesting using predefined strategy rules. The objective of this section is to illustrate how the strategy would have behaved under historical market conditions, given specific execution and cost assumptions.",
 
-  "metrics.tagline": "Key Metrics",
+  "metrics.tagline": "Performance Data",
   "metrics.title": "Key Metrics",
-  "metrics.subtitle": "Key Metrics",
+  "metrics.subtitle": "Core statistical indicators derived from historical simulation."
   "metrics.items": [
     {
       "title": "Net Return",
@@ -42,7 +42,7 @@
 
   "methodology.tagline": "Methodology",
   "methodology.title": "Backtesting Methodology & Execution Assumptions",
-  "methodology.subtitle": "Methodology",
+  "methodology.subtitle": "Key assumptions and setup used to simulate historical trades, including data, execution, and cost parameters."
   "methodology.items": [
     {
       "title": "Platform Environment",
