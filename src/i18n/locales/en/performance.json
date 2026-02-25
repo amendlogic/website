@@ -37,9 +37,9 @@
     }
   ],
 
-  "strategy.tagline": "Strategy Settings",
+  "strategy.tagline": "Configuration",
   "strategy.title": "Strategy Settings",
-  "strategy.subtitle": "Parameters and configuration used during the backtest.",
+  "strategy.subtitle": "Adjustable parameters available in the strategy and their effect on trade execution and risk.",
   "strategy.items": [
     {
       "title": "Net Return",
