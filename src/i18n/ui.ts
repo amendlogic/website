@@ -1,19 +1,19 @@
 // Englisch Imports
-import navEn from './locales/en/nav.json';
+import navEn from './locales/en/ui/nav.json';
 import homeEn from './locales/en/home.json';
 import aboutEn from './locales/en/about.json';
 import pricingEn from './locales/en/pricing.json';
-import footnotesEn from './locales/en/footnotes.json';
-import fallbacksEn from './locales/en/fallbacks.json';
+import footnotesEn from './locales/en/ui/footnotes.json';
+import fallbacksEn from './locales/en/ui/fallbacks.json';
 import faqEn from './locales/en/faq.json';
 
 // Deutsch Imports
-import navDe from './locales/de/nav.json';
+import navDe from './locales/de/ui/nav.json';
 import homeDe from './locales/de/home.json';
 import aboutDe from './locales/de/about.json';
 import pricingDe from './locales/de/pricing.json';
-import footnotesDe from './locales/de/footnotes.json';
-import fallbacksDe from './locales/de/fallbacks.json';
+import footnotesDe from './locales/de/ui/footnotes.json';
+import fallbacksDe from './locales/de/ui/fallbacks.json';
 import faqDe from './locales/de/faq.json';
 
 export const ui = {
