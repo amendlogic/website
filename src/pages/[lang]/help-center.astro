@@ -90,15 +90,22 @@ const metadata = {
 
   <!-- CallToAction Widget *********** -->
 
-  <CallToAction
-    title="Ready to boost your projects?"
-    subtitle="Join our community of satisfied customers who have transformed their work with our templates."
+ <CallToAction
+    title={t('faq.cta.title')}
     actions={[
       {
         variant: 'primary',
-        text: 'Get started now',
-        href: '/',
+        text: t('faq.cta.btnText'),
+        href: 'https://github.com/arthelokyo/astrowind',
+        target: '_self',
+        icon: 'tabler:chevron-right',
       },
     ]}
-  />
+  >
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </CallToAction>
+
 </Layout>
