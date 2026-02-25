@@ -70,9 +70,9 @@ const footerData = getFooterData(lang, ['testimonials']);
       </a>
     </Fragment>
 
-    <Fragment slot="title">
-      {t('index.hero.text')}
-    </Fragment>
+    <Fragment slot="title" set:html={t('index.hero.text', {
+      accent: `${t('index.hero.accent')}`,
+    })} />
 
     <Fragment slot="subtitle">
       <span class="block mb-1 font-bold text-blue-600">{t('index.hero.tagline')}</span>
