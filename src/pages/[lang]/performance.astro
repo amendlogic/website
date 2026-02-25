@@ -109,35 +109,44 @@ const metadata = {
 
   <!-- EChart Widget *************** -->
 
-<EChart
-  id="backtest"
-  tagline={t('performance.chart.tagline')}
-  title={t('performance.chart.title')}
-  subtitle={t('performance.chart.subtitle')}
-  height="400px"
-  csvPath="./src/data/strategy.csv" 
->
-  <Fragment slot="content">
-    {t('home.features2.contentDesc')}
-  </Fragment>
-</EChart>
+  <EChart
+    id="backtest"
+    tagline={t('performance.chart.tagline')}
+    title={t('performance.chart.title')}
+    subtitle={t('performance.chart.subtitle')}
+    height="400px"
+    csvPath="./src/data/strategy.csv" 
+  >
+    <Fragment slot="content">
+      {t('home.features2.contentDesc')}
+    </Fragment>
+  </EChart>
 
 
   <!-- EChart Widget *************** -->
 
-<EChart
-  id="backtest"
-  height="400px"
-  csvPath="./src/data/strategy.csv" 
->
-  <Fragment slot="content">
-    {t('home.features2.contentDesc')}
-  </Fragment>
-</EChart>
+  <EChart
+    id="backtest"
+    height="400px"
+    csvPath="./src/data/strategy.csv" 
+  >
+    <Fragment slot="content">
+      {t('home.features2.contentDesc')}
+    </Fragment>
+  </EChart>
 
 
+  <!-- EChart Widget *************** -->
 
-
+  <EChart
+    id="backtest"
+    height="400px"
+    csvPath="./src/data/strategy.csv" 
+  >
+    <Fragment slot="content">
+      {t('home.features2.contentDesc')}
+    </Fragment>
+  </EChart>
 
 
   <!-- Note Widget ************** -->
@@ -146,10 +155,5 @@ const metadata = {
     title={t('performance.limitations.title')}
     description={t('performance.limitations.desc')} 
   />
-
-
-
-
-
 
 </Layout>
