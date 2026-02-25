@@ -4,7 +4,7 @@
   "hero.subtitle": "The following results reflect rule-based historical backtesting conducted within the TradingView Strategy Tester environment.",
   "hero.btnSecondary": "View Additional Backtests",
 
-  "overview.title": "Overview",
+  "overview.title": "Overview:",
   "overview.desc": "The performance data presented below is derived from systematic backtesting using predefined strategy rules. The objective of this section is to illustrate how the strategy would have behaved under historical market conditions, given specific execution and cost assumptions.",
 
   "metrics.tagline": "Performance Data",
@@ -110,7 +110,7 @@
     }
   ],
 
-  "limitations.title": "Limitations",
+  "limitations.title": "Limitations:",
   "limitations.desc": "Backtesting is a method of evaluating a strategy using historical data. Simulated results have inherent limitations and do not reflect real-time market conditions, liquidity constraints, order book dynamics, latency, funding rates, psychological decision-making, or structural market changes.",
 
   "chart.tagline": "Risk Profiles",
