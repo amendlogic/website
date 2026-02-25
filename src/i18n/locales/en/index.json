@@ -1,7 +1,7 @@
 {
-  "hero.titleStart": "Systematic Trading.",
-  "hero.titleAccent": "Defined Rules.",
-  "hero.titleEnd": "Disciplined Execution.",
+  "hero.text": "Systematic Trading. {accent} Disciplined Execution.",
+  "hero.accent": "Defined Rules.",
+
   "hero.subtitle": "A structured TradingView strategy developed from years of hands-on crypto market experience. Built to standardize decisions, manage risk, and operate consistently — even in volatile conditions.",
   "hero.tagline": "Logic-driven automation designed for disciplined traders.",
   "hero.btnPrimary": "Activate the Strategy",
