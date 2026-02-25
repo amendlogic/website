@@ -41,6 +41,12 @@ const metadata = {
   <Hero
     tagline={t('performance.hero.tagline')} 
   >
+    <Fragment slot="actions">
+      <a href="#backtests" class="btn btn-secondary">
+        {t('performance.hero.btnSecondary')}
+      </a>
+    </Fragment>
+
     <Fragment slot="title">
       {t('performance.hero.title')} 
     </Fragment>
@@ -127,7 +133,7 @@ const metadata = {
 
   <EChart
     isAfterContent
-    id="backtest"
+    id="backtests"
     height="400px"
     csvPath="./src/data/strategy.csv" 
   >
