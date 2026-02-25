@@ -1,6 +1,7 @@
 {
   "hero.tagline": "Performance",
-  "hero.title": "Historical Simulation Under Defined Parameters.",
+  "hero.text": "{accent} Under Defined Parameters.",
+  "hero.accent": "Historical Simulation",
   "hero.subtitle": "The following results reflect rule-based historical backtesting conducted within the TradingView Strategy Tester environment.",
 
   "overview.title": "Overview",
