@@ -6,9 +6,9 @@ import { getI18nPaths, useTranslations } from '~/i18n/utils';
 import Hero from '~/components/widgets/Hero.astro';
 import Note from '~/components/widgets/Note.astro';
 import Features2 from '~/components/widgets/Features2.astro';
-import Features from '~/components/widgets/Features.astro';
 import Steps from '~/components/widgets/Steps.astro';
-
+import Features from '~/components/widgets/Features.astro';
+import EChart from '~/components/widgets/EChart.astro';
 
 
 import Stats from '~/components/widgets/Stats.astro';
@@ -107,7 +107,45 @@ const metadata = {
   />
 
 
+  <!-- EChart Widget *************** -->
 
+<EChart
+  id="backtest"
+  tagline={t('home.chart.tagline')}
+  title={t('home.chart.title')}
+  subtitle={t('home.chart.subtitle')}
+  height="400px"
+  csvPath="./src/data/strategy.csv" 
+  callToAction={{
+      target: '_self',
+      text: t('home.chart.btnText'),
+      href: getPermalink('/performance', lang),
+      icon: 'tabler:chevron-right',
+    }}
+>
+  <Fragment slot="content">
+    {t('home.features2.contentDesc')}
+  </Fragment>
+</EChart>
+
+
+  <!-- EChart Widget *************** -->
+
+<EChart
+  id="backtest"
+  height="400px"
+  csvPath="./src/data/strategy.csv" 
+  callToAction={{
+      target: '_self',
+      text: t('home.chart.btnText'),
+      href: getPermalink('/performance', lang),
+      icon: 'tabler:chevron-right',
+    }}
+>
+  <Fragment slot="content">
+    {t('home.features2.contentDesc')}
+  </Fragment>
+</EChart>
 
 
 
