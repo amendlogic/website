@@ -47,7 +47,7 @@
     {
       "title": "Platform Environment",
       "description": "All simulations were conducted using the TradingView Strategy Tester.",
-      "icon": "tabler:brand-tradingview"
+      "icon": "tabler:device-laptop"
     },
     {
       "title": "Data Basis",
