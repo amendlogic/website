@@ -7,6 +7,7 @@ import Hero from '~/components/widgets/Hero.astro';
 import Note from '~/components/widgets/Note.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 import Features from '~/components/widgets/Features.astro';
+import Steps from '~/components/widgets/Steps.astro';
 
 
 
@@ -79,11 +80,18 @@ const metadata = {
   />
 
 
-  <!-- Note Widget ************** -->
-
-  <Note 
-    title={t('performance.limitations.title')}
-    description={t('performance.limitations.desc')} 
+  <!-- Steps Widget *************** -->
+  <Steps
+    id="system"
+    tagline={t('performance.strategy.tagline')}
+    title={t('performance.strategy.title')}
+    subtitle={t('performance.strategy.subtitle')}
+    isReversed={true}
+    items={t('performance.strategy.items')}
+    image={{
+      src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&auto=format&fit=crop&w=987&q=80',
+      alt: 'Steps image',
+    }}
   />
 
 
@@ -93,9 +101,29 @@ const metadata = {
     id="features"
     tagline={t('performance.methodology.tagline')}
     title={t('performance.methodology.title')}
-    subtitle={t('performance.metrics.subtitle')} 
+    subtitle={t('performance.methodology.subtitle')} 
     columns={2}
     items={t('performance.methodology.items')}
   />
+
+
+
+
+
+
+
+
+
+  <!-- Note Widget ************** -->
+
+  <Note 
+    title={t('performance.limitations.title')}
+    description={t('performance.limitations.desc')} 
+  />
+
+
+
+
+
 
 </Layout>
