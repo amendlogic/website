@@ -1,6 +1,7 @@
 {
   "hero.tagline": "Systematic Execution",
-  "hero.title": "Structured Trading. Transparent Terms.",
+  "hero.text": "Structured Trading. {accent}",
+  "hero.accent": "Transparent Terms.",
   "hero.subtitle": "Start a rule-based trading framework designed for disciplined, emotion-free execution – ready to deploy immediately.",
 
   "title": "Pricing",
