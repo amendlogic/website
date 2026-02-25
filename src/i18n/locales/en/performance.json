@@ -8,7 +8,7 @@
 
   "metrics.tagline": "Performance Data",
   "metrics.title": "Key Metrics",
-  "metrics.subtitle": "Core statistical indicators derived from historical simulation."
+  "metrics.subtitle": "Core statistical indicators derived from historical simulation.",
   "metrics.items": [
     {
       "title": "Net Return",
@@ -42,7 +42,7 @@
 
   "methodology.tagline": "Methodology",
   "methodology.title": "Backtesting Methodology & Execution Assumptions",
-  "methodology.subtitle": "Key assumptions and setup used to simulate historical trades, including data, execution, and cost parameters."
+  "methodology.subtitle": "Key assumptions and setup used to simulate historical trades, including data, execution, and cost parameters.",
   "methodology.items": [
     {
       "title": "Platform Environment",
