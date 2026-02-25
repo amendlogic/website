@@ -67,19 +67,35 @@
   "billing.items": [
     {
       "title": "Wie viel kostet das System?",
-      "description": "Wir bieten auf unterschiedliche Bedürfnisse zugeschnittene Abonnement-Modelle — transparent, fair und performanceorientiert."
+      "description": "Wir bieten Abonnementpläne, die auf unterschiedliche Bedürfnisse zugeschnitten sind — transparent, fair und leistungsorientiert."
     },
     {
       "title": "Gibt es eine Testversion?",
-      "description": "Ja. Sie können die Strategie 7 Tage lang kostenlos testen, um die Performance zu evaluieren, bevor Sie sich für ein Abonnement entscheiden."
+      "description": "Ja. Sie können die Strategie 7 Tage kostenlos testen, um deren Performance zu bewerten, bevor Sie ein Abonnement wählen."
+    },
+    {
+      "title": "Wie erfolgt die Abrechnung?",
+      "description": "Alle Zahlungen werden sicher über Stripe abgewickelt. Je nach gewähltem Plan erfolgt die Abrechnung monatlich, vierteljährlich oder jährlich."
     },
     {
       "title": "Kann ich jederzeit kündigen?",
-      "description": "Absolut. Sie können Ihr Abonnement jederzeit ohne Strafgebühren oder Nachteile kündigen."
+      "description": "Ja. Abonnements können jederzeit über das Abrechnungsportal gekündigt werden. Der Zugang bleibt bis zum Ende des bereits bezahlten Abrechnungszeitraums aktiv."
+    },
+    {
+      "title": "Gibt es zusätzliche Gebühren?",
+      "description": "Nein. Es fallen keine versteckten Kosten, Performance-Gebühren oder Gewinnbeteiligungen an. Der Abonnementpreis ist vollständig transparent."
     },
     {
       "title": "Welche Zahlungsmethoden werden akzeptiert?",
-      "description": "Wir akzeptieren alle gängigen Kreditkarten und Zahlungsdienstleister, abhängig von Ihrer Region."
+      "description": "Wir akzeptieren alle gängigen Kreditkarten und weitere Zahlungsmöglichkeiten, abhängig von Ihrer Region, alle sicher über Stripe abgewickelt."
+    },
+    {
+      "title": "Sind zukünftige Updates im Abonnement enthalten?",
+      "description": "Ja. Alle aktiven Abonnements beinhalten kontinuierliche Systemverbesserungen, Optimierungen und Framework-Updates ohne zusätzliche Kosten."
+    },
+    {
+      "title": "Was passiert nach dem Kauf?",
+      "description": "Nach erfolgreicher Zahlung erhalten Sie umgehend Zugangsinformationen sowie eine Schritt-für-Schritt-Anleitung zur Integration des Systems."
     }
   ],
 
