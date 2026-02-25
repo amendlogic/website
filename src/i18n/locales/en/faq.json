@@ -66,28 +66,36 @@
   "billing.subtitle": "Transparent subscription plans, trial access, and flexible cancellation options.",
   "billing.items": [
     {
+      "title": "How much does the system cost?",
+      "description": "We offer subscription plans tailored to different needs — transparent, fair, and performance-oriented."
+    },
+    {
+      "title": "Is there a trial version?",
+      "description": "Yes. You can test the strategy free for 7 days to evaluate its performance before choosing a subscription."
+    },
+    {
       "title": "How is billing handled?",
-      "description": "Payments are securely processed via Stripe. Billing occurs automatically based on your selected subscription cycle (monthly, quarterly, or annually)."
+      "description": "All payments are securely processed via Stripe. Depending on your selected plan, billing occurs monthly, quarterly, or annually."
     },
     {
       "title": "Can I cancel at any time?",
-      "description": "Yes. You can cancel your subscription at any time through the billing portal. Access remains active until the end of the current billing period."
+      "description": "Yes. Subscriptions can be canceled at any time through the billing portal. Access remains active until the end of the paid billing period."
     },
     {
-      "title": "Are there any hidden fees or performance charges?",
-      "description": "No. There are no hidden fees, profit-sharing models, or performance-based commissions. The subscription price is fixed and fully transparent."
+      "title": "Are there additional fees?",
+      "description": "No. There are no hidden costs, performance fees, or profit-sharing arrangements. The subscription price is fully transparent."
+    },
+    {
+      "title": "What payment methods are accepted?",
+      "description": "We accept major credit cards and other payment services depending on your region, all securely handled via Stripe."
     },
     {
       "title": "Does the subscription include future updates?",
-      "description": "Yes. Active subscriptions include continuous framework improvements, optimizations, and feature updates at no additional cost."
+      "description": "Yes. All active subscriptions include ongoing system improvements, optimizations, and framework updates."
     },
     {
       "title": "What happens after purchase?",
-      "description": "After successful payment, you receive immediate access instructions along with step-by-step integration guidance to set up the system."
-    },
-    {
-      "title": "Is there a minimum contract duration?",
-      "description": "No long-term commitment is required. The subscription runs according to the selected billing interval and renews automatically unless canceled."
+      "description": "After successful payment, you receive immediate access instructions along with step-by-step integration guidance."
     }
   ],
 
