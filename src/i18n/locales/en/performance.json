@@ -68,7 +68,6 @@
     }
   ],
   
-
   "methodology.tagline": "Methodology",
   "methodology.title": "Backtesting Methodology & Execution Assumptions",
   "methodology.subtitle": "Key assumptions and setup used to simulate historical trades, including data, execution, and cost parameters.",
@@ -110,7 +109,10 @@
     }
   ],
 
-
+  "chart.tagline": "Risk Profiles",
+  "chart.title": "Alternative Backtests",
+  "chart.subtitle": "Performance under different risk settings or alternative configurations.",
+  "chart.setting1": "Review Performance Details",
 
   
   "limitations.title": "Limitations of Backtesting",
