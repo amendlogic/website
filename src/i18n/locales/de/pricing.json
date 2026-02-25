@@ -1,6 +1,8 @@
 {
   "hero.tagline": "Systematische Ausführung",
-  "hero.title": "Strukturiertes Trading. Transparente Konditionen.",
+  "hero.text": "Strukturiertes Trading. {accent}",
+  "hero.accent": "Transparente Konditionen.",
+  "hero.title": "",
   "hero.subtitle": "Starte ein regelbasiertes Trading-Framework, das diszipliniertes, emotionsfreies Handeln ermöglicht – sofort einsatzbereit.",
 
   "title": "Preise",
