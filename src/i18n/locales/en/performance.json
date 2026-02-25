@@ -1,0 +1,76 @@
+{
+  "hero": {
+    "tagline": "Performance",
+    "title": "Historical Simulation Under Defined Parameters.",
+    "subtitle": "The following results reflect rule-based historical backtesting conducted within the TradingView Strategy Tester environment."
+  },
+
+  "overview": {
+    "title": "Overview",
+    "text": "The performance data presented below is derived from systematic backtesting using predefined strategy rules. The objective of this section is to illustrate how the strategy would have behaved under historical market conditions, given specific execution and cost assumptions."
+  },
+
+  "metrics": {
+    "title": "Key Metrics",
+    "items": [
+      { "label": "Net Return", "description": "Total percentage return generated during the selected backtest period." },
+      { "label": "Max Drawdown", "description": "Largest peak-to-trough equity decline observed during the simulation." },
+      { "label": "Profit Factor", "description": "Gross profit divided by gross loss across all simulated trades." },
+      { "label": "Win Rate", "description": "Percentage of trades closed in profit." },
+      { "label": "Total Trades", "description": "Number of executed trades within the backtest period." }
+    ]
+  },
+
+  "methodology": {
+    "title": "Backtesting Methodology & Execution Assumptions",
+    "items": [
+      {
+        "title": "Platform Environment",
+        "description": "All simulations were conducted using the TradingView Strategy Tester."
+      },
+      {
+        "title": "Data Basis",
+        "description": "Historical price data provided by TradingView was used for testing. Data accuracy depends on the data feed available at the time of analysis."
+      },
+      {
+        "title": "Commission Model",
+        "description": "A commission rate of 0.6% per trade was applied, reflecting publicly documented Bitget fee structures at the time of testing."
+      },
+      {
+        "title": "Slippage Assumption",
+        "description": "A slippage parameter of 2 was applied within TradingView to simulate execution friction."
+      },
+      {
+        "title": "Execution Logic",
+        "description": "Trade entries are executed when strategy conditions are met without bar-close delay. Position closures are confirmed at bar close."
+      },
+      {
+        "title": "Intrabar Simulation",
+        "description": "Intrabar execution is modeled according to TradingView’s internal engine and does not represent true tick-level market execution."
+      },
+      {
+        "title": "Indicator Integrity",
+        "description": "No repainting indicators are used. All signals are generated from non-forward-looking data."
+      }
+    ]
+  },
+
+  "limitations": {
+    "title": "Limitations of Backtesting",
+    "text": "Backtesting is a method of evaluating a strategy using historical data. Simulated results have inherent limitations and do not reflect real-time market conditions, liquidity constraints, order book dynamics, latency, funding rates, psychological decision-making, or structural market changes."
+  },
+
+  "disclaimer": {
+    "title": "Performance Disclaimer",
+    "text": "The performance results shown are hypothetical and based solely on historical simulation within the TradingView Strategy Tester environment. Commission and slippage assumptions were applied as specified above. Actual trading results may differ materially. Past performance is not indicative of future results."
+  },
+
+  "hypotheticalDisclosure": {
+    "title": "Hypothetical Performance Disclosure",
+    "text": "Hypothetical or simulated performance results have certain limitations. Unlike actual performance records, simulated results do not represent real trading. Simulated trading programs may be designed with the benefit of hindsight. No representation is being made that any account will or is likely to achieve profits or losses similar to those shown."
+  },
+
+  "riskReference": {
+    "text": "Trading digital assets involves substantial risk and may result in the loss of capital. Users should review the full Risk Disclosure before making any financial decisions."
+  }
+}
