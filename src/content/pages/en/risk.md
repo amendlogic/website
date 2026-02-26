@@ -1,3 +1,7 @@
+---
+title: 'Risk Disclosure'
+layout: '~/layouts/MarkdownLayout.astro'
+---
 # Risk Disclosure
 
 **Effective Date:** [Insert Date]
