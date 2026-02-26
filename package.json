@@ -35,7 +35,7 @@
     "unpic": "^4.1.3",
     "echarts": "^5.5.0",
     "vanilla-cookieconsent": "^3.0.0",
-    "@astrojs/vercel": "^4",
+    "@astrojs/vercel": "^4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
