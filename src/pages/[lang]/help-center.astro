@@ -1,5 +1,6 @@
 ---
-import { getI18nPaths, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
+import { getI18nPaths, useTranslations } from '~/i18n/utils';
+import { getPermalink } from '~/utils/permalinks';
 
 // 1. Daten und Navigation importieren
 import Layout from '~/layouts/PageLayout.astro';
@@ -96,7 +97,7 @@ const metadata = {
       {
         variant: 'primary',
         text: t('faq.cta.btnText'),
-        href: 'https://github.com/arthelokyo/astrowind',
+        href: getPermalink('/contact', lang),,
         target: '_self',
         icon: 'tabler:chevron-right',
       },
