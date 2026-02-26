@@ -2,12 +2,11 @@
 import Layout from '~/layouts/Layout.astro';
 import { getHomePermalink } from '~/utils/permalinks';
 import { getHeaderData, getFooterData } from '~/navigation';
-import { useTranslations, DEFAULT_LANG } from '~/i18n/utils';
+import { useTranslations } from '~/i18n/utils';
 
-// Fallback auf DEFAULT_LANG
+// 2️⃣ Sprache & Übersetzungen
 const { lang } = Astro.params;
-const currentLang = lang || DEFAULT_LANG;
-const t = useTranslations(currentLang);
+const t = useTranslations(lang);
 
 // Header/Footer
 const headerData = getHeaderData(currentLang);
@@ -25,7 +24,7 @@ const title = t('404.title') || 'Error 404';
         </h2>
         <p class="text-3xl font-semibold md:text-3xl">{t('404.message') || "Sorry, we couldn't find this page."}</p>
         <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
-          {t('404.suggestion') || "But don't worry, you can find plenty of other things on our homepage."}
+          {t('404.suggestion')}{t('faq.faq.tagline')}
         </p>
         <a rel="noopener noreferrer" href={getHomePermalink(currentLang)} class="btn ml-4">{t('404.backHome') || 'Back to homepage'}</a>
       </div>
