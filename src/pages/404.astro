@@ -12,7 +12,7 @@ const t = useTranslations(lang);
 const headerData = getHeaderData(lang);
 const footerData = getFooterData(lang);
 
-const title = t('404.title') || 'Error 404';
+const title = `Error 404`;
 ---
 <Layout lang={lang} metadata={{ title }} headerData={headerData} footerData={footerData}>
   <section class="flex items-center h-full p-16">
@@ -22,11 +22,11 @@ const title = t('404.title') || 'Error 404';
           <span class="sr-only">Error</span>
           <span class="text-primary">404</span>
         </h2>
-        <p class="text-3xl font-semibold md:text-3xl">{t('404.message') || "Sorry, we couldn't find this page."}</p>
+        <p class="text-3xl font-semibold md:text-3xl">{t('404.message')}</p>
         <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
-          {t('404.suggestion')} TEST {t('faq.faq.tagline')}
+          {t('404.suggestion')}
         </p>
-        <a rel="noopener noreferrer" href={getHomePermalink(lang)} class="btn ml-4">{t('404.backHome') || 'Back to homepage'}</a>
+        <a rel="noopener noreferrer" href={getHomePermalink()} class="btn ml-4">Back to homepage</a>
       </div>
     </div>
   </section>
