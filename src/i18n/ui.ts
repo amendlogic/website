@@ -7,6 +7,7 @@ import performanceEn from './locales/en/performance.json';
 import footnotesEn from './locales/en/ui/footnotes.json';
 import fallbacksEn from './locales/en/ui/fallbacks.json';
 import faqEn from './locales/en/faq.json';
+import 404En from './locales/en/ui/404.json';
 
 // Deutsch Imports
 import navDe from './locales/de/ui/nav.json';
@@ -17,6 +18,7 @@ import performanceDe from './locales/de/performance.json';
 import footnotesDe from './locales/de/ui/footnotes.json';
 import fallbacksDe from './locales/de/ui/fallbacks.json';
 import faqDe from './locales/de/faq.json';
+import 404De from './locales/de/ui/404.json';
 
 export const ui = {
   en: {
@@ -28,6 +30,7 @@ export const ui = {
     footnotes: footnotesEn,
     fallbacks: fallbacksEn,
     faq: faqEn,
+    404: 404En,
   },
   de: {
     nav: navDe,
@@ -38,5 +41,6 @@ export const ui = {
     footnotes: footnotesDe,
     fallbacks: fallbacksDe,
     faq: faqDe,
+    404: 404De,
   },
 } as const;
