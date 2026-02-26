@@ -8,9 +8,9 @@ import { useTranslations } from '~/i18n/utils';
 const { lang } = Astro.params;
 const t = useTranslations(lang);
 
-// Header/Footer
-const headerData = getHeaderData(currentLang);
-const footerData = getFooterData(currentLang);
+// Header/FooterF
+const headerData = getHeaderData(lang);
+const footerData = getFooterData(lang);
 
 const title = t('404.title') || 'Error 404';
 ---
@@ -26,7 +26,7 @@ const title = t('404.title') || 'Error 404';
         <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
           {t('404.suggestion')}{t('faq.faq.tagline')}
         </p>
-        <a rel="noopener noreferrer" href={getHomePermalink(currentLang)} class="btn ml-4">{t('404.backHome') || 'Back to homepage'}</a>
+        <a rel="noopener noreferrer" href={getHomePermalink(lang)} class="btn ml-4">{t('404.backHome') || 'Back to homepage'}</a>
       </div>
     </div>
   </section>
