@@ -15,6 +15,9 @@ import astrowind from './vendor/integration';
 
 import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin, lazyImagesRehypePlugin } from './src/utils/frontmatter';
 
+import cloudflare from '@astrojs/cloudflare';
+import vercel from '@astrojs/vercel/serverless';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const hasExternalScripts = false;
@@ -23,6 +26,7 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 
 export default defineConfig({
   output: 'server',
+  adapter: vercel(),
 
 i18n: {
     defaultLocale: "en",
