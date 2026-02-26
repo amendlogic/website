@@ -22,11 +22,11 @@ const title = `Error 404`;
           <span class="sr-only">Error</span>
           <span class="text-primary">404</span>
         </h2>
-        <p class="text-3xl font-semibold md:text-3xl">{t('404.message')}</p>
+        <p class="text-3xl font-semibold md:text-3xl">{t('error404.message')}</p>
         <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
-          {t('404.suggestion')}
+          {t('error404.suggestion')}
         </p>
-        <a rel="noopener noreferrer" href={getHomePermalink()} class="btn ml-4">{t('404.btn')}</a>
+        <a rel="noopener noreferrer" href={getHomePermalink(lang)} class="btn ml-4">{t('error404.btn')}</a>
       </div>
     </div>
   </section>
