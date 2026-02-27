@@ -23,6 +23,7 @@ export function getHeaderData(lang?: string) {
           { text: t('nav.faq'), href: getPermalink('#faq', 'page', lang) },
         ],
       },
+      { text: t('nav.performance'), href: getPermalink('/performance', 'page', lang) },
       { text: t('nav.about'), href: getPermalink('/about', 'page', lang) },
       {
         text: t('nav.insights'),
