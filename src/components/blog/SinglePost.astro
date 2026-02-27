@@ -1,10 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
 
-// 2️⃣ Sprache & Übersetzungen
-const { lang } = Astro.params;
-const t = useTranslations(lang); // intern fallback auf DEFAULT_LANG
-
 import Image from '~/components/common/Image.astro';
 import PostTags from '~/components/blog/Tags.astro';
 import SocialShare from '~/components/common/SocialShare.astro';
@@ -46,7 +42,7 @@ const { post, url } = Astro.props;
               <>
                 {' '}
                 ·{' '}
-                <a class="hover:underline inline-block" href={`/${lang}/category/${post.category.slug}`}>
+                <a class="hover:underline inline-block" href={getPermalink(post.category.slug, 'category')}>
                   {post.category.title}
                 </a>
               </>
