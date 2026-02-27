@@ -42,7 +42,7 @@ const { post, url } = Astro.props;
               <>
                 {' '}
                 ·{' '}
-                <a class="hover:underline inline-block" href=`/${lang}/category/${post.category.slug}`>
+                <a class="hover:underline inline-block" href={`/${lang}/category/${post.category.slug}`}>
                   {post.category.title}
                 </a>
               </>
