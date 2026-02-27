@@ -62,7 +62,7 @@ export function getFooterData(
       {
         title: t('nav.resources'),
         links: [
-          { text: t('nav.performance'), href: getPermalink('/#performance', 'page', lang) },
+          { text: t('nav.performance'), href: getPermalink('/performance', 'page', lang) },
           { text: t('nav.docs'), href: '#' },
           { text: t('nav.community'), href: '#', icon: 'tabler:external-link' },
           { text: t('nav.github'), href: '#', icon: 'tabler:external-link' },
