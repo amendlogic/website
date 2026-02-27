@@ -5,6 +5,7 @@ import Image from '~/components/common/Image.astro';
 import PostTags from '~/components/blog/Tags.astro';
 import SocialShare from '~/components/common/SocialShare.astro';
 
+const { lang } = Astro.params;
 import { getPermalink } from '~/utils/permalinks';
 import { getFormattedDate } from '~/utils/utils';
 
@@ -42,7 +43,7 @@ const { post, url } = Astro.props;
               <>
                 {' '}
                 ·{' '}
-                <a class="hover:underline inline-block" href={getPermalink(post.category.slug, 'category')}>
+                <a class="hover:underline inline-block" href={getPermalink(post.category.slug, 'category', lang)}>
                   {post.category.title}
                 </a>
               </>
