@@ -142,15 +142,12 @@ const footerData = getFooterData(lang, ['testimonials']);
   callToAction={{
       target: '_self',
       text: t('index.chart.btnText'),
-      href: `${getPermalink('/privacy', lang)}`,
+      href: getPermalink('/performance', lang)},
       icon: 'tabler:chevron-right',
     }}
 >
   <Fragment slot="content">
     {t('index.features2.contentDesc')}
-<p>Lang: {lang}</p>
-<p>Manual: /{lang}/privacy</p>
-<p>Function: {getPermalink('/privacy', lang)}</p>
   </Fragment>
 </EChart>
 
