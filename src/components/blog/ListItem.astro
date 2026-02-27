@@ -7,7 +7,6 @@ import PostTags from '~/components/blog/Tags.astro';
 import { APP_BLOG } from 'astrowind:config';
 import type { Post } from '~/types';
 
-const { lang } = Astro.params;
 import { getPermalink } from '~/utils/permalinks';
 import { findImage } from '~/utils/images';
 import { getFormattedDate } from '~/utils/utils';
@@ -85,7 +84,7 @@ const link = APP_BLOG?.post?.isEnabled ? post.permalink : '';
                 {' '}
                 ·{' '}
                 {/* WICHTIG: post.lang Fix bleibt, damit der Link stimmt */}
-                <a class="capitalize hover:underline" href={getPermalink(post.category.slug, 'category', lang)}>
+                <a class="capitalize hover:underline" href={getPermalink(post.category.slug, 'category', post.lang)}>
                   {post.category.title}
                 </a>
               </>
