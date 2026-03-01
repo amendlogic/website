@@ -1,46 +1,64 @@
 {
-  "hero.tagline": "Systematic Execution",
-  "hero.text": "Structured Trading. {accent}",
-  "hero.accent": "Transparent Terms.",
-  "hero.subtitle": "Start a rule-based trading framework designed for disciplined, emotion-free execution – ready to deploy immediately.",
-
+  "hero.tagline": "Pricing",
+  "hero.text": "One System. {accent}",
+  "hero.accent": "Three Ways to Access It.",
+  "hero.subtitle": "Full access to the complete framework on every plan. The only difference is how long you commit — and how much you pay per month as a result.",
   "title": "Pricing",
-  "subtitle": "Choose the billing structure that matches your trading horizon and capital commitment.",
-
+  "subtitle": "All plans include the same strategy, the same signal logic, and the same risk framework. Longer commitments cost less per month. That's the only distinction.",
   "prices": [
     {
       "title": "Monthly",
-      "subtitle": "Flexible short-term access",
+      "subtitle": "Try it, test it, evaluate it",
       "price": 99,
-      "period": "Billed monthly",
+      "period": "per month, cancel anytime",
       "items": [
-        { "description": "Full access to the systematic framework" },
-        { "description": "Complete signal logic & rule-based execution engine" },
-        { "description": "Continuous model refinement & system updates" },
-        { "description": "Adaptive risk configuration settings" },
-        { "description": "Email support" }
+        {
+          "description": "Full strategy access — every signal, every feature"
+        },
+        {
+          "description": "Complete rule-based execution engine"
+        },
+        {
+          "description": "All risk configuration parameters"
+        },
+        {
+          "description": "Ongoing strategy updates included"
+        },
+        {
+          "description": "Email support"
+        }
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "Start 7-Day Trial",
+        "text": "Start 7-Day Free Trial",
         "href": "#"
       }
     },
     {
       "title": "Quarterly",
-      "subtitle": "Optimized commitment",
+      "subtitle": "Three months, one decision",
       "price": 249,
-      "period": "Billed every 3 months",
+      "period": "every 3 months — €83/mo",
       "items": [
-        { "description": "Full access to the systematic framework" },
-        { "description": "Complete signal logic & rule-based execution engine" },
-        { "description": "Continuous model refinement & system updates" },
-        { "description": "Adaptive risk configuration settings" },
-        { "description": "Priority email support" }
+        {
+          "description": "Full strategy access — every signal, every feature"
+        },
+        {
+          "description": "Complete rule-based execution engine"
+        },
+        {
+          "description": "All risk configuration parameters"
+        },
+        {
+          "description": "Ongoing strategy updates included"
+        },
+        {
+          "description": "Priority email support"
+        }
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "Start 7-Day Trial",
+        "text": "Start 7-Day Free Trial",
         "href": "#"
       },
       "hasRibbon": true,
@@ -48,91 +66,100 @@
     },
     {
       "title": "Annual",
-      "subtitle": "Maximum structural efficiency",
+      "subtitle": "Serious capital, serious structure",
       "price": 899,
-      "period": "Billed annually",
+      "period": "per year — €75/mo",
       "items": [
-        { "description": "Full access to the systematic framework" },
-        { "description": "Complete signal logic & rule-based execution engine" },
-        { "description": "Continuous model refinement & system updates" },
-        { "description": "Adaptive risk configuration settings" },
-        { "description": "Priority support" },
-        { "description": "Most cost-efficient billing structure" }
+        {
+          "description": "Full strategy access — every signal, every feature"
+        },
+        {
+          "description": "Complete rule-based execution engine"
+        },
+        {
+          "description": "All risk configuration parameters"
+        },
+        {
+          "description": "Ongoing strategy updates included"
+        },
+        {
+          "description": "Priority support with faster response times"
+        },
+        {
+          "description": "Lowest available monthly cost"
+        }
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "Start 7-Day Trial",
+        "text": "Start 7-Day Free Trial",
         "href": "#"
       },
       "hasRibbon": true,
       "ribbonTitle": "Save 24%"
     }
   ],
-
-  "trust.title": "Transparent Billing. Institutional-Grade Processing.",
-  "trust.subtitle": "Secure infrastructure. Clearly defined terms. No hidden fees or structures.",
+  "trust.title": "Clean Billing. No Surprises.",
+  "trust.subtitle": "Every financial detail of the subscription is visible upfront. What you see at checkout is what you pay — nothing added later.",
   "trust.columns": 2,
   "trust.items": [
     {
-      "title": "Secure Payments",
-      "description": "All transactions are securely processed via Stripe using industry-standard encryption and global payment infrastructure.",
+      "title": "Processed by Whop",
+      "description": "Checkout, billing, and subscription management are handled entirely by Whop Inc. as Merchant of Record. Your payment details never touch our servers.",
       "icon": "tabler:shield-lock"
     },
     {
-      "title": "No Hidden Fees",
-      "description": "No performance fees. No revenue share. No hidden execution costs.",
+      "title": "No Performance Fees",
+      "description": "The subscription is a flat fee. We don't take a cut of your profits, charge per trade, or add fees based on account size. Ever.",
       "icon": "tabler:receipt-off"
     },
     {
-      "title": "Subscription Control",
-      "description": "Manage, upgrade, or cancel your subscription anytime directly through the customer billing portal.",
+      "title": "Cancel From Your Dashboard",
+      "description": "Manage, pause, or cancel your subscription at any time directly through your Whop member dashboard — no emails to send, no requests to approve.",
       "icon": "tabler:adjustments"
     },
     {
-      "title": "Instant Deployment",
-      "description": "Immediate authorization and access to the proprietary TradingView script after successful payment.",
+      "title": "Access Within Minutes",
+      "description": "After payment, your TradingView account is authorized automatically. The strategy is in your Invite-Only Scripts folder and ready to apply to a chart.",
       "icon": "tabler:bolt"
     }
   ],
-
-  "steps.tagline": "Deployment Protocol",
-  "steps.title": "A structured integration process to activate the framework in your TradingView environment within minutes.",
+  "steps.tagline": "Getting Started",
+  "steps.title": "From checkout to live chart in under ten minutes.",
   "steps.items": [
     {
-      "title": "Step 1: Select Access Tier",
-      "description": "Choose the access plan that aligns with your operational trading horizon.",
+      "title": "Step 1: Choose Your Plan",
+      "description": "Monthly for flexibility, quarterly or annual if you're committing to the process. All plans start with the same 7-day free trial.",
       "icon": "tabler:box"
     },
     {
-      "title": "Step 2: Provide TradingView Username",
-      "description": "Enter your exact TradingView username during checkout to link the private script to your account.",
+      "title": "Step 2: Enter Your TradingView Username",
+      "description": "During checkout, you'll be asked for your exact TradingView username. This is how access is linked to your account — so get the spelling right. Note: a TradingView paid plan (Essential or higher) is required for reliable alert delivery. The free plan has alert limitations that can affect strategy performance.",
       "icon": "tabler:user-scan"
     },
     {
-      "title": "Step 3: Secure Payment Processing",
-      "description": "Finalize your subscription securely via our Stripe-integrated payment gateway.",
+      "title": "Step 3: Complete Payment via Whop",
+      "description": "Checkout is handled securely by Whop. Card details go directly to their infrastructure — not to us.",
       "icon": "tabler:shield-lock"
     },
     {
       "title": "Step 4: Automatic Authorization",
-      "description": "After successful payment, your TradingView account is automatically authorized, granting immediate access to the invite-only system.",
+      "description": "The moment payment clears, your TradingView username is authorized for the private script. No manual steps on our end required.",
       "icon": "tabler:server-cog"
     },
     {
-      "title": "Step 5: Initialize on Chart",
-      "description": "Open TradingView, navigate to your 'Invite-only scripts' folder, and apply the framework to your chart.",
+      "title": "Step 5: Apply to Your Chart",
+      "description": "Open TradingView, find the strategy under Invite-Only Scripts in the Indicators menu, and apply it to a Bitcoin chart. Set your preferred timeframe and risk parameters. Requires TradingView Essential plan or higher for full functionality — the free plan does not support the number of active alerts needed for consistent execution.",
       "icon": "tabler:chart-candle"
     },
     {
-      "title": "Step 6: Configure Automation <span class=\"font-medium\">(Optional)</span>",
-      "description": "Connect the framework to your exchange via webhooks for fully automated, rule-based trading. <a href='#' class='underline font-semibold'>View the Automation Guide</a>.",
+      "title": "Step 6: Connect to Your Exchange <span class=\"font-medium\">(Optional)</span>",
+      "description": "For fully automated execution, connect the strategy to your exchange via TradingView webhooks. <a href='#' class='underline font-semibold'>The setup guide walks through the exact steps.</a>",
       "icon": "tabler:settings-automation"
     }
   ],
-
-  "faq.title": "Pricing & Billing Questions",
-  
-  "cta.title": "Trade with Structure.",
-  "cta.subtitle": "Take control: systematic rules instead of spontaneous decisions.",
-  "cta.btnText": "Activate Structured Access"
+  "faq.title": "Common Questions Before Buying",
+  "cta.title": "Seven Days Free. No Commitment.",
+  "cta.subtitle": "Apply the strategy to a live chart, observe the signals in real market conditions, and evaluate it yourself before paying anything.",
+  "cta.btnText": "Start Free Trial",
+  "steps.subtitle": "What you'll need before starting: a TradingView account on the Essential plan or higher, your exact TradingView username, and a Bitget account if you want automated execution (optional)."
 }
