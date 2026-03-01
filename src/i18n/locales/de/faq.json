@@ -1,138 +1,159 @@
 {
   "faq.tagline": "FAQ",
-  "faq.title": "Gut zu wissen",
-  "faq.subtitle": "Antworten auf die häufigsten Fragen.",
-
-  "started.title": "📘 Erste Schritte",
-  "started.subtitle": "Setup-Anleitung, Plattform-Integration und alles, was Sie für den Start in den automatisierten Bitcoin-Handel benötigen.",
+  "faq.title": "Häufige Fragen",
+  "faq.subtitle": "Direkte Antworten — kein Füllmaterial.",
+  "started.title": "Erste Schritte",
+  "started.subtitle": "Was du vor und nach dem Abonnieren wissen musst.",
   "started.items": [
     {
-      "title": "Ist das System für Anfänger geeignet?",
-      "description": "Ja. Der vollautomatisierte Betrieb und das intuitive Design ermöglichen einen einfachen Einstieg — keine Vorkenntnisse erforderlich."
+      "title": "Brauche ich Trading-Erfahrung?",
+      "description": "Eine grundlegende Vertrautheit mit TradingView und den Grundlagen des Tradings wird empfohlen. Die Strategie automatisiert die Ausführung, aber du solltest verstehen, was sie tut — Positionsgrößen, Stop-Losses und Risiko pro Trade. Wenn du noch nie einen Trade platziert hast, empfehlen wir, dich zuerst mit der Plattform vertraut zu machen."
     },
     {
-      "title": "Wie erhalte ich Zugang zur Strategie?",
-      "description": "Nach Abschluss des Abonnements können Sie die Strategie direkt über Ihr Konto ausführen und verwalten — schnell und unkompliziert."
+      "title": "Wie funktioniert der Zugang nach dem Abonnieren?",
+      "description": "Nach erfolgreicher Zahlung über Whop wird dein TradingView-Benutzername automatisch für das private Invite-Only-Skript autorisiert. TradingView öffnen, unter 'Invite-Only Scripts' im Indikator-Menü nach der Strategie suchen und auf deinen Chart anwenden. Der gesamte Prozess dauert unter zehn Minuten."
     },
     {
-      "title": "Welche Plattformen werden unterstützt?",
-      "description": "Unsere Strategie unterstützt aktuell **Bidget** — die Integration ist einfach und sicher."
+      "title": "Welchen TradingView-Plan brauche ich?",
+      "description": "Ein kostenpflichtiger TradingView-Plan (Essential oder höher) wird empfohlen für zuverlässige Alert-Zustellung und Webhook-Support — besonders wenn du automatisierte Ausführung nutzen möchtest. Der kostenlose TradingView-Plan hat Einschränkungen bei der Anzahl aktiver Alerts, die die Strategie-Performance beeinflussen können."
+    },
+    {
+      "title": "Welche Exchanges werden für automatisierte Ausführung unterstützt?",
+      "description": "Die Strategie generiert Signale innerhalb von TradingView. Für automatisierte Orderausführung verbindest du deine Exchange über TradingView Webhook-Alerts. Bitget ist die primär getestete Exchange. Andere Exchanges, die TradingView Webhook-Integration unterstützen, können ebenfalls verwendet werden — Konfiguration und Ausführungsverhalten können jedoch variieren."
+    },
+    {
+      "title": "Kann ich die Strategie ohne Automatisierung nutzen?",
+      "description": "Ja. Du kannst die Strategie als reines Signal-Tool verwenden — der Chart zeigt Einstiege, Ausstiege und aktive Positionen visuell an. Manuelle Ausführung basierend auf den Signalen wird vollständig unterstützt. Die Automatisierung über Webhooks ist optional."
     }
   ],
-
-  "performance.title": "📊 Strategie & Performance",
-  "performance.subtitle": "Wie die KI-Strategie operiert, Risiken managt und über verschiedene Marktbedingungen hinweg performt.",
+  "performance.title": "Strategie & Performance",
+  "performance.subtitle": "Wie die Strategie funktioniert, was ihre Entscheidungen antreibt und was die Zahlen wirklich bedeuten.",
   "performance.items": [
     {
-      "title": "Welche Märkte und Timeframes werden unterstützt?",
-      "description": "Unsere Strategie ist für Bitcoin optimiert, kann aber auf andere volatile Assets und Timeframes ab 4 Stunden (H4) angewendet werden."
+      "title": "Wie unterscheidet sich das von anderen TradingView-Strategien?",
+      "description": "Die meisten öffentlich verfügbaren TradingView-Strategien sind darauf optimiert, in einem bestimmten historischen Fenster beeindruckend auszusehen — typischerweise einer Bullenmarktphase, in der fast alles funktioniert. Sie zeigen selten Full-Cycle-Performance einschließlich Drawdown-Phasen, und die zugrundeliegende Logik ist oft eine Kombination aus Standardindikatoren ohne sinnvolle Risikoarchitektur. Dieses Framework unterscheidet sich in drei konkreten Punkten: Die Signallogik enthält einen Regime-Filter, der die Aktivität in strukturell schlechten Marktphasen reduziert — die meisten Strategien handeln kontextunabhängig ständig weiter. Risikoparameter werden dynamisch pro Trade berechnet statt fixer Losgrößen zu verwenden. Und die Backtesting-Methodik ist transparent dokumentiert — einschließlich der Bärenmarktphasen, in denen die Strategie underperformt hat oder flat war. Wir behaupten nicht, die beste verfügbare Strategie zu sein. Wir behaupten, dass die Performance-Daten ehrlich und die Logik nachvollziehbar ist."
     },
     {
-      "title": "Wie geht das System mit Marktvolatilität um?",
-      "description": "Die Strategie passt sich dynamisch an wechselnde Marktbedingungen an und bewahrt selbst in turbulenten Phasen ihre strukturelle Stabilität."
+      "title": "Ist das eine KI- oder Machine-Learning-Strategie?",
+      "description": "Nein. Die Strategie ist regelbasiert — jeder Einstieg, Ausstieg und jede Risikoentscheidung wird aus expliziten, vordefinierten technischen Bedingungen abgeleitet. Es gibt kein Machine Learning, keine adaptive KI und keine Black-Box-Logik. Jede Trade-Entscheidung lässt sich auf eine konkrete Regel zurückführen."
+    },
+    {
+      "title": "Für welche Märkte und Zeitrahmen ist die Strategie geeignet?",
+      "description": "Die Strategie ist für Bitcoin (BTCUSDT Perpetual) entwickelt und getestet. Sie kann auf andere volatile Krypto-Assets angewendet werden, aber die Performance-Charakteristika werden von den veröffentlichten Backtests abweichen, die Bitcoin-spezifisch sind. Zeitrahmen ab 4H werden empfohlen."
+    },
+    {
+      "title": "Wie verhält sich die Strategie in Seitwärts- oder Chop-Märkten?",
+      "description": "Choppy, qualitativ schlechte Marktphasen sind einer der Hauptgründe für Kontoverluste bei aktiven Tradern. Die Strategie enthält einen Regime-Filter, der diese Phasen erkennt und die Aktivität automatisch reduziert oder pausiert. Es wird Phasen geben, in denen die Strategie absichtlich keine Positionen eingeht — das ist by Design, kein Fehler."
     },
     {
       "title": "Sind alle Trades profitabel?",
-      "description": "Nein. Verluste sind Teil jeder Trading-Strategie. Das System fokussiert sich auf das Management des Downside-Risikos bei gleichzeitiger Wahrung eines statistischen Edges über die Zeit."
+      "description": "Nein. Verluste sind ein struktureller Bestandteil jeder Handelsstrategie. Das System ist darauf ausgelegt, einzelne Verluste klein zu halten, Overtrading in schlechten Bedingungen zu vermeiden und über eine große Stichprobe von Trades einen statistischen Vorteil aufrechtzuerhalten. Die Strategie anhand einzelner Trades zu bewerten ist der falsche Rahmen — betrachte die Performance über mindestens 50–100 Trades."
     },
     {
-      "title": "Kann ich die Strategie anpassen?",
-      "description": "Ja. Kernparameter wie das Risikoprofil und das Handelsverhalten können an Ihre Präferenzen angepasst werden."
+      "title": "Welche Parameter kann ich anpassen?",
+      "description": "Wichtige Risikoparameter — darunter Risikoprozentsatz pro Trade, Drawdown-Reduktionsschwelle und Volatilitätssensitivität — sind direkt im TradingView Strategy-Panel konfigurierbar. Die Kern-Signallogik ist nicht benutzerseitig anpassbar, um unbeabsichtigte Überoptimierung zu verhindern."
     },
     {
-      "title": "Wie interpretiere ich die Performance-Metriken?",
-      "description": "Wir stellen übersichtliche Dashboards und Charts bereit, damit Sie Renditen, Drawdowns und Risikometriken auf einen Blick verfolgen können."
+      "title": "Sind die Backtesting-Ergebnisse realistisch?",
+      "description": "Wir haben konservative Annahmen angewendet: 0,6% Kommission pro Trade (Bitget Taker-Gebühr), 2-Tick-Slippage, getestet über mehrere vollständige Marktzyklen einschließlich des anhaltenden Bärenmarkts 2022. Dennoch haben alle Backtests inhärente Grenzen — sie können Live-Ausführung, Funding-Rate-Auswirkungen oder reale Liquiditätsbedingungen nicht vollständig replizieren. Die vollständige Methodik ist auf der Performance-Seite dokumentiert."
     }
   ],
-
-  "security.title": "🔐 Sicherheit & Kontrolle",
-  "security.subtitle": "Wie Ihr Kapital bei der Nutzung der automatisierten Ausführung vollständig unter Ihrer Kontrolle bleibt.",
+  "security.title": "Sicherheit & Kontrolle",
+  "security.subtitle": "Dein Kapital bleibt jederzeit unter deiner Kontrolle.",
   "security.items": [
     {
-      "title": "Ist mein Kapital sicher?",
-      "description": "Ja. Das System hat keinen Zugriff auf Ihre Wallet oder Ihre Gelder. Sie behalten jederzeit die volle Kontrolle über Ihre Investments."
+      "title": "Habt ihr Zugriff auf meine Gelder?",
+      "description": "Nein. Wir haben zu keinem Zeitpunkt Zugriff auf dein Exchange-Konto oder deine Gelder. Die Strategie läuft innerhalb von TradingView auf deinem eigenen Konto. Wenn du automatisierte Ausführung über Webhooks verwendest, werden Orders direkt von TradingView an deine Exchange gesendet — nicht über uns."
     },
     {
-      "title": "Wie sicher sind API-Schlüssel?",
-      "description": "Ihre API-Schlüssel werden niemals geteilt oder außerhalb Ihres eigenen Kontos gespeichert. Die Strategie operiert sicher ausschließlich über Lese- und Schreibberechtigungen (Read/Write)."
+      "title": "Wie funktioniert die Webhook-Automatisierung — speichert ihr meine API-Keys?",
+      "description": "Nein. Deine Exchange-API-Keys werden direkt in TradingViews Alert-Einstellungen eingegeben und werden niemals mit uns geteilt oder von uns gespeichert. Die Webhook-Integration ist eine direkte Verbindung zwischen TradingView und deiner Exchange. Wir haben weder Einblick in noch Zugriff auf diese Verbindung."
+    },
+    {
+      "title": "Welche API-Berechtigungen braucht die Exchange-Integration?",
+      "description": "Für automatisierte Ausführung benötigt dein Exchange-API-Key 'Lesen'- und 'Futures-Trading'- (oder entsprechende Order-Platzierungs-)Berechtigungen. Abhebungsberechtigungen sollten für keinen Trading-Bot-API-Key aktiviert werden — das ist eine allgemeine Sicherheitspraxis unabhängig von welcher Strategie du verwendest."
     },
     {
       "title": "Kann ich die Strategie jederzeit stoppen?",
-      "description": "Ja. Sie können die Strategie jederzeit sofort über Ihr Dashboard pausieren oder stoppen."
+      "description": "Ja. Du kannst die Strategie jederzeit von deinem Chart entfernen, Webhook-Alerts in TradingView deaktivieren oder Positionen manuell auf deiner Exchange schließen. Kein Schritt von unserer Seite ist erforderlich, um die Ausführung zu stoppen."
+    },
+    {
+      "title": "Was passiert, wenn TradingView ausfällt?",
+      "description": "Bei einem TradingView-Ausfall kann die Signalgenerierung und Alert-Zustellung unterbrochen werden. Offene Positionen auf deiner Exchange bleiben offen und nicht verwaltet, bis der TradingView-Dienst wiederhergestellt ist. Das ist ein Plattform-Abhängigkeitsrisiko, das für jede TradingView-basierte Strategie gilt. Wir empfehlen, dein Exchange-Konto besonders in hochvolatilen Phasen eigenständig zu überwachen."
     }
   ],
-
-  "billing.title": "💳 Preise & Abrechnung",
-  "billing.subtitle": "Transparente Abonnement-Modelle, Testzugänge und flexible Kündigungsoptionen.",
+  "billing.title": "Preise & Abrechnung",
+  "billing.subtitle": "Was du zahlst, wie die Abrechnung funktioniert und was bei einer Kündigung passiert.",
   "billing.items": [
     {
-      "title": "Wie viel kostet das System?",
-      "description": "Wir bieten Abonnementpläne, die auf unterschiedliche Bedürfnisse zugeschnitten sind — transparent, fair und leistungsorientiert."
+      "title": "Was kosten die Pläne?",
+      "description": "Monatlicher Zugang kostet 99 €/Monat. Vierteljährliche Abrechnung beträgt 249 € alle 3 Monate (83 €/Monat — 16% Ersparnis). Jährliche Abrechnung beträgt 899 €/Jahr (75 €/Monat — 24% Ersparnis). Alle Pläne enthalten identischen Strategie-Zugang. Der einzige Unterschied ist die Abrechnungsfrequenz und der monatliche Preis."
     },
     {
-      "title": "Gibt es eine Testversion?",
-      "description": "Ja. Sie können die Strategie 7 Tage kostenlos testen, um deren Performance zu bewerten, bevor Sie ein Abonnement wählen."
+      "title": "Was beinhaltet die kostenlose Testphase?",
+      "description": "Die 7-tägige kostenlose Testphase gibt dir vollen Zugang zur Strategie — identisch mit einem bezahlten Abonnement. Keine Funktionen sind während der Testphase eingeschränkt. Du musst Zahlungsdetails angeben, um zu starten, wirst aber erst nach Ablauf der Testphase belastet. Vor Tag 7 kündigen und nichts wird abgerechnet."
     },
     {
-      "title": "Wie erfolgt die Abrechnung?",
-      "description": "Alle Zahlungen werden sicher über Stripe abgewickelt. Je nach gewähltem Plan erfolgt die Abrechnung monatlich, vierteljährlich oder jährlich."
+      "title": "Wer verarbeitet die Zahlungen?",
+      "description": "Die gesamte Abrechnung wird von Whop Inc. als Merchant of Record abgewickelt. Whop verarbeitet deine Zahlung, stellt Belege aus und verwaltet Abonnementverlängerungen. Deine Kartendaten werden direkt in Whops sicheren Checkout eingegeben — sie erreichen unsere Server nie. Mit dem Abonnieren akzeptierst du auch die Nutzungsbedingungen von Whop."
     },
     {
-      "title": "Kann ich jederzeit kündigen?",
-      "description": "Ja. Abonnements können jederzeit über das Abrechnungsportal gekündigt werden. Der Zugang bleibt bis zum Ende des bereits bezahlten Abrechnungszeitraums aktiv."
+      "title": "Wie kündige ich?",
+      "description": "Jederzeit über dein Whop Member Dashboard unter whop.com kündigen. Die Kündigung tritt am Ende des laufenden Abrechnungszeitraums in Kraft — der Zugang bleibt bis dahin aktiv. Es gibt keine Kündigungsgebühr und keine Genehmigung von uns ist erforderlich."
+    },
+    {
+      "title": "Gibt es eine Rückerstattungsrichtlinie?",
+      "description": "Abonnements sind nach Gewährung des Zugangs zum privaten Skript nicht erstattungsfähig, außer wie durch geltendes Verbraucherschutzrecht vorgeschrieben. Bei einem technischen Problem, das jeglichen Zugang zum Dienst verhindert hat, kontaktiere uns innerhalb von 7 Tagen und wir prüfen die Situation."
     },
     {
       "title": "Gibt es zusätzliche Gebühren?",
-      "description": "Nein. Es fallen keine versteckten Kosten, Performance-Gebühren oder Gewinnbeteiligungen an. Der Abonnementpreis ist vollständig transparent."
+      "description": "Keine Performance-Gebühren, keine Gewinnbeteiligung, keine Trade-Gebühren. Das Abonnement ist eine Pauschalgebühr. Deine Exchange berechnet ihre eigenen Handelsgebühren separat — die sind zwischen dir und deiner Exchange, nicht uns."
     },
     {
       "title": "Welche Zahlungsmethoden werden akzeptiert?",
-      "description": "Wir akzeptieren alle gängigen Kreditkarten und weitere Zahlungsmöglichkeiten, abhängig von Ihrer Region, alle sicher über Stripe abgewickelt."
+      "description": "Whop unterstützt gängige Kredit- und Debitkarten. Weitere Zahlungsmethoden können je nach Region verfügbar sein. Akzeptierte Methoden werden beim Checkout angezeigt."
     },
     {
-      "title": "Sind zukünftige Updates im Abonnement enthalten?",
-      "description": "Ja. Alle aktiven Abonnements beinhalten kontinuierliche Systemverbesserungen, Optimierungen und Framework-Updates ohne zusätzliche Kosten."
-    },
-    {
-      "title": "Was passiert nach dem Kauf?",
-      "description": "Nach erfolgreicher Zahlung erhalten Sie umgehend Zugangsinformationen sowie eine Schritt-für-Schritt-Anleitung zur Integration des Systems."
+      "title": "Sind Strategie-Updates inklusive?",
+      "description": "Ja. Alle aktiven Abonnements umfassen laufende Updates der Strategie, sobald diese veröffentlicht werden. Updates werden automatisch eingespielt — kein Neuinstallieren deinerseits erforderlich."
     }
   ],
-
-  "legal.title": "⚠️ Risiko & Rechtliches",
-  "legal.subtitle": "Wichtige Informationen zu Handelsrisiken, Limitierungen und regulatorischen Aspekten.",
+  "legal.title": "Risiko & Rechtliches",
+  "legal.subtitle": "Wichtige Hinweise zu Handelsrisiken und der Natur dieses Dienstes.",
   "legal.items": [
     {
       "title": "Welche Risiken sind damit verbunden?",
-      "description": "Trading ist immer mit Risiken verbunden. Unsere Strategie fokussiert sich auf das Risikomanagement, kann Verluste jedoch nicht vollständig eliminieren."
+      "description": "Der Handel mit Kryptowährungen ist mit erheblichem Verlustrisiko verbunden, einschließlich des möglichen vollständigen Verlusts des eingesetzten Kapitals. Die Strategie managt Risiko strukturell, kann es aber nicht eliminieren. Märkte können sich auf Weisen verhalten, die kein historisches Vorbild haben. Handle nur mit Kapital, dessen vollständigen Verlust du dir leisten kannst."
     },
     {
-      "title": "Handelt es sich hierbei um Finanzberatung?",
-      "description": "Nein. Unsere Plattform stellt Tools und Strategien zur Verfügung, aber Sie treffen alle Handelsentscheidungen eigenverantwortlich."
+      "title": "Ist das Anlageberatung?",
+      "description": "Nein. Wir stellen ein technisches Software-Tool bereit — ein TradingView-Strategieskript. Wir verwalten keine Gelder, führen keine Trades in deinem Namen aus und geben keine personalisierten Anlageempfehlungen. Wir sind kein lizenzierter Anlageberater, Makler oder Finanzinstitut. Alle Handelsentscheidungen und ihre Konsequenzen liegen bei dir."
     },
     {
-      "title": "Für wen ist dieses System nicht geeignet?",
-      "description": "Dieses System ist möglicherweise nicht für Personen mit geringer Risikotoleranz oder unzureichendem Verständnis für das Trading geeignet."
+      "title": "Sind die Performance-Ergebnisse garantiert?",
+      "description": "Nein. Alle Performance-Daten auf dieser Website stammen aus historischem Backtesting, nicht aus Live-Trading. Vergangene simulierte Performance garantiert, prognostiziert oder impliziert keine zukünftigen Ergebnisse. Die Lücke zwischen Backtesting- und Live-Performance kann erheblich sein."
+    },
+    {
+      "title": "Für wen ist das nicht geeignet?",
+      "description": "Dieser Dienst ist nicht geeignet für Personen, die sich den Verlust ihres eingesetzten Kapitals nicht leisten können, die kein grundlegendes Verständnis von Krypto-Trading und Leverage haben, die garantierte Renditen suchen, oder deren lokale Regulierung den Kryptowährungshandel verbietet."
     }
   ],
-
-  "support.title": "🛟 Support",
-  "support.subtitle": "Dedizierte Unterstützung und Ressourcen, um Ihnen in jeder Phase zu helfen.",
+  "support.title": "Support",
+  "support.subtitle": "Wie du Hilfe bekommst und was du erwarten kannst.",
   "support.items": [
     {
-      "title": "Welche Art von Support wird angeboten?",
-      "description": "Unser Support-Team steht Ihnen rund um die Uhr (24/7) per Chat und E-Mail zur Verfügung, um Sie bei Bedarf zu unterstützen."
+      "title": "Welchen Support gibt es?",
+      "description": "E-Mail-Support steht allen Abonnenten zur Verfügung. Bevorzugte Antwortzeiten gelten für Vierteljahres- und Jahresplan-Inhaber. Wir sind bestrebt, alle Anfragen innerhalb von 24 Stunden an Werktagen zu beantworten."
     },
     {
-      "title": "Wie kann ich den Support kontaktieren?",
-      "description": "Sie erreichen uns direkt über Ihr Konto-Dashboard oder per E-Mail an support@example.com."
+      "title": "Wie erreiche ich den Support?",
+      "description": "Per E-Mail an support@yourdomain.com. Bitte TradingView-Benutzernamen und eine Beschreibung des Problems angeben. Für abrechnungsbezogene Fragen kannst du Whop auch direkt über dein Member Dashboard kontaktieren."
     },
     {
-      "title": "Wie lang ist die Reaktionszeit?",
-      "description": "Die meisten Anfragen werden innerhalb weniger Stunden beantwortet; dringende Anliegen werden umgehend priorisiert."
+      "title": "Gibt es eine Einrichtungsanleitung?",
+      "description": "Ja. Eine Schritt-für-Schritt-Integrationsanleitung ist nach dem Abonnieren verfügbar — für Chart-Setup, Risikokonfiguration und die optionale Webhook-Automatisierung für deine Exchange."
     }
   ],
-  
-  "cta.title": "Noch Fragen offen?",
+  "cta.title": "Noch Fragen?",
   "cta.btnText": "Support kontaktieren"
 }
