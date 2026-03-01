@@ -1,8 +1,7 @@
-# Risk Disclosure / Risikohinweise
-
 ---
-
-# ENGLISH VERSION
+title: 'Risk Disclosure'
+layout: '~/layouts/MarkdownLayout.astro'
+---
 
 **Last Updated:** February 2026
 
