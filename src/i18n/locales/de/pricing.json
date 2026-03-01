@@ -1,139 +1,165 @@
 {
-  "hero.tagline": "Systematische Ausführung",
-  "hero.text": "Strukturiertes Trading. {accent}",
-  "hero.accent": "Transparente Konditionen.",
-  "hero.title": "",
-  "hero.subtitle": "Starte ein regelbasiertes Trading-Framework, das diszipliniertes, emotionsfreies Handeln ermöglicht – sofort einsatzbereit.",
-
+  "hero.tagline": "Preise",
+  "hero.text": "Ein System. {accent}",
+  "hero.accent": "Drei Zugangswege.",
+  "hero.subtitle": "Voller Zugang zum kompletten Framework in jedem Plan. Der einzige Unterschied ist die Laufzeit — und der monatliche Preis, der sich daraus ergibt.",
   "title": "Preise",
-  "subtitle": "Wähle die Abrechnungsstruktur, die deinem Trading-Horizont und Kapital-Commitment entspricht.",
-
+  "subtitle": "Alle Pläne enthalten dieselbe Strategie, dieselbe Signallogik und dasselbe Risiko-Framework. Längere Laufzeiten kosten weniger pro Monat. Das ist der einzige Unterschied.",
   "prices": [
     {
       "title": "Monatlich",
-      "subtitle": "Flexibler kurzfristiger Zugang",
+      "subtitle": "Testen, evaluieren, entscheiden",
       "price": 99,
-      "period": "Monatliche Abrechnung",
+      "period": "pro Monat, jederzeit kündbar",
       "items": [
-        { "description": "Vollständiger Zugang zum systematischen Framework" },
-        { "description": "Gesamte Signal-Logik & regelbasierte Execution-Engine" },
-        { "description": "Kontinuierliche Modellverfeinerung & System-Updates" },
-        { "description": "Adaptive Einstellungen zur Risiko-Konfiguration" },
-        { "description": "E-Mail-Support" }
+        {
+          "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
+        },
+        {
+          "description": "Komplette regelbasierte Ausführungs-Engine"
+        },
+        {
+          "description": "Alle Risikokonfigurations-Parameter"
+        },
+        {
+          "description": "Laufende Strategie-Updates inklusive"
+        },
+        {
+          "description": "E-Mail-Support"
+        }
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "7-Tage-Test starten",
+        "text": "7 Tage kostenlos testen",
         "href": "#"
       }
     },
     {
-      "title": "Quartalsweise",
-      "subtitle": "Optimiertes Commitment",
+      "title": "Vierteljährlich",
+      "subtitle": "Drei Monate, eine Entscheidung",
       "price": 249,
-      "period": "Abrechnung alle 3 Monate",
+      "period": "alle 3 Monate — 83 €/Monat",
       "items": [
-        { "description": "Vollständiger Zugang zum systematischen Framework" },
-        { "description": "Gesamte Signal-Logik & regelbasierte Execution-Engine" },
-        { "description": "Kontinuierliche Modellverfeinerung & System-Updates" },
-        { "description": "Adaptive Einstellungen zur Risiko-Konfiguration" },
-        { "description": "Priority E-Mail-Support" }
+        {
+          "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
+        },
+        {
+          "description": "Komplette regelbasierte Ausführungs-Engine"
+        },
+        {
+          "description": "Alle Risikokonfigurations-Parameter"
+        },
+        {
+          "description": "Laufende Strategie-Updates inklusive"
+        },
+        {
+          "description": "Prioritäts-E-Mail-Support"
+        }
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "7-Tage-Test starten",
+        "text": "7 Tage kostenlos testen",
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "Save 16 %"
+      "ribbonTitle": "16% sparen"
     },
     {
       "title": "Jährlich",
-      "subtitle": "Maximale strukturelle Effizienz",
+      "subtitle": "Ernsthaftes Kapital, ernsthafte Struktur",
       "price": 899,
-      "period": "Jährliche Abrechnung",
+      "period": "pro Jahr — 75 €/Monat",
       "items": [
-        { "description": "Vollständiger Zugang zum systematischen Framework" },
-        { "description": "Gesamte Signal-Logik & regelbasierte Execution-Engine" },
-        { "description": "Kontinuierliche Modellverfeinerung & System-Updates" },
-        { "description": "Adaptive Einstellungen zur Risiko-Konfiguration" },
-        { "description": "Priority Support" },
-        { "description": "Effizienteste Konditionenstruktur" }
+        {
+          "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
+        },
+        {
+          "description": "Komplette regelbasierte Ausführungs-Engine"
+        },
+        {
+          "description": "Alle Risikokonfigurations-Parameter"
+        },
+        {
+          "description": "Laufende Strategie-Updates inklusive"
+        },
+        {
+          "description": "Prioritäts-Support mit schnelleren Antwortzeiten"
+        },
+        {
+          "description": "Niedrigster verfügbarer Monatspreis"
+        }
       ],
       "callToAction": {
         "target": "_blank",
-        "text": "7-Tage-Test starten",
+        "text": "7 Tage kostenlos testen",
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "Save 24 %"
+      "ribbonTitle": "24% sparen"
     }
   ],
-
-  "trust.title": "Transparente Abrechnung. Institutionelle Abwicklung.",
-  "trust.subtitle": "Sichere Infrastruktur. Klar definierte Konditionen. Keine versteckten Strukturen.",
+  "trust.title": "Klare Abrechnung. Keine Überraschungen.",
+  "trust.subtitle": "Alle finanziellen Details des Abonnements sind vor dem Kauf sichtbar. Was du beim Checkout siehst, ist was du zahlst — nichts kommt später dazu.",
   "trust.columns": 2,
   "trust.items": [
     {
-      "title": "Sichere Zahlungen",
-      "description": "Alle Transaktionen werden sicher über Stripe abgewickelt, unter Nutzung von branchenüblicher Verschlüsselung und globaler Zahlungsinfrastruktur.",
+      "title": "Abgewickelt über Whop",
+      "description": "Checkout, Abrechnung und Abonnementverwaltung werden vollständig von Whop Inc. als Merchant of Record übernommen. Deine Zahlungsdetails erreichen unsere Server nie.",
       "icon": "tabler:shield-lock"
     },
     {
-      "title": "Keine versteckten Gebühren",
-      "description": "Keine Performance Fees. Keine Umsatzbeteiligung. Keine versteckten Transaktionskosten.",
+      "title": "Keine Performance-Gebühren",
+      "description": "Das Abonnement ist eine Pauschalgebühr. Wir nehmen keinen Anteil an deinen Gewinnen, erheben keine Gebühren pro Trade und rechnen nicht nach Kontogröße ab. Nie.",
       "icon": "tabler:receipt-off"
     },
     {
-      "title": "Abonnement-Kontrolle",
-      "description": "Verwalte, wechsle oder kündige dein Abonnement jederzeit direkt über das Kunden-Abrechnungsportal.",
+      "title": "Kündigung über dein Dashboard",
+      "description": "Abonnement verwalten, pausieren oder kündigen — jederzeit direkt über dein Whop Member Dashboard. Keine E-Mails schreiben, keine Anfragen stellen.",
       "icon": "tabler:adjustments"
     },
     {
-      "title": "Sofortiges Deployment",
-      "description": "Unmittelbare Autorisierung und Zugang zum proprietären TradingView-Script nach erfolgreicher Zahlung.",
+      "title": "Zugang innerhalb von Minuten",
+      "description": "Nach dem Bezahlen wird dein TradingView-Konto automatisch autorisiert. Die Strategie liegt sofort in deinem Invite-Only Scripts Ordner und ist bereit, auf einem Chart angewendet zu werden.",
       "icon": "tabler:bolt"
     }
   ],
-
-  "steps.tagline": "Deployment-Protokoll",
-  "steps.title": "Ein strukturierter Integrationsprozess, um das Framework innerhalb von Minuten in deiner TradingView-Umgebung zu aktivieren.",
+  "steps.tagline": "Erste Schritte",
+  "steps.title": "Vom Checkout zum Live-Chart in unter zehn Minuten.",
   "steps.items": [
     {
-      "title": "Schritt 1: Zugangsstufe wählen",
-      "description": "Wähle die Zugangsstruktur, die deinem operativen Trading-Horizont entspricht.",
+      "title": "Schritt 1: Plan wählen",
+      "description": "Monatlich für Flexibilität, vierteljährlich oder jährlich wenn du dich für den Prozess entschieden hast. Alle Pläne starten mit denselben 7 kostenlosen Testtagen.",
       "icon": "tabler:box"
     },
     {
-      "title": "Schritt 2: TradingView-Nutzernamen angeben",
-      "description": "Gib während des Checkouts deinen exakten TradingView-Nutzernamen ein, um das private Script mit deinem Account zu verknüpfen.",
+      "title": "Schritt 2: TradingView-Benutzernamen eingeben",
+      "description": "Beim Checkout wird dein exakter TradingView-Benutzername abgefragt. So wird der Zugang mit deinem Konto verknüpft — also auf die Schreibweise achten. Hinweis: Für zuverlässige Alert-Zustellung ist ein kostenpflichtiger TradingView-Plan (Essential oder höher) erforderlich. Der kostenlose Plan hat Alert-Einschränkungen, die die Strategie-Performance beeinflussen können.",
       "icon": "tabler:user-scan"
     },
     {
-      "title": "Schritt 3: Sichere Zahlungsabwicklung",
-      "description": "Schließe dein Abonnement sicher über unser integriertes Stripe-Zahlungsgateway ab.",
+      "title": "Schritt 3: Zahlung über Whop abschließen",
+      "description": "Der Checkout wird sicher über Whop abgewickelt. Kartendaten gehen direkt an deren Infrastruktur — nicht an uns.",
       "icon": "tabler:shield-lock"
     },
     {
       "title": "Schritt 4: Automatische Autorisierung",
-      "description": "Nach erfolgreicher Zahlung wird dein TradingView-Account automatisch autorisiert und erhält sofortigen Zugriff auf das Invite-Only-System.",
+      "description": "In dem Moment, in dem die Zahlung bestätigt ist, wird dein TradingView-Benutzername für das private Skript autorisiert. Kein manueller Schritt unsererseits erforderlich.",
       "icon": "tabler:server-cog"
     },
     {
-      "title": "Schritt 5: Auf dem Chart initialisieren",
-      "description": "Öffne TradingView, navigiere zu deinem 'Invite-only scripts'-Ordner und wende das Framework auf deinen Chart an.",
+      "title": "Schritt 5: Auf deinen Chart anwenden",
+      "description": "TradingView öffnen, die Strategie unter Invite-Only Scripts im Indikator-Menü finden und auf einen Bitcoin-Chart anwenden. Bevorzugten Zeitrahmen und Risikoparameter einstellen. Für volle Funktionalität ist der TradingView Essential-Plan oder höher erforderlich — der kostenlose Plan unterstützt nicht die Anzahl aktiver Alerts, die für konsistente Ausführung benötigt werden.",
       "icon": "tabler:chart-candle"
     },
     {
-      "title": "Schritt 6: Automatisierung konfigurieren <span class=\"font-medium\">(Optional)</span>",
-      "description": "Verbinde das Framework über Webhooks mit deiner Exchange für vollautomatisiertes, regelbasiertes Trading. <a href='#' class='underline font-semibold'>Jetzt Automatisierungs-Guide ansehen</a>.",
+      "title": "Schritt 6: Mit Exchange verbinden <span class=\"font-medium\">(Optional)</span>",
+      "description": "Für vollautomatische Ausführung die Strategie über TradingView-Webhooks mit deiner Exchange verbinden. <a href='#' class='underline font-semibold'>Die Einrichtungsanleitung führt durch alle Schritte.</a>",
       "icon": "tabler:settings-automation"
     }
   ],
-
-  "faq.title": "Fragen zur Preisgestaltung & Abrechnung",
-  
-  "cta.title": "Trade mit Struktur.",
-  "cta.subtitle": "Übernimm die Kontrolle: systematische Regeln statt spontaner Entscheidungen.",
-  "cta.btnText": "Strukturierten Zugang aktivieren"
+  "faq.title": "Häufige Fragen vor dem Kauf",
+  "cta.title": "Sieben Tage kostenlos. Keine Verpflichtung.",
+  "cta.subtitle": "Die Strategie auf einem Live-Chart einsetzen, die Signale unter echten Marktbedingungen beobachten und selbst bewerten — bevor irgendwas bezahlt wird.",
+  "cta.btnText": "Kostenlose Testphase starten",
+  "steps.subtitle": "Was du vorher brauchst: einen TradingView-Account auf dem Essential-Plan oder höher, deinen genauen TradingView-Benutzernamen und einen Bitget-Account für automatisierte Ausführung (optional)."
 }
