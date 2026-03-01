@@ -1,0 +1,200 @@
+---
+title: 'Risikohinweise'
+layout: '~/layouts/MarkdownLayout.astro'
+---
+
+**Zuletzt aktualisiert:** Februar 2026
+
+---
+
+## WICHTIGER HINWEIS
+
+**Bitte lesen Sie diese Risikohinweise sorgfältig, bevor Sie einen Dienst, ein Tool, eine Strategie oder Inhalte von [Ihr Unternehmensname] nutzen. Dieses Dokument beschreibt wesentliche Risiken im Zusammenhang mit dem Handel und der Nutzung automatisierter oder systematischer Handelsstrategien. Durch den Zugriff auf oder die Nutzung unserer Dienste bestätigen Sie, dass Sie alle hier beschriebenen Risiken gelesen, verstanden und akzeptiert haben.**
+
+**Handel ist mit einem erheblichen Verlustrisiko verbunden. Sie sollten nur mit Kapital handeln, dessen vollständigen Verlust Sie sich leisten können.**
+
+---
+
+## 1. Allgemeines Handelsrisiko
+
+### 1.1 Erhebliches Verlustrisiko
+Der Handel mit Kryptowährungen, Derivaten, Differenzkontrakten (CFDs), Futures und anderen gehebelten Finanzinstrumenten ist mit einem **hohen Risiko** verbunden und eignet sich nicht für alle Personen. Es besteht die reale Möglichkeit, dass Sie **das gesamte oder einen wesentlichen Teil des Kapitals** verlieren, das Sie für Handelsaktivitäten einsetzen. Sie sollten niemals mit Geld handeln, dessen Verlust Sie sich nicht leisten können.
+
+### 1.2 Volatilität
+Kryptowährungsmärkte unterliegen extremen Preisschwankungen. Kursbewegungen können schnell, dramatisch und unvorhersehbar sein und können jederzeit auftreten, auch in Phasen geringer Liquidität. Selbst eine gut strukturierte, regelbasierte Strategie kann die fundamentalen Risiken des Handels auf hochvolatilen Märkten nicht beseitigen.
+
+### 1.3 Hebel und Margin
+Wenn Sie sich entscheiden, mit Hebel oder auf Margin zu handeln — sei es über unsere Strategie oder unabhängig davon — werden Ihre potenziellen Verluste vergrößert. Gehebelter Handel kann zu Verlusten führen, die Ihre ursprüngliche Einlage übersteigen. Sie sind allein dafür verantwortlich, die Hebeleinstellungen an einer von Ihnen genutzten Börse oder Plattform zu verstehen und zu verwalten.
+
+### 1.4 Liquiditätsrisiko
+Kryptowährungsmärkte können Phasen extremer Illiquidität erleben, insbesondere während starker Marktbewegungen oder negativer makroökonomischer Ereignisse. In solchen Phasen werden Aufträge möglicherweise nicht zu den erwarteten Preisen ausgeführt oder überhaupt nicht ausgeführt. Slippage, Teilausführungen und fehlgeschlagene Ausführungen sind inhärente Handelsrisiken.
+
+### 1.5 Marktmanipulation
+Kryptowährungsmärkte sind in vielen Ländern weitgehend unreguliert und anfällig für manipulative Praktiken, einschließlich Wash Trading, Spoofing und koordinierter Kursbewegungen durch große Marktteilnehmer. Solche Manipulationen können die Strategieleistung negativ beeinflussen und liegen außerhalb unserer Kontrolle.
+
+---
+
+## 2. Strategiespezifische Risiken
+
+### 2.1 Keine Leistungsgarantie
+Die von [Ihr Unternehmensname] bereitgestellte Handelsstrategie ist ein systematisches, regelbasiertes Tool zur Standardisierung der Handelsausführung. Es garantiert **weder** Gewinne, positive Renditen noch ein bestimmtes finanzielles Ergebnis. Vergangene Leistungen — ob live, simuliert oder rückgetestet — garantieren, prognostizieren oder implizieren keine zukünftigen Ergebnisse.
+
+### 2.2 Rückgetestete Ergebnisse sind keine tatsächlichen Handelsergebnisse
+Die auf unserer Website präsentierten Leistungsdaten, einschließlich Charts, Metriken und Statistiken, stammen aus **historischem Backtesting** innerhalb der TradingView Strategy Tester-Umgebung. Rückgetestete Ergebnisse:
+
+- Werden anhand historischer Preisdaten berechnet, die zum Zeitpunkt der Simulation bekannt waren
+- Berücksichtigen keine echtzeitlichen Marktdynamiken, einschließlich Orderbuchtiefe, tatsächlicher Liquidität oder realer Ausführungsquoten
+- Spiegeln nicht die psychologischen Herausforderungen des Live-Handels wider (Angst, Gier, Zögern)
+- Unterliegen Survivorship Bias, Data Mining Bias und Optimierungsbias, sofern nicht ausdrücklich anders angegeben
+- Können wesentlich von den im Live-Handelsbetrieb erzielten Ergebnissen abweichen
+
+**Die Lücke zwischen simulierter Backtesting-Leistung und tatsächlicher Live-Handelsleistung kann erheblich sein und lässt sich nicht zuverlässig vorhersagen.**
+
+### 2.3 Überoptimierungsrisiko
+Jede systematische Handelsstrategie birgt das Risiko, auf historische Daten überangepasst oder überoptimiert zu sein. Eine Strategie, die im Backtesting starke Ergebnisse liefert, kann diese Ergebnisse im Live-Handel aufgrund von Unterschieden in der Marktmikrostruktur, Regimewechseln oder strukturellen Marktveränderungen, die in historischen Daten nicht erfasst sind, möglicherweise nicht reproduzieren.
+
+### 2.4 Veränderte Marktbedingungen
+Finanzmärkte sind dynamisch. Marktregime ändern sich im Laufe der Zeit — von trendend zu seitwärts, von niedriger zu hoher Volatilität und von korrelierten zu unkorrelierten Verhaltensweisen. Eine Strategie, die in einem Marktumfeld gut abschneidet, kann in einem anderen unterperformen oder Verluste erzeugen. Die Strategie ist so konzipiert, dass sie sich systematisch an ein gewisses Maß an Regimevariation anpasst, kann jedoch keine Belastbarkeit unter allen möglichen zukünftigen Bedingungen garantieren.
+
+### 2.5 Drawdowns
+Alle Handelsstrategien erleben Drawdown-Phasen — längere Zeiträume, in denen die Eigenkapitalkurve von einem jüngsten Höchststand zurückgeht. Drawdowns können erheblich, langwierig und psychologisch schwer zu ertragen sein. Sie müssen bereit sein, Drawdown-Phasen zu überstehen, ohne die Strategie verfrüht aufzugeben oder emotional gesteuerte Eingriffe vorzunehmen.
+
+### 2.6 Signallatenz und Ausführungsverzögerungen
+Von der Strategie generierte Signale werden innerhalb der TradingView-Plattform verarbeitet. Die tatsächliche Ausführung an einer verbundenen Börse hängt von Plattformreaktionszeiten, Internetverbindung, Exchange-API-Reaktionsfähigkeit und anderen technischen Variablen ab. Ausführungsverzögerungen können zu wesentlich anderen Ausführungspreisen führen als in Backtests widergespiegelt.
+
+### 2.7 Abhängigkeit von der TradingView-Plattform
+Die Strategie ist für die Signalgenerierung und (optional) automatisierte Ausführung vollständig von der TradingView-Plattform abhängig. TradingView-Ausfälle, Wartungsfenster, Plan-Einschränkungen oder Änderungen an TradingViews Nutzungsbedingungen können den Strategiebetrieb unterbrechen oder verhindern. [Ihr Unternehmensname] ist nicht verantwortlich für durch TradingView verursachte Unterbrechungen.
+
+---
+
+## 3. Automatisierter Handel – Risiken
+
+### 3.1 Automatisierung eliminiert kein Risiko
+Die Verbindung der Strategie mit einer Börse über Webhooks ermöglicht automatisierte Orderausführung. Automatisierung beseitigt die Notwendigkeit manueller Eingriffe, eliminiert oder reduziert jedoch **nicht** das zugrundeliegende finanzielle Risiko der Trades selbst. Automatisierte Systeme können und erzeugen Verluste.
+
+### 3.2 Technische Fehler
+Automatisierte Handelssysteme sind anfällig für technische Fehler, einschließlich, aber nicht beschränkt auf:
+
+- Unterbrechungen der Internetverbindung
+- TradingView-Webhook-Fehler oder -Verzögerungen
+- Exchange-API-Ausfälle oder Ratenbegrenzungen
+- Serverseitige Fehler an Ihrer Börse oder Ihrem VPS
+- Fehlkonfigurationen in Webhook-Einstellungen oder Alert-Parametern
+
+Jeder dieser Fehler kann zu verpassten Einstiegen, verpassten Ausstiegen, Doppelorders oder unbeabsichtigten offenen Positionen führen. Sie sind allein dafür verantwortlich, Ihr automatisiertes Setup zu überwachen und eine angemessene technische Infrastruktur aufrechtzuerhalten.
+
+### 3.3 Unkontrollierte oder unbeabsichtigte Orders
+In seltenen Fällen können technische Fehler, falsch konfigurierte Parameter oder unerwartete Marktereignisse dazu führen, dass automatisierte Systeme unbeabsichtigte Orders generieren. Sie sind dafür verantwortlich, Ihr Börsenkonto regelmäßig zu überwachen, um solche Situationen schnell zu identifizieren und zu korrigieren. [Ihr Unternehmensname] übernimmt keine Haftung für Verluste, die durch technische Fehler der Automatisierungsschicht entstehen.
+
+### 3.4 Kontinuierliche Überwachung empfohlen
+Auch bei der Verwendung einer automatisierten Strategie wird Ihnen dringend empfohlen, Ihre Positionen, Ihr Kontosaldo und Ihren Systemstatus regelmäßig zu überwachen. Vollautomatisierung entbindet Sie nicht von der Verantwortung für die in Ihren Konten stattfindende Handelsaktivität.
+
+---
+
+## 4. Kryptowährungsspezifische Risiken
+
+### 4.1 Regulatorische Unsicherheit
+Das regulatorische Umfeld für Kryptowährungen entwickelt sich schnell und variiert erheblich zwischen den Rechtsordnungen. Regulatorische Änderungen — einschließlich vollständiger Verbote, Handelsbeschränkungen, Börsenlizenzerfordernisse oder Änderungen der steuerlichen Behandlung — können Kryptowährungspreise und Ihre Handelsmöglichkeiten negativ beeinflussen.
+
+### 4.2 Börsenrisiko
+Der Handel an Kryptowährungsbörsen ist mit zusätzlichem Kontrahentenrisiko verbunden. Börsen können:
+
+- Den Handel unerwartet aussetzen
+- Sicherheitsverletzungen oder Hacks erleiden
+- Insolvent werden oder den Markt verlassen
+- Auszahlungen einfrieren oder den Kontozugriff einschränken
+- Gebührenstrukturen, API-Bedingungen oder Hebelregeln ohne ausreichende Vorankündigung ändern
+
+[Ihr Unternehmensname] ist nicht verantwortlich für Verluste, die durch börsenbezogene Fehler, Einschränkungen oder Vorfälle entstehen. Sie sind dafür verantwortlich, Ihre Börse auszuwählen und zu bewerten.
+
+### 4.3 Verwahrungsrisiko
+Beim Handel an zentralisierten Börsen werden Ihre Kryptowährungsbestände von dieser Börse verwahrt. Sie halten keine privaten Schlüssel zu diesen Vermögenswerten. Börseinsolvenzen, Betrug oder Sicherheitsfehler können zum teilweisen oder vollständigen Verlust verwahrter Vermögenswerte führen.
+
+### 4.4 Technologierisiko
+Blockchain-Netzwerke, Smart Contracts und Kryptowährungsinfrastruktur unterliegen technischen Risiken, einschließlich Protokollfehlern, Netzwerküberlastung, Hard Forks und Konsensausfällen. Diese Risiken liegen außerhalb der Kontrolle von [Ihr Unternehmensname] und können Marktbedingungen und Handelsergebnisse negativ beeinflussen.
+
+### 4.5 Funding Rates und Perpetual Contracts
+Wenn Sie Perpetual-Futures-Kontrakte handeln, beachten Sie, dass Funding Rates ein erheblicher laufender Kostenfaktor sein können, der die Rentabilität im Laufe der Zeit negativ beeinflusst. Funding Rates sind dynamisch, können sich während volatiler Marktbedingungen schnell ändern und werden in der Backtesting-Performance nicht vollständig widergespiegelt.
+
+---
+
+## 5. Keine Anlageberatung
+
+### 5.1 Ausschließlich Informations- und Bildungszwecke
+Alle von [Ihr Unternehmensname] bereitgestellten Inhalte, Tools, Skripte, Dokumentationen und Mitteilungen dienen ausschließlich **Informations- und Bildungszwecken**. Nichts, was wir bereitstellen, stellt dar oder sollte interpretiert werden als:
+
+- Personalisierte Anlageberatung
+- Aufforderung zum Kauf, Verkauf oder Halten eines Finanzinstruments
+- Garantie eines Handelsergebnisses
+- Auf Ihre persönliche finanzielle Situation zugeschnittene Empfehlung
+
+### 5.2 Kein Finanzinstitut
+[Ihr Unternehmensname] ist **kein** lizenzierter Anlageberater, Börsenmakler, Finanzplaner, Portfoliomanager, Rohstoffhandelsberater oder reguliertes Finanzinstitut in einer Rechtsordnung. Wir verwalten keine Kundengelder. Wir führen keine Trades in Ihrem Namen aus. Wir halten keine Lizenzen einer Finanzaufsichtsbehörde.
+
+### 5.3 Unabhängige professionelle Beratung einholen
+Bevor Sie mit dem Kryptowährungshandel beginnen oder eine Handelsstrategie implementieren, sollten Sie unabhängige Beratung von einem qualifizierten und zugelassenen Finanzberater, Buchhalter oder Rechtsexperten einholen, der mit Ihrer persönlichen finanziellen Situation, Risikobereitschaft, Anlageziele und den geltenden lokalen Gesetzen vertraut ist.
+
+---
+
+## 6. Risikoeignung
+
+### 6.1 Selbsteinschätzung
+Der Handel mit systematischen Strategien ist nicht für jeden geeignet. Sie sollten ehrlich einschätzen, ob Handel für Sie geeignet ist, indem Sie folgendes berücksichtigen:
+
+- **Finanzielle Lage:** Können Sie es sich leisten, das Kapital zu verlieren, mit dem Sie handeln möchten? Handel sollte nur mit echtem Risikokapital betrieben werden.
+- **Erfahrung:** Verfügen Sie über ausreichendes Verständnis von Kryptowährungsmärkten, technischer Analyse, Handelsmechanismen und Risikomanagement?
+- **Risikobereitschaft:** Sind Sie in der Lage, erhebliche Drawdowns — einschließlich längerer Verlustphasen — zu ertragen, ohne emotional gesteuerte Entscheidungen zu treffen?
+- **Zeitaufwand:** Sind Sie in der Lage, Ihr Trading-Setup regelmäßig zu überwachen und auf technische Probleme zu reagieren?
+
+### 6.2 Nicht geeignet für
+Unsere Dienste und die Strategie sind **nicht geeignet** für:
+
+- Personen mit begrenzten finanziellen Mitteln, die sich keinen Kapitalverlust leisten können
+- Personen ohne grundlegendes Verständnis von Handel, Hebel und Risikomanagement
+- Personen, die garantierte Renditen oder Kapitalerhalt anstreben
+- Personen in Rechtsordnungen, in denen Kryptowährungshandel verboten oder eingeschränkt ist
+
+---
+
+## 7. Disclaimer für simulierte und hypothetische Leistung
+
+Alle Leistungsergebnisse, Charts, Metriken oder Statistiken, die im Zusammenhang mit der Strategie präsentiert werden, können **simulierte, rückgetestete oder hypothetische Ergebnisse** darstellen. Der folgende Disclaimer gilt für alle derartigen Ergebnisse:
+
+> **HYPOTHETISCHE LEISTUNGSERGEBNISSE HABEN VIELE INHÄRENTE EINSCHRÄNKUNGEN, VON DENEN EINIGE UNTEN BESCHRIEBEN WERDEN. ES WIRD KEINE ZUSICHERUNG GEMACHT, DASS EIN KONTO GEWINNE ODER VERLUSTE ÄHNLICH DENEN, DIE GEZEIGT WERDEN, ERZIELEN WIRD ODER WAHRSCHEINLICH ERZIELT. TATSÄCHLICH GIBT ES HÄUFIG ERHEBLICHE UNTERSCHIEDE ZWISCHEN HYPOTHETISCHEN LEISTUNGSERGEBNISSEN UND DEN TATSÄCHLICHEN ERGEBNISSEN, DIE ANSCHLIESSEND MIT EINER BESTIMMTEN HANDELSSTRATEGIE ERZIELT WERDEN.**
+>
+> **EINE DER EINSCHRÄNKUNGEN HYPOTHETISCHER LEISTUNGSERGEBNISSE BESTEHT DARIN, DASS SIE IM ALLGEMEINEN MIT DEM VORTEIL DES NACHHINEINWISSENS ERSTELLT WERDEN. DARÜBER HINAUS BEINHALTET HYPOTHETISCHER HANDEL KEIN FINANZIELLES RISIKO, UND KEIN HYPOTHETISCHES HANDELSERGEBNIS KANN DIE AUSWIRKUNGEN DES FINANZIELLEN RISIKOS IM TATSÄCHLICHEN HANDEL VOLLSTÄNDIG BERÜCKSICHTIGEN.**
+
+---
+
+## 8. Zukunftsgerichtete Aussagen
+
+Bestimmte Aussagen oder Prognosen auf unserer Website oder in unseren Materialien können zukunftsgerichtete Aussagen darstellen. Solche Aussagen beinhalten bekannte und unbekannte Risiken, Unsicherheiten und andere Faktoren, die dazu führen können, dass tatsächliche Ergebnisse wesentlich von den geäußerten oder implizierten Ergebnissen abweichen. Alle zukunftsgerichteten Aussagen werden zum Zeitpunkt ihrer Veröffentlichung gemacht, und wir übernehmen keine Verpflichtung, sie zu aktualisieren.
+
+---
+
+## 9. Testimonials und Nutzererfahrungen
+
+Testimonials und Nutzererfahrungen auf unserer Website spiegeln die subjektiven Erfahrungen einzelner Nutzer wider und sind möglicherweise nicht repräsentativ für die typischen Erfahrungen anderer Abonnenten. Individuelle Ergebnisse variieren. Testimonials sind **keine Garantien** für zukünftige Leistung, Einnahmen oder Erfolg. Die von einem einzelnen Abonnenten erzielten Handelsergebnisse hängen von zahlreichen Faktoren ab, darunter Börseneinstellungen, Risikokonfiguration, Kapitalausstattung, Handelsausführung und die während des Abonnementzeitraums herrschenden Marktbedingungen.
+
+---
+
+## 10. Risikoakzeptanz
+
+Durch das Abonnieren und die Nutzung der von [Ihr Unternehmensname] bereitgestellten Strategie bestätigen und stimmen Sie ausdrücklich zu, dass:
+
+1. Sie diese Risikohinweise gelesen und vollständig verstanden haben
+2. Sie alle mit dem Kryptowährungshandel und der Nutzung systematischer Strategien verbundenen Risiken akzeptieren
+3. Sie finanziell und emotional in der Lage sind, Handelsverluste zu tragen
+4. Sie allein für alle Handelsentscheidungen und Ergebnisse in Ihren Konten verantwortlich sind
+5. [Ihr Unternehmensname] keine Verantwortung oder Haftung für Verluste übernimmt, die durch die Nutzung der Strategie oder das Vertrauen auf von uns bereitgestellte Informationen entstehen
+6. Vergangene Leistungsdaten, die von uns präsentiert werden, kein Versprechen, keine Prognose oder Garantie zukünftiger Ergebnisse darstellen
+
+---
+
+## 11. Kontakt
+
+Bei Fragen zu diesen Risikohinweisen kontaktieren Sie uns bitte unter:
+
+**[Ihr Unternehmensname]**
+E-Mail: [legal@yourdomain.com]
+Adresse: [Ihre eingetragene Adresse]
