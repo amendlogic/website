@@ -1,3 +1,11 @@
+---
+title: 'Impressum'
+layout: '~/layouts/MarkdownLayout.astro'
+---
+
+**Zuletzt aktualisiert:** Februar 2026
+
+---
 
 ## Angaben gemäß § 5 TMG (Telemediengesetz)
 
