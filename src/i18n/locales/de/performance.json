@@ -1,86 +1,124 @@
 {
   "hero.tagline": "Performance",
-  "hero.text": "{accent} Under Defined Parameters.",
-  "hero.accent": "Historical Simulation",
-  "hero.subtitle": "The following results reflect rule-based historical backtesting conducted within the TradingView Strategy Tester environment.",
+  "hero.text": "Die Zahlen. {accent}",
+  "hero.accent": "Alle davon.",
+  "hero.subtitle": "Rückgetestete Ergebnisse aus dem TradingView Strategy Tester — einschließlich der Drawdowns, der Flat-Phasen und der Parameter, die zur Erzeugung jeder Zahl auf dieser Seite verwendet wurden.",
+  "hero.btnSecondary": "Alternative Konfigurationen ansehen",
 
-  "overview.title": "Overview",
-  "overview.desc": "The performance data presented below is derived from systematic backtesting using predefined strategy rules. The objective of this section is to illustrate how the strategy would have behaved under historical market conditions, given specific execution and cost assumptions.",
+  "overview.title": "Bevor du diese Zahlen liest:",
+  "overview.desc": "Jede Zahl auf dieser Seite stammt aus historischer Simulation, nicht aus Live-Trading. Backtests haben echte Grenzen — sie bilden Slippage nicht perfekt ab, berücksichtigen nicht Funding Rates unter allen Bedingungen und profitieren vom Rückblick auf eine Weise, die Live-Trading nicht kann. Wir haben realistische Kosteneinnahmen angewendet und über vollständige Marktzyklen getestet, um die Lücke zwischen Simulation und Realität zu verringern. Aber diese Lücke existiert. Lies den Methodik-Abschnitt, bevor du Schlussfolgerungen ziehst.",
 
-  "metrics.tagline": "Key Metrics",
-  "metrics.title": "Key Metrics",
-  "metrics.subtitle": "Key Metrics",
+  "metrics.tagline": "Kennzahlen",
+  "metrics.title": "Vollzyklus-Ergebnisse — [Zeitraum, z.B. Jan 2020 – Dez 2024]",
+  "metrics.subtitle": "Alle Zahlen basieren auf der Standardkonfiguration. Kommission: 0,6% pro Trade. Slippage: 2 Ticks. Startkapital: [X] USDT. Hebel: [X]x.",
   "metrics.items": [
     {
-      "title": "Net Return",
-      "description": "Total percentage return generated during the selected backtest period.",
+      "title": "Netto-Rendite: [X]%",
+      "description": "Gesamte prozentuale Rendite über den vollständigen Backtest-Zeitraum nach Abzug aller Kommissionen und Slippage. Bitcoin Buy-and-Hold über denselben Zeitraum erzielte zum Vergleich ca. [X]%.",
       "icon": "tabler:chart-line"
     },
     {
-      "title": "Max Drawdown",
-      "description": "Largest peak-to-trough equity decline observed during the simulation.",
+      "title": "Maximaler Drawdown: [X]%",
+      "description": "Der größte Peak-to-Trough-Rückgang während der Simulation. Dieser trat während [Zeitraum beschreiben, z.B. der Kapitulationsphase Q3 2022] auf und dauerte ca. [X] Wochen bis zur Erholung.",
       "icon": "tabler:chart-area-line"
     },
     {
-      "title": "Profit Factor",
-      "description": "Gross profit divided by gross loss across all simulated trades.",
+      "title": "Profit Factor: [X.X]",
+      "description": "Bruttogewinn geteilt durch Bruttoverlust über alle Trades. Ein Wert über 1,0 bedeutet, dass die Strategie in Summe mehr gewonnen als verloren hat. Werte über 1,5 gelten allgemein als aussagekräftig.",
       "icon": "tabler:scale"
     },
     {
-      "title": "Win Rate",
-      "description": "Percentage of trades closed in profit.",
+      "title": "Trefferquote: [X]%",
+      "description": "Prozentsatz der geschlossenen Trades, die im Plus endeten. Hinweis: Die Trefferquote allein ist ohne das entsprechende durchschnittliche Gewinn/Verlust-Verhältnis keine nützliche Kennzahl — beides wird im vollständigen Report gezeigt.",
       "icon": "tabler:percentage"
     },
     {
-      "title": "Total Trades",
-      "description": "Number of executed trades within the backtest period.",
+      "title": "Gesamte Trades: [X]",
+      "description": "Anzahl der abgeschlossenen Round-Trip-Trades über den vollständigen Backtest-Zeitraum. Durchschnittlich über [X] Monate entspricht das ca. [X] Trades pro Monat — was den selektiven Ansatz der Strategie widerspiegelt.",
       "icon": "tabler:repeat"
     }
   ],
 
-  "limitations.title": "Limitations of Backtesting",
-  "limitations.desc": "Backtesting is a method of evaluating a strategy using historical data. Simulated results have inherent limitations and do not reflect real-time market conditions, liquidity constraints, order book dynamics, latency, funding rates, psychological decision-making, or structural market changes.",
+  "strategy.tagline": "Konfiguration",
+  "strategy.title": "Was die Einstellungen tatsächlich bewirken",
+  "strategy.subtitle": "Das sind die Parameter, die du im TradingView Strategy-Panel anpassen kannst — und was sich ändert, wenn du sie verstellst.",
+  "strategy.items": [
+    {
+      "title": "Risiko pro Trade (%)",
+      "description": "Definiert den maximalen Prozentsatz des Kontokapitals, der auf einen einzelnen Trade riskiert wird. Eine Senkung reduziert den Drawdown, skaliert aber die Renditen proportional. Die Standardkonfiguration verwendet [X]%.",
+      "icon": "tabler:percentage"
+    },
+    {
+      "title": "Drawdown-Reduktions-Schwelle",
+      "description": "Wenn der kumulative Drawdown diese Schwelle überschreitet, reduziert die Strategie automatisch die Positionsgrößen. Wirkt als Schutzschalter während Verlustphasen ohne manuellen Eingriff.",
+      "icon": "tabler:chart-area-line"
+    },
+    {
+      "title": "Volatilitätssensitivität",
+      "description": "Steuert, wie aggressiv die Strategie die Positionsgröße als Reaktion auf erhöhte Marktvolatilität anpasst. Höhere Sensitivität bedeutet kleinere Positionen bei unsicheren Bedingungen.",
+      "icon": "tabler:activity"
+    },
+    {
+      "title": "Signal-Bestätigungsfenster",
+      "description": "Die Anzahl der Kerzen, die die Strategie auf Signalbestätigung wartet, bevor sie einsteigt. Längere Fenster filtern mehr Rauschen, können aber Einstiege in schnell bewegenden Märkten verzögern.",
+      "icon": "tabler:clock"
+    },
+    {
+      "title": "Regime-Filter-Stärke",
+      "description": "Bestimmt, wie streng die Strategie schlechte Marktbedingungen herausfiltert. Höhere Werte bedeuten weniger Trades, aber ein höherer Anteil dieser Trades findet in strukturell günstigen Umgebungen statt.",
+      "icon": "tabler:filter"
+    }
+  ],
 
-  "methodology.tagline": "Methodology",
-  "methodology.title": "Backtesting Methodology & Execution Assumptions",
-  "methodology.subtitle": "Methodology",
+  "methodology.tagline": "Methodik",
+  "methodology.title": "Wie diese Zahlen entstanden sind",
+  "methodology.subtitle": "Die Annahmen hinter einem Backtest sind genauso wichtig wie die Ergebnisse. Diese sind unsere — klar formuliert, damit du sie selbst bewerten kannst.",
   "methodology.items": [
     {
-      "title": "Platform Environment",
-      "description": "All simulations were conducted using the TradingView Strategy Tester.",
+      "title": "Plattform",
+      "description": "Alle Simulationen wurden innerhalb des TradingView Strategy Testers mit dessen nativer Backtesting-Engine durchgeführt. Ergebnisse sind abhängig vom TradingView-Datenfeed und dem Ausführungssimulationsmodell.",
       "icon": "tabler:device-laptop"
     },
     {
-      "title": "Data Basis",
-      "description": "Historical price data provided by TradingView was used for testing. Data accuracy depends on the data feed available at the time of analysis.",
+      "title": "Daten",
+      "description": "BTCUSDT Perpetual Contract-Daten von Bitget, abgerufen über TradingViews Datenfeed. Das Testfenster umfasst [Startdatum] bis [Enddatum] und erstreckt sich über mindestens einen vollständigen Bull-Bear-Erholungszyklus.",
       "icon": "tabler:database"
     },
     {
-      "title": "Commission Model",
-      "description": "A commission rate of 0.6% per trade was applied, reflecting publicly documented Bitget fee structures at the time of testing.",
+      "title": "Kommission",
+      "description": "0,6% pro Trade in beide Richtungen angewendet — entspricht Bitgets öffentlich dokumentierter Taker-Gebührenstruktur zum Zeitpunkt des Tests. Falls du auf einer anderen Exchange oder in einer anderen Gebührenstufe handelst, weichen deine tatsächlichen Kosten ab.",
       "icon": "tabler:receipt"
     },
     {
-      "title": "Slippage Assumption",
-      "description": "A slippage parameter of 2 was applied within TradingView to simulate execution friction.",
+      "title": "Slippage",
+      "description": "Ein Slippage-Parameter von 2 Ticks wurde innerhalb von TradingView angewendet, um Ausführungsreibung zu simulieren. Tatsächliche Slippage bei hochvolatilen Ereignissen kann diese Annahme überschreiten.",
       "icon": "tabler:arrows-shuffle"
     },
     {
-      "title": "Execution Logic",
-      "description": "Trade entries are executed when strategy conditions are met without bar-close delay. Position closures are confirmed at bar close.",
+      "title": "Einstiegslogik",
+      "description": "Einstiege werden intrabar ausgelöst, wenn Bedingungen erfüllt sind — ohne auf den Kerzenabschluss zu warten. Ausstiege werden beim Kerzenabschluss bestätigt. Dieser Ansatz entspricht dem beabsichtigten Live-Ausführungsverhalten.",
       "icon": "tabler:cpu"
     },
     {
-      "title": "Intrabar Simulation",
-      "description": "Intrabar execution is modeled according to TradingView’s internal engine and does not represent true tick-level market execution.",
+      "title": "Intrabar-Simulation",
+      "description": "TradingViews Engine modelliert die Intrabar-Ausführung auf Basis von OHLC-Daten, nicht Tick-Daten. Das bedeutet, dass Stop-Losses, die mitten in einer Kerze ausgelöst werden, leicht bessere Fills zeigen können als in der Realität — eine bekannte Einschränkung des Plattform-Backtestings.",
       "icon": "tabler:timeline"
     },
     {
-      "title": "Indicator Integrity",
-      "description": "No repainting indicators are used. All signals are generated from non-forward-looking data.",
+      "title": "Kein Repainting",
+      "description": "Die Strategie verwendet ausschließlich bestätigte, abgeschlossene Kerzen-Daten für die Signalgenerierung. Es werden keine Indikatoren verwendet, die bei Neuberechnung repainnten. Signale, die auf historischen Kerzen angezeigt werden, sind die Signale, die in Echtzeit erschienen wären.",
       "icon": "tabler:shield-check"
     }
-  ]
+  ],
 
+  "chart.tagline": "Alternative Konfigurationen",
+  "chart.title": "Wie Ergebnisse über Risikoeinstellungen variieren",
+  "chart.subtitle": "Dieselbe Kern-Strategielogik, angewendet bei verschiedenen Risikokonfigurationen, erzeugt bedeutend unterschiedliche Equity-Kurven. Niedrigere Risikoeinstellungen reduzieren sowohl Drawdown als auch absolute Rendite. Diese Charts zeigen den Trade-off explizit.",
+  "chart.setting1": "Vollständigen Performance-Report ansehen",
 
+  "limitations.title": "Was dieser Backtest dir nicht sagen kann:",
+  "limitations.desc": "Er kann dir nicht sagen, wie die Strategie nächsten Monat, nächstes Jahr oder in einer Marktstruktur ohne historisches Vorbild performen wird. Er kann keine Exchange-spezifischen Ausführungsprobleme, Funding-Rate-Umgebungen die in diesem Datensatz nicht vorkommen, oder deine persönliche Fähigkeit berücksichtigen, das System durch einen anhaltenden Drawdown laufen zu lassen. Historische Simulation ist ein Werkzeug zur Bewertung interner Konsistenz und zum Stress-Testing der Logik — keine Prognose. Handle entsprechend.",
+
+  "cta.title": "Auf einem Live-Chart evaluieren, bevor du dich entscheidest.",
+  "cta.btnText": "7 Tage kostenlos testen"
 }
