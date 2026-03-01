@@ -1,124 +1,124 @@
 {
   "hero.tagline": "Performance",
-  "hero.text": "{accent} Under Defined Parameters.",
-  "hero.accent": "Historical Simulation",
-  "hero.subtitle": "The following results reflect rule-based historical backtesting conducted within the TradingView Strategy Tester environment.",
-  "hero.btnSecondary": "View Additional Backtests",
+  "hero.text": "The Numbers. {accent}",
+  "hero.accent": "All of Them.",
+  "hero.subtitle": "Backtested results from the TradingView Strategy Tester — including the drawdowns, the flat periods, and the parameters used to generate every figure on this page.",
+  "hero.btnSecondary": "View Alternative Configurations",
 
-  "overview.title": "Overview:",
-  "overview.desc": "The performance data presented below is derived from systematic backtesting using predefined strategy rules. The objective of this section is to illustrate how the strategy would have behaved under historical market conditions, given specific execution and cost assumptions.",
+  "overview.title": "Before You Read These Numbers:",
+  "overview.desc": "Every figure on this page is derived from historical simulation, not live trading. Backtests have real limitations — they don't capture slippage perfectly, they don't account for funding rates across all conditions, and they benefit from hindsight in ways live trading cannot. We've applied realistic cost assumptions and tested across full market cycles specifically to reduce the gap between simulation and reality. But that gap exists. Read the methodology section before drawing conclusions.",
 
-  "metrics.tagline": "Performance Data",
-  "metrics.title": "Key Metrics",
-  "metrics.subtitle": "Core statistical indicators derived from historical simulation.",
+  "metrics.tagline": "Key Metrics",
+  "metrics.title": "Full-Cycle Results — [Timeframe, e.g. Jan 2020 – Dec 2024]",
+  "metrics.subtitle": "All figures use the default configuration. Commission: 0.6% per trade. Slippage: 2 ticks. Starting capital: [X] USDT. Leverage: [X]x.",
   "metrics.items": [
     {
-      "title": "Net Return",
-      "description": "Total percentage return generated during the selected backtest period.",
+      "title": "Net Return: [X]%",
+      "description": "Total percentage return across the full backtest period after all commissions and slippage deductions. Buy-and-hold Bitcoin over the same period returned approximately [X]% for comparison.",
       "icon": "tabler:chart-line"
     },
     {
-      "title": "Max Drawdown",
-      "description": "Largest peak-to-trough equity decline observed during the simulation.",
+      "title": "Max Drawdown: [X]%",
+      "description": "The largest peak-to-trough decline observed during the simulation. This occurred during [describe period, e.g. the Q3 2022 capitulation phase] and lasted approximately [X] weeks before recovery.",
       "icon": "tabler:chart-area-line"
     },
     {
-      "title": "Profit Factor",
-      "description": "Gross profit divided by gross loss across all simulated trades.",
+      "title": "Profit Factor: [X.X]",
+      "description": "Gross profit divided by gross loss across all trades. A value above 1.0 means the strategy made more than it lost in aggregate. Values above 1.5 are generally considered meaningful.",
       "icon": "tabler:scale"
     },
     {
-      "title": "Win Rate",
-      "description": "Percentage of trades closed in profit.",
+      "title": "Win Rate: [X]%",
+      "description": "Percentage of closed trades that ended in profit. Note: win rate alone is not a useful metric without the corresponding average win/loss ratio — both are shown in the full report.",
       "icon": "tabler:percentage"
     },
     {
-      "title": "Total Trades",
-      "description": "Number of executed trades within the backtest period.",
+      "title": "Total Trades: [X]",
+      "description": "Number of completed round-trip trades over the full backtest period. Averaged across [X] months, this represents approximately [X] trades per month — reflecting the strategy's selective approach.",
       "icon": "tabler:repeat"
     }
   ],
 
   "strategy.tagline": "Configuration",
-  "strategy.title": "Strategy Settings",
-  "strategy.subtitle": "Adjustable parameters available in the strategy and their effect on trade execution and risk.",
+  "strategy.title": "What the Settings Actually Do",
+  "strategy.subtitle": "These are the parameters you can adjust in the TradingView strategy panel — and what changes when you move them.",
   "strategy.items": [
     {
-      "title": "Net Return",
-      "description": "Total percentage return generated during the selected backtest period.",
-      "icon": "tabler:chart-line"
-    },
-    {
-      "title": "Max Drawdown",
-      "description": "Largest peak-to-trough equity decline observed during the simulation.",
-      "icon": "tabler:chart-area-line"
-    },
-    {
-      "title": "Profit Factor",
-      "description": "Gross profit divided by gross loss across all simulated trades.",
-      "icon": "tabler:scale"
-    },
-    {
-      "title": "Win Rate",
-      "description": "Percentage of trades closed in profit.",
+      "title": "Risk Per Trade (%)",
+      "description": "Defines the maximum percentage of account equity risked on a single trade. Lowering this reduces drawdown but also scales returns proportionally. The default configuration uses [X]%.",
       "icon": "tabler:percentage"
     },
     {
-      "title": "Total Trades",
-      "description": "Number of executed trades within the backtest period.",
-      "icon": "tabler:repeat"
+      "title": "Drawdown Reduction Threshold",
+      "description": "When cumulative drawdown exceeds this threshold, the strategy automatically reduces position sizing. Acts as a circuit breaker during losing streaks without requiring manual intervention.",
+      "icon": "tabler:chart-area-line"
+    },
+    {
+      "title": "Volatility Sensitivity",
+      "description": "Controls how aggressively the strategy adjusts position size in response to elevated market volatility. Higher sensitivity means smaller positions during uncertain conditions.",
+      "icon": "tabler:activity"
+    },
+    {
+      "title": "Signal Confirmation Window",
+      "description": "The number of bars the strategy waits for signal confirmation before entry. Longer windows filter more noise but may delay entries in fast-moving markets.",
+      "icon": "tabler:clock"
+    },
+    {
+      "title": "Regime Filter Strength",
+      "description": "Determines how strictly the strategy filters out low-quality market conditions. Higher values mean fewer trades but a higher proportion of those trades occurring in structurally favorable environments.",
+      "icon": "tabler:filter"
     }
   ],
-  
+
   "methodology.tagline": "Methodology",
-  "methodology.title": "Backtesting Methodology & Execution Assumptions",
-  "methodology.subtitle": "Key assumptions and setup used to simulate historical trades, including data, execution, and cost parameters.",
+  "methodology.title": "How These Numbers Were Generated",
+  "methodology.subtitle": "The assumptions behind a backtest matter as much as the results. These are ours — stated plainly so you can evaluate them yourself.",
   "methodology.items": [
     {
-      "title": "Platform Environment",
-      "description": "All simulations were conducted using the TradingView Strategy Tester.",
+      "title": "Platform",
+      "description": "All simulations were run inside the TradingView Strategy Tester using its native backtesting engine. Results are dependent on TradingView's data feed and execution simulation model.",
       "icon": "tabler:device-laptop"
     },
     {
-      "title": "Data Basis",
-      "description": "Historical price data provided by TradingView was used for testing. Data accuracy depends on the data feed available at the time of analysis.",
+      "title": "Data",
+      "description": "BTCUSDT perpetual contract data from Bitget, accessed via TradingView's data feed. The test window covers [start date] to [end date], spanning at least one full bull-bear-recovery cycle.",
       "icon": "tabler:database"
     },
     {
-      "title": "Commission Model",
-      "description": "A commission rate of 0.6% per trade was applied, reflecting publicly documented Bitget fee structures at the time of testing.",
+      "title": "Commission",
+      "description": "0.6% per trade applied in both directions — matching Bitget's publicly documented taker fee structure at the time of testing. If you trade on a different exchange or tier, your actual costs will differ.",
       "icon": "tabler:receipt"
     },
     {
-      "title": "Slippage Assumption",
-      "description": "A slippage parameter of 2 was applied within TradingView to simulate execution friction.",
+      "title": "Slippage",
+      "description": "A slippage parameter of 2 ticks was applied within TradingView to simulate execution friction. Real slippage during high-volatility events may exceed this assumption.",
       "icon": "tabler:arrows-shuffle"
     },
     {
-      "title": "Execution Logic",
-      "description": "Trade entries are executed when strategy conditions are met without bar-close delay. Position closures are confirmed at bar close.",
+      "title": "Entry Logic",
+      "description": "Entries are triggered intrabar when conditions are met, without waiting for bar close. Exits are confirmed at bar close. This approach matches the intended live execution behavior.",
       "icon": "tabler:cpu"
     },
     {
       "title": "Intrabar Simulation",
-      "description": "Intrabar execution is modeled according to TradingView’s internal engine and does not represent true tick-level market execution.",
+      "description": "TradingView's engine models intrabar execution based on OHLC data, not tick data. This means stop-losses triggered mid-bar may show slightly better fills than real execution — a known limitation of platform backtesting.",
       "icon": "tabler:timeline"
     },
     {
-      "title": "Indicator Integrity",
-      "description": "No repainting indicators are used. All signals are generated from non-forward-looking data.",
+      "title": "No Repainting",
+      "description": "The strategy uses only confirmed, closed-bar data for signal generation. No indicators that repaint on recalculation are used. Signals shown on historical bars are the signals that would have appeared in real time.",
       "icon": "tabler:shield-check"
     }
   ],
 
-  "chart.tagline": "Risk Profiles",
-  "chart.title": "Alternative Backtests",
-  "chart.subtitle": "Performance under different risk settings or alternative configurations.",
-  "chart.setting1": "Review Performance Details",
+  "chart.tagline": "Alternative Configurations",
+  "chart.title": "How Results Change Across Risk Settings",
+  "chart.subtitle": "The same core strategy logic applied at different risk configurations produces meaningfully different equity curves. Lower risk settings reduce both drawdown and absolute return. These charts show the trade-off explicitly.",
+  "chart.setting1": "View Full Performance Report",
 
-  "limitations.title": "Limitations:",
-  "limitations.desc": "Backtesting is a method of evaluating a strategy using historical data. Simulated results have inherent limitations and do not reflect real-time market conditions, liquidity constraints, order book dynamics, latency, funding rates, psychological decision-making, or structural market changes.",
+  "limitations.title": "What This Backtest Cannot Tell You:",
+  "limitations.desc": "It cannot tell you how the strategy will perform next month, next year, or in a market structure that has no historical precedent. It cannot account for exchange-specific execution issues, funding rate environments not present in this data set, or your personal ability to leave the system running through an extended drawdown. Historical simulation is a tool for evaluating internal consistency and stress-testing logic — not a forecast. Trade size accordingly.",
 
-  "cta.title": "Ready to Evaluate the Framework Yourself?",
-  "cta.btnText": "Start 7-Day Trial"
+  "cta.title": "Evaluate It on a Live Chart Before You Commit.",
+  "cta.btnText": "Start 7-Day Free Trial"
 }
