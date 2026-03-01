@@ -1,108 +1,107 @@
 {
-  "hero.text": "{accent} Defined Rules. Disciplined Execution.",
-  "hero.accent": "Systematic Trading.",
-
-  "hero.subtitle": "A structured TradingView strategy developed from years of hands-on crypto market experience. Built to standardize decisions, manage risk, and operate consistently — even in volatile conditions.",
-  "hero.tagline": "Logic-driven automation designed for disciplined traders.",
+  "hero.text": "{accent} No Gut Feelings. No Second-Guessing.",
+  "hero.accent": "Pure Logic.",
+  "hero.subtitle": "A proprietary TradingView strategy built for Bitcoin traders who are tired of losing to their own decisions. Structured entry criteria. Hard-coded risk limits. Consistent execution — regardless of what the market is doing.",
+  "hero.tagline": "Stop trading your emotions. Start trading a system.",
   "hero.btnPrimary": "Activate the Strategy",
-  "hero.btnSecondary": "Explore the Framework",
+  "hero.btnSecondary": "See How It Works",
 
-  "note.title": "Our Approach:",
-  "note.desc": "Markets are volatile. Emotions are unpredictable. Our strategy replaces both with predefined structure, objective rules, and controlled risk management.",
+  "note.title": "Why most traders underperform their own strategy:",
+  "note.desc": "It's rarely the analysis that fails. It's the moment the position goes red and you override the plan. Or the moment a big green candle makes you double your size. The framework exists to take that moment away from you entirely.",
 
-  "features1.tagline": "Benefits",
-  "features1.title": "What You Get",
-  "features1.contentTitle": "Market Structure & Objective Signal Logic",
-  "features1.contentDesc": "Designed to identify meaningful opportunities while filtering out low-quality market noise.",
+  "features1.tagline": "What Changes",
+  "features1.title": "Three Things That Break Most Traders — Solved",
+  "features1.contentTitle": "From Interpretation to Instruction",
+  "features1.contentDesc": "Every decision the strategy makes is traceable back to a predefined rule. There is no gray area, no discretionary override, no 'feel' required.",
   "features1.items": [
     {
-      "title": "Objective Market Analysis",
-      "description": "Evaluates price structure and trend behavior using rule-based logic — removing subjective interpretation.",
+      "title": "No More Chart Paralysis",
+      "description": "The strategy evaluates market structure through a fixed technical framework — the same way, every time. You stop asking 'does this look right?' because the system has already answered that question.",
       "icon": "tabler:device-analytics"
     },
     {
-      "title": "Adaptive Framework",
-      "description": "Adjusts systematically to shifting volatility and structural changes without constant manual intervention.",
+      "title": "Built for Volatile Markets, Not Despite Them",
+      "description": "Bitcoin doesn't trend cleanly. The framework identifies high-probability structural setups and stays flat during low-quality, choppy conditions — preserving capital for the moments that actually count.",
       "icon": "tabler:activity"
     },
     {
-      "title": "Automated Rule Execution",
-      "description": "Predefined criteria are executed instantly and consistently, eliminating hesitation and emotional interference.",
+      "title": "Execution That Doesn't Hesitate",
+      "description": "When the criteria are met, the trade fires. When they aren't, nothing happens. No waiting for confirmation that never comes. No chasing entries because you missed the first signal.",
       "icon": "tabler:settings-automation"
     }
   ],
 
-  "features2.contentTitle": "Risk Management & Capital Protection",
-  "features2.contentDesc": "Structured safeguards designed to protect capital and maintain long-term consistency.",
+  "features2.contentTitle": "Risk Management That Actually Has Teeth",
+  "features2.contentDesc": "Most strategies define entries. Few define exactly how wrong you're allowed to be — and what happens when you get there.",
   "features2.items": [
     {
-      "title": "Controlled Exposure",
-      "description": "Built-in risk parameters limit drawdowns and prevent uncontrolled position sizing.",
+      "title": "Position Size Is Never Negotiable",
+      "description": "Risk per trade is calculated from your configured parameters before the order is placed. The strategy doesn't care how good the setup looks — the exposure stays within bounds.",
       "icon": "tabler:alert-hexagon"
     },
     {
-      "title": "Overtrading Prevention",
-      "description": "Reduces activity during structurally weak or choppy market phases.",
+      "title": "Flat When the Market Is Noise",
+      "description": "Ranging, choppy, or directionless markets are the primary account killers for active traders. The strategy detects these phases and reduces activity automatically — not reactively.",
       "icon": "tabler:waves-electricity"
     },
     {
-      "title": "Configurable Risk Profiles",
-      "description": "Key parameters can be adjusted to align with your personal risk tolerance.",
+      "title": "Risk Profiles You Control",
+      "description": "Conservative, moderate, or aggressive — the core parameters are configurable to match your account size and personal drawdown tolerance, without compromising the underlying logic.",
       "icon": "tabler:adjustments"
     }
   ],
 
-  "steps.tagline": "Execution Process",
-  "steps.title": "Structured by Design",
-  "steps.subtitle": "The strategy operates directly on TradingView. It continuously evaluates market data, validates predefined conditions, and executes trades according to strict parameters.",
+  "steps.tagline": "How It Works",
+  "steps.title": "Three Steps from Signal to Execution",
+  "steps.subtitle": "The entire process runs inside TradingView. No external servers, no black box, no signal subscription required. You see exactly what the strategy sees — and why it acts.",
   "steps.items": [
     {
-      "title": "Signal Generation — Objective Criteria",
-      "description": "The proprietary indicator monitors market structure continuously and generates signals only when predefined conditions align.",
+      "title": "The Indicator Reads the Market",
+      "description": "On every completed bar, the proprietary indicator evaluates price structure against its internal model. A signal only emerges when multiple independent conditions align simultaneously — not on a single trigger.",
       "icon": "tabler:number-1"
     },
     {
-      "title": "Validation — Risk & Direction",
-      "description": "Each signal is automatically validated against risk rules and position sizing parameters.",
+      "title": "The Risk Engine Validates the Signal",
+      "description": "Before anything is placed, the signal is checked against your configured risk parameters: is the market phase appropriate? Is the position size within limits? Is there an existing open position? All conditions must pass.",
       "icon": "tabler:number-2"
     },
     {
-      "title": "Execution — Consistent Placement",
-      "description": "Orders are placed instantly and consistently according to your configured risk framework.",
+      "title": "The Order Is Placed — Exactly As Defined",
+      "description": "Entry, stop-loss, and take-profit levels are placed in a single atomic action. Nothing is left to manual interpretation after the signal fires.",
       "icon": "tabler:number-3"
     }
   ],
 
   "chart.tagline": "Performance Overview",
-  "chart.title": "Built on Structured Testing",
-  "chart.subtitle": "Backtested using realistic assumptions across multiple market cycles. Focused on stability, controlled risk, and sustainable performance rather than aggressive optimization.",
-  "chart.btnText": "Review Performance Details",
+  "chart.title": "Tested Across Bull Markets, Bear Markets, and Everything Between",
+  "chart.subtitle": "The backtest covers multiple full Bitcoin market cycles. The goal was never to find the most impressive number in isolation — it was to find settings that hold up across different volatility regimes without falling apart.",
+  "chart.btnText": "Review the Full Performance Breakdown",
 
-  "testimonials.tagline": "Testimonials",
-  "testimonials.title": "Words from real traders",
-  "testimonials.btnText": "Read Additional Reviews",
+  "testimonials.tagline": "From Subscribers",
+  "testimonials.title": "What Happens After You Stop Trading on Feel",
+  "testimonials.btnText": "Read More Reviews",
   "testimonials.items": [
     {
       "name": "Alex M.",
       "job": "Part-time Trader",
-      "testimonial": "Finally, I can trade without staring at charts all day. The discipline this system enforces has completely stopped my revenge trading.",
+      "testimonial": "I've tried three other strategies before this. The difference is I actually follow this one. When it's a rule, I don't argue with it. My revenge trading is gone — not because I got more disciplined, but because the system removed the decision.",
       "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
     },
     {
       "name": "David K.",
       "job": "Software Engineer",
-      "testimonial": "I appreciate the logic behind the entries. It doesn't trade just for the sake of it. The overtrading protection saved me during the last chop.",
+      "testimonial": "What I respect most is what it doesn't do. It doesn't trade during the chop phases that wiped me out in 2023. I missed some moves sitting in cash, but I also missed the three 8% drawdowns in between. That trade-off is worth it.",
       "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80"
     },
     {
       "name": "Sophie L.",
       "job": "Crypto Investor",
-      "testimonial": "Trustworthy and consistent. Unlike other bots, this one prioritizes risk management over unrealistic gains. Highly recommended.",
+      "testimonial": "I was skeptical of anything with 'automated' in the description. But the transparency here is different — I can see the logic, I can see the trades, I understand why each position was taken. It feels like a methodology, not a mystery.",
       "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80"
     }
   ],
 
-  "cta.title": "Structure Your Trading, Eliminate Emotion.",
-  "cta.subtitle": "Implement a rule-based framework designed to operate consistently in volatile markets.",
-  "cta.btnText": "Activate the System"
+  "cta.title": "Your Next Trade Doesn't Have to Be a Guess.",
+  "cta.subtitle": "The framework is ready to deploy on your TradingView chart today. Seven days free. Cancel anytime. No ambiguity.",
+  "cta.btnText": "Start Your Free Trial"
 }
