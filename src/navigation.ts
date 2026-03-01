@@ -4,7 +4,7 @@ import { getPermalink, getBlogPermalink, getAsset, getHomePermalink } from './ut
 import { useTranslations } from '~/i18n/utils';
 
 export const FOOTNOTE_ORDER = ['education', 'risk', 'backtest', 'testimonials', 'payments', 'third-party', 'regulatory'];
-export const DEFAULT_FOOTNOTES = ['education', 'risk', 'backtest', 'third-party', 'regulatory'];
+export const DEFAULT_FOOTNOTES = ['risk', 'backtest', 'advice', 'third-party'];
 // -----------------------------
 // Header
 // -----------------------------
