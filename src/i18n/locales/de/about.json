@@ -1,117 +1,117 @@
 {
-  "hero.tagline": "Märkte schwanken. Struktur hat Bestand.",
-  "hero.text": "Disziplin wird {accent} — nicht vorausgesetzt.",
-  "hero.accent": "konstruiert",
-  "hero.subtitle": "Systematische Regeln. Validierte Bedingungen. Kontrolliertes Risiko. Ein Bitcoin-Trading-Framework, entwickelt für Konstanz über alle Marktzyklen hinweg.",
-  "hero.ctaPrimary": "Framework erkunden",
-  "hero.ctaSecondary": "Performance-Logik prüfen",
+  "hero.tagline": "Der Ursprung des Frameworks",
+  "hero.text": "Aus Verlusten gebaut, {accent}",
+  "hero.accent": "nicht aus Theorie.",
+  "hero.subtitle": "Diese Strategie begann nicht mit einem Backtesting-Engine. Sie begann mit einem Trading-Tagebuch voller derselben Fehler — wiederholt über drei Jahre und mehrere Marktzyklen.",
+  "hero.ctaPrimary": "Das Framework ansehen",
+  "hero.ctaSecondary": "Performance-Daten prüfen",
 
   "story.tagline": "Ursprung",
-  "story.title": "Warum Struktur nicht verhandelbar wurde",
-  "story.subtitle": "Jahre extremer Bitcoin-Volatilität — von rasanten Expansionsphasen bis hin zu langanhaltenden Drawdowns — legten immer wieder die Grenzen diskretionärer Entscheidungen offen. Flexibilität ohne feste Grenzen führt zu Inkonsequenz. Marktrauschen verzerrt die Wahrnehmung. Emotionen beeinflussen das Timing. Hindsight Bias verfälscht das Urteilsvermögen. Die Schlussfolgerung war eindeutig: Nachhaltige Performance entsteht nicht durch bessere Vorhersagen. Sie entsteht durch einen mechanischen Prozess. Das Framework wurde konstruiert, um die Ausführung zu standardisieren, subjektive Eingriffe zu eliminieren und völlig unabhängig von emotionalen Störfaktoren zu agieren.",
+  "story.title": "Das Problem war nicht der Markt",
+  "story.subtitle": "Die Verlust-Trades waren selten das Ergebnis schlechter Analyse. Die Struktur war oft korrekt. Das Timing war oft vernünftig. Das Problem war die Ausführung — genauer gesagt, was zwischen Signal und Aktion passierte. Ein Zögern beim Einstieg. Ein frühzeitiger Ausstieg, weil die Position sich unwohl anfühlte. Eine verdoppelte Größe, weil der letzte Trade ein Gewinner war. Jede dieser Entscheidungen fühlte sich im Moment rational an. Zusammengenommen waren sie der Unterschied zwischen einer Strategie, die auf dem Papier funktionierte, und einem Konto, das langsam leckte. Die Schlussfolgerung nach Jahren, in denen dieses Muster sich wiederholte: Das Problem war die Anwesenheit eines Entscheidungsträgers. Die Lösung war, einen zu entfernen.",
+
   "story.items": [
     {
-      "title": "Emotion",
-      "description": "Ersetzt durch absolute Entscheidungslogik.",
+      "title": "Zögern",
+      "description": "Eliminiert. Einstiegsbedingungen sind binär — entweder sie sind erfüllt oder nicht. Es gibt kein 'fast erfüllt', das eine Abwägung erfordert.",
       "icon": "tabler:mood-empty"
     },
     {
-      "title": "Impuls",
-      "description": "Ersetzt durch strukturierte Validierungskriterien.",
+      "title": "Den Plan überschreiben",
+      "description": "Strukturell unmöglich. Das Framework führt aus, was die Regeln definieren — nicht was sich richtig anfühlt in dem Moment, in dem die Position offen ist und gegen dich läuft.",
       "icon": "tabler:player-pause"
     },
     {
-      "title": "Hindsight Bias",
-      "description": "Ersetzt durch vorwärtsgetestete Regelausführung.",
+      "title": "Die Geschichte umschreiben",
+      "description": "Irrelevant. Das System erinnert sich nicht an den letzten Trade. Es wendet dieselben Kriterien auf die nächste Kerze an wie auf jede Kerze davor.",
       "icon": "tabler:history-toggle"
     }
   ],
 
-  "context.tagline": "Marktrealität",
-  "context.title": "Die meisten Systeme sind darauf ausgelegt zu beeindrucken.",
-  "context.subtitle": "Der Krypto-Trading-Space ist übersättigt mit aggressiver Optimierung, kurzfristigen Performance-Snapshots und undurchsichtigen Signal-Diensten. Viele Systeme werden so konstruiert, dass sie in isolierten Zeiträumen außergewöhnlich gut aussehen, es mangelt ihnen jedoch an Resilienz über wechselnde Volatilitätsregime hinweg. Dieses Framework wurde nicht entwickelt, um die Trading-Frequenz zu maximieren oder unrealistische kurzfristige Spitzen zu erzeugen. Es wurde für strukturelle Robustheit in unterschiedlichsten Marktumfeldern konzipiert.",
+  "context.tagline": "Die Landschaft",
+  "context.title": "Was das hier nicht ist.",
+  "context.subtitle": "Der Krypto-Strategie-Markt basiert fast ausschließlich auf zwei Dingen: selektiv gewählten Performance-Fenstern und undurchsichtiger Signallogik. Eine Strategie, die den Bullenmarkt 2020–2021 mitgenommen hat, sieht im Isolation betrachtet außergewöhnlich aus. Dieselbe Strategie angewendet durch 2022 erzählt oft eine vollständig andere Geschichte. Dieses Framework wurde durch Drawdown-Phasen, Seitwärtsmärkte und Volatilitätsspitzen gestresst — nicht optimiert, um in der einen Periode gut auszusehen, in der alles funktioniert hat. Das Ziel war ein System, das überlebt, nicht eines, das beeindruckt.",
 
-  "framework.tagline": "Framework",
-  "framework.title": "Ein mechanisches Regelsystem — keine Blackbox",
-  "framework.subtitle": "Das Framework operiert direkt in TradingView unter einem transparenten Protokoll. Es bewertet Price Action, validiert definierte Bedingungen und führt Trades strikt nach geregelten Risikoparametern aus. Keine ausgelagerte Signal-Logik. Keine KI-Mystifizierung. Keine diskretionären Eingriffe.",
+  "framework.tagline": "Das Framework",
+  "framework.title": "Transparente Logik. Keine Black Box.",
+  "framework.subtitle": "Jede Komponente des Frameworks ist innerhalb von TradingView sichtbar. Keine ausgelagerten Signale, keine proprietären KI-Ansprüche, keine Indikatoren, die 'einfach funktionieren' ohne Erklärung. Die Einstiegslogik wird aus der Preisstruktur abgeleitet. Die Risikoregeln sind explizit. Die Ausführung ist deterministisch. Wenn du verstehen möchtest, warum ein Trade eingegangen wurde, kannst du ihn Schritt für Schritt nachvollziehen.",
   "framework.items": [
     {
-      "title": "Signal-Logik",
-      "description": "Explizite Einstiegs- und Ausstiegskriterien, abgeleitet aus empirischem Marktverhalten.",
+      "title": "Signallogik",
+      "description": "Einstiegs- und Ausstiegsbedingungen, abgeleitet aus objektiver Analyse der Marktstruktur — Expansion, Kontraktion und Übergangsphasen werden jeweils unterschiedlich behandelt.",
       "icon": "tabler:logic-and"
     },
     {
       "title": "Risikoprotokoll",
-      "description": "Vordefinierte Exposure-Limits und Regeln zur Kapitalallokation, angewendet vor der Ausführung.",
+      "description": "Maximale Exposure, Positionsgröße und Drawdown-Schwellen werden definiert bevor der Markt öffnet — nicht angepasst mitten im Trade, je nachdem wie es sich anfühlt.",
       "icon": "tabler:shield-check"
     },
     {
       "title": "Ausführungsdisziplin",
-      "description": "Automatisierte Orderplatzierung, exakt auf die validierten Bedingungen abgestimmt.",
+      "description": "Orders werden in dem Moment gesetzt, in dem Bedingungen bestätigt sind. Kein Warten auf einen 'besseren Einstieg'. Kein Halten über den definierten Ausstieg hinaus, weil es sich vielleicht noch dreht.",
       "icon": "tabler:settings-automation"
     },
     {
-      "title": "Regime-Monitoring",
-      "description": "Kontinuierliche Auswertung der Marktphasen, um die kontextuelle Ausrichtung beizubehalten.",
+      "title": "Regime-Bewusstsein",
+      "description": "Das Framework bewertet kontinuierlich, ob aktuelle Marktbedingungen für eine aktive Positionierung geeignet sind. Wenn nicht, wartet es — auch wenn das Warten sich unangenehm anfühlt.",
       "icon": "tabler:chart-radar"
     }
   ],
 
   "methodology.tagline": "Methodik",
-  "methodology.title": "Empirische Marktanalyse & Trendvalidierung",
-  "methodology.subtitle": "Das System bewertet das Preisverhalten — nicht das Narrativ. Es identifiziert distinkte Marktregime, qualifiziert den direktionalen Bias durch objektive Kriterien und passt die Exposure an die vorherrschende Volatilität an. Das Ziel ist keine konstante Aktivität, sondern konditionales Engagement, wenn Logik und Wahrscheinlichkeit übereinstimmen.",
+  "methodology.title": "Was das System wirklich misst",
+  "methodology.subtitle": "Die Strategie sagt keine Preise voraus. Sie identifiziert strukturelle Bedingungen, unter denen historisch die Wahrscheinlichkeit einer direktionalen Bewegung erhöht war — und dimensioniert die Exposure entsprechend. Wenn diese Bedingungen fehlen, fällt die Exposure auf null. Die Handelsfrequenz ist eine Konsequenz der Marktbedingungen, kein Selbstzweck.",
   "methodology.items": [
     {
-      "title": "Identifikation der Marktphasen",
-      "description": "Unterscheidet zwischen Expansions-, Konsolidierungs- und Transitionsumfeldern.",
+      "title": "Marktphasen-Klassifikation",
+      "description": "Jeder Marktzustand — trendend, seitwärts oder in Transition — erfordert eine andere Reaktion. Das System erkennt die aktuelle Phase und passt sein Verhalten automatisch an, anstatt dieselben Regeln kontextunabhängig anzuwenden.",
       "icon": "tabler:chart-candle"
     },
     {
-      "title": "Trendqualifikation",
-      "description": "Setzt Kapital nur dann ein, wenn technische Bedingungen den direktionalen Bias bestätigen.",
+      "title": "Bestätigung der Richtungsverzerrung",
+      "description": "Ein Signal im falschen strukturellen Kontext ist Rauschen. Das Framework setzt Kapital nur ein, wenn Signal und übergeordnete Marktstruktur übereinstimmen.",
       "icon": "tabler:list-check"
     },
     {
-      "title": "Volatilitätskalibrierte Exposure",
-      "description": "Passt die Risikoallokation systematisch basierend auf der vorherrschenden Marktstabilität an.",
+      "title": "Volatilitätsangepasste Exposure",
+      "description": "Höhere Volatilität bedeutet breitere Stops und mehr Unsicherheit. Das Framework berücksichtigt dies, indem es die Positionsgröße bei erhöhter Volatilität reduziert — das Risiko pro Trade bleibt konsistent, auch wenn die Kursbewegungen zunehmen.",
       "icon": "tabler:adjustments-horizontal"
     }
   ],
 
-  "risk.tagline": "Risk First",
-  "risk.title": "Konstruiert, um Volatilität zu überstehen.",
-  "risk.subtitle": "Rendite ist das Ergebnis. Risikokontrolle ist das Fundament. Das Framework priorisiert den Kapitalerhalt vor aggressiven Wachstumszielen. Schutzmechanismen begrenzen Drawdowns, reduzieren die Exposure in instabilen Phasen und verhindern unkontrolliertes Position Sizing. Langfristige Konstanz erfordert strukturelle Verteidigung vor der offensiven Positionierung.",
+  "risk.tagline": "Risiko zuerst",
+  "risk.title": "Überleben ist die Strategie.",
+  "risk.subtitle": "Jede Verlustserie endet irgendwann. Die Frage ist, ob dein Konto lang genug überlebt, um am Folgenden teilzuhaben. Aggressive Drawdowns kosten nicht nur Geld — sie kosten den Zinseszins, der danach kommt. Das Framework behandelt Kapitalerhalt nicht als sekundäre Überlegung, sondern als primäre Designbedingung. Wachstum ist das, was passiert, wenn du nicht alles verlierst.",
   "risk.items": [
     {
-      "title": "Kontrolliertes Position Sizing",
-      "description": "Die Exposure wird durch vordefinierte Risikoparameter bestimmt.",
+      "title": "Festes Risiko pro Trade",
+      "description": "Die Exposure pro Trade wird als fixer Prozentsatz des Kontokapitals berechnet. Ein gut aussehendes Setup bekommt keine größere Position — die Regel biegt sich nicht.",
       "icon": "tabler:chart-pie"
     },
     {
-      "title": "Drawdown-Minimierung",
-      "description": "Systematische Reduktion der Aktivität während instabiler Marktbedingungen.",
+      "title": "Automatische Drawdown-Reaktion",
+      "description": "Während anhaltender Verlustphasen reduziert das Framework die Aktivität, anstatt sie zu erhöhen. Der Instinkt, 'es wieder reinzuholen', ist einer der zuverlässigsten Wege, eine Verlustserie zu verlängern — diese Option wird strukturell entfernt.",
       "icon": "tabler:shield-lock"
     },
     {
-      "title": "Volatilitätsbasierte Risikoskalierung",
-      "description": "Dynamische Anpassung der Exposure, abgestimmt auf die Marktstabilität.",
+      "title": "Volatilitätsskalierte Positionierung",
+      "description": "Wenn der Markt unbeständig wird, schrumpfen die Positionsgrößen. Dies hält das Dollar-Risiko pro Trade konsistent, auch wenn die Kursschwankungen zunehmen.",
       "icon": "tabler:activity"
     },
     {
-      "title": "Konfigurierbare Risikoprofile",
-      "description": "Parameter passen sich der individuellen Toleranz an, während die Systemintegrität erhalten bleibt.",
+      "title": "Konfigurierbare Grenzen",
+      "description": "Die Kern-Risikoparameter — maximale Drawdown-Schwelle, Risiko-Prozentsatz pro Trade, Exposure-Limits — sind anpassbar für deine Kontogröße und persönliche Toleranz, ohne die zugrundeliegende Systemlogik zu beeinträchtigen.",
       "icon": "tabler:settings"
     }
   ],
 
-  "transparency.tagline": "Verbindlichkeit",
-  "transparency.title": "Gründergeführt. Direkt verantwortlich.",
-  "transparency.description1": "wird unter direkter Aufsicht des Gründers entwickelt und gepflegt. Keine anonymen Entwicklerteams. Keine ausgelagerten Signal-Anbieter. Keine auf Affiliates ausgerichteten Marketing-Narrative.",
-  "transparency.description2": "Das Framework wird kontinuierlich über alle Marktbedingungen hinweg evaluiert – mit Fokus auf struktureller Integrität statt auf werbewirksamen Performance-Metriken.",
-  "transparency.description3": "Ein regelbasiertes System anzubieten bedeutet, voll und ganz hinter der eigenen Methodik zu stehen — transparent und verantwortungsvoll.",
+  "transparency.tagline": "Verantwortlichkeit",
+  "transparency.title": "Eine Person. Volle Verantwortung.",
+  "transparency.description1": "wird vom Gründer entwickelt, gepflegt und selbst gehandelt. Kein Entwicklungsteam, auf das man verweisen könnte, kein anonymer Signal-Anbieter hinter der Logik, kein Affiliate-Netzwerk mit Anreiz, Ergebnisse zu überverkaufen.",
+  "transparency.description2": "Die Strategie läuft auf demselben Framework, das verkauft wird. Die Performance wird kontinuierlich unter Live- und simulierten Bedingungen ausgewertet — nicht nur in den Perioden, die auf einem Marketing-Screenshot gut aussehen.",
+  "transparency.description3": "Ein regelbasiertes System zu verkaufen bedeutet, öffentlich und explizit hinter seinen Regeln zu stehen. Diese Rechenschaftspflicht ist kein Zufall — sie ist der Kern des Angebots.",
 
-
-  "cta.title": "Märkte werden immer schwanken. Disziplin sollte es nicht.",
-  "cta.subtitle": "Entwickelt für Trader, die Prozess über Vorhersage stellen. Systematisiere deine Ausführung. Eliminiere diskretionäre Eingriffe. Agiere mit objektiver Logik.",
-  "cta.btnText": "Zugang zum Framework"
+  "cta.title": "Versteh das System, bevor du kaufst.",
+  "cta.subtitle": "Die Performance-Daten, Methodik und Konfigurationsdetails sind verfügbar, bevor du dich zu irgendetwas verpflichtest. Fang mit den Zahlen an — dann entscheide.",
+  "cta.btnText": "Performance-Daten ansehen"
 }
