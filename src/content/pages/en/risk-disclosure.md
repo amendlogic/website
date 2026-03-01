@@ -195,8 +195,6 @@ By subscribing to and using the Strategy provided by [Your Company Name], you ex
 
 If you have questions about this Risk Disclosure, please contact us at:
 
-**[Your Company Name]**
+**Amendlogic**
 Email: [legal@yourdomain.com]
 Address: [Your registered address]
-
----
