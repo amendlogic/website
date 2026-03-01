@@ -1,0 +1,203 @@
+# Risk Disclosure / Risikohinweise
+
+---
+
+# ENGLISH VERSION
+
+**Last Updated:** February 2026
+
+---
+
+## IMPORTANT NOTICE
+
+**Please read this Risk Disclosure Statement carefully before using any service, tool, strategy, or content provided by [Your Company Name]. This document outlines significant risks associated with trading and the use of automated or systematic trading strategies. By accessing or using our Services, you confirm that you have read, understood, and accepted all risks described herein.**
+
+**Trading involves a substantial risk of loss. You should only trade with capital you can afford to lose entirely.**
+
+---
+
+## 1. General Trading Risk
+
+### 1.1 Substantial Risk of Loss
+Trading in cryptocurrencies, derivatives, contracts for difference (CFDs), futures, and other leveraged financial instruments involves a **high degree of risk** and is not suitable for all individuals. There is a real possibility that you may lose **all or substantially all of the capital** you allocate to trading activities. You should never trade with money that you cannot afford to lose.
+
+### 1.2 Volatility
+Cryptocurrency markets are subject to extreme price volatility. Price movements can be rapid, dramatic, and unpredictable, and may occur at any time of day or night, including during periods of low liquidity. Even a well-structured, rule-based strategy cannot eliminate the fundamental risks associated with trading in highly volatile markets.
+
+### 1.3 Leverage and Margin
+If you choose to trade using leverage or margin — whether through our Strategy or independently — your potential losses are amplified. Leveraged trading can result in losses that exceed your initial deposit. You are solely responsible for understanding and managing the leverage settings on any exchange or platform you use.
+
+### 1.4 Liquidity Risk
+Cryptocurrency markets may experience periods of extreme illiquidity, particularly during sharp market movements or adverse macroeconomic events. During such periods, orders may not be executed at expected prices, or may not be executed at all. Slippage, partial fills, and failed executions are inherent risks of trading.
+
+### 1.5 Market Manipulation
+Cryptocurrency markets remain largely unregulated in many jurisdictions and are susceptible to manipulative practices including wash trading, spoofing, and coordinated price movements by large market participants. Such manipulation can adversely affect strategy performance and is beyond our control.
+
+---
+
+## 2. Strategy-Specific Risk
+
+### 2.1 No Guarantee of Performance
+The trading strategy provided by [Your Company Name] is a systematic, rule-based tool designed to standardize trade execution. It does **not** guarantee profits, positive returns, or any specific financial outcome. Past performance — whether live, simulated, or backtested — does not guarantee, predict, or imply future results.
+
+### 2.2 Backtested Results Are Not Actual Trading Results
+Performance data presented on our website, including charts, metrics, and statistics, is derived from **historical backtesting** conducted within the TradingView Strategy Tester environment. Backtested results:
+
+- Are calculated using historical price data that was known at the time of simulation
+- Do not account for real-time market dynamics, including order book depth, true liquidity, or actual fill rates
+- Do not reflect the psychological challenges of live trading (fear, greed, hesitation)
+- Are subject to survivorship bias, data mining bias, and optimization bias unless explicitly stated otherwise
+- May differ materially from results achieved in live trading environments
+
+**The gap between simulated backtested performance and actual live trading performance can be significant and cannot be reliably predicted.**
+
+### 2.3 Over-Optimization Risk
+Any systematic trading strategy carries the risk of being over-fitted or over-optimized to historical data. A strategy that produces strong results in backtesting may fail to replicate those results in live trading due to differences in market microstructure, regime changes, or structural shifts in the market not captured in historical data.
+
+### 2.4 Changing Market Conditions
+Financial markets are dynamic. Market regimes change over time — from trending to ranging, from low to high volatility, and from correlated to uncorrelated behavior. A strategy that performs well in one market environment may underperform or generate losses in another. The Strategy is designed to adapt systematically to some degree of regime variation, but cannot guarantee resilience under all possible future conditions.
+
+### 2.5 Drawdowns
+All trading strategies experience drawdown periods — extended intervals during which the equity curve declines from a recent peak. Drawdowns may be substantial, prolonged, and psychologically difficult to endure. You must be prepared to sustain drawdown periods without abandoning the strategy prematurely or making emotionally driven overrides.
+
+### 2.6 Signal Latency and Execution Delays
+Signals generated by the Strategy operate within the TradingView platform. Actual execution on a connected exchange depends on platform response times, internet connectivity, exchange API responsiveness, and other technical variables. Execution delays can result in materially different fill prices than those reflected in backtests.
+
+### 2.7 TradingView Platform Dependency
+The Strategy is entirely dependent on the TradingView platform for signal generation and (optionally) automated execution. TradingView outages, maintenance windows, plan limitations, or changes to TradingView's terms of service may interrupt or prevent strategy operation. [Your Company Name] is not responsible for any interruptions caused by TradingView.
+
+---
+
+## 3. Automated Trading Risk
+
+### 3.1 Automation Does Not Eliminate Risk
+Connecting the Strategy to an exchange via webhooks enables automated order execution. Automation removes the need for manual intervention but does **not** eliminate or reduce the underlying financial risk of the trades themselves. Automated systems can and do generate losses.
+
+### 3.2 Technical Failures
+Automated trading systems are susceptible to technical failures including, but not limited to:
+
+- Internet connectivity interruptions
+- TradingView webhook failures or delays
+- Exchange API downtime or rate-limiting
+- Server-side errors on your exchange or VPS
+- Misconfigurations in webhook settings or alert parameters
+
+Any of these failures could result in missed entries, missed exits, duplicate orders, or unintended open positions. You are solely responsible for monitoring your automated setup and maintaining appropriate technical infrastructure.
+
+### 3.3 Runaway or Unintended Orders
+In rare circumstances, technical errors, misconfigured parameters, or unexpected market events can cause automated systems to generate unintended orders. You are responsible for monitoring your exchange account regularly to identify and correct any such situations promptly. [Your Company Name] accepts no liability for losses resulting from technical failures of the automation layer.
+
+### 3.4 Continuous Monitoring Recommended
+Even when using an automated strategy, you are strongly encouraged to monitor your positions, account balance, and system status regularly. Full automation does not absolve you of responsibility for the trading activity occurring in your accounts.
+
+---
+
+## 4. Cryptocurrency-Specific Risk
+
+### 4.1 Regulatory Uncertainty
+The regulatory environment for cryptocurrencies is evolving rapidly and varies significantly across jurisdictions. Regulatory changes — including outright bans, trading restrictions, exchange licensing requirements, or tax treatment modifications — can adversely affect cryptocurrency prices and your ability to trade.
+
+### 4.2 Exchange Risk
+Trading on cryptocurrency exchanges involves additional counterparty risk. Exchanges may:
+
+- Halt trading unexpectedly
+- Experience security breaches or hacks
+- Become insolvent or exit the market
+- Freeze withdrawals or restrict account access
+- Change their fee structures, API terms, or leverage rules without adequate notice
+
+[Your Company Name] is not responsible for losses caused by exchange-related failures, restrictions, or incidents. You are responsible for selecting and evaluating your exchange of choice.
+
+### 4.3 Custody Risk
+When trading on centralized exchanges, your cryptocurrency assets are held in custody by that exchange. You do not hold private keys to these assets. Exchange insolvency, fraud, or security failures can result in the partial or total loss of custodied assets.
+
+### 4.4 Technology Risk
+Blockchain networks, smart contracts, and cryptocurrency infrastructure are subject to technical risks including protocol bugs, network congestion, hard forks, and consensus failures. These risks are outside the control of [Your Company Name] and can adversely impact market conditions and trading outcomes.
+
+### 4.5 Funding Rates and Perpetual Contracts
+If trading perpetual futures contracts, be aware that funding rates can be a significant ongoing cost that negatively affects profitability over time. Funding rates are dynamic, can change rapidly during volatile market conditions, and are not consistently reflected in backtested performance.
+
+---
+
+## 5. No Investment Advice
+
+### 5.1 Informational and Educational Purpose Only
+All content, tools, scripts, documentation, and communications provided by [Your Company Name] are intended strictly for **informational and educational purposes only**. Nothing we provide constitutes, and should not be interpreted as:
+
+- Personalized investment advice
+- A solicitation to buy, sell, or hold any financial instrument
+- A guarantee of any trading outcome
+- A recommendation tailored to your personal financial situation
+
+### 5.2 Not a Financial Institution
+[Your Company Name] is **not** a licensed investment advisor, broker-dealer, financial planner, portfolio manager, commodity trading advisor, or regulated financial institution in any jurisdiction. We do not manage client funds. We do not execute trades on your behalf. We do not hold any licenses from any financial regulatory authority.
+
+### 5.3 Seek Independent Professional Advice
+Before engaging in cryptocurrency trading or implementing any trading strategy, you should seek independent advice from a qualified and licensed financial advisor, accountant, or legal professional who is familiar with your personal financial circumstances, risk tolerance, investment goals, and applicable local laws.
+
+---
+
+## 6. Risk Suitability
+
+### 6.1 Self-Assessment
+Trading using systematic strategies is not suitable for everyone. You should honestly assess whether trading is appropriate for you by considering the following:
+
+- **Financial position:** Can you afford to lose the capital you intend to trade? Trading should only be conducted with genuinely risk capital.
+- **Experience:** Do you have sufficient understanding of cryptocurrency markets, technical analysis, trading mechanics, and risk management?
+- **Risk tolerance:** Are you able to withstand significant drawdowns — including extended losing streaks — without making emotionally driven decisions?
+- **Time commitment:** Are you able to monitor your trading setup regularly and respond to technical issues?
+
+### 6.2 Not Suitable For
+Our Services and the Strategy are **not appropriate** for:
+
+- Individuals with limited financial resources who cannot afford any capital loss
+- Individuals without a basic understanding of how trading, leverage, and risk management work
+- Individuals seeking guaranteed returns or capital preservation
+- Individuals in jurisdictions where cryptocurrency trading is prohibited or restricted
+
+---
+
+## 7. Simulation and Hypothetical Performance Disclaimer
+
+Any performance results, charts, metrics, or statistics presented in connection with the Strategy may represent **simulated, backtested, or hypothetical results**. The following disclaimer applies to all such results:
+
+> **HYPOTHETICAL PERFORMANCE RESULTS HAVE MANY INHERENT LIMITATIONS, SOME OF WHICH ARE DESCRIBED BELOW. NO REPRESENTATION IS BEING MADE THAT ANY ACCOUNT WILL OR IS LIKELY TO ACHIEVE PROFITS OR LOSSES SIMILAR TO THOSE SHOWN. IN FACT, THERE ARE FREQUENTLY SHARP DIFFERENCES BETWEEN HYPOTHETICAL PERFORMANCE RESULTS AND THE ACTUAL RESULTS SUBSEQUENTLY ACHIEVED BY ANY PARTICULAR TRADING STRATEGY.**
+>
+> **ONE OF THE LIMITATIONS OF HYPOTHETICAL PERFORMANCE RESULTS IS THAT THEY ARE GENERALLY PREPARED WITH THE BENEFIT OF HINDSIGHT. IN ADDITION, HYPOTHETICAL TRADING DOES NOT INVOLVE FINANCIAL RISK, AND NO HYPOTHETICAL TRADING RECORD CAN COMPLETELY ACCOUNT FOR THE IMPACT OF FINANCIAL RISK IN ACTUAL TRADING. FOR EXAMPLE, THE ABILITY TO WITHSTAND LOSSES OR ADHERE TO A PARTICULAR TRADING STRATEGY IN SPITE OF TRADING LOSSES ARE MATERIAL POINTS WHICH CAN ALSO ADVERSELY AFFECT ACTUAL TRADING RESULTS. THERE ARE NUMEROUS OTHER FACTORS RELATED TO THE MARKETS IN GENERAL OR TO THE IMPLEMENTATION OF ANY SPECIFIC TRADING STRATEGY WHICH CANNOT BE FULLY ACCOUNTED FOR IN THE PREPARATION OF HYPOTHETICAL PERFORMANCE RESULTS AND ALL OF WHICH CAN ADVERSELY AFFECT ACTUAL TRADING RESULTS.**
+
+---
+
+## 8. Forward-Looking Statements
+
+Certain statements or projections on our website or in our materials may constitute forward-looking statements. Such statements involve known and unknown risks, uncertainties, and other factors that may cause actual results to differ materially from those expressed or implied. All forward-looking statements are made as of the date they are published and we assume no obligation to update them.
+
+---
+
+## 9. Testimonials and User Experiences
+
+Testimonials and user experiences presented on our website reflect the subjective experiences of individual users and may not be representative of the typical experience of other subscribers. Individual results vary. Testimonials are **not guarantees** of future performance, earnings, or success. The trading results experienced by any individual subscriber depend on numerous factors including their exchange settings, risk configuration, capital size, trade execution, and prevailing market conditions during their subscription period.
+
+---
+
+## 10. Acceptance of Risk
+
+By subscribing to and using the Strategy provided by [Your Company Name], you expressly acknowledge and agree that:
+
+1. You have read and fully understand this Risk Disclosure Statement
+2. You accept all risks associated with cryptocurrency trading and systematic strategy use
+3. You are financially and emotionally capable of sustaining trading losses
+4. You are solely responsible for all trading decisions and outcomes in your accounts
+5. [Your Company Name] bears no responsibility or liability for any losses incurred through use of the Strategy or reliance on any information we provide
+6. Past performance data presented by us does not constitute a promise, projection, or guarantee of future results
+
+---
+
+## 11. Contact
+
+If you have questions about this Risk Disclosure, please contact us at:
+
+**[Your Company Name]**
+Email: [legal@yourdomain.com]
+Address: [Your registered address]
+
+---
