@@ -1,108 +1,107 @@
 {
-  "hero.text": "{accent} Definierte Regeln. Disziplinierte Ausführung.",
-  "hero.accent": "Systematisches Trading.",
-  
-  "hero.subtitle": "Eine strukturierte TradingView-Strategie, entwickelt aus jahrelanger praktischer Krypto-Markterfahrung. Gebaut, um Entscheidungen zu standardisieren, Risiken zu managen und konsistent zu agieren – selbst unter volatilen Bedingungen.",
-  "hero.tagline": "Logikbasierte Automatisierung für disziplinierte Trader.",
+  "hero.text": "{accent} Kein Bauchgefühl. Kein Zögern.",
+  "hero.accent": "Reine Logik.",
+  "hero.subtitle": "Eine proprietäre TradingView-Strategie für Bitcoin-Trader, die es leid sind, an den eigenen Entscheidungen zu scheitern. Klare Einstiegskriterien. Feste Risikolimits. Konsistente Ausführung — egal was der Markt gerade macht.",
+  "hero.tagline": "Hör auf, deine Emotionen zu handeln. Fang an, ein System zu handeln.",
   "hero.btnPrimary": "Strategie aktivieren",
-  "hero.btnSecondary": "Framework entdecken",
+  "hero.btnSecondary": "Funktionsweise ansehen",
 
-  "note.title": "Unser Ansatz:",
-  "note.desc": "Märkte sind volatil. Emotionen sind unberechenbar. Unsere Strategie ersetzt beides durch vordefinierte Strukturen, objektive Regeln und kontrolliertes Risikomanagement.",
+  "note.title": "Warum die meisten Trader schlechter performen als ihre eigene Strategie:",
+  "note.desc": "Selten liegt es an der Analyse. Es passiert in dem Moment, in dem die Position ins Minus dreht und du den Plan überwirfst. Oder wenn eine starke grüne Kerze dazu verleitet, die Position zu verdoppeln. Jede dieser Entscheidungen fühlt sich im Moment richtig an. Zusammengenommen erklären sie den Unterschied zwischen einer Strategie, die auf dem Papier funktioniert, und einem Konto, das langsam blutet. Das Framework nimmt dir diesen Moment vollständig weg.",
 
-  "features1.tagline": "Vorteile",
-  "features1.title": "Was du bekommst",
-  "features1.contentTitle": "Marktstruktur & Objektive Signal-Logik",
-  "features1.contentDesc": "Entwickelt, um signifikante Chancen zu identifizieren und minderwertiges Marktrauschen zu filtern.",
+  "features1.tagline": "Was sich verändert",
+  "features1.title": "Drei Dinge, die die meisten Trader ruinieren — gelöst",
+  "features1.contentTitle": "Von Interpretation zu Instruktion",
+  "features1.contentDesc": "Jede Entscheidung der Strategie lässt sich auf eine vordefinierte Regel zurückführen. Es gibt keine Grauzone, keinen diskretionären Override, kein Bauchgefühl das gefragt wäre.",
   "features1.items": [
     {
-      "title": "Objektive Marktanalyse",
-      "description": "Bewertet Preisstruktur und Trendverhalten mittels regelbasierter Logik – ohne subjektive Interpretation.",
+      "title": "Kein Chart-Starren mehr",
+      "description": "Die Strategie bewertet die Marktstruktur nach einem festen technischen Rahmen — immer auf dieselbe Weise. Du hörst auf zu fragen 'sieht das richtig aus?', weil das System diese Frage bereits beantwortet hat.",
       "icon": "tabler:device-analytics"
     },
     {
-      "title": "Adaptives Framework",
-      "description": "Passt sich systematisch an wechselnde Volatilität und strukturelle Änderungen an, ohne ständiges manuelles Eingreifen.",
+      "title": "Für volatile Märkte gebaut, nicht trotz ihnen",
+      "description": "Bitcoin trendet nicht sauber. Das Framework identifiziert hochwahrscheinliche strukturelle Setups und bleibt in choppy, qualitativ schlechten Phasen flat — Kapital wird für die Momente aufgespart, die wirklich zählen.",
       "icon": "tabler:activity"
     },
     {
-      "title": "Automatisierte Regelausführung",
-      "description": "Vordefinierte Kriterien werden sofort und konsistent ausgeführt, was Zögern und emotionale Störfaktoren eliminiert.",
+      "title": "Ausführung, die nicht zögert",
+      "description": "Wenn die Kriterien erfüllt sind, wird gehandelt. Wenn nicht, passiert nichts. Kein Warten auf eine Bestätigung, die nie kommt. Kein Nachjagendes Einsteigen, weil das erste Signal verpasst wurde.",
       "icon": "tabler:settings-automation"
     }
   ],
 
-  "features2.contentTitle": "Risikomanagement & Kapitalschutz",
-  "features2.contentDesc": "Strukturierte Sicherheitsmechanismen für den Schutz deines Kapitals und langfristige Konsistenz.",
+  "features2.contentTitle": "Risikomanagement mit echten Zähnen",
+  "features2.contentDesc": "Die meisten Strategien definieren Einstiege. Wenige definieren präzise, wie falsch du sein darfst — und was passiert, wenn du dort ankommst.",
   "features2.items": [
     {
-      "title": "Kontrollierte Exposure",
-      "description": "Integrierte Risikoparameter begrenzen Drawdowns und verhindern unkontrollierte Positionsgrößen.",
+      "title": "Positionsgröße ist nicht verhandelbar",
+      "description": "Das Risiko pro Trade wird aus den konfigurierten Parametern berechnet, bevor die Order gesetzt wird. Die Strategie interessiert es nicht, wie gut das Setup aussieht — die Exposure bleibt innerhalb der Grenzen.",
       "icon": "tabler:alert-hexagon"
     },
     {
-      "title": "Overtrading-Prävention",
-      "description": "Reduziert die Aktivität in strukturell schwachen oder unruhigen Marktphasen (Chop).",
+      "title": "Flat wenn der Markt Rauschen ist",
+      "description": "Seitwärtsmärkte, choppy Phasen und richtungslose Bewegungen sind der Hauptgrund für Kontoverluste bei aktiven Tradern. Die Strategie erkennt diese Phasen und reduziert die Aktivität automatisch — nicht reaktiv.",
       "icon": "tabler:waves-electricity"
     },
     {
-      "title": "Konfigurierbare Risikoprofile",
-      "description": "Zentrale Parameter können angepasst werden, um sie mit deiner persönlichen Risikotoleranz abzugleichen.",
+      "title": "Risikoprofile, die du steuerst",
+      "description": "Konservativ, moderat oder aggressiv — die Kernparameter sind konfigurierbar, um zu deiner Kontogröße und persönlichen Drawdown-Toleranz zu passen, ohne die zugrundeliegende Logik zu kompromittieren.",
       "icon": "tabler:adjustments"
     }
   ],
 
-  "steps.tagline": "Ausführungsprozess",
-  "steps.title": "Struktur durch Design",
-  "steps.subtitle": "Die Strategie arbeitet direkt auf TradingView. Sie bewertet kontinuierlich Marktdaten, validiert Bedingungen und führt Trades nach strikten Parametern aus.",
+  "steps.tagline": "So funktioniert es",
+  "steps.title": "Drei Schritte vom Signal zur Ausführung",
+  "steps.subtitle": "Der gesamte Prozess läuft innerhalb von TradingView. Keine externen Server, keine Black Box, kein Signal-Abo erforderlich. Du siehst genau was die Strategie sieht — und warum sie handelt.",
   "steps.items": [
     {
-      "title": "Signalgenerierung — Objektive Kriterien",
-      "description": "Der proprietäre Indikator überwacht die Marktstruktur rund um die Uhr und generiert Signale nur bei Übereinstimmung vordefinierter Bedingungen.",
+      "title": "Der Indikator liest den Markt",
+      "description": "Nach jeder abgeschlossenen Kerze bewertet der proprietäre Indikator die Preisstruktur anhand seines internen Modells. Ein Signal entsteht nur, wenn mehrere unabhängige Bedingungen gleichzeitig erfüllt sind — nicht bei einem einzelnen Auslöser.",
       "icon": "tabler:number-1"
     },
     {
-      "title": "Validierung — Risiko & Richtung",
-      "description": "Jedes Signal wird automatisch gegen Risikoregeln und Parameter zur Positionsgröße geprüft.",
+      "title": "Die Risk-Engine validiert das Signal",
+      "description": "Bevor etwas platziert wird, prüft das System das Signal gegen deine konfigurierten Risikoparameter: Ist die Marktphase geeignet? Liegt die Positionsgröße im Rahmen? Gibt es bereits eine offene Position? Alle Bedingungen müssen bestanden werden.",
       "icon": "tabler:number-2"
     },
     {
-      "title": "Ausführung — Konsistente Platzierung",
-      "description": "Orders werden sofort und präzise innerhalb deines konfigurierten Risiko-Frameworks platziert.",
+      "title": "Die Order wird — exakt wie definiert — gesetzt",
+      "description": "Einstieg, Stop-Loss und Take-Profit werden in einem einzigen Schritt platziert. Nach dem Signal bleibt nichts der manuellen Interpretation überlassen.",
       "icon": "tabler:number-3"
     }
   ],
 
   "chart.tagline": "Performance-Übersicht",
-  "chart.title": "Gefestigt durch strukturierte Tests",
-  "chart.subtitle": "Backtesting unter realistischen Annahmen über mehrere Marktzyklen hinweg. Fokus auf Stabilität und Nachhaltigkeit statt aggressiver Optimierung.",
-  "chart.btnText": "Performance-Details prüfen",
-  
-  "testimonials.tagline": "Testimonials",
-  "testimonials.title": "Das sagen echte Trader",
-  "testimonials.btnText": "Weitere Erfahrungsberichte lesen",
+  "chart.title": "Getestet über Bullenmärkte, Bärenmärkte und alles dazwischen",
+  "chart.subtitle": "Der Backtest umfasst mehrere vollständige Bitcoin-Marktzyklen. Das Ziel war nie, die beeindruckendste isolierte Zahl zu finden — sondern Einstellungen, die sich über verschiedene Volatilitätsregimes halten, ohne auseinanderzufallen.",
+  "chart.btnText": "Vollständige Performance-Analyse ansehen",
+
+  "testimonials.tagline": "Von Abonnenten",
+  "testimonials.title": "Was passiert, wenn man aufhört, auf Gefühl zu handeln",
+  "testimonials.btnText": "Weitere Bewertungen lesen",
   "testimonials.items": [
     {
       "name": "Alex M.",
-      "job": "Teilzeit-Trader",
-      "testimonial": "Endlich kann ich traden, ohne den ganzen Tag auf die Charts zu starren. Die Disziplin des Systems hat meine Rache-Trades gestoppt.",
+      "job": "Nebenberuflicher Trader",
+      "testimonial": "Ich habe davor drei andere Strategien ausprobiert. Der Unterschied ist: Diese hier halte ich wirklich durch. Wenn es eine Regel ist, diskutiere ich nicht dagegen. Mein Revenge-Trading ist weg — nicht weil ich disziplinierter geworden bin, sondern weil das System die Entscheidung entfernt hat.",
       "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
     },
     {
       "name": "David K.",
-      "job": "Software-Entwickler",
-      "testimonial": "Ich schätze die Logik hinter den Einstiegen. Die Overtrading-Prävention hat mich im letzten Seitwärtsmarkt gerettet.",
+      "job": "Software-Ingenieur",
+      "testimonial": "Was ich am meisten respektiere, ist das, was es nicht tut. Es handelt nicht in den Chop-Phasen, die mich 2023 erwischt haben. Ich habe ein paar Moves in Cash sitzend verpasst — aber auch drei 8%-Drawdowns dazwischen. Dieser Tausch ist es wert.",
       "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80"
     },
     {
       "name": "Sophie L.",
       "job": "Krypto-Investorin",
-      "testimonial": "Vertrauenswürdig und konsistent. Im Gegensatz zu anderen Bots priorisiert dieses System Risikomanagement vor unrealistischen Gewinnen.",
+      "testimonial": "Ich war skeptisch gegenüber allem mit 'automatisiert' in der Beschreibung. Aber die Transparenz hier ist anders — ich sehe die Logik, ich sehe die Trades, ich verstehe warum jede Position eingegangen wurde. Es fühlt sich wie eine Methodik an, kein Mysterium.",
       "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80"
     }
   ],
 
-  "cta.title": "Strukturiere dein Trading, eliminiere Emotionen.",
-  "cta.subtitle": "Nutze ein regelbasiertes Framework, das für Beständigkeit in volatilen Märkten entwickelt wurde.",
-  "cta.btnText": "System aktivieren"
+  "cta.title": "Dein nächster Trade muss kein Ratespiel sein.",
+  "cta.subtitle": "Das Framework ist heute einsatzbereit auf deinem TradingView-Chart. Sieben Tage kostenlos. Jederzeit kündbar. Keine Unklarheiten.",
+  "cta.btnText": "Kostenlose Testphase starten"
 }
