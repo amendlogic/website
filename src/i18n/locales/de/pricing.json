@@ -1,4 +1,7 @@
 {
+  "meta.title": "test",
+  "meta.description": "test2",
+  
   "hero.tagline": "Preise",
   "hero.text": "Ein System. {accent}",
   "hero.accent": "Drei Zugangswege.",
