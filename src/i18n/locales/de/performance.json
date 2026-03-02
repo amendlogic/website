@@ -1,4 +1,7 @@
 {
+  "meta.title": "test",
+  "meta.description": "test2",
+  
   "hero.tagline": "Performance",
   "hero.text": "Die Zahlen. {accent}",
   "hero.accent": "Alle davon.",
