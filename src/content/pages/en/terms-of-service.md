@@ -1,0 +1,284 @@
+---
+title: 'Terms and Conditions'
+layout: '~/layouts/MarkdownLayout.astro'
+---
+
+**Last Updated:** February 2026
+
+---
+
+## 1. Introduction & Acceptance of Terms
+
+Welcome to **[Your Company Name]** ("Company", "we", "us", or "our"). These Terms of Service ("Terms") govern your access to and use of our website, proprietary TradingView strategy scripts, subscription services, and all associated content, features, and functionality (collectively, the "Services").
+
+By accessing or using our Services — including visiting our website, starting a trial, or purchasing a subscription — you confirm that you have read, understood, and agree to be bound by these Terms in their entirety, including our Privacy Policy, Cookie Policy, and Risk Disclosure, which are incorporated herein by reference.
+
+**If you do not agree to these Terms, you must immediately cease all use of our Services.**
+
+These Terms constitute a legally binding agreement between you ("User", "Subscriber", or "you") and [Your Company Name]. We reserve the right to update or modify these Terms at any time. Material changes will be communicated via email or a prominent notice on the website. Your continued use of the Services following any changes constitutes acceptance of the updated Terms.
+
+---
+
+## 2. Eligibility
+
+### 2.1 Age Requirement
+You must be at least **18 years of age** to access or use the Services. By agreeing to these Terms, you represent and warrant that you are at least 18 years old.
+
+### 2.2 Legal Capacity
+You represent that you have the full legal capacity and authority to enter into this agreement.
+
+### 2.3 Jurisdictional Compliance
+You represent that your use of the Services does not violate any law or regulation applicable in your country of residence or jurisdiction. You are solely responsible for determining whether the use of our Services is lawful in your jurisdiction.
+
+---
+
+## 3. Description of Services
+
+### 3.1 What We Provide
+[Your Company Name] provides a proprietary, rule-based automated trading strategy script ("the Framework" or "the Strategy") designed to operate within the **TradingView** platform. The Strategy:
+
+- Analyzes historical and real-time price data according to predefined technical logic
+- Generates entry and exit signals based on systematic, objective criteria
+- Applies configurable risk management parameters including position sizing and drawdown controls
+- Is delivered as a private, invite-only TradingView script linked to the subscriber's TradingView username
+
+### 3.2 What We Do Not Provide
+We explicitly do **not** provide:
+
+- Personalized investment advice or recommendations
+- Portfolio management or fund management services
+- Brokerage or order execution services on your behalf
+- Financial planning or tax advisory services
+- Guaranteed returns or profit assurances of any kind
+- Real-time signal alerts, hotlines, or personal trading mentorship
+
+Our Services are strictly **educational and technical in nature**. We are **not** a licensed investment advisor, broker-dealer, fund manager, or financial institution.
+
+### 3.3 TradingView Dependency
+The Strategy operates exclusively within the TradingView platform. You are responsible for maintaining an active and valid TradingView account. We are not affiliated with TradingView, Inc. and are not responsible for its availability, functionality, or terms of service.
+
+### 3.4 Optional Automation
+The Strategy may optionally be connected to supported cryptocurrency exchanges via TradingView webhooks for automated order execution. This functionality is entirely at your own discretion and risk.
+
+### 3.5 Technical Requirements — TradingView Subscription
+Access to and full functionality of the Strategy requires an active, independent TradingView account subscribed to the **Essential plan or higher** (or equivalent paid tier as defined by TradingView, Inc. at the time of use). The free TradingView plan imposes limitations on the number of active alerts and indicator slots that may prevent the Strategy from functioning as intended.
+
+**You are solely responsible for:**
+- Maintaining an active TradingView account at the required subscription level
+- Any costs associated with your TradingView subscription
+- Ensuring your TradingView account remains in good standing
+
+We are not affiliated with TradingView, Inc. and have no control over TradingView's pricing, plan structures, or terms of service, which may change at any time. A failure to maintain the required TradingView subscription level does not entitle you to a refund of subscription fees paid to us.
+
+---
+
+## 4. Account Registration & Subscription
+
+### 4.1 Platform — Whop
+All subscriptions, checkouts, access management, and billing are handled through **Whop Inc.** ("Whop"), a third-party digital product platform acting as **Merchant of Record**. This means Whop enters into the sales contract with you directly, processes your payment, and is responsible for invoicing and tax collection on all transactions.
+
+By purchasing a subscription, you also agree to **Whop's Terms of Service**, available at [https://whop.com/terms/](https://whop.com/terms/).
+
+### 4.2 TradingView Username Requirement
+To receive access to the invite-only Strategy script, you must provide your exact TradingView username during the Whop checkout process. You are responsible for providing accurate information. Access is linked to the TradingView username provided at checkout. Incorrect username submissions that result in failed access are not grounds for a refund without prior support contact.
+
+### 4.3 Subscription Plans
+We currently offer the following subscription tiers, available via our Whop storefront:
+
+| Plan | Price | Billing Cycle |
+|------|-------|--------------|
+| Monthly | €99 | Every 30 days |
+| Quarterly | €249 | Every 90 days |
+| Annual | €899 | Every 365 days |
+
+Prices are subject to change. Any price changes will be communicated with a minimum of 30 days' advance notice and will not affect active billing cycles already in progress.
+
+### 4.4 Free Trial
+We offer a **7-day free trial** for new subscribers. If you do not cancel before the trial period ends, your selected subscription plan will automatically commence and your payment method will be charged. Only one free trial per person is permitted.
+
+### 4.5 Automatic Renewal
+All subscriptions are recurring and will automatically renew at the end of each billing cycle unless cancelled in advance through your **Whop Member Dashboard** at [https://whop.com/](https://whop.com/). You authorize Whop to charge your payment method on a recurring basis until cancellation.
+
+### 4.6 Cancellation
+You may cancel your subscription at any time via your **Whop Member Dashboard**. Cancellation takes effect at the end of the current paid billing period. Access to the Strategy continues until the end of the period for which payment has been made. We do not provide prorated refunds for mid-cycle cancellations.
+
+---
+
+## 5. Payment Terms
+
+### 5.1 Merchant of Record — Whop
+All payments are processed by **Whop Inc.** as Merchant of Record. Whop is solely responsible for:
+
+- Collecting and processing your payment
+- Issuing invoices and receipts
+- Calculating and remitting applicable taxes (including VAT where required)
+- Managing subscription renewals and cancellations
+- Handling chargebacks and payment disputes
+
+We do not collect, store, or process your payment card details at any point. All payment data is handled directly and exclusively by Whop.
+
+### 5.2 Accepted Payment Methods
+Whop supports a range of payment methods including major credit and debit cards, and potentially additional methods depending on your region. Current accepted payment methods are displayed at checkout within the Whop platform.
+
+### 5.3 Failed Payments
+In the event of a failed recurring payment, Whop will manage the retry process according to its own billing policies. If payment cannot be collected, your subscription and access to the Strategy may be suspended until payment is successfully processed.
+
+### 5.4 Taxes & VAT
+As Whop acts as Merchant of Record, Whop is responsible for calculating and collecting applicable taxes (e.g., VAT) based on your billing location. Tax amounts, if applicable, will be displayed at checkout.
+
+### 5.5 Currency
+Prices are denominated in **Euro (€)**. Whop handles currency conversion where applicable. Any conversion fees charged by your bank or card issuer are your responsibility.
+
+### 5.6 Whop Platform Terms
+Your use of the Whop platform for checkout, account management, and billing is additionally governed by Whop's own Terms of Service and Privacy Policy. In the event of any conflict between these Terms and Whop's Terms regarding payment processing, Whop's Terms shall govern with respect to the payment relationship.
+
+---
+
+## 6. Refund Policy
+
+### 6.1 General Policy
+Due to the nature of digital software and immediate access upon activation, **all subscription fees are non-refundable** once access to the invite-only script has been granted, except as expressly required by applicable consumer protection law.
+
+### 6.2 Trial Period
+If you are dissatisfied with the Service, you must cancel during the 7-day free trial period to avoid being charged.
+
+### 6.3 Exceptions
+Refund requests may be considered on a case-by-case basis where:
+
+- A technical failure on our part prevented any access to the Service
+- A duplicate charge occurred due to a billing system error
+
+Refund requests must be submitted to our support email within **7 days** of the charge in question. Please note that because Whop acts as Merchant of Record, certain refunds may need to be processed through Whop's support infrastructure. We will coordinate with Whop on your behalf where necessary.
+
+### 6.4 Chargebacks
+Initiating a chargeback without first contacting us constitutes a breach of these Terms and may result in immediate suspension of your access and termination of your subscription.
+
+---
+
+## 7. Intellectual Property
+
+### 7.1 Ownership
+All content, code, strategy logic, signal algorithms, design elements, documentation, trademarks, and intellectual property comprising the Services are and remain the exclusive property of [Your Company Name]. All rights are reserved.
+
+### 7.2 License Grant
+Upon active subscription, we grant you a **limited, non-exclusive, non-transferable, revocable license** to access and use the Strategy script solely for your own personal trading purposes via TradingView for the duration of your subscription.
+
+### 7.3 Restrictions
+You expressly agree **not to**:
+
+- Copy, reproduce, modify, adapt, reverse-engineer, or decompile the Strategy or any part of its logic
+- Share, sublicense, sell, resell, rent, or otherwise transfer access to the Strategy to any third party
+- Publish or publicly disclose the Strategy's methodology, signal logic, or source code in any form
+- Use the Services to build a competing product or service
+- Circumvent or attempt to circumvent any access controls or authorization mechanisms
+
+Violation of these restrictions will result in immediate termination of your subscription and may result in legal action.
+
+### 7.4 Feedback
+If you voluntarily submit feedback or suggestions, you grant us a perpetual, irrevocable, royalty-free license to use and incorporate such feedback without restriction or compensation.
+
+---
+
+## 8. Disclaimers & Limitation of Liability
+
+### 8.1 No Financial Advice
+Nothing contained in our Services constitutes financial, investment, trading, legal, or tax advice. All content is provided for **informational and educational purposes only**.
+
+### 8.2 No Guarantee of Performance
+We make **no representations, warranties, or guarantees** that the Strategy will generate profits, that past simulated performance will replicate in live trading, or that the information provided is accurate, complete, or up-to-date at all times.
+
+### 8.3 Services Provided "As Is"
+The Services are provided on an **"as is" and "as available"** basis without warranties of any kind, either express or implied.
+
+### 8.4 Limitation of Liability
+To the maximum extent permitted by applicable law, [Your Company Name] shall not be liable for any trading losses, indirect, incidental, special, consequential, or punitive damages, system outages, or any actions taken based on information provided through the Services.
+
+### 8.5 Maximum Aggregate Liability
+Our total aggregate liability shall not exceed the **total subscription fees paid by you in the 3 months immediately preceding the event giving rise to the claim**.
+
+---
+
+## 9. User Conduct & Prohibited Activities
+
+By using the Services, you agree not to:
+
+- Use the Services for any unlawful or unauthorized purpose
+- Attempt to reverse-engineer or extract any proprietary logic
+- Share, sell, or transfer your subscription credentials or script access to any third party
+- Use the Services in violation of TradingView's or Whop's own terms of service
+- Make false or misleading statements about the Services or their performance
+
+---
+
+## 10. Availability & Modifications
+
+### 10.1 Service Availability
+We strive to maintain continuous availability but do not guarantee uninterrupted access.
+
+### 10.2 Strategy Updates
+We continuously refine the Strategy. Updates are delivered at our sole discretion without prior notice and may alter signal logic or risk parameters.
+
+### 10.3 Service Discontinuation
+We reserve the right to discontinue or materially alter the Services with **30 days' prior notice** to active subscribers.
+
+---
+
+## 11. Third-Party Services
+
+The Services involve the following third-party platforms:
+
+- **Whop** — checkout, subscription management, and payment processing (Merchant of Record)
+- **TradingView** — charting and strategy execution environment
+- **Cloudflare** — hosting and content delivery
+- **Google Analytics** — website usage analytics
+- Cryptocurrency exchanges via optional webhook integration
+
+We are not responsible for the availability, terms, or conduct of any third-party services.
+
+---
+
+## 12. Privacy & Data Protection
+
+Your use of the Services is subject to our **Privacy Policy** and **Cookie Policy**. Personal data related to your payment and subscription is also processed by Whop under Whop's Privacy Policy, available at [https://whop.com/privacy-policy/](https://whop.com/privacy-policy/).
+
+---
+
+## 13. Termination
+
+### 13.1 By You
+Cancel your subscription at any time via your Whop Member Dashboard.
+
+### 13.2 By Us
+We reserve the right to suspend or terminate your access immediately if you breach these Terms, we suspect fraudulent activity, or payment cannot be collected.
+
+### 13.3 Effect of Termination
+Upon termination, your license is revoked and TradingView script access will be removed. Provisions regarding IP, liability, and dispute resolution survive termination.
+
+---
+
+## 14. Governing Law & Dispute Resolution
+
+### 14.1 Governing Law
+These Terms shall be governed by the laws of **[Country/State]**.
+
+### 14.2 Dispute Resolution
+Disputes shall first be addressed through good-faith negotiation, then submitted to the exclusive jurisdiction of the courts of **[City, Country]**.
+
+### 14.3 EU Consumer Rights
+EU consumers may bring proceedings in their country of domicile. Mandatory local consumer protection provisions apply notwithstanding these Terms.
+
+EU Online Dispute Resolution platform: [https://ec.europa.eu/consumers/odr](https://ec.europa.eu/consumers/odr)
+
+---
+
+## 15. Severability & Entire Agreement
+
+If any provision is found unenforceable, the remaining provisions remain in effect. These Terms, together with our Privacy Policy, Cookie Policy, and Risk Disclosure, constitute the entire agreement between you and [Your Company Name].
+
+---
+
+## 16. Contact
+
+**[Your Company Name]**
+Email: [legal@yourdomain.com]
+Address: [Your registered address]
