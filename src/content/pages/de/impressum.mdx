@@ -1,7 +1,7 @@
 ---
 title: 'Impressum'
-layout: '~/layouts/MarkdownLayout.astro'
 ---
+import { SITE } from 'astrowind:config'
 
 **Zuletzt aktualisiert:** Februar 2026
 
@@ -11,7 +11,7 @@ layout: '~/layouts/MarkdownLayout.astro'
 
 ### Verantwortlicher Diensteanbieter
 
-**[Ihr vollständiger Name / Unternehmensname]**
+**Kevin Amend / {SITE?.name}**
 [Straße und Hausnummer]
 [Postleitzahl] [Stadt]
 [Land]
@@ -50,7 +50,7 @@ DE[XXXXXXXXX] gemäß § 27a UStG *(sofern zutreffend)*
 
 ## Aufsichtsbehörde & Regulatorischer Hinweis
 
-[Ihr Unternehmensname] ist **kein** reguliertes Finanzinstitut, keine lizenzierte Wertpapierfirma, kein Anlageberater und kein Kreditinstitut im Sinne des KWG, WpIG oder der MiFID II.
+{SITE?.name} ist **kein** reguliertes Finanzinstitut, keine lizenzierte Wertpapierfirma, kein Anlageberater und kein Kreditinstitut im Sinne des KWG, WpIG oder der MiFID II.
 
 Wir unterliegen keiner Aufsicht durch die BaFin, ESMA oder vergleichbare Behörden.
 
