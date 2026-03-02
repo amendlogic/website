@@ -1,0 +1,107 @@
+---
+title: 'Impressum'
+layout: '~/layouts/MarkdownLayout.astro'
+---
+
+**Zuletzt aktualisiert:** Februar 2026
+
+---
+
+## Angaben gemäß § 5 TMG
+
+### Verantwortlicher Diensteanbieter
+
+**[Ihr vollständiger Name / Unternehmensname]**
+[Straße und Hausnummer]
+[Postleitzahl] [Stadt]
+[Land]
+
+---
+
+### Kontakt
+
+E-Mail: [kontakt@yourdomain.com]
+Website: [https://www.yourdomain.com]
+
+> **Hinweis:** Wir bitten um Kontaktaufnahme ausschließlich per E-Mail.
+
+---
+
+### Unternehmensform & Registrierung
+
+**Einzelunternehmen / Freiberufler:**
+Inhaber: [Ihr vollständiger Name]
+Steuernummer: [XX/XXX/XXXXX] (Finanzamt: [Stadt])
+
+---
+
+### Umsatzsteuer-Identifikationsnummer
+
+DE[XXXXXXXXX] gemäß § 27a UStG *(sofern zutreffend)*
+
+---
+
+### Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV
+
+**[Ihr vollständiger Name]**
+[Adresse wie oben]
+
+---
+
+## Aufsichtsbehörde & Regulatorischer Hinweis
+
+[Ihr Unternehmensname] ist **kein** reguliertes Finanzinstitut, keine lizenzierte Wertpapierfirma, kein Anlageberater und kein Kreditinstitut im Sinne des KWG, WpIG oder der MiFID II.
+
+Wir unterliegen keiner Aufsicht durch die BaFin, ESMA oder vergleichbare Behörden.
+
+Unser Angebot beschränkt sich auf die Bereitstellung technischer Software-Tools (TradingView-Strategieskripte) zu Bildungs- und Informationszwecken. Es werden keine Anlageberatungsleistungen erbracht, keine Kundengelder verwaltet und keine Aufträge im Namen von Nutzern ausgeführt.
+
+---
+
+## Plattform der EU-Kommission zur Online-Streitbeilegung (OS)
+
+https://ec.europa.eu/consumers/odr
+
+Unsere E-Mail für diese Plattform: **[kontakt@yourdomain.com]**
+
+Wir sind **nicht verpflichtet und nicht bereit**, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen (§ 36 VSBG).
+
+---
+
+## Haftung für Inhalte (§ 7 Abs. 1 TMG)
+
+Als Diensteanbieter sind wir für eigene Inhalte nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8–10 TMG sind wir nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen. Bei Bekanntwerden von Rechtsverletzungen entfernen wir entsprechende Inhalte umgehend.
+
+---
+
+## Haftung für Links (§ 8 TMG)
+
+Unser Angebot enthält Links zu externen Websites, auf deren Inhalte wir keinen Einfluss haben. Für diese Inhalte ist der jeweilige Anbieter verantwortlich. Bei Bekanntwerden von Rechtsverletzungen entfernen wir derartige Links umgehend.
+
+---
+
+## Urheberrecht
+
+Die durch den Seitenbetreiber erstellten Inhalte unterliegen dem deutschen Urheberrecht. Vervielfältigung, Bearbeitung und Verbreitung bedürfen der schriftlichen Zustimmung. Bei Kenntnis von Urheberrechtsverletzungen entfernen wir betreffende Inhalte umgehend.
+
+---
+
+## Markenrechtliche Hinweise
+
+**TradingView®** ist eine eingetragene Marke der TradingView, Inc. Dieses Angebot steht in keiner Verbindung zu TradingView und wird von TradingView weder gesponsert noch befürwortet.
+
+**Whop®** ist eine eingetragene Marke der Whop Inc. (169 Madison Ave Suite 2895, New York, NY 10016, USA). Die Nutzung des Namens erfolgt ausschließlich zur Information über die verwendete Checkout- und Abonnementplattform. Dieses Angebot steht in keiner darüber hinausgehenden Verbindung zu Whop Inc. und wird von Whop weder gesponsert noch als offizieller Partner befürwortet.
+
+**Google Analytics** ist ein Dienst von Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland. Die Nutzung erfolgt gemäß unserer Datenschutzerklärung.
+
+**Cloudflare®** ist eine eingetragene Marke der Cloudflare, Inc. Das Hosting dieser Website erfolgt über Cloudflare Pages.
+
+---
+
+## Technische Umsetzung, Hosting & Zahlungsabwicklung
+
+Diese Website basiert auf dem **AstroWind**-Template. Das Hosting erfolgt über **Cloudflare Pages** (Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA).
+
+Abonnements, Checkout und Zahlungsabwicklung werden von **Whop Inc.** (169 Madison Ave Suite 2895, New York, NY 10016, USA) als Merchant of Record bereitgestellt und verarbeitet. Whop ist für die Zahlungsabwicklung, Rechnungsstellung, Steuererhebung und das Abonnementmanagement verantwortlich.
+
+Website-Analysedaten werden über **Google Analytics 4** erhoben (Details in der Datenschutzerklärung).
