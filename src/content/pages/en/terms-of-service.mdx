@@ -1,7 +1,7 @@
 ---
 title: 'Terms of Service'
-layout: '~/layouts/MarkdownLayout.astro'
 ---
+import { SITE } from 'astrowind:config'
 
 **Last Updated:** February 2026
 
@@ -9,13 +9,13 @@ layout: '~/layouts/MarkdownLayout.astro'
 
 ## 1. Introduction & Acceptance of Terms
 
-Welcome to **[Your Company Name]** ("Company", "we", "us", or "our"). These Terms of Service ("Terms") govern your access to and use of our website, proprietary TradingView strategy scripts, subscription services, and all associated content, features, and functionality (collectively, the "Services").
+Welcome to **{SITE.owner.companyName}** ("Company", "we", "us", or "our"). These Terms of Service ("Terms") govern your access to and use of our website, proprietary TradingView strategy scripts, subscription services, and all associated content, features, and functionality (collectively, the "Services").
 
 By accessing or using our Services — including visiting our website, starting a trial, or purchasing a subscription — you confirm that you have read, understood, and agree to be bound by these Terms in their entirety, including our Privacy Policy, Cookie Policy, and Risk Disclosure, which are incorporated herein by reference.
 
 **If you do not agree to these Terms, you must immediately cease all use of our Services.**
 
-These Terms constitute a legally binding agreement between you ("User", "Subscriber", or "you") and [Your Company Name]. We reserve the right to update or modify these Terms at any time. Material changes will be communicated via email or a prominent notice on the website. Your continued use of the Services following any changes constitutes acceptance of the updated Terms.
+These Terms constitute a legally binding agreement between you ("User", "Subscriber", or "you") and {SITE.owner.companyName}. We reserve the right to update or modify these Terms at any time. Material changes will be communicated via email or a prominent notice on the website. Your continued use of the Services following any changes constitutes acceptance of the updated Terms.
 
 ---
 
@@ -35,7 +35,7 @@ You represent that your use of the Services does not violate any law or regulati
 ## 3. Description of Services
 
 ### 3.1 What We Provide
-[Your Company Name] provides a proprietary, rule-based automated trading strategy script ("the Framework" or "the Strategy") designed to operate within the **TradingView** platform. The Strategy:
+{SITE.owner.companyName} provides a proprietary, rule-based automated trading strategy script ("the Framework" or "the Strategy") designed to operate within the **TradingView** platform. The Strategy:
 
 - Analyzes historical and real-time price data according to predefined technical logic
 - Generates entry and exit signals based on systematic, objective criteria
@@ -158,7 +158,7 @@ Initiating a chargeback without first contacting us constitutes a breach of thes
 ## 7. Intellectual Property
 
 ### 7.1 Ownership
-All content, code, strategy logic, signal algorithms, design elements, documentation, trademarks, and intellectual property comprising the Services are and remain the exclusive property of [Your Company Name]. All rights are reserved.
+All content, code, strategy logic, signal algorithms, design elements, documentation, trademarks, and intellectual property comprising the Services are and remain the exclusive property of {SITE.owner.companyName}. All rights are reserved.
 
 ### 7.2 License Grant
 Upon active subscription, we grant you a **limited, non-exclusive, non-transferable, revocable license** to access and use the Strategy script solely for your own personal trading purposes via TradingView for the duration of your subscription.
@@ -191,7 +191,7 @@ We make **no representations, warranties, or guarantees** that the Strategy will
 The Services are provided on an **"as is" and "as available"** basis without warranties of any kind, either express or implied.
 
 ### 8.4 Limitation of Liability
-To the maximum extent permitted by applicable law, [Your Company Name] shall not be liable for any trading losses, indirect, incidental, special, consequential, or punitive damages, system outages, or any actions taken based on information provided through the Services.
+To the maximum extent permitted by applicable law, {SITE.owner.companyName} shall not be liable for any trading losses, indirect, incidental, special, consequential, or punitive damages, system outages, or any actions taken based on information provided through the Services.
 
 ### 8.5 Maximum Aggregate Liability
 Our total aggregate liability shall not exceed the **total subscription fees paid by you in the 3 months immediately preceding the event giving rise to the claim**.
@@ -273,12 +273,12 @@ EU Online Dispute Resolution platform: [https://ec.europa.eu/consumers/odr](http
 
 ## 15. Severability & Entire Agreement
 
-If any provision is found unenforceable, the remaining provisions remain in effect. These Terms, together with our Privacy Policy, Cookie Policy, and Risk Disclosure, constitute the entire agreement between you and [Your Company Name].
+If any provision is found unenforceable, the remaining provisions remain in effect. These Terms, together with our Privacy Policy, Cookie Policy, and Risk Disclosure, constitute the entire agreement between you and {SITE.owner.companyName}.
 
 ---
 
 ## 16. Contact
 
-**[Your Company Name]**
-Email: [legal@yourdomain.com]
-Address: [Your registered address]
+<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
+{SITE.owner.address}<br />
+Email: {SITE.owner.eMail}
