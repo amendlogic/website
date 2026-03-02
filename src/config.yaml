@@ -7,10 +7,10 @@ site:
   googleSiteVerificationId: orcPxI47GSa-cRvY11tUe6iGg2IO_RPvnA1q95iEM3M
 
   owner:
+    fullName: 'Max Mustermann'
     companyName: 'AmendLogic'
     address: 'Musterstraße 1, 12345 Berlin'
     legalForm: 'GmbH'
-    owner: 'Max Mustermann'
     taxNumber: '12/345/67890'
     commercialRegister: 'Amtsgericht Berlin'
     hrbNumber: 'HRB 123456'
