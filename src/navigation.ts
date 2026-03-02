@@ -82,11 +82,11 @@ export function getFooterData(
       {
         title: t('nav.legal'),
         links: [
-          { text: t('nav.imprint'), href: '#' },
-          { text: t('nav.terms'), href: getPermalink('/terms', 'page', lang) },
-          { text: t('nav.privacy'), href: getPermalink('/privacy', 'page', lang) },
-          { text: t('nav.cookie'), href: '#' },
-          { text: t('nav.risk'), href: '#' },
+          { text: t('nav.imprint'), href: getPermalink('/impressum', 'page', lang) },
+          { text: t('nav.terms'), href: getPermalink('/terms-of-service', 'page', lang) },
+          { text: t('nav.privacy'), href: getPermalink('/privacy-policy', 'page', lang) },
+          { text: t('nav.cookie'), href: getPermalink('/cookie-policy', 'page', lang) },
+          { text: t('nav.risk'), href: getPermalink('/risk-disclosure', 'page', lang) },
         ],
       },
     ],
