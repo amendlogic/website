@@ -1,4 +1,7 @@
 {
+  "meta.title": "test",
+  "meta.description": "test2",
+  
   "hero.text": "{accent} Kein Bauchgefühl. Kein Zögern.",
   "hero.accent": "Reine Logik.",
   "hero.subtitle": "Eine proprietäre TradingView-Strategie für Bitcoin-Trader, die es leid sind, an den eigenen Entscheidungen zu scheitern. Klare Einstiegskriterien. Feste Risikolimits. Konsistente Ausführung — egal was der Markt gerade macht.",
