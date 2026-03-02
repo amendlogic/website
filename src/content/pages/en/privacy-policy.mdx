@@ -1,7 +1,7 @@
 ---
 title: 'Privacy Policy'
-layout: '~/layouts/MarkdownLayout.astro'
 ---
+import { SITE } from 'astrowind:config'
 
 **Last Updated:** February 2026
 
@@ -10,17 +10,15 @@ layout: '~/layouts/MarkdownLayout.astro'
 ## 1. Introduction & Controller Identity
 
 ### 1.1 Who We Are
-This Privacy Policy describes how **[Your Company Name]** ("we", "us", or "our"), operating the website at **[https://www.yourdomain.com]** ("Website"), collects, processes, stores, and uses your personal data when you visit our Website, use our Services, or interact with us in any way.
+This Privacy Policy describes how **{SITE.owner.companyName}** ("we", "us", or "our"), operating the website at **{SITE.site}** ("Website"), collects, processes, stores, and uses your personal data when you visit our Website, use our Services, or interact with us in any way.
 
 This policy is designed to be transparent and compliant with the **General Data Protection Regulation (GDPR)** (EU) 2016/679, the **German Federal Data Protection Act (BDSG)**, and other applicable data protection legislation.
 
 ### 1.2 Data Controller
 
-**[Your Full Name / Company Name]**
-[Street and House Number]
-[Postal Code] [City]
-[Country]
-Email: [privacy@yourdomain.com]
+<strong>{SITE.owner.fullName} / {SITE.owner.companyName}</strong><br />
+{SITE.owner.address}<br />
+E-Mail: {SITE.owner.eMail}
 
 ### 1.3 What This Policy Covers
 This policy applies to visitors to our Website, users of our TradingView strategy subscription service, and anyone who contacts us. It does **not** apply to third-party websites linked from our Website, including the Whop platform.
@@ -189,7 +187,7 @@ Note: Payment data, billing addresses, and full transaction records are retained
 
 ## 9. Your Rights Under GDPR
 
-You may exercise any of the following rights by contacting us at [privacy@yourdomain.com]. For data held by Whop in their capacity as independent data controller, you must contact Whop directly.
+You may exercise any of the following rights by contacting us at {SITE.owner.eMail}. For data held by Whop in their capacity as independent data controller, you must contact Whop directly.
 
 ### 9.1 Right of Access (Art. 15 GDPR)
 You may request confirmation of whether we process personal data about you and receive a copy of that data.
@@ -230,7 +228,7 @@ We implement HTTPS/TLS encryption, Cloudflare security infrastructure, access co
 
 ## 11. Children's Privacy
 
-Our Services are not directed at individuals under 18. Contact [privacy@yourdomain.com] if you believe we hold data from a minor.
+Our Services are not directed at individuals under 18. Contact {SITE.owner.eMail} if you believe we hold data from a minor.
 
 ---
 
@@ -242,8 +240,6 @@ We may update this policy periodically. Material changes will be communicated vi
 
 ## 13. Contact
 
-**[Your Company Name]**
-Email: [privacy@yourdomain.com]
-Address: [Your registered address]
-
-We aim to respond within **30 days**.
+<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
+{SITE.owner.address}<br />
+Email: {SITE.owner.eMail}
