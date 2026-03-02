@@ -2,7 +2,7 @@
 title: 'Cookie-Richtlinie'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
-
+import { SITE } from 'astrowind:config'
 **Zuletzt aktualisiert:** Februar 2026
 
 ---
@@ -130,6 +130,6 @@ Wir aktualisieren diese Richtlinie bei Änderungen. Das Datum „Zuletzt aktuali
 
 ## 8. Kontakt
 
-**[Ihr Unternehmensname]**
+**{SITE?.name}**
 E-Mail: [datenschutz@yourdomain.com]
 Adresse: [Ihre eingetragene Adresse]
