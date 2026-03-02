@@ -1,7 +1,7 @@
 ---
 title: 'Legal Notice'
-layout: '~/layouts/MarkdownLayout.astro'
 ---
+import { SITE } from 'astrowind:config'
 
 **Last Updated:** February 2026
 
@@ -9,30 +9,30 @@ layout: '~/layouts/MarkdownLayout.astro'
 
 ## Service Provider
 
-**[Your Full Name / Company Name]**
-[Street and House Number]
-[Postal Code] [City]
-[Country]
-Email: [contact@yourdomain.com]
+<strong>{SITE.owner.fullName} / {SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
+{SITE.owner.address}<br />
+Email: {SITE.owner.eMail}
 
 ---
 
 ## Company Structure & Registration
 
-**Sole Trader / Freelancer:**
-Tax Number: [XX/XXX/XXXXX]
+<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
+Inhaber: {SITE.owner.fullName}<br />
+Tax Number: {SITE.owner.taxNumber}
 
 ---
 
 ## Person Responsible for Editorial Content (§ 18 Para. 2 MStV)
 
-**[Your Full Name]**, [Address as above]
+<strong>{SITE.owner.fullName}</strong><br />
+{SITE.owner.address}
 
 ---
 
 ## Regulatory Notice
 
-[Your Company Name] is **not** a regulated financial institution, licensed securities firm, investment advisor, asset manager, or credit institution under applicable financial services law including KWG, WpIG, or MiFID II. We are not supervised by BaFin, ESMA, or any comparable authority.
+{SITE.owner.companyName} is **not** a regulated financial institution, licensed securities firm, investment advisor, asset manager, or credit institution under applicable financial services law including KWG, WpIG, or MiFID II. We are not supervised by BaFin, ESMA, or any comparable authority.
 
 Our offering is limited to providing technical software tools (TradingView strategy scripts) for educational and informational purposes only.
 
@@ -40,7 +40,7 @@ Our offering is limited to providing technical software tools (TradingView strat
 
 ## EU Online Dispute Resolution
 
-https://ec.europa.eu/consumers/odr — Email: [contact@yourdomain.com]
+https://ec.europa.eu/consumers/odr — Email: {SITE.owner.eMail}
 
 We are neither obligated nor willing to participate in dispute resolution proceedings before a consumer arbitration board.
 
