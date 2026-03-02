@@ -1,7 +1,7 @@
 ---
 title: 'Cookie Policy'
-layout: '~/layouts/MarkdownLayout.astro'
 ---
+import { SITE } from 'astrowind:config'
 
 **Last Updated:** February 2026
 
@@ -9,7 +9,7 @@ layout: '~/layouts/MarkdownLayout.astro'
 
 ## 1. Introduction
 
-This Cookie Policy explains how **[Your Company Name]** uses cookies and similar tracking technologies on our website at **[https://www.yourdomain.com]**. Please read this alongside our Privacy Policy and Terms of Service.
+This Cookie Policy explains how **{SITE.owner.companyName}** uses cookies and similar tracking technologies on our website at **{SITE.site}**. Please read this alongside our Privacy Policy and Terms of Service.
 
 By using our Website, you acknowledge that we may use cookies as described here. Where cookies require consent, we ask for it via our cookie consent banner before any non-essential cookies are placed on your device.
 
@@ -38,7 +38,7 @@ Essential for the Website to function. No consent required.
 |-------------|----------|---------|----------|
 | `_cfuvid` | Cloudflare | Rate limiting and abuse prevention | Session |
 | `cf_clearance` | Cloudflare | Records successful security challenge | 1 year |
-| `cookieconsent_status` | [Your Company Name] | Stores your cookie consent choice | 1 year |
+| `cc_cookie` | {SITE.owner.companyName} | Stores your cookie consent choice | 1 year |
 
 **Note on Whop Cookies:** The Whop checkout and member dashboard operate on Whop's own domain (`whop.com`) and are not part of our Website. Cookies set by Whop on their platform are governed by Whop's Cookie Policy, not this one. When you are redirected to Whop's checkout, you are leaving our Website and entering Whop's environment.
 
@@ -145,6 +145,6 @@ We may update this policy to reflect changes in cookies used, applicable law, or
 
 ## 8. Contact
 
-**[Your Company Name]**
-Email: [privacy@yourdomain.com]
-Address: [Your registered address]
+<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
+{SITE.owner.address}<br />
+E-Mail: {SITE.owner.eMail}
