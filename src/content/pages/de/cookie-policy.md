@@ -1,0 +1,135 @@
+---
+title: 'Cookie-Richtlinie'
+layout: '~/layouts/MarkdownLayout.astro'
+---
+
+**Zuletzt aktualisiert:** Februar 2026
+
+---
+
+## 1. Einleitung
+
+Diese Cookie-Richtlinie erläutert, wie **[Ihr Unternehmensname]** Cookies und ähnliche Tracking-Technologien auf unserer Website einsetzt. Sie ergänzt unsere Datenschutzerklärung und Nutzungsbedingungen.
+
+---
+
+## 2. Was sind Cookies?
+
+Cookies sind kleine Textdateien, die beim Website-Besuch auf Ihrem Gerät gespeichert werden. Wir können zusätzlich Local Storage, Session Storage, Pixel-Tags und JavaScript-Tracker einsetzen. Der Begriff „Cookies" bezeichnet in dieser Richtlinie alle diese Technologien gemeinsam.
+
+---
+
+## 3. Arten der verwendeten Cookies
+
+### 3.1 Unbedingt notwendige Cookies
+
+Für den ordnungsgemäßen Betrieb der Website unerlässlich. Keine Einwilligung erforderlich.
+
+| Cookie-Name | Anbieter | Zweck | Laufzeit |
+|-------------|----------|-------|----------|
+| `_cfuvid` | Cloudflare | Ratenbegrenzung und Missbrauchsprävention | Sitzung |
+| `cf_clearance` | Cloudflare | Bestandene Cloudflare-Sicherheitsprüfung | 1 Jahr |
+| `cookieconsent_status` | [Ihr Unternehmensname] | Speichert Ihre Cookie-Einwilligungsentscheidung | 1 Jahr |
+
+**Hinweis zu Whop:** Der Whop-Checkout und das Member-Dashboard laufen vollständig auf der Plattform von Whop unter `whop.com`. Wenn Sie zum Whop-Checkout weitergeleitet werden oder auf Ihr Whop Member Dashboard zugreifen, verlassen Sie unsere Website und betreten die Whop-Umgebung. Cookies, die Whop auf ihrer Plattform setzt, unterliegen der eigenen Cookie- und Datenschutzerklärung von Whop, nicht dieser Richtlinie. Wir haben keine Kontrolle und keine Einsicht in die Cookies, die Whop auf ihrer Plattform setzt.
+
+**Rechtsgrundlage:** Art. 6 Abs. 1 lit. f DSGVO — Berechtigte Interessen.
+
+---
+
+### 3.2 Analyse-Cookies
+
+Erfassen anonymisierte Daten zur Website-Nutzung. **Werden nur mit ausdrücklicher Einwilligung** über unser Cookie-Banner gesetzt.
+
+#### Google Analytics 4 (GA4)
+Bereitgestellt von Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irland).
+
+- IP-Adressen werden vor der Speicherung **anonymisiert**
+- Kein Einsatz für Werbezwecke oder Remarketing
+- Datenspeicherung auf **14 Monate** begrenzt
+- Datensparsamkeitseinstellungen aktiviert
+
+| Cookie-Name | Anbieter | Zweck | Laufzeit |
+|-------------|----------|-------|----------|
+| `_ga` | Google Analytics | Unterscheidet Unique Users; speichert Client-ID | 2 Jahre |
+| `_ga_[ID]` | Google Analytics | Speichert und zählt Seitenaufrufe | 2 Jahre |
+| `_gid` | Google Analytics | Nutzerunterscheidung; täglich erneuert | 24 Stunden |
+| `_gat` | Google Analytics | Drosselung der Anfragerate | 1 Minute |
+
+**Rechtsgrundlage:** Art. 6 Abs. 1 lit. a DSGVO — Einwilligung.
+
+**Opt-out:**
+- Analyse-Cookies im Cookie-Banner ablehnen (empfohlen)
+- [Google Analytics Opt-out Add-on](https://tools.google.com/dlpage/gaoptout) installieren
+
+---
+
+### 3.3 Funktionale Cookies
+
+Aktuell keine weiteren funktionalen Cookies über die oben genannten hinaus.
+
+---
+
+### 3.4 Marketing- und Werbe-Cookies
+
+**Wir verwenden keine Marketing-, Werbe-, Retargeting- oder verhaltensbasierten Tracking-Cookies.** Kein Facebook Pixel, keine Google Ads Tags, keine Werbenetzwerk-Cookies.
+
+---
+
+## 4. Drittanbieter-Cookies
+
+### 4.1 Whop Inc.
+Unser Abonnement-Checkout und die Mitgliederverwaltung laufen vollständig auf der Whop-Plattform unter `whop.com`. Wenn Sie zum Whop-Checkout weitergeleitet werden, verlassen Sie unsere Website und betreten die Whop-Umgebung. Cookies, die Whop auf ihrer Plattform setzt, unterliegen der eigenen Datenschutzerklärung von Whop. Wir haben weder Kontrolle noch Einblick in diese Cookies. Bitte lesen Sie die Datenschutzerklärung von Whop unter [https://whop.com/privacy-policy/](https://whop.com/privacy-policy/).
+
+### 4.2 Cloudflare
+Cloudflare stellt Hosting, CDN und Sicherheitsfunktionen bereit und kann notwendige Sicherheits-Cookies setzen. Details: [https://www.cloudflare.com/privacypolicy/](https://www.cloudflare.com/privacypolicy/)
+
+### 4.3 Google Analytics
+GA4 setzt Cookies nach erteilter Einwilligung. Datenübertragung in die USA über Standardvertragsklauseln. Details: [https://policies.google.com/privacy](https://policies.google.com/privacy)
+
+---
+
+## 5. Einwilligung und Wahlmöglichkeiten
+
+### 5.1 Cookie-Banner
+Bei Ihrem ersten Besuch erscheint unser Banner:
+- **Alle akzeptieren** — notwendige und Analyse-Cookies aktiv
+- **Ablehnen** — nur notwendige Cookies aktiv
+- **Einstellungen verwalten** — selektive Auswahl
+
+Ihre Entscheidung wird 12 Monate gespeichert.
+
+### 5.2 Widerruf
+- Klick auf **„Cookie-Einstellungen"** in der Fußzeile
+- Browser-Cookies löschen und Website erneut aufrufen
+
+### 5.3 Browser-Einstellungen
+
+- **Google Chrome:** https://support.google.com/chrome/answer/95647
+- **Mozilla Firefox:** https://support.mozilla.org/de/kb/cookies-informationen-websites-speichern
+- **Safari (macOS):** https://support.apple.com/de-de/guide/safari/sfri11471/mac
+- **Safari (iOS):** https://support.apple.com/de-de/HT201265
+- **Microsoft Edge:** https://support.microsoft.com/de-de/windows/verwalten-von-cookies-in-microsoft-edge
+
+### 5.4 Do Not Track
+Unsere Website reagiert nicht auf DNT-Signale. Steuern Sie das Tracking über unser Cookie-Banner.
+
+---
+
+## 6. Keine sensiblen Daten per Cookie
+
+Wir verwenden Cookies nicht zur Erhebung von Zahlungskartendetails, Passwörtern oder besonderen Datenkategorien nach Art. 9 DSGVO.
+
+---
+
+## 7. Aktualisierungen
+
+Wir aktualisieren diese Richtlinie bei Änderungen. Das Datum „Zuletzt aktualisiert" wird entsprechend angepasst.
+
+---
+
+## 8. Kontakt
+
+**[Ihr Unternehmensname]**
+E-Mail: [datenschutz@yourdomain.com]
+Adresse: [Ihre eingetragene Adresse]
