@@ -1,4 +1,7 @@
 {
+  "meta.title": "test",
+  "meta.description": "test2",
+  
   "hero.tagline": "Pricing",
   "hero.text": "One System. {accent}",
   "hero.accent": "Three Ways to Access It.",
