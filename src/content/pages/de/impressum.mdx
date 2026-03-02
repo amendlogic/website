@@ -11,17 +11,15 @@ import { SITE } from 'astrowind:config'
 
 ### Verantwortlicher Diensteanbieter
 
-**Kevin Amend / {SITE?.name}**
-[Straße und Hausnummer]
-[Postleitzahl] [Stadt]
-[Land]
+**{SITE.owner.fullName} / {SITE.owner.companyName} {SITE.owner.legalForm}**
+{SITE.owner.address}
 
 ---
 
 ### Kontakt
 
-E-Mail: [kontakt@yourdomain.com]
-Website: [https://www.yourdomain.com]
+E-Mail: {SITE.owner.eMail}
+Website: {SITE.site}
 
 > **Hinweis:** Wir bitten um Kontaktaufnahme ausschließlich per E-Mail.
 
@@ -29,28 +27,28 @@ Website: [https://www.yourdomain.com]
 
 ### Unternehmensform & Registrierung
 
-**Einzelunternehmen / Freiberufler:**
-Inhaber: [Ihr vollständiger Name]
-Steuernummer: [XX/XXX/XXXXX] (Finanzamt: [Stadt])
+**{SITE.owner.legalForm}**
+Inhaber: {SITE.owner.fullName}
+Steuernummer: {SITE.owner.taxNumber} (Finanzamt: {SITE.owner.taxOffice})
 
 ---
 
 ### Umsatzsteuer-Identifikationsnummer
 
-DE[XXXXXXXXX] gemäß § 27a UStG *(sofern zutreffend)*
+{SITE.owner.vatId} gemäß § 27a UStG
 
 ---
 
 ### Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV
 
-**[Ihr vollständiger Name]**
-[Adresse wie oben]
+**{SITE.owner.fullName}**
+{SITE.owner.address}
 
 ---
 
 ## Aufsichtsbehörde & Regulatorischer Hinweis
 
-{SITE?.name} ist **kein** reguliertes Finanzinstitut, keine lizenzierte Wertpapierfirma, kein Anlageberater und kein Kreditinstitut im Sinne des KWG, WpIG oder der MiFID II.
+{SITE.owner.companyName} ist **kein** reguliertes Finanzinstitut, keine lizenzierte Wertpapierfirma, kein Anlageberater und kein Kreditinstitut im Sinne des KWG, WpIG oder der MiFID II.
 
 Wir unterliegen keiner Aufsicht durch die BaFin, ESMA oder vergleichbare Behörden.
 
@@ -62,7 +60,7 @@ Unser Angebot beschränkt sich auf die Bereitstellung technischer Software-Tools
 
 https://ec.europa.eu/consumers/odr
 
-Unsere E-Mail für diese Plattform: **[kontakt@yourdomain.com]**
+Unsere E-Mail für diese Plattform: **{SITE.owner.eMail}**
 
 Wir sind **nicht verpflichtet und nicht bereit**, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen (§ 36 VSBG).
 
