@@ -19,6 +19,7 @@ Email: [contact@yourdomain.com]
 
 ## Company Structure & Registration
 
+**Sole Trader / Freelancer:**
 Tax Number: [XX/XXX/XXXXX]
 
 ---
