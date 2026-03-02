@@ -1,4 +1,7 @@
 {
+  "meta.title": "test",
+  "meta.description": "test2",
+  
   "hero.text": "{accent} No Gut Feelings. No Second-Guessing.",
   "hero.accent": "Pure Logic.",
   "hero.subtitle": "A proprietary TradingView strategy built for Bitcoin traders who are tired of losing to their own decisions. Structured entry criteria. Hard-coded risk limits. Consistent execution — regardless of what the market is doing.",
