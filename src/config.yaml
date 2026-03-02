@@ -8,14 +8,14 @@ site:
 
   owner:
     fullName: 'Max Mustermann'
-    eMail: 'legal@amendlogic.com'
+    eMail: 'contact@amendlogic.com'
     companyName: 'AmendLogic'
     legalForm: 'GmbH'
     address: 'Musterstraße 1, 12345 Berlin'
     taxNumber: '12/345/67890'
     taxOffice: 'Berlin Mitte'
-    commercialRegister: 'Amtsgericht Berlin'
     hrbNumber: 'HRB 123456'
+    commercialRegister: 'Amtsgericht Berlin'
     managingDirector: ''
     vatId: 'DE123456789'
 
