@@ -1,4 +1,7 @@
 {
+  "meta.title": "test",
+  "meta.description": "test2",
+  
   "hero.tagline": "Der Ursprung des Frameworks",
   "hero.text": "Aus Verlusten gebaut, {accent}",
   "hero.accent": "nicht aus Theorie.",
