@@ -1,6 +1,7 @@
 site:
   name: AmendLogic
-  site: 'https://amendlogic.com' 
+  site: 'https://amendlogic.com'
+  address: 'Musterstraße 1, 12345 Berlin'
   base: '/'
   trailingSlash: false
 
