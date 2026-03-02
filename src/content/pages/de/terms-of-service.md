@@ -1,7 +1,7 @@
 ---
 title: 'Nutzungsbedingungen'
-layout: '~/layouts/MarkdownLayout.astro'
 ---
+import { SITE } from 'astrowind:config'
 
 **Zuletzt aktualisiert:** Februar 2026
 
@@ -9,7 +9,7 @@ layout: '~/layouts/MarkdownLayout.astro'
 
 ## 1. Einleitung und Annahme der Bedingungen
 
-Willkommen bei **[Ihr Unternehmensname]**. Diese Nutzungsbedingungen regeln Ihren Zugang zu und Ihre Nutzung unserer Website, unserer proprietären TradingView-Strategie-Skripte, unserer Abonnementdienste sowie aller damit verbundenen Inhalte und Funktionen (gemeinsam die „Dienste").
+Willkommen bei **{SITE.owner.companyName}**. Diese Nutzungsbedingungen regeln Ihren Zugang zu und Ihre Nutzung unserer Website, unserer proprietären TradingView-Strategie-Skripte, unserer Abonnementdienste sowie aller damit verbundenen Inhalte und Funktionen (gemeinsam die „Dienste").
 
 Durch den Zugriff auf unsere Dienste bestätigen Sie, dass Sie diese Bedingungen vollständig gelesen, verstanden und akzeptiert haben, einschließlich unserer Datenschutzerklärung, Cookie-Richtlinie und Risikohinweise.
 
@@ -33,7 +33,7 @@ Sie sind allein dafür verantwortlich festzustellen, ob die Nutzung unserer Dien
 ## 3. Beschreibung der Dienste
 
 ### 3.1 Was wir anbieten
-[Ihr Unternehmensname] stellt ein proprietäres, regelbasiertes automatisiertes Handelsstrategie-Skript bereit, das innerhalb der **TradingView**-Plattform betrieben wird. Die Strategie analysiert Preisdaten, generiert Signale auf Basis systematischer Kriterien und wendet konfigurierbare Risikomanagement-Parameter an. Sie wird als privates, Invite-Only-TradingView-Skript bereitgestellt.
+{SITE.owner.companyName} stellt ein proprietäres, regelbasiertes automatisiertes Handelsstrategie-Skript bereit, das innerhalb der **TradingView**-Plattform betrieben wird. Die Strategie analysiert Preisdaten, generiert Signale auf Basis systematischer Kriterien und wendet konfigurierbare Risikomanagement-Parameter an. Sie wird als privates, Invite-Only-TradingView-Skript bereitgestellt.
 
 ### 3.2 Was wir nicht anbieten
 Wir erbringen ausdrücklich keine personalisierte Anlageberatung, Portfolio- oder Vermögensverwaltung, Makler- oder Orderausführungsdienste, Finanzplanung oder Steuerberatung und keine garantierten Renditen.
@@ -134,7 +134,7 @@ Das Einleiten einer Rückbuchung ohne vorherige Kontaktaufnahme mit uns stellt e
 ## 7. Geistiges Eigentum
 
 ### 7.1 Eigentum
-Alle Inhalte, Codes, Strategielogiken und geistiges Eigentum sind und bleiben das ausschließliche Eigentum von [Ihr Unternehmensname].
+Alle Inhalte, Codes, Strategielogiken und geistiges Eigentum sind und bleiben das ausschließliche Eigentum von {SITE.owner.companyName}.
 
 ### 7.2 Lizenzvergabe
 Bei aktivem Abonnement gewähren wir eine **begrenzte, nicht exklusive, nicht übertragbare, widerrufliche Lizenz** zur persönlichen Nutzung der Strategie über TradingView.
@@ -212,6 +212,6 @@ Diese Bedingungen bilden zusammen mit Datenschutzerklärung, Cookie-Richtlinie u
 
 ## 16. Kontakt
 
-**[Ihr Unternehmensname]**
-E-Mail: [legal@yourdomain.com]
-Adresse: [Ihre eingetragene Adresse]
+<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
+E-Mail: {SITE.owner.eMail}<br />
+Adresse: {SITE.owner.address}
