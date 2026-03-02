@@ -1,4 +1,5 @@
 ---
+
 import { getI18nPaths, useTranslations } from '~/i18n/utils';
 import { getPermalink } from '~/utils/permalinks';
 
@@ -23,6 +24,7 @@ const t = useTranslations(lang);
 // 4. Metadaten
 const metadata = {
   title: `${t('home.hero.titleStart')} ${t('home.hero.titleAccent')} — AmendLogic`,
+  description: t('faq.meta.description'),
   ignoreTitleTemplate: true,
 };
 ---
