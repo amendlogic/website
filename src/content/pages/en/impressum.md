@@ -1,0 +1,66 @@
+---
+title: 'Legal Notice'
+layout: '~/layouts/MarkdownLayout.astro'
+---
+
+**Last Updated:** February 2026
+
+---
+
+## Service Provider
+
+**[Your Full Name / Company Name]**
+[Street and House Number]
+[Postal Code] [City]
+[Country]
+Email: [contact@yourdomain.com]
+
+---
+
+## Company Structure & Registration
+
+Tax Number: [XX/XXX/XXXXX]
+
+---
+
+## Person Responsible for Editorial Content (§ 18 Para. 2 MStV)
+
+**[Your Full Name]**, [Address as above]
+
+---
+
+## Regulatory Notice
+
+[Your Company Name] is **not** a regulated financial institution, licensed securities firm, investment advisor, asset manager, or credit institution under applicable financial services law including KWG, WpIG, or MiFID II. We are not supervised by BaFin, ESMA, or any comparable authority.
+
+Our offering is limited to providing technical software tools (TradingView strategy scripts) for educational and informational purposes only.
+
+---
+
+## EU Online Dispute Resolution
+
+https://ec.europa.eu/consumers/odr — Email: [contact@yourdomain.com]
+
+We are neither obligated nor willing to participate in dispute resolution proceedings before a consumer arbitration board.
+
+---
+
+## Trademark Notices
+
+**TradingView®** is a registered trademark of TradingView, Inc. This offering is not affiliated with, sponsored by, or endorsed by TradingView.
+
+**Whop®** is a registered trademark of Whop Inc. (169 Madison Ave Suite 2895, New York, NY 10016, USA). The name is referenced solely to inform users about the checkout and subscription platform used. This offering is not otherwise affiliated with Whop Inc. and is not sponsored or endorsed by Whop.
+
+**Google Analytics** is a service of Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland.
+
+**Cloudflare®** is a registered trademark of Cloudflare, Inc. This website is hosted via Cloudflare Pages.
+
+---
+
+## Technical Implementation, Hosting & Payment Processing
+
+This website is built on the **AstroWind** template and hosted via **Cloudflare Pages** (Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA).
+
+Subscriptions, checkout, and payment processing are provided and managed by **Whop Inc.** (169 Madison Ave Suite 2895, New York, NY 10016, USA) acting as Merchant of Record. Whop is responsible for payment processing, invoicing, tax collection, and subscription management.
+
+Website analytics are collected via **Google Analytics 4** (see Privacy Policy for details).
