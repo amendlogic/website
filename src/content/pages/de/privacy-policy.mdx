@@ -10,15 +10,13 @@ import { SITE } from 'astrowind:config'
 ## 1. Einleitung und Verantwortlicher
 
 ### 1.1 Wer wir sind
-Diese Datenschutzerklärung beschreibt, wie **{SITE?.name}** personenbezogene Daten erhebt, verarbeitet und verwendet, wenn Sie unsere Website besuchen oder unsere Dienste nutzen.
+Diese Datenschutzerklärung beschreibt, wie **{SITE.owner.companyName}** personenbezogene Daten erhebt, verarbeitet und verwendet, wenn Sie unsere Website besuchen oder unsere Dienste nutzen.
 
 ### 1.2 Verantwortlicher
 
-**Kevin Amend / {SITE?.name}**
-[Straße und Hausnummer]
-[Postleitzahl] [Stadt]
-[Land]
-E-Mail: [datenschutz@yourdomain.com]
+<strong>{SITE.owner.fullName} / {SITE.owner.companyName}</strong><br />
+{SITE.owner.address}<br />
+E-Mail: {SITE.owner.eMail}
 
 ### 1.3 Wichtiger Hinweis zu Whop als Merchant of Record
 Unser Abonnement-Checkout und die Abrechnung werden von **Whop Inc.** als Merchant of Record abgewickelt. Whop verarbeitet Ihre Zahlungsdaten, stellt Rechnungen aus und übernimmt steuerliche Pflichten eigenständig. Die Erhebung und Verarbeitung Ihrer Zahlungs- und Kontodaten durch Whop unterliegt der **eigenen Datenschutzerklärung von Whop** unter [https://whop.com/privacy-policy/](https://whop.com/privacy-policy/). Wir erhalten von Whop nur die in Abschnitt 3 beschriebenen eingeschränkten Daten.
@@ -167,6 +165,6 @@ Dienste nicht für Personen unter 18. Externe Links unterliegen eigenen Datensch
 
 ## 12. Kontakt
 
-**{SITE?.name}** | E-Mail: [datenschutz@yourdomain.com] | Adresse: [Ihre Adresse]
-
-Antwort innerhalb von **30 Tagen**.
+<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
+E-Mail: {SITE.owner.eMail}<br />
+Adresse: {SITE.owner.address}
