@@ -12,6 +12,7 @@ import { SITE } from 'astrowind:config'
 ### Verantwortlicher Diensteanbieter
 
 **{SITE.owner.fullName} / {SITE.owner.companyName} {SITE.owner.legalForm}**
+
 {SITE.owner.address}
 
 ---
@@ -28,8 +29,10 @@ Website: {SITE.site}
 
 ### Unternehmensform & Registrierung
 
-**{SITE.owner.legalForm}**
+**{SITE.owner.companyName} {SITE.owner.legalForm}**
+
 Inhaber: {SITE.owner.fullName}
+
 Steuernummer: {SITE.owner.taxNumber} (Finanzamt: {SITE.owner.taxOffice})
 
 ---
