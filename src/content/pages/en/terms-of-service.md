@@ -1,5 +1,5 @@
 ---
-title: 'Terms and Conditions'
+title: 'Terms of Service'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
