@@ -1,5 +1,6 @@
 ---
-import { getI18nPaths, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
+import { SITE } from 'astrowind:config';
+import { getI18nPaths, useTranslations } from '~/i18n/utils';
 
 // 1. Daten und Navigation importieren
 import Layout from '~/layouts/PageLayout.astro';
@@ -19,6 +20,7 @@ const t = useTranslations(lang);
 // 4. Metadaten
 const metadata = {
   title: `${t('home.hero.titleStart')} ${t('home.hero.titleAccent')} — AmendLogic`,
+  description: t('contact.description'),
   ignoreTitleTemplate: true,
 };
 ---
