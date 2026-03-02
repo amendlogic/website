@@ -18,7 +18,7 @@ import { SITE } from 'astrowind:config'
 
 ### Kontakt
 
-E-Mail: {SITE.owner.eMail}  
+E-Mail: {SITE.owner.eMail}<br />
 Website: {SITE.site}
 
 > **Hinweis:** Wir bitten um Kontaktaufnahme ausschließlich per E-Mail.
@@ -27,8 +27,8 @@ Website: {SITE.site}
 
 ### Unternehmensform & Registrierung
 
-**{SITE.owner.companyName} {SITE.owner.legalForm}**  
-Inhaber: {SITE.owner.fullName}  
+<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
+Inhaber: {SITE.owner.fullName}<br />
 Steuernummer: {SITE.owner.taxNumber} (Finanzamt: {SITE.owner.taxOffice})
 
 ---
@@ -41,7 +41,7 @@ Steuernummer: {SITE.owner.taxNumber} (Finanzamt: {SITE.owner.taxOffice})
 
 ### Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV
 
-**{SITE.owner.fullName}**  
+<strong>{SITE.owner.fullName}</strong><br />
 {SITE.owner.address}
 
 ---
