@@ -1,7 +1,7 @@
 ---
 title: 'Datenschutzerklärung'
-layout: '~/layouts/MarkdownLayout.astro'
 ---
+import { SITE } from 'astrowind:config'
 
 **Zuletzt aktualisiert:** Februar 2026
 
@@ -10,11 +10,11 @@ layout: '~/layouts/MarkdownLayout.astro'
 ## 1. Einleitung und Verantwortlicher
 
 ### 1.1 Wer wir sind
-Diese Datenschutzerklärung beschreibt, wie **[Ihr Unternehmensname]** personenbezogene Daten erhebt, verarbeitet und verwendet, wenn Sie unsere Website besuchen oder unsere Dienste nutzen.
+Diese Datenschutzerklärung beschreibt, wie **{SITE?.name}** personenbezogene Daten erhebt, verarbeitet und verwendet, wenn Sie unsere Website besuchen oder unsere Dienste nutzen.
 
 ### 1.2 Verantwortlicher
 
-**[Ihr vollständiger Name / Unternehmensname]**
+**Kevin Amend / {SITE?.name}**
 [Straße und Hausnummer]
 [Postleitzahl] [Stadt]
 [Land]
@@ -167,6 +167,6 @@ Dienste nicht für Personen unter 18. Externe Links unterliegen eigenen Datensch
 
 ## 12. Kontakt
 
-**[Ihr Unternehmensname]** | E-Mail: [datenschutz@yourdomain.com] | Adresse: [Ihre Adresse]
+**{SITE?.name}** | E-Mail: [datenschutz@yourdomain.com] | Adresse: [Ihre Adresse]
 
 Antwort innerhalb von **30 Tagen**.
