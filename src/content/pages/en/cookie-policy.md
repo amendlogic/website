@@ -1,0 +1,150 @@
+---
+title: 'Cookie Policy'
+layout: '~/layouts/MarkdownLayout.astro'
+---
+
+**Last Updated:** February 2026
+
+---
+
+## 1. Introduction
+
+This Cookie Policy explains how **[Your Company Name]** uses cookies and similar tracking technologies on our website at **[https://www.yourdomain.com]**. Please read this alongside our Privacy Policy and Terms of Service.
+
+By using our Website, you acknowledge that we may use cookies as described here. Where cookies require consent, we ask for it via our cookie consent banner before any non-essential cookies are placed on your device.
+
+---
+
+## 2. What Are Cookies?
+
+Cookies are small text files stored on your device when you visit a website. They allow the site to recognize your device and remember information about your visit.
+
+**Similar technologies we may use:**
+- **Local storage / Session storage:** Browser-based data storage
+- **Pixel tags / Web beacons:** Tiny images that record when a page is loaded
+- **JavaScript trackers:** Code snippets that collect behavioral data
+
+Throughout this policy, "cookies" refers collectively to all such technologies.
+
+---
+
+## 3. Types of Cookies We Use
+
+### 3.1 Strictly Necessary Cookies
+
+Essential for the Website to function. No consent required.
+
+| Cookie Name | Provider | Purpose | Duration |
+|-------------|----------|---------|----------|
+| `_cfuvid` | Cloudflare | Rate limiting and abuse prevention | Session |
+| `cf_clearance` | Cloudflare | Records successful security challenge | 1 year |
+| `cookieconsent_status` | [Your Company Name] | Stores your cookie consent choice | 1 year |
+
+**Note on Whop Cookies:** The Whop checkout and member dashboard operate on Whop's own domain (`whop.com`) and are not part of our Website. Cookies set by Whop on their platform are governed by Whop's Cookie Policy, not this one. When you are redirected to Whop's checkout, you are leaving our Website and entering Whop's environment.
+
+**Legal basis:** Art. 6(1)(f) GDPR — Legitimate Interests. No consent required.
+
+---
+
+### 3.2 Analytics Cookies
+
+Collect anonymized data about how visitors use our Website. **Only placed after you have given explicit consent** via our cookie banner.
+
+#### Google Analytics 4 (GA4)
+Provided by Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Ireland).
+
+**Key facts about our GA4 implementation:**
+- IP addresses are **anonymized** before storage
+- We do **not** use GA4 for advertising or remarketing
+- Data retention is set to **14 months**
+- Data minimization settings are enabled
+
+| Cookie Name | Provider | Purpose | Duration |
+|-------------|----------|---------|----------|
+| `_ga` | Google Analytics | Distinguishes unique users via randomly generated client ID | 2 years |
+| `_ga_[ID]` | Google Analytics | Stores and counts page views for the GA4 property | 2 years |
+| `_gid` | Google Analytics | Distinguishes users; refreshed every 24 hours | 24 hours |
+| `_gat` | Google Analytics | Throttles request rate | 1 minute |
+
+**Legal basis:** Art. 6(1)(a) GDPR — Consent.
+
+**Opt-out options:**
+- Decline analytics cookies in our cookie banner (recommended)
+- Install the [Google Analytics Opt-out Browser Add-on](https://tools.google.com/dlpage/gaoptout)
+- Use a tracking-blocking browser extension (e.g., uBlock Origin)
+
+---
+
+### 3.3 Functional Cookies
+
+We do not currently use additional functional cookies beyond those listed under strictly necessary. This policy will be updated if that changes.
+
+---
+
+### 3.4 Marketing & Advertising Cookies
+
+**We do not use marketing, advertising, retargeting, or behavioral tracking cookies on this Website.**
+
+No Facebook Pixel, Google Ads remarketing tags, or advertising network cookies are deployed. No data collected on our Website is used for targeted advertising.
+
+---
+
+## 4. Third-Party Cookies
+
+### 4.1 Whop Inc.
+Our subscription checkout and member management operate entirely on Whop's platform at `whop.com`. When you click through to Whop's checkout or access your Whop Member Dashboard, you are navigating to a separate domain operated by Whop. Any cookies set by Whop on their platform fall under Whop's own Cookie and Privacy Policy. We have no control over and no visibility into the cookies Whop sets on their platform. Please review Whop's Privacy Policy at [https://whop.com/privacy-policy/](https://whop.com/privacy-policy/) for details.
+
+### 4.2 Cloudflare
+Cloudflare provides hosting, CDN, and security services for our Website. Cloudflare may set cookies to support DDoS protection, bot detection, and rate-limiting. These are strictly necessary. See [Cloudflare's Privacy Policy](https://www.cloudflare.com/privacypolicy/).
+
+### 4.3 Google Analytics
+As described in Section 3.2, Google Analytics 4 sets cookies when you have consented. Data may be transferred to Google LLC servers in the United States under Standard Contractual Clauses. See [Google's Privacy Policy](https://policies.google.com/privacy).
+
+---
+
+## 5. Cookie Consent & Your Choices
+
+### 5.1 Our Cookie Banner
+When you first visit our Website, a consent banner lets you:
+- **Accept all cookies** — enables strictly necessary and analytics cookies
+- **Decline non-essential cookies** — only strictly necessary cookies remain active
+- **Manage preferences** — selectively enable or disable categories
+
+Your choice is stored via the `cookieconsent_status` cookie for **12 months**.
+
+### 5.2 Changing or Withdrawing Consent
+- Click **"Cookie Preferences"** in our Website footer
+- Clear your browser cookies and revisit our Website
+
+Withdrawal does not affect the lawfulness of prior processing.
+
+### 5.3 Browser-Level Controls
+
+- **Google Chrome:** https://support.google.com/chrome/answer/95647
+- **Mozilla Firefox:** https://support.mozilla.org/en-US/kb/cookies-information-websites-store-on-your-computer
+- **Safari (macOS):** https://support.apple.com/guide/safari/manage-cookies-sfri11471/mac
+- **Safari (iOS):** https://support.apple.com/en-us/HT201265
+- **Microsoft Edge:** https://support.microsoft.com/en-us/windows/manage-cookies-in-microsoft-edge
+
+### 5.4 Do Not Track (DNT)
+Our Website does not currently respond to DNT signals. Use our cookie banner to control analytics tracking.
+
+---
+
+## 6. Cookies and Sensitive Information
+
+We do not use cookies to collect payment details, passwords, or special categories of personal data.
+
+---
+
+## 7. Updates to This Policy
+
+We may update this policy to reflect changes in cookies used, applicable law, or third-party services. The "Last Updated" date will be revised accordingly.
+
+---
+
+## 8. Contact
+
+**[Your Company Name]**
+Email: [privacy@yourdomain.com]
+Address: [Your registered address]
