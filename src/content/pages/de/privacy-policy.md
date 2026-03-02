@@ -1,0 +1,172 @@
+---
+title: 'Datenschutzerklärung'
+layout: '~/layouts/MarkdownLayout.astro'
+---
+
+**Zuletzt aktualisiert:** Februar 2026
+
+---
+
+## 1. Einleitung und Verantwortlicher
+
+### 1.1 Wer wir sind
+Diese Datenschutzerklärung beschreibt, wie **[Ihr Unternehmensname]** personenbezogene Daten erhebt, verarbeitet und verwendet, wenn Sie unsere Website besuchen oder unsere Dienste nutzen.
+
+### 1.2 Verantwortlicher
+
+**[Ihr vollständiger Name / Unternehmensname]**
+[Straße und Hausnummer]
+[Postleitzahl] [Stadt]
+[Land]
+E-Mail: [datenschutz@yourdomain.com]
+
+### 1.3 Wichtiger Hinweis zu Whop als Merchant of Record
+Unser Abonnement-Checkout und die Abrechnung werden von **Whop Inc.** als Merchant of Record abgewickelt. Whop verarbeitet Ihre Zahlungsdaten, stellt Rechnungen aus und übernimmt steuerliche Pflichten eigenständig. Die Erhebung und Verarbeitung Ihrer Zahlungs- und Kontodaten durch Whop unterliegt der **eigenen Datenschutzerklärung von Whop** unter [https://whop.com/privacy-policy/](https://whop.com/privacy-policy/). Wir erhalten von Whop nur die in Abschnitt 3 beschriebenen eingeschränkten Daten.
+
+---
+
+## 2. Rechtsgrundlagen (Art. 6 DSGVO)
+
+- **Art. 6 Abs. 1 lit. a** — Einwilligung (Analyse-Cookies)
+- **Art. 6 Abs. 1 lit. b** — Vertragserfüllung (Abonnement, TradingView-Zugang, Support)
+- **Art. 6 Abs. 1 lit. c** — Rechtliche Verpflichtung (steuerliche Aufzeichnungspflichten)
+- **Art. 6 Abs. 1 lit. f** — Berechtigte Interessen (Betrugsprävention, Sicherheit)
+
+---
+
+## 3. Erhobene Daten
+
+### 3.1 Direkt bereitgestellte Daten
+
+**a) Abonnementregistrierung (über Whop)**
+Der Checkout erfolgt vollständig über Whop. Whop erhebt bei der Anmeldung Name, E-Mail-Adresse, Rechnungsadresse und Zahlungsdetails. Wir betreiben das Checkout-Formular nicht und erhalten **keine** Zahlungskartendetails.
+
+Nach erfolgreichem Abonnement übermittelt Whop uns folgende Daten:
+- E-Mail-Adresse
+- Whop User ID
+- Abonnementstatus und Plandetails
+- TradingView-Benutzername (von Ihnen beim Checkout angegeben)
+
+**b) TradingView-Benutzername**
+Ihr TradingView-Benutzername ist erforderlich, um Ihren Skript-Zugang zu autorisieren. Sie geben ihn beim Whop-Checkout an. Wir verwenden ihn ausschließlich zur Vergabe und Verwaltung Ihres TradingView-Skriptzugangs.
+
+**c) Kontakt- und Support-Anfragen**
+Name (sofern angegeben), E-Mail-Adresse, Nachrichteninhalt.
+
+### 3.2 Automatisch erhobene Daten
+
+**a) Serverlogs (Cloudflare):** IP-Adresse, Browser, Betriebssystem, Verweisende URL, besuchte Seiten, Zeitstempel.
+
+**b) Analysedaten (Google Analytics 4):** Seitenaufrufe, Navigationspfade, Sitzungsdauer, Gerätetyp, ungefährer geografischer Standort (aus anonymisierter IP). IP-Adressen werden vor der Speicherung anonymisiert. Rechtsgrundlage: Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).
+
+### 3.3 Nicht erhobene Daten
+Wir erheben keine Zahlungskartendetails (Whop), keine vollständigen Rechnungsadressen, keine besonderen Datenkategorien nach Art. 9 DSGVO, keine API-Schlüssel und keine genauen Standortdaten.
+
+---
+
+## 4. Verarbeitungszwecke
+
+| Zweck | Daten | Rechtsgrundlage |
+|-------|-------|-----------------|
+| TradingView-Skriptzugang | TradingView-Benutzername, Abonnementstatus (von Whop) | Art. 6 Abs. 1 lit. b |
+| Abonnementverwaltung (via Whop) | E-Mail, Whop User ID, Abonnementdaten | Art. 6 Abs. 1 lit. b |
+| Kundensupport | E-Mail, Name, Nachrichteninhalt | Art. 6 Abs. 1 lit. b / lit. f |
+| Hosting und Sicherheit | IP-Adresse, Protokolldaten | Art. 6 Abs. 1 lit. f |
+| Website-Analyse (GA4) | Anonymisierte Nutzungsdaten | Art. 6 Abs. 1 lit. a |
+| Betrugsprävention | IP-Adresse, Nutzungsmuster | Art. 6 Abs. 1 lit. f |
+| Aufzeichnungspflichten | Transaktionsreferenzen, Korrespondenz | Art. 6 Abs. 1 lit. c |
+| Transaktionale E-Mails | E-Mail-Adresse | Art. 6 Abs. 1 lit. b |
+| Marketing | E-Mail-Adresse | Art. 6 Abs. 1 lit. a |
+
+---
+
+## 5. Cookies
+
+Details entnehmen Sie unserer **[Cookie-Richtlinie]**. Analyse-Cookies (GA4) werden nur mit Ihrer Einwilligung aktiviert. Keine Werbe-Cookies.
+
+---
+
+## 6. Drittanbieter
+
+### 6.1 Cloudflare, Inc. (Hosting & CDN)
+**Rolle:** Auftragsverarbeiter | **Zweck:** Hosting, CDN, DDoS-Schutz | **Standort:** USA (SCC) | **Datenschutz:** https://www.cloudflare.com/privacypolicy/
+
+### 6.2 Whop Inc. (Checkout, Abonnementverwaltung & Merchant of Record)
+**Rolle:** Eigenständiger Verantwortlicher (Merchant of Record)
+**Zweck:** Whop fungiert als Merchant of Record für alle Abonnementtransaktionen. Whop erhebt und verarbeitet eigenständig Ihre Zahlungsdaten, Rechnungsadresse, Abonnementdetails und Kontoinformationen beim Checkout und für die laufende Abrechnungsverwaltung. Whop ist allein verantwortlich für Zahlungssicherheit, Steuererhebung, Rechnungsstellung und die Verwaltung Ihres Whop-Kontos. Wir erhalten von Whop ausschließlich: E-Mail-Adresse, Whop User ID, TradingView-Benutzername und Abonnementstatus.
+**Von uns an Whop übermittelte Daten:** TradingView-Benutzername (von Ihnen beim Checkout angegeben)
+**Von Whop an uns übermittelte Daten:** E-Mail-Adresse, Whop User ID, Abonnementstatus und Plan, TradingView-Benutzername
+**Standort:** USA (Whop Inc., 169 Madison Ave Suite 2895, New York, NY 10016, USA)
+**Datenschutz:** https://whop.com/privacy-policy/
+
+> Da Whop als Merchant of Record und eigenständiger Verantwortlicher handelt, unterliegt die Erhebung und Nutzung Ihrer Zahlungsdaten, Rechnungsinformationen und Kontodaten auf der Whop-Plattform vollständig der eigenen Datenschutzerklärung von Whop. Wir empfehlen dringend, die Datenschutzerklärung von Whop vor dem Kauf zu lesen.
+
+### 6.3 Google Ireland Limited (Analyse)
+**Rolle:** Auftragsverarbeiter | **Zweck:** Website-Analyse via GA4 | **Standort:** USA (SCC) | **Opt-Out:** https://tools.google.com/dlpage/gaoptout | **Datenschutz:** https://policies.google.com/privacy
+
+### 6.4 TradingView, Inc. (Strategie-Plattform)
+**Rolle:** Eigenständiger Verantwortlicher | **Übermittelte Daten:** Ausschließlich TradingView-Benutzername | **Standort:** USA | **Datenschutz:** https://www.tradingview.com/privacy-policy/
+
+### 6.5 E-Mail-Dienstleister
+**Rolle:** Auftragsverarbeiter | **Zweck:** Transaktionale E-Mails | **Anbieter:** [Eintragen] | **Datenschutz:** [Link]
+
+---
+
+## 7. Internationale Datenübertragungen
+
+Alle Übertragungen in die USA sind durch Standardvertragsklauseln (SCC) gemäß Art. 46 DSGVO abgesichert. Bitte prüfen Sie für Whop deren aktuelle Datenschutzerklärung zu bestehenden Schutzmaßnahmen.
+
+---
+
+## 8. Speicherdauer
+
+| Datenkategorie | Speicherdauer |
+|----------------|--------------|
+| Von Whop erhaltene Abonnementdaten | Dauer des Abonnements + 3 Jahre |
+| TradingView-Benutzername | Dauer des Abonnements; Löschung nach Kündigung |
+| Transaktionsreferenzen | 10 Jahre (§ 257 HGB, § 147 AO) |
+| Support-E-Mail-Korrespondenz | 3 Jahre |
+| Analysedaten (GA4) | 14 Monate |
+| Cloudflare-Logs | Bis zu 30 Tage |
+| Cookie-Einwilligungsnachweise | 3 Jahre |
+
+Zahlungsdaten, Rechnungsadressen und vollständige Transaktionsdaten werden von Whop gemäß ihrer eigenen Datenschutzrichtlinie aufbewahrt. Wir speichern keine Kopien dieser Daten.
+
+---
+
+## 9. Ihre Rechte nach DSGVO
+
+Für bei uns gespeicherte Daten: [datenschutz@yourdomain.com]. Für bei Whop gespeicherte Daten (Zahlungs- und Kontodaten) wenden Sie sich bitte direkt an Whop.
+
+- **Art. 15** — Auskunftsrecht
+- **Art. 16** — Recht auf Berichtigung
+- **Art. 17** — Recht auf Löschung (vorbehaltlich gesetzlicher Aufbewahrungspflichten)
+- **Art. 18** — Einschränkung der Verarbeitung
+- **Art. 20** — Datenübertragbarkeit
+- **Art. 21** — Widerspruchsrecht
+- **Art. 7 Abs. 3** — Widerruf der Einwilligung
+- **Art. 22** — Kein automatisiertes Entscheidungsverfahren
+
+**Beschwerderecht (Art. 77 DSGVO):**
+Bundesbeauftragte für den Datenschutz und die Informationsfreiheit (BfDI)
+Graurheindorfer Str. 153, 53117 Bonn | https://www.bfdi.bund.de
+
+---
+
+## 10. Datensicherheit
+
+HTTPS/TLS-Verschlüsselung, Cloudflare-Sicherheitsinfrastruktur, Zugriffskontrollen und Datensparsamkeit. Zahlungssicherheit wird vollständig von Whop verwaltet.
+
+---
+
+## 11. Minderjährige, Links, Änderungen
+
+Dienste nicht für Personen unter 18. Externe Links unterliegen eigenen Datenschutzrichtlinien. Wesentliche Änderungen werden per Website-Hinweis und E-Mail mitgeteilt.
+
+---
+
+## 12. Kontakt
+
+**[Ihr Unternehmensname]** | E-Mail: [datenschutz@yourdomain.com] | Adresse: [Ihre Adresse]
+
+Antwort innerhalb von **30 Tagen**.
