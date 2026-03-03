@@ -85,7 +85,7 @@ apps:
 analytics:
   vendors:
     googleAnalytics:
-      id: null 
+      id: 'G-0KL9Z6C40R'
 
 ui:
   theme: 'system'
