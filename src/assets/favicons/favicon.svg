@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 163 163">
-    <path d="M 119.5 153 h -22 v -8 a 55 55 90 0 1 -88 -44 a 55 55 90 0 1 88 -44 a 33 33 90 0 0 -33 -33 v -22 a 55 55 90 0 1 55 55 z m -22 -52 a 1 1 0 0 0 -66 0 a 1 1 0 0 0 66 0 z" />
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 154 154">
+    <path d="M 132 151 h -22 v -8 a 55 55 90 0 1 -88 -44 a 55 55 90 0 1 88 -44 a 33 33 90 0 0 -33 -33 v -22 a 55 55 90 0 1 55 55 z m -22 -52 a 1 1 0 0 0 -66 0 a 1 1 0 0 0 66 0 z" />
     <style>
-        path { fill: #000; }
+        path { fill: #0161ef; }
         @media (prefers-color-scheme: dark) {
             path { fill: #FFF; }
         }
