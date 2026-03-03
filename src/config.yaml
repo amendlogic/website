@@ -84,8 +84,6 @@ apps:
 
 analytics:
   vendors:
-    googleTagManager:
-      id: 'GTM-XXXXXXX'
     googleAnalytics:
       id: null 
 
