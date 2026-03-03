@@ -37,7 +37,11 @@ import { SITE } from 'astrowind:config'
 <address class="not-italic">
   <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
   {`Inhaber: ${SITE.owner.fullName}`}<br />
-  {`Steuernummer: ${SITE.owner.taxNumber} (Finanzamt: ${SITE.owner.taxOffice})`}
+  {SITE.owner.hrbNumber && <>HRB: {SITE.owner.hrbNumber}<br /></>}
+  {SITE.owner.commercialRegister && <>Amtsgericht: {SITE.owner.commercialRegister}<br /></>}
+  {SITE.owner.vatId && <>USt-IdNr.: {SITE.owner.vatId}<br /></>}
+  {SITE.owner.economicId && <>W-IdNr.: {SITE.owner.economicId}<br /></>}
+  {SITE.owner.managingDirector && <>Geschäftsführer: {SITE.owner.managingDirector}</>}
 </address>
 
 ---
