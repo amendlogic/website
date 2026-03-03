@@ -1,13 +1,32 @@
 ---
-import { GoogleAnalytics } from '@astrolib/analytics';
 import { ANALYTICS } from 'astrowind:config';
+const GA_ID = ANALYTICS?.vendors?.googleAnalytics?.id;
 ---
 
-{
-  ANALYTICS?.vendors?.googleAnalytics?.id ? (
-    <GoogleAnalytics
-      id={String(ANALYTICS.vendors.googleAnalytics.id)}
-      partytown={ANALYTICS?.vendors?.googleAnalytics?.partytown}
-    />
-  ) : null
-}
+{GA_ID && (
+  <>
+    <!-- Google Analytics blockiert bis Consent -->
+    <script
+      type="text/plain"
+      data-category="analytics"
+      data-service="Google Analytics"
+      is:inline
+    >
+      {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '${GA_ID}', {
+          anonymize_ip: true
+        });
+      `}
+    </script>
+
+    <script
+      type="text/plain"
+      data-category="analytics"
+      data-service="Google Analytics"
+      src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"
+    ></script>
+  </>
+)}
