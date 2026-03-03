@@ -10,7 +10,7 @@ site:
     fullName: 'Max Mustermann'
     eMail: 'contact@amendlogic.com'
     companyName: 'AmendLogic'
-    legalForm: 'GmbH'
+    legalForm: ''
 
     address:
       street: 'Musterstraße 1'
@@ -20,9 +20,9 @@ site:
 
     taxNumber: '12/345/67890'
     taxOffice: 'Oberhausen-Nord'
-    hrbNumber: '123456'
-    commercialRegister: 'Duisburg'
-    managingDirector: 'Peter'
+    hrbNumber: ''
+    commercialRegister: ''
+    managingDirector: ''
     vatId: 'DE123456789'
     economicId: '123456'
 
