@@ -34,6 +34,43 @@ export const config = {
           analytics: {},
           marketing: {}
       },
+      
+      onAccept: ({ categories }) => {
+
+        if (categories.includes('analytics')) {
+          gtag('consent', 'update', {
+            analytics_storage: 'granted'
+          });
+        }
+
+        if (categories.includes('marketing')) {
+          gtag('consent', 'update', {
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted'
+          });
+        }
+
+      },
+
+      onChange: ({ categories }) => {
+
+        if (!categories.includes('analytics')) {
+          gtag('consent', 'update', {
+            analytics_storage: 'denied'
+          });
+        }
+
+        if (!categories.includes('marketing')) {
+          gtag('consent', 'update', {
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied'
+          });
+        }
+
+      },
+      
       language: {
           default: "en",
           autoDetect: "document",
