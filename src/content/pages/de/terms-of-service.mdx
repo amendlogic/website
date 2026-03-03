@@ -307,9 +307,20 @@ Wenn eine Bestimmung dieser Bedingungen als ungültig, rechtswidrig oder nicht d
 
 Bei Fragen, Support oder rechtlichen Hinweisen zu diesen Bedingungen kontaktieren Sie uns bitte unter:
 
-<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
-{SITE.owner.address}<br />
-E-Mail: {SITE.owner.eMail}
+<address>
+  <strong>
+    {SITE.owner.fullName} / {SITE.owner.companyName} {SITE.owner.legalForm}
+  </strong><br />
+
+  {SITE.owner.address.street}<br />
+  {SITE.owner.address.postalCode}&nbsp;{SITE.owner.address.city}<br />
+  {SITE.owner.address.country}<br /><br />
+
+  E-Mail: 
+  <a href={`mailto:${SITE.owner.eMail}`}>
+    {SITE.owner.eMail}
+  </a>
+</address>
 
 ---
 
