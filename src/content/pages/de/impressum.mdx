@@ -34,11 +34,11 @@ import { SITE } from 'astrowind:config'
 
 ### Unternehmensform & Registrierung
 
-<div>
+<address class="not-italic">
   <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
-  Inhaber: {SITE.owner.fullName}<br />
-  Steuernummer: {SITE.owner.taxNumber} (Finanzamt: {SITE.owner.taxOffice})
-</div>
+  {`Inhaber: ${SITE.owner.fullName}`}<br />
+  {`Steuernummer: ${SITE.owner.taxNumber} (Finanzamt: ${SITE.owner.taxOffice})`}
+</address>
 
 ---
 
