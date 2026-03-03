@@ -48,13 +48,6 @@ import { SITE } from 'astrowind:config'
 
 ---
 
-### Umsatzsteuer-Identifikationsnummer
-
-Umsatzsteuer-Identifikationsnummer gemäß § 27a des Umsatzsteuergesetzes:
-**{SITE.owner.vatId}**
-
----
-
 ### Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV (Medienstaatsvertrag)
 
 <address class="not-italic">
@@ -63,12 +56,6 @@ Umsatzsteuer-Identifikationsnummer gemäß § 27a des Umsatzsteuergesetzes:
   {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
   {SITE.owner.address.country}
 </address>
-
----
-
-### Wirtschafts-Identifikationsnummer (W-IdNr.)
-
-W-IdNr.: {SITE.owner.economicId}
 
 ---
 
