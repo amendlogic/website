@@ -24,7 +24,7 @@ const t = useTranslations(lang);
 // 4. Metadaten
 const metadata = {
   title: `${t('about.meta.preword')} ${SITE.name} — ${t('about.meta.title')}`,
-  description: t('about.meta.description'),
+  description: `${SITE.name} ${t('about.meta.description')}`,
   ignoreTitleTemplate: true,
 };
 ---
