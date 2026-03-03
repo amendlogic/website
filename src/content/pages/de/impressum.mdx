@@ -32,9 +32,11 @@ Website: {SITE.site}
 
 ### Unternehmensform & Registrierung
 
-<strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
-Inhaber: {SITE.owner.fullName}<br />
-Steuernummer: {SITE.owner.taxNumber} (Finanzamt: {SITE.owner.taxOffice})
+<address class="not-italic">
+  <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
+  Inhaber: {SITE.owner.fullName}<br />
+  Steuernummer: {SITE.owner.taxNumber} (Finanzamt: {SITE.owner.taxOffice})
+</address>
 
 ---
 
