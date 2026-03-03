@@ -11,13 +11,20 @@ site:
     eMail: 'contact@amendlogic.com'
     companyName: 'AmendLogic'
     legalForm: ''
-    address: 'Musterstraße 1, 12345 Berlin, Germany'
+
+    address:
+      street: 'Musterstraße 1'
+      postalCode: '12345'
+      city: 'Berlin'
+      country: 'DE'
+
     taxNumber: '12/345/67890'
-    taxOffice: 'Oberhausen‑Nord'
+    taxOffice: 'Oberhausen-Nord'
     hrbNumber: 'HRB 123456'
     commercialRegister: 'Amtsgericht Duisburg'
     managingDirector: ''
     vatId: 'DE123456789'
+    economicId: '123456'
 
 metadata:
   title:
