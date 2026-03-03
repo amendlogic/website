@@ -13,7 +13,7 @@ import { SITE } from 'astrowind:config'
 ### Verantwortlicher Diensteanbieter
 
 <address class="not-italic">
-  <strong>{SITE.owner.fullName} / {SITE.owner.companyName}</strong><br />
+  <strong>{`${SITE.owner.fullName} / ${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
   {SITE.owner.address.street}<br />
   {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
   {SITE.owner.address.country}
