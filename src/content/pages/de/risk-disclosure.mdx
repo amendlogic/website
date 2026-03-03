@@ -200,7 +200,8 @@ Bei Fragen zu diesen Risikohinweisen kontaktieren Sie uns bitte unter:
   <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
   {SITE.owner.address.street}<br />
   {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
-  {SITE.owner.address.country}
+  {SITE.owner.address.country}<br />
+  E-Mail: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a>
 </address>
 
 ---
