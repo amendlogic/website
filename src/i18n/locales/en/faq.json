@@ -90,7 +90,7 @@
   "billing.items": [
     {
       "title": "What do the plans cost?",
-      "description": "Monthly access is €99/month. Quarterly billing is €249 every 3 months (€83/month — 16% saving). Annual billing is €899/year (€75/month — 24% saving). All plans include identical strategy access. The only difference is billing frequency and monthly cost."
+      "description": "A full overview of all plans and prices is available on our <a href='/en/pricing' class='underline font-semibold'>pricing page</a>. All plans start with a free 7-day trial."
     },
     {
       "title": "What's included in the free trial?",
