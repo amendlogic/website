@@ -5,16 +5,16 @@ description: 'Vollständige Nutzungsbedingungen von AmendLogic. Abonnementzugang
 import { SITE } from 'astrowind:config'
 import pricingData from '~/i18n/locales/de/pricing.json'
 
-export const periodMap = {
-  "per month": "Alle 30 Tage",
-  "every 3 months": "Alle 90 Tage",
-  "per year": "Alle 365 Tage",
-}
-
 export const titleMap = {
   "Monthly": "Monatlich",
   "Quarterly": "Vierteljährlich",
   "Annual": "Jährlich",
+}
+
+export const periodMap = {
+  "Monthly": "Alle 30 Tage",
+  "Quarterly": "Alle 90 Tage",
+  "Annual": "Alle 365 Tage",
 }
 
 <table>
@@ -30,7 +30,7 @@ export const titleMap = {
       <tr key={plan.title}>
         <td>{titleMap[plan.title] ?? plan.title}</td>
         <td>{plan.price} €</td>
-        <td>{periodMap[plan.period] ?? plan.period}</td>
+        <td>{periodMap[plan.title] ?? plan.period}</td>
       </tr>
     ))}
   </tbody>
