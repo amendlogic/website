@@ -15,7 +15,7 @@
       "currency": "€",
       "price": 99,
       "period": "pro Monat, jederzeit kündbar",
-      "tax.note": "Alle Preise zzgl. MwSt. Die MwSt. wird abhängig von deinem Rechnungsstandort beim Checkout von Whop berechnet und ausgewiesen.",
+      "tax": "Alle Preise zzgl. MwSt. Die MwSt. wird abhängig von deinem Rechnungsstandort beim Checkout von Whop berechnet und ausgewiesen.",
       "items": [
         {
           "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
