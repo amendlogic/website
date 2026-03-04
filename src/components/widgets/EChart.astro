@@ -1,22 +1,27 @@
----
 // src/components/widgets/ChartWidget.astro
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Headline from '~/components/ui/Headline.astro';
 import Button from '~/components/ui/Button.astro';
 import { Icon } from 'astro-icon/components';
 import { parseCsvData, getBaseChartOptions } from '~/lib/chart-data';
-import type { AstroComponentFactory } from 'astro';
 
 export interface Props {
+  title?: string;
+  subtitle?: string;
+  tagline?: string;
   icon?: string;
   csvPath?: string;
   initialCapital?: number;
+  callToAction?: Record<string, any>;
+  content?: string;
   options?: Record<string, any>;
   id?: string;
   height?: string | number;
   locale?: string;
   isDark?: boolean;
+  isAfterContent?: boolean;
   classes?: { container?: string };
+  bg?: string;
 }
 
 const {
@@ -38,30 +43,38 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-// eindeutige IDs für Wrapper + Chart + JSON
-const uid = Math.random().toString(36).slice(2, 9);
+// Eindeutige IDs für Wrapper + Chart + JSON
+const uid = crypto.randomUUID().slice(0, 7);
 const wrapperId = id ?? `widget-${uid}`;
 const chartId = `chart-${uid}`;
 const dataId = `data-${uid}`;
 
 // Server Side Parsing
-const parsedData = await parseCsvData(csvPath, Number(initialCapital));
+const parsedData = await parseCsvData(csvPath, initialCapital);
 const baseOptions = getBaseChartOptions(parsedData);
 ---
 
-<WidgetWrapper id={wrapperId} isDark={isDark} containerClass={`max-w-6xl mx-auto ${isAfterContent ? 'pt-0 md:pt-0 lg:pt-0' : ''} ${classes?.container ?? ''}`} bg={bg}>
+<WidgetWrapper
+  id={wrapperId}
+  isDark={isDark}
+  containerClass={`max-w-6xl mx-auto ${isAfterContent ? 'pt-0 md:pt-0 lg:pt-0' : ''} ${classes?.container ?? ''}`}
+  bg={bg}
+>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
-  {content && <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-md text-center font-medium">
-    <Icon name={icon} class="w-5 h-5 inline-block align-text-bottom font-bold" />
-    <Fragment set:html={content} />
-  </div>}
+
+  {content && (
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-md text-center font-medium">
+      <Icon name={icon} class="w-5 h-5 inline-block align-text-bottom font-bold" />
+      <Fragment set:html={content} />
+    </div>
+  )}
 
   <div class="p-4 md:p-6 rounded-md shadow-xl dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
     {baseOptions ? (
-      <div 
-        id={chartId} 
+      <div
+        id={chartId}
         data-json-id={dataId}
-        class="w-full overflow-hidden" 
+        class="w-full overflow-hidden"
         style={`height:${height};`}
       ></div>
     ) : (
@@ -70,13 +83,12 @@ const baseOptions = getBaseChartOptions(parsedData);
       </div>
     )}
   </div>
-  {
-    callToAction && (
-      <div class="flex justify-center mx-auto w-fit mt-8 md:mt-12 font-medium">
-        <Button {...callToAction} />
-      </div>
-    )
-  }
+
+  {callToAction && (
+    <div class="flex justify-center mx-auto w-fit mt-8 md:mt-12 font-medium">
+      <Button {...callToAction} />
+    </div>
+  )}
 </WidgetWrapper>
 
 {baseOptions && (
@@ -84,13 +96,14 @@ const baseOptions = getBaseChartOptions(parsedData);
 )}
 
 <script>
-  // Importiere die Client-Logik aus dem lib-Ordner
   import { initChartWidget, cleanup } from '~/lib/chart-widget';
 
-  // Astro Lifecycle Events
   document.addEventListener('astro:page-load', initChartWidget);
   document.addEventListener('astro:before-swap', cleanup);
-  
-  // Falls Skript direkt ausgeführt wird (z.B. initial Load ohne View Transitions)
-  if (document.readyState !== 'loading') initChartWidget();
+
+  // Nur initialisieren wenn keine View Transitions aktiv sind,
+  // da astro:page-load sonst doppelt feuert
+  if (!document.startViewTransition && document.readyState !== 'loading') {
+    initChartWidget();
+  }
 </script>
