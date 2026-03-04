@@ -17,11 +17,24 @@ export const titleMap = {
   "Annual": "Jährlich",
 }
 
-| Plan | Preis | Abrechnungszeitraum |
-|------|-------|---------------------|
-{pricingData.prices.map((plan) => (
-  `| ${titleMap[plan.title] ?? plan.title} | ${plan.price} € | ${periodMap[plan.period] ?? plan.period} |`
-)).join('\n')}
+<table>
+  <thead>
+    <tr>
+      <th>Plan</th>
+      <th>Preis</th>
+      <th>Abrechnungszeitraum</th>
+    </tr>
+  </thead>
+  <tbody>
+    {pricingData.prices.map((plan) => (
+      <tr key={plan.title}>
+        <td>{titleMap[plan.title] ?? plan.title}</td>
+        <td>{plan.price} €</td>
+        <td>{periodMap[plan.period] ?? plan.period}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
 **Zuletzt aktualisiert:** Februar 2026
 
