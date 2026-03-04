@@ -14,7 +14,7 @@
       "title": "Monthly",
       "subtitle": "Try it, test it, evaluate it",
       "currency": "$",
-      "price": 99,
+      "price": 52,
       "period": "per month, cancel anytime",
       "items": [
         {
@@ -43,8 +43,8 @@
       "title": "Quarterly",
       "subtitle": "Three months, one decision",
       "currency": "$",
-      "price": 249,
-      "period": "every 3 months — €83/mo",
+      "price": 127,
+      "period": "every 3 months — $42,33/mo",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
@@ -68,14 +68,14 @@
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "Save 16%"
+      "ribbonTitle": "Save 20%"
     },
     {
       "title": "Annual",
       "subtitle": "Serious capital, serious structure",
       "currency": "$",
-      "price": 899,
-      "period": "per year — €75/mo",
+      "price": 425,
+      "period": "per year — $35,42/mo",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
@@ -102,7 +102,7 @@
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "Save 24%"
+      "ribbonTitle": "Save 33%"
     }
   ],
   "trust.title": "Clean Billing. No Surprises.",
