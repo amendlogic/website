@@ -1,6 +1,4 @@
 ---
-import { YouTube } from 'astro-embed';
-
 interface Props {
   id: string;
   title: string;
@@ -9,6 +7,56 @@ interface Props {
 const { id, title } = Astro.props;
 ---
 
-<div data-cc="block-iframe" data-category="functionality">
-  <YouTube {id} {title} />
+<div class="relative aspect-video w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-slate-800">
+  
+  <!-- Platzhalter — sichtbar bis Einwilligung -->
+  <div
+    id={`yt-placeholder-${id}`}
+    class="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center"
+  >
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      Dieses Video wird erst nach Einwilligung in funktionale Cookies geladen.
+    </p>
+    <button
+      onclick="CookieConsent.showPreferences()"
+      class="text-sm underline text-primary cursor-pointer"
+    >
+      Cookie-Einstellungen öffnen
+    </button>
+  </div>
+
+  <!-- Video — wird erst nach Einwilligung injiziert -->
+  <div id={`yt-embed-${id}`} class="absolute inset-0 hidden"></div>
+
 </div>
+
+<script define:vars={{ id, title }}>
+  function loadVideo() {
+    if (window.CookieConsent?.acceptedCategory('functionality')) {
+      const placeholder = document.getElementById(`yt-placeholder-${id}`);
+      const embed = document.getElementById(`yt-embed-${id}`);
+      if (!embed || embed.dataset.loaded) return;
+
+      // Iframe direkt injizieren — kein astro-embed
+      embed.innerHTML = `
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/${id}"
+          title="${title}"
+          class="w-full h-full"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      `;
+      embed.dataset.loaded = 'true';
+      embed.classList.remove('hidden');
+      placeholder?.classList.add('hidden');
+    }
+  }
+
+  // Beim Laden prüfen falls bereits eingewilligt
+  document.addEventListener('DOMContentLoaded', loadVideo);
+
+  // Nach Einwilligung im Banner
+  window.addEventListener('cc:onConsent', loadVideo);
+</script>
