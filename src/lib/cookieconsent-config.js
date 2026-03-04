@@ -32,9 +32,11 @@ export const config = {
     },
     analytics: {
       // Wird nur aktiviert wenn Nutzer zustimmt
+    },
+    functionality: {
+      // YouTube-Einbettung — Cookies werden erst beim
+      // aktiven Abspielen des Videos gesetzt (youtube-nocookie.com)
     }
-    // Keine functionality- oder marketing-Kategorien,
-    // da diese Cookies nicht verwendet werden.
   },
 
   language: {
@@ -48,7 +50,7 @@ export const config = {
       de: {
         consentModal: {
           title: "Wir verwenden Cookies",
-          description: "Wir setzen notwendige Cookies ein, die für den Betrieb der Website erforderlich sind. Mit Ihrer Einwilligung setzen wir zusätzlich Analyse-Cookies (Google Analytics 4) ein, um die Nutzung der Website anonymisiert auszuwerten und zu verbessern. Eine Ablehnung hat keinen Einfluss auf die Funktionalität der Website.",
+          description: "Wir setzen notwendige Cookies ein, die für den Betrieb der Website erforderlich sind. Mit Ihrer Einwilligung setzen wir zusätzlich Analyse-Cookies (Google Analytics 4) sowie funktionale Cookies für eingebettete YouTube-Videos ein. Eine Ablehnung hat keinen Einfluss auf die Funktionalität der Website.",
           acceptAllBtn: "Alle akzeptieren",
           acceptNecessaryBtn: "Nur notwendige",
           showPreferencesBtn: "Einstellungen verwalten",
@@ -136,6 +138,39 @@ export const config = {
               }
             },
             {
+              title: "Funktionale Cookies",
+              description: "Diese Cookies werden beim aktiven Abspielen eingebetteter YouTube-Videos gesetzt. Wir verwenden den erweiterten Datenschutzmodus (<code>youtube-nocookie.com</code>) — vor dem Abspielen werden keine Cookies gesetzt. Beim aktiven Abspielen überträgt YouTube Daten (inkl. IP-Adresse) an Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland. Datenübertragung in die USA auf Basis von Standardvertragsklauseln (SCC).",
+              linkedCategory: "functionality",
+              cookieTable: {
+                headers: {
+                  name: "Cookie",
+                  domain: "Anbieter",
+                  desc: "Zweck",
+                  expiration: "Laufzeit"
+                },
+                body: [
+                  {
+                    name: "VISITOR_INFO1_LIVE",
+                    domain: "YouTube",
+                    desc: "Schätzt die Bandbreite des Nutzers für Videowiedergabe",
+                    expiration: "6 Monate"
+                  },
+                  {
+                    name: "YSC",
+                    domain: "YouTube",
+                    desc: "Verhindert missbräuchliche Nutzung; eindeutige Video-Sitzungs-ID",
+                    expiration: "Sitzung"
+                  },
+                  {
+                    name: "yt-remote-device-id",
+                    domain: "YouTube",
+                    desc: "Speichert Nutzer-Videopräferenzen",
+                    expiration: "Dauerhaft"
+                  }
+                ]
+              }
+            },
+            {
               title: "Weitere Informationen",
               description: "Für Fragen zu unserer Cookie-Richtlinie und Ihren Wahlmöglichkeiten kontaktieren Sie uns bitte per <a class=\"cc__link\" href=\"mailto:contact@amendlogic.com\">E-Mail</a>. Weitere Details finden Sie in unserer <a class=\"cc__link\" href=\"/de/privacy-policy\">Datenschutzerklärung</a> und <a class=\"cc__link\" href=\"/de/cookie-policy\">Cookie-Richtlinie</a>."
             }
@@ -149,7 +184,7 @@ export const config = {
       en: {
         consentModal: {
           title: "We use cookies",
-          description: "We use necessary cookies required for the operation of this website. With your consent, we additionally use analytics cookies (Google Analytics 4) to anonymously analyse and improve website usage. Declining does not affect the functionality of the website.",
+          description: "We use necessary cookies required for the operation of this website. With your consent, we additionally use analytics cookies (Google Analytics 4) and functional cookies for embedded YouTube videos. Declining does not affect the functionality of the website.",
           acceptAllBtn: "Accept all",
           acceptNecessaryBtn: "Necessary only",
           showPreferencesBtn: "Manage preferences",
@@ -232,6 +267,39 @@ export const config = {
                     domain: "Google Analytics",
                     desc: "User distinction; renewed daily",
                     expiration: "24 hours"
+                  }
+                ]
+              }
+            },
+            {
+              title: "Functional Cookies",
+              description: "These cookies are set when embedded YouTube videos are actively played. We use Privacy-Enhanced Mode (<code>youtube-nocookie.com</code>) — no cookies are set before playback. Upon active playback, YouTube transmits data (including IP address) to Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland. Data transfer to the USA is based on Standard Contractual Clauses (SCCs).",
+              linkedCategory: "functionality",
+              cookieTable: {
+                headers: {
+                  name: "Cookie",
+                  domain: "Provider",
+                  desc: "Purpose",
+                  expiration: "Duration"
+                },
+                body: [
+                  {
+                    name: "VISITOR_INFO1_LIVE",
+                    domain: "YouTube",
+                    desc: "Estimates user bandwidth for video playback",
+                    expiration: "6 months"
+                  },
+                  {
+                    name: "YSC",
+                    domain: "YouTube",
+                    desc: "Prevents abusive use; unique video session ID",
+                    expiration: "Session"
+                  },
+                  {
+                    name: "yt-remote-device-id",
+                    domain: "YouTube",
+                    desc: "Stores user video preferences",
+                    expiration: "Persistent"
                   }
                 ]
               }
