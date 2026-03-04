@@ -15,7 +15,7 @@
       "currency": "$",
       "price": 99,
       "period": "per month, cancel anytime",
-      "tax": "Exclusive of applicable taxes. VAT or other applicable taxes are calculated based on your billing location and displayed at checkout by Whop.",
+      "tax": "Prices exclude VAT. Applicable taxes are calculated at checkout based on your billing location.",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
@@ -45,7 +45,7 @@
       "currency": "$",
       "price": 249,
       "period": "every 3 months — €83/mo",
-      "tax": "Exclusive of applicable taxes. VAT or other applicable taxes are calculated based on your billing location and displayed at checkout by Whop.",
+      "tax": "Prices exclude VAT. Applicable taxes are calculated at checkout based on your billing location.",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
@@ -77,7 +77,7 @@
       "currency": "$",
       "price": 899,
       "period": "per year — €75/mo",
-      "tax": "Exclusive of applicable taxes. VAT or other applicable taxes are calculated based on your billing location and displayed at checkout by Whop.",
+      "tax": "Prices exclude VAT. Applicable taxes are calculated at checkout based on your billing location.",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
