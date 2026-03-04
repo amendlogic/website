@@ -1,96 +1,104 @@
 ---
 title: 'Privacy Policy'
-description: 'How AmendLogic collects, uses, and protects your personal data. Covers Whop, Google Analytics, Cloudflare, and TradingView. Full GDPR compliance documented.'
+description: 'How AmendLogic collects, uses, and protects personal data. Covering Whop, Google Analytics, Cloudflare, and TradingView. Fully GDPR-compliant.'
 ---
 import { SITE } from 'astrowind:config'
 
-**Last Updated:** February 2026
+**Last updated:** February 2026
 
 ---
 
-## 1. Introduction & Controller Identity
+## 1. Introduction and Controller
 
 ### 1.1 Who We Are
-This Privacy Policy describes how **{SITE.owner.companyName}** ("we", "us", or "our"), operating the website at **{SITE.site}** ("Website"), collects, processes, stores, and uses your personal data when you visit our Website, use our Services, or interact with us in any way.
+This Privacy Policy describes how **{SITE.owner.companyName} {SITE.owner.legalForm}** ("we", "us", or "our"), operator of the website at **{SITE.site}** ("Website"), collects, processes, stores, and uses your personal data when you visit our website, use our services, contact us by email, or otherwise interact with us.
 
-This policy is designed to be transparent and compliant with the **General Data Protection Regulation (GDPR)** (EU) 2016/679, the **German Federal Data Protection Act (BDSG)**, and other applicable data protection legislation.
+We take your privacy seriously. This policy is designed to be transparent, specific, and compliant with the **General Data Protection Regulation (GDPR)** (EU) 2016/679, the **German Federal Data Protection Act (BDSG)**, and other applicable data protection laws.
 
-### 1.2 Data Controller
+### 1.2 Data Controller under the GDPR
 
-<strong>{SITE.owner.fullName} / {SITE.owner.companyName}</strong><br />
-{SITE.owner.address}<br />
-E-Mail: {SITE.owner.eMail}
+<address class="not-italic">
+  <strong>{`${SITE.owner.fullName} / ${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
+  {SITE.owner.address.street}<br />
+  {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+  {SITE.owner.address.country}
+</address>
 
-### 1.3 What This Policy Covers
-This policy applies to visitors to our Website, users of our TradingView strategy subscription service, and anyone who contacts us. It does **not** apply to third-party websites linked from our Website, including the Whop platform.
+### 1.3 Data Protection Officer
+We are not legally required to appoint a Data Protection Officer. For any data protection-related enquiries, please contact us directly at the email address provided in § 14.
 
-### 1.4 Important Note on Whop as Merchant of Record
-Our subscription checkout and billing are handled by **Whop Inc.** as Merchant of Record. This means Whop processes your payment data, issues invoices, and handles tax obligations independently. Whop's collection and processing of your payment and account data is governed by **Whop's own Privacy Policy** at [https://whop.com/privacy-policy/](https://whop.com/privacy-policy/). We receive only limited data from Whop as described in Section 3 below.
+### 1.4 Scope
+This policy applies to:
+- Visitors to our website
+- Users of our TradingView strategy subscription service
+- Persons who contact us by email or otherwise
+
+It does **not** apply to third-party websites or services linked from our website.
 
 ---
 
-## 2. Legal Basis for Processing (GDPR Art. 6)
+## 2. Legal Bases for Processing (Art. 6 GDPR)
 
-- **Art. 6(1)(a) GDPR — Consent:** For analytics cookies and marketing communications.
-- **Art. 6(1)(b) GDPR — Contract:** For subscription management, TradingView access authorization, and customer support.
-- **Art. 6(1)(c) GDPR — Legal Obligation:** For tax record-keeping and responding to lawful authority requests.
-- **Art. 6(1)(f) GDPR — Legitimate Interests:** For fraud prevention, website security, and service improvement.
+We process your personal data only on the basis of one of the following legal grounds:
+
+- **Art. 6(1)(a) GDPR — Consent:** You have given us your explicit consent (e.g. for analytics cookies).
+- **Art. 6(1)(b) GDPR — Contract performance:** Processing is necessary for the performance of a contract with you (e.g. subscription management, payment processing, TradingView access provisioning).
+- **Art. 6(1)(c) GDPR — Legal obligation:** Processing is necessary to comply with a legal obligation (e.g. tax record-keeping requirements).
+- **Art. 6(1)(f) GDPR — Legitimate interests:** Processing is necessary for our legitimate interests, provided your rights do not override them (e.g. fraud prevention, website security).
 
 ---
 
-## 3. Data We Collect & How We Collect It
+## 3. Data Collected and How It Is Collected
 
 ### 3.1 Data You Provide Directly
 
-**a) Subscription Registration (via Whop)**
-Our subscription checkout is handled entirely by Whop. During checkout on the Whop platform, Whop collects your name, email address, billing address, and payment details. We do **not** operate or control the Whop checkout form and do **not** receive your payment card details at any point.
+**a) Subscription registration (via Whop)**
+Checkout is handled entirely by Whop. Whop collects your name, email address, billing address, and payment details at sign-up. We do not operate the checkout form and receive **no** payment card details.
 
-After a successful subscription, Whop shares the following data with us:
+Upon successful subscription, Whop transmits the following data to us:
 - Email address
 - Whop User ID
 - Subscription status and plan details
-- TradingView username (as entered by you during checkout)
+- TradingView username (provided by you at checkout)
 
-**b) TradingView Username**
-Your TradingView username is required to authorize access to the invite-only strategy script. You provide this during the Whop checkout process. We use it solely to grant and manage your TradingView script access.
+**b) TradingView username**
+Your TradingView username is required to authorise your script access. You provide it during the Whop checkout. We use it solely to grant and manage your TradingView script access.
 
-**c) Contact & Support Inquiries**
-When you contact us via email:
-- Name (if provided)
-- Email address
-- Content of your message and any attachments
+**c) Contact and support requests**
+Name (if provided), email address, message content.
 
-### 3.2 Data Collected Automatically
+### 3.2 Automatically Collected Data
 
-**a) Server Logs & Technical Data (via Cloudflare)**
-When you visit our Website, Cloudflare automatically records:
-- IP address (anonymized or full, depending on configuration)
+**a) Server logs and technical data (via Cloudflare)**
+When you visit our website, Cloudflare — our hosting and CDN provider — automatically records:
+- IP address (anonymised or full, depending on configuration)
 - Browser type and version
 - Operating system
 - Referring URL
 - Pages visited and timestamps
 - HTTP status codes
 
-**b) Analytics Data (via Google Analytics 4)**
-We use Google Analytics 4 ("GA4") to understand how visitors interact with our Website. GA4 collects:
-- Pages viewed and navigation paths
+**b) Analytics data (via Google Analytics 4)**
+We use Google Analytics 4 ("GA4") to analyse user behaviour. GA4 collects:
+- Pages visited and navigation paths
 - Session duration and bounce rate
 - Device type, browser, and operating system
-- Approximate geographic location (country/region, derived from anonymized IP)
+- Approximate geographic location (country/region, derived from anonymised IP)
 - Referral source
-- Conversion events (e.g., pricing page views, trial sign-ups)
+- Conversion events (e.g. pricing page views, trial sign-ups)
 
-**IP Anonymization:** GA4 is configured to anonymize IP addresses before processing. Full IP addresses are not retained.
+**IP anonymisation:** GA4 is configured to anonymise IP addresses prior to processing. Full IP addresses are not stored.
 
-Legal basis: **Art. 6(1)(a) GDPR — Consent** (via cookie banner).
+**Cookie dependency:** GA4 relies on cookies. Consent is obtained via our cookie banner. If you decline, no tracking takes place.
+
+Legal basis: **Art. 6(1)(a) GDPR — Consent**.
 
 ### 3.3 Data We Do Not Collect
-We do not collect or store:
-- Payment card details (handled exclusively by Whop)
-- Full billing addresses (collected by Whop, not shared with us in full)
-- Sensitive personal data under Art. 9 GDPR
+We do not collect, store, or process:
+- Special categories of personal data (Art. 9 GDPR)
+- Official identification document numbers
 - Trading account credentials, API keys, or exchange login details
-- Precise geolocation data
+- Precise location data
 
 ---
 
@@ -98,124 +106,133 @@ We do not collect or store:
 
 | Purpose | Data Used | Legal Basis |
 |---------|-----------|-------------|
-| TradingView script access authorization | TradingView username, subscription status (from Whop) | Art. 6(1)(b) — Contract |
-| Subscription management (via Whop) | Email, Whop User ID, subscription data | Art. 6(1)(b) — Contract |
-| Customer support & communication | Email, name, message content | Art. 6(1)(b) — Contract / Art. 6(1)(f) — Legitimate Interest |
-| Website hosting & security | IP address, technical log data | Art. 6(1)(f) — Legitimate Interest |
-| Website analytics & optimization | Anonymized usage data via GA4 | Art. 6(1)(a) — Consent |
-| Fraud prevention & abuse detection | IP address, usage patterns | Art. 6(1)(f) — Legitimate Interest |
-| Legal compliance & record-keeping | Transaction references, correspondence | Art. 6(1)(c) — Legal Obligation |
-| Sending transactional emails | Email address | Art. 6(1)(b) — Contract |
-| Sending marketing communications | Email address | Art. 6(1)(a) — Consent |
+| Subscription access & TradingView authorisation | Email, TradingView username, subscription status | Art. 6(1)(b) — Contract |
+| Payment processing and invoicing | Email, subscription data (via Whop) | Art. 6(1)(b) — Contract |
+| Customer support and communication | Email, name, message content | Art. 6(1)(b) — Contract / (f) — Legitimate interests |
+| Website hosting and security | IP address, technical log data | Art. 6(1)(f) — Legitimate interests |
+| Website analytics and optimisation | Anonymised usage data via GA4 | Art. 6(1)(a) — Consent |
+| Fraud prevention and abuse detection | IP address, usage patterns | Art. 6(1)(f) — Legitimate interests |
+| Legal compliance and record-keeping | Transaction data, correspondence | Art. 6(1)(c) — Legal obligation |
+| Transactional emails | Email address | Art. 6(1)(b) — Contract |
 
 ---
 
-## 5. Cookies & Tracking Technologies
+## 5. Cookies and Tracking Technologies
 
-We use cookies on our Website. For full details, please refer to our **[Cookie Policy]**.
+We use cookies and similar technologies on our website. Full details are provided in our **[Cookie Policy]**.
 
+In summary:
 - **Strictly necessary cookies** are always active and do not require consent.
-- **Analytics cookies** (Google Analytics 4) are only activated with your consent.
-- **No advertising or targeting cookies** are used.
+- **Analytics cookies** (Google Analytics 4) are only activated with your consent via our cookie banner.
+- **No advertising or third-party targeting cookies** are used on our website.
 
 ---
 
-## 6. Third-Party Service Providers & Data Processors
+## 6. Third-Party Services and Processors
 
 ### 6.1 Cloudflare, Inc. (Hosting & CDN)
-**Role:** Data Processor
-**Purpose:** Website hosting, content delivery, DDoS protection, and security via Cloudflare Pages
-**Data shared:** IP addresses, HTTP request data, technical metadata
-**Location:** United States. Transfers governed by Standard Contractual Clauses (SCCs) per Art. 46 GDPR.
-**Privacy Policy:** https://www.cloudflare.com/privacypolicy/
+**Role:** Data processor<br />
+**Purpose:** Website hosting, content delivery, DDoS protection, and security via Cloudflare Pages<br />
+**Data shared:** IP addresses, HTTP request data, technical metadata<br />
+**Location:** USA. Data transfers to the USA are safeguarded by Standard Contractual Clauses (SCCs) pursuant to Art. 46 GDPR.<br />
+**Privacy policy:** https://www.cloudflare.com/privacypolicy/
 
 ### 6.2 Whop Inc. (Checkout, Subscription Management & Merchant of Record)
-**Role:** Independent Data Controller (Merchant of Record)
-**Purpose:** Whop acts as Merchant of Record for all subscription transactions. Whop independently collects and processes your payment data, billing address, subscription details, and account information during checkout and for ongoing billing management. Whop is solely responsible for payment security, tax collection, invoicing, and the management of your Whop account. We receive from Whop only: email address, Whop User ID, TradingView username, and subscription status.
-**Data shared with Whop by us:** TradingView username (as provided by you at checkout)
-**Data received from Whop by us:** Email address, Whop User ID, subscription status and plan, TradingView username
-**Location:** United States (Whop Inc., 169 Madison Ave Suite 2895, New York, NY 10016, USA)
-**GDPR Note:** Whop processes EU customer data. Please refer to Whop's Privacy Policy for details on their data protection measures and international transfer safeguards.
-**Privacy Policy:** https://whop.com/privacy-policy/
+**Role:** Independent data controller (Merchant of Record)<br />
+**Purpose:** Whop acts as Merchant of Record for all subscription transactions. Whop independently collects and processes your payment data, billing address, subscription details, and account information at checkout and for ongoing billing management. Whop is solely responsible for payment security, tax collection, invoicing, and management of your Whop account. We receive from Whop only: email address, Whop User ID, TradingView username, and subscription status.<br />
+**Data we transmit to Whop:** TradingView username (provided by you at checkout)<br />
+**Data Whop transmits to us:** Email address, Whop User ID, subscription status and plan, TradingView username<br />
+**Location:** USA (Whop Inc., 169 Madison Ave Suite 2895, New York, NY 10016, USA). Data transfers to the USA are safeguarded by Standard Contractual Clauses (SCCs) pursuant to Art. 46 GDPR.<br />
+**Privacy policy:** https://whop.com/privacy-policy/
 
-> Because Whop acts as Merchant of Record and independent data controller, Whop's collection and use of your payment data, billing information, and account data on its platform is governed entirely by Whop's own Privacy Policy, not by this policy. We strongly encourage you to review Whop's Privacy Policy before completing your purchase.
+> As Whop acts as Merchant of Record and an independent data controller, the collection and use of your payment data, billing information, and account data on the Whop platform is governed entirely by Whop's own Privacy Policy. We strongly recommend reading Whop's Privacy Policy before making a purchase.
 
 ### 6.3 Google Ireland Limited (Analytics)
-**Role:** Data Processor
-**Purpose:** Website analytics and usage measurement via Google Analytics 4
-**Data shared:** Anonymized IP address, device/browser data, pages visited, session behavior, referral source
-**Location:** United States. Transfer governed by Google's Data Processing Terms and SCCs.
-**Privacy Policy:** https://policies.google.com/privacy
-**Opt-Out:** Decline analytics cookies in our cookie banner, or install the Google Analytics Opt-out Add-on: https://tools.google.com/dlpage/gaoptout
+**Role:** Data processor<br />
+**Purpose:** Website analytics and usage measurement via Google Analytics 4<br />
+**Data shared:** Anonymised IP address, device/browser data, pages visited, session behaviour, referral source<br />
+**Location:** USA. Transfer based on Google's data processing terms and Standard Contractual Clauses (SCCs).<br />
+**Privacy policy:** https://policies.google.com/privacy<br />
+**Opt-out:** Decline analytics cookies in the cookie banner, or install the Google Analytics Opt-out Browser Add-on: https://tools.google.com/dlpage/gaoptout
 
 ### 6.4 TradingView, Inc. (Strategy Platform)
-**Role:** Independent Data Controller
-**Purpose:** We share your TradingView username with TradingView solely to authorize your invite-only script access. No other personal data is shared with TradingView.
-**Data shared:** TradingView username only
-**Location:** United States
-**Privacy Policy:** https://www.tradingview.com/privacy-policy/
+**Role:** Independent data controller<br />
+**Purpose:** We transmit your TradingView username solely to authorise your invite-only script access. No further personal data is transmitted.<br />
+**Data shared:** TradingView username only<br />
+**Location:** USA<br />
+**Privacy policy:** https://www.tradingview.com/privacy-policy/
 
-### 6.5 Email Service Provider
-**Role:** Data Processor
-**Purpose:** Delivery of transactional emails (subscription confirmations, access notifications, support replies)
-**Data shared:** Email address, name (if provided)
-**Provider:** [Insert your email provider, e.g., Gmail / Fastmail / Postmark / Mailgun]
-**Privacy Policy:** [Link to provider's privacy policy]
+### 6.5 Optional Webhook Integration with Cryptocurrency Exchanges
+If you choose to use the optional automation feature and connect the Strategy to a cryptocurrency exchange via TradingView webhooks, data is transmitted directly between TradingView and the relevant exchange. We are not involved in this data transfer, do not receive any data arising from it, and have no influence over the privacy practices of the respective exchange. Please read the privacy policy of the exchange you use.
+
+### 6.6 Email Service Provider
+**Role:** Data processor<br />
+**Purpose:** Delivery of transactional emails (subscription confirmations, access notifications, support replies)<br />
+**Data shared:** Email address, name (if provided)<br />
+**Provider:** [Insert email provider, e.g. Gmail / Fastmail / Postmark / Mailgun]<br />
+**Privacy policy:** [Link to provider's privacy policy]
 
 ---
 
 ## 7. International Data Transfers
 
-Several service providers are located in the United States. All international data transfers are protected by appropriate safeguards under GDPR Chapter V, primarily Standard Contractual Clauses (SCCs). Cloudflare, Google, and Whop each maintain SCCs with EU customers. Please review each provider's privacy policy for details.
+Some of our service providers are located outside the European Economic Area (EEA), in particular in the USA. All data transfers are safeguarded by appropriate guarantees in accordance with GDPR Chapter V, in particular by Standard Contractual Clauses (SCCs) issued by the European Commission. This applies to Cloudflare, Whop, and Google.
 
 ---
 
-## 8. Data Retention
+## 8. Retention Periods
 
 | Data Category | Retention Period |
 |---------------|-----------------|
-| Subscription data received from Whop (email, User ID, status) | Duration of active subscription + 3 years |
+| Subscription and account data | Duration of active subscription + 3 years |
+| Payment and transaction data | 10 years (§ 257 HGB, § 147 AO) |
+| Business correspondence and emails | 6 years (§ 147 AO) |
+| Support email correspondence (non-commercial) | 3 years from last contact |
 | TradingView username | Duration of active subscription; deleted upon cancellation |
-| Transaction reference records | 10 years (§ 257 HGB, § 147 AO) |
-| Support email correspondence | 3 years from last contact |
-| Analytics data (GA4) | 14 months |
+| Analytics data (GA4) | 14 months (default GA4 setting) |
 | Server/access log data (Cloudflare) | Up to 30 days |
 | Cookie consent records | 3 years |
 
-Note: Payment data, billing addresses, and full transaction records are retained by Whop under their own data retention policy. We do not retain copies of this data.
-
 ---
 
-## 9. Your Rights Under GDPR
+## 9. Your Rights under the GDPR
 
-You may exercise any of the following rights by contacting us at {SITE.owner.eMail}. For data held by Whop in their capacity as independent data controller, you must contact Whop directly.
+You may exercise all of the following rights by contacting us at <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a>.
 
 ### 9.1 Right of Access (Art. 15 GDPR)
-You may request confirmation of whether we process personal data about you and receive a copy of that data.
+You may request confirmation of whether and which personal data we process about you, and request a copy of that data.
 
 ### 9.2 Right to Rectification (Art. 16 GDPR)
-You may request correction of inaccurate or incomplete personal data we hold.
+You may request the correction of inaccurate and the completion of incomplete personal data.
 
 ### 9.3 Right to Erasure (Art. 17 GDPR)
-You may request deletion of your personal data where it is no longer necessary or consent has been withdrawn. Subject to statutory retention obligations.
+You may request the deletion of your personal data where it is no longer necessary, consent has been withdrawn, or the data has been unlawfully processed. This right is subject to statutory retention obligations.
 
 ### 9.4 Right to Restriction of Processing (Art. 18 GDPR)
-You may request restricted processing in certain circumstances.
+You may request restriction of processing in certain circumstances, e.g. while the accuracy of data is being contested.
 
 ### 9.5 Right to Data Portability (Art. 20 GDPR)
-Where processing is based on consent or contract and automated, you may receive your data in a machine-readable format.
+Where processing is based on consent or contract and carried out by automated means, you may receive your data in a structured, machine-readable format.
 
 ### 9.6 Right to Object (Art. 21 GDPR)
-You may object to processing based on legitimate interests.
+You may object at any time to processing based on legitimate interests (Art. 6(1)(f) GDPR).
 
 ### 9.7 Right to Withdraw Consent (Art. 7(3) GDPR)
-You may withdraw consent at any time with effect for the future.
+You may withdraw any consent given at any time with effect for the future. The lawfulness of processing carried out prior to withdrawal is not affected.
 
 ### 9.8 No Automated Decision-Making (Art. 22 GDPR)
-We do not engage in automated decision-making with significant effects.
+We do not carry out automated decision-making or profiling with legally significant effects.
 
 ### 9.9 Right to Lodge a Complaint (Art. 77 GDPR)
-**Bundesbeauftragte für den Datenschutz und die Informationsfreiheit (BfDI)**
+You have the right to lodge a complaint with a data protection supervisory authority. The supervisory authority competent for us is:
+
+**State Commissioner for Data Protection and Freedom of Information of North Rhine-Westphalia (LDI NRW)**
+Postfach 20 04 44, 40102 Düsseldorf, Germany
+https://www.ldi.nrw.de
+
+You also have the option of contacting the Federal Commissioner for Data Protection and Freedom of Information (BfDI):
+
+**Federal Commissioner for Data Protection and Freedom of Information (BfDI)**
 Graurheindorfer Str. 153, 53117 Bonn, Germany
 https://www.bfdi.bund.de
 
@@ -223,24 +240,47 @@ https://www.bfdi.bund.de
 
 ## 10. Data Security
 
-We implement HTTPS/TLS encryption, Cloudflare security infrastructure, access controls, and minimal data collection practices to protect your personal data. Payment security is entirely managed by Whop.
+We implement the following technical and organisational security measures:
+- **HTTPS/TLS encryption** for all data in transit
+- **Cloudflare security infrastructure** including DDoS protection and WAF
+- **PCI-DSS-compliant** payment processing by Whop
+- **Access controls** to protect personal data
+- **Data minimisation** — we collect only what is strictly necessary
+
+No internet transmission is 100% secure. However, we strive to protect your data using industry-standard methods.
 
 ---
 
 ## 11. Children's Privacy
 
-Our Services are not directed at individuals under 18. Contact {SITE.owner.eMail} if you believe we hold data from a minor.
+Our Services are not directed at persons under the age of 18. We do not knowingly collect data from minors. If you suspect accidental collection, please contact us at <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a>.
 
 ---
 
-## 12. Changes to This Policy
+## 12. Links to Third-Party Websites
 
-We may update this policy periodically. Material changes will be communicated via Website notice and, for active subscribers, via email.
+Our website may contain links to external websites. This Privacy Policy does not apply to those sites. We recommend reading their respective privacy policies.
 
 ---
 
-## 13. Contact
+## 13. Changes to This Policy
 
-<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
-{SITE.owner.address}<br />
-Email: {SITE.owner.eMail}
+We may update this Privacy Policy as necessary. Material changes will be communicated via a website notice and, for active subscribers, by email.
+
+---
+
+## 14. Contact and Data Protection Enquiries
+
+<address class="not-italic">
+  <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
+  {SITE.owner.address.street}<br />
+  {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+  {SITE.owner.address.country}<br />
+  Email: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a>
+</address>
+
+We respond to all data protection-related enquiries within **30 days**. For complex requests, this period may be extended by a further 60 days, of which we will inform you within the first 30 days.
+
+---
+
+*This Privacy Policy was last updated in February 2026.*
