@@ -3,6 +3,25 @@ title: 'Nutzungsbedingungen'
 description: 'Vollständige Nutzungsbedingungen von AmendLogic. Abonnementzugang, Zahlungsabwicklung über Whop, geistiges Eigentum, Haftungsbeschränkungen und Kündigungsrechte.'
 ---
 import { SITE } from 'astrowind:config'
+import pricingData from '~/i18n/locales/de/pricing.json'
+
+export const periodMap = {
+  "per month, cancel anytime": "Alle 30 Tage",
+  "every 3 months — €83/mo": "Alle 90 Tage",
+  "per year — €75/mo": "Alle 365 Tage",
+}
+
+export const titleMap = {
+  "Monthly": "Monatlich",
+  "Quarterly": "Vierteljährlich",
+  "Annual": "Jährlich",
+}
+
+| Plan | Preis | Abrechnungszeitraum |
+|------|-------|---------------------|
+{pricingData.prices.map((plan) => (
+  `| ${titleMap[plan.title] ?? plan.title} | ${plan.price} € | ${periodMap[plan.period] ?? plan.period} |`
+)).join('\n')}
 
 **Zuletzt aktualisiert:** Februar 2026
 
