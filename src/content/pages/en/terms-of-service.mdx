@@ -3,7 +3,12 @@ title: 'Terms of Service'
 description: 'Full Terms of Service of AmendLogic. Subscription access, payment processing via Whop, intellectual property, liability limitations, and cancellation rights.'
 ---
 import { SITE } from 'astrowind:config'
-
+import pricingData from '~/i18n/locales/en/pricing.json'
+export const labelMap = [
+  { title: "Monthly",     period: "Every 30 days"  },
+  { title: "Quarterly",   period: "Every 90 days"  },
+  { title: "Annual",      period: "Every 365 days" },
+]
 **Last updated:** February 2026
 
 ---
@@ -81,11 +86,24 @@ To gain access to the invite-only strategy script, you must provide your exact T
 ### 4.2 Subscription Plans
 We currently offer the following subscription options:
 
-| Plan | Price | Billing Cycle |
-|------|-------|---------------|
-| Monthly | €99 | Every 30 days |
-| Quarterly | €249 | Every 90 days |
-| Annual | €899 | Every 365 days |
+<table>
+  <thead>
+    <tr>
+      <th>Plan</th>
+      <th>Price</th>
+      <th>Billing Cycle</th>
+    </tr>
+  </thead>
+  <tbody>
+    {pricingData.prices.map((plan, i) => (
+      <tr key={i}>
+        <td>{labelMap[i].title}</td>
+        <td>{plan.price}</td>
+        <td>{labelMap[i].period}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
 Prices are subject to change. Price changes will be communicated with at least 30 days' advance notice and will not apply to billing periods already in progress. Price changes do not entitle you to early termination of a current billing period.
 
