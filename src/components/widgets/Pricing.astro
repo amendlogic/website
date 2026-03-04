@@ -24,7 +24,7 @@ const {
     <div class="grid grid-cols-3 gap-4 dark:text-white sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
       {
         prices &&
-          prices.map(({ title, subtitle, currency, price, period, taxNote, items, callToAction, hasRibbon = false, ribbonTitle }) => (
+          prices.map(({ title, subtitle, currency, price, period, tax, items, callToAction, hasRibbon = false, ribbonTitle }) => (
             <div class="col-span-3 mx-auto flex w-full sm:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-1 intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter">
               {price && period && (
                 <div class="rounded-lg backdrop-blur border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 shadow px-6 py-8 flex w-full max-w-sm flex-col justify-between text-center">
@@ -55,7 +55,7 @@ const {
                     )}
                       </div>
                       <span class="text-base leading-6 lowercase text-gray-600 dark:text-slate-400">{period}</span>
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{taxNote}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{tax}</p>
                     </div>
                     {items && (
                       <ul class="my-8 md:my-10 space-y-2 text-left">
