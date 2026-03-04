@@ -15,7 +15,7 @@
       "currency": "€",
       "price": 99,
       "period": "pro Monat, jederzeit kündbar",
-      "tax": "Alle Preise zzgl. MwSt. Die MwSt. wird abhängig von deinem Rechnungsstandort beim Checkout von Whop berechnet und ausgewiesen.",
+      "tax": "zzgl. MwSt. Die MwSt. wird abhängig von deinem Rechnungsstandort beim Checkout von Whop berechnet und ausgewiesen.",
       "items": [
         {
           "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
@@ -45,6 +45,7 @@
       "currency": "€",
       "price": 249 ,
       "period": "alle 3 Monate — 83 €/Monat",
+      "tax": "zzgl. MwSt. Die MwSt. wird abhängig von deinem Rechnungsstandort beim Checkout von Whop berechnet und ausgewiesen.",
       "items": [
         {
           "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
@@ -76,6 +77,7 @@
       "currency": "€",
       "price": 899,
       "period": "pro Jahr — 75 €/Monat",
+      "tax": "zzgl. MwSt. Die MwSt. wird abhängig von deinem Rechnungsstandort beim Checkout von Whop berechnet und ausgewiesen.",
       "items": [
         {
           "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
