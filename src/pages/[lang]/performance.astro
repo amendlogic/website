@@ -18,7 +18,7 @@ import Content from '~/components/widgets/Content.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import Layout from '~/layouts/PageLayout.astro';
 
-import { YouTube } from 'astro-embed';
+import YouTubeConsent from '~/components/ui/YouTubeConsent.astro';
 
 // 2. Pfade generieren (SSOT für [lang])
 export async function getStaticPaths() {
@@ -62,7 +62,7 @@ const metadata = {
     </Fragment>
 
     <Fragment slot="image">
-      <YouTube id="gxBkghlglTg" title="Astro just Launched.... Could it be the ultimate web framework?" />
+      <YouTubeConsent id="gxBkghlglTg" title="..." />
       <style is:inline>
         lite-youtube {
           margin: 0 auto;
