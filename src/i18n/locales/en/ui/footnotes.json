@@ -1,13 +1,13 @@
 {
-  "risk": "<b>Risk Warning:</b> Trading cryptocurrencies involves substantial risk and may result in the loss of your entire invested capital. Past performance is not indicative of future results. Only trade with capital you can afford to lose entirely.",
-  "backtest": "<b>Simulated Performance:</b> All performance data presented on this website is derived from historical backtesting, not live trading. Simulated results have inherent limitations and do not guarantee future performance. Actual results may differ materially.",
-  "advice": "<b>No Financial Advice:</b> The content and tools provided on this website are for informational and educational purposes only. We are not a licensed investment advisor, broker-dealer, or financial institution. Nothing on this website constitutes personalized investment advice.",
-  "testimonials": "<b>Testimonials:</b> Individual user experiences may not reflect typical results. Testimonials are not guarantees of future performance or success.",
-  "payments": "<b>Payments:</b> Subscription billing is processed by Whop Inc. as Merchant of Record. By subscribing, you also agree to Whop's Terms of Service and Privacy Policy.",
-  "third-party": "<b>Third-Party Services:</b> Charts and market data are powered by <a class='underline' href='https://www.tradingview.com/' target='_blank' rel='noopener noreferrer'>TradingView</a>. This website is not affiliated with, endorsed by, or sponsored by TradingView, Inc.",
-
-  "closing.text": "By using this website you confirm that you have read and accepted our {terms}, {risk}, and {privacy}.",
+  "risk": "<b>Risk Warning:</b> Trading cryptocurrencies involves significant risk and may result in the complete loss of your invested capital. Past results are not an indicator of future performance. Only trade with capital you can afford to lose.",
+  "backtest": "<b>Simulated Performance:</b> All performance data presented on this website is derived from historical backtesting, not live trading. Simulated results have inherent limitations and do not constitute a guarantee of future results. Actual results may differ materially.",
+  "advice": "<b>No Investment Advice:</b> The content and tools provided on this website are for informational and educational purposes only. We are not a licensed investment adviser, stockbroker, or financial institution. Nothing on this website constitutes a personalised investment recommendation.",
+  "testimonials": "<b>Testimonials:</b> Individual user experiences may not be representative of typical results. Testimonials were not financially compensated and are not guarantees of future performance or success.",
+  "payments": "<b>Payments:</b> Subscription billing is processed by Whop Inc. as Merchant of Record. By subscribing, you also agree to Whop's <a class='underline' href='https://whop.com/terms' target='_blank' rel='noopener noreferrer'>Terms of Service</a> and <a class='underline' href='https://whop.com/privacy-policy/' target='_blank' rel='noopener noreferrer'>Privacy Policy</a>.",
+  "third-party": "<b>Third-Party Services:</b> Charts and market data are provided by <a class='underline' href='https://www.tradingview.com/' target='_blank' rel='noopener noreferrer'>TradingView</a>. This website has no affiliation with TradingView, Inc. and is neither sponsored nor endorsed by TradingView.",
+  "closing.text": "By using this website, you confirm that you have read and accepted our {terms}, {risk}, {privacy}, and {cookie}.",
   "closing.terms": "Terms of Service",
   "closing.risk": "Risk Disclosure",
-  "closing.privacy": "Privacy Policy"
+  "closing.privacy": "Privacy Policy",
+  "closing.cookie": "Cookie Policy"
 }
