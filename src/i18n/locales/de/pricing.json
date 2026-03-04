@@ -14,7 +14,7 @@
       "title": "Monatlich",
       "subtitle": "Testen, evaluieren, entscheiden",
       "currency": "€",
-      "price": 99,
+      "price": 49,
       "period": "pro Monat, jederzeit kündbar",
       "items": [
         {
@@ -43,8 +43,8 @@
       "title": "Vierteljährlich",
       "subtitle": "Drei Monate, eine Entscheidung",
       "currency": "€",
-      "price": 249 ,
-      "period": "alle 3 Monate — 83 €/Monat",
+      "price": 118 ,
+      "period": "alle 3 Monate — 39,33 €/Monat",
       "items": [
         {
           "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
@@ -68,14 +68,14 @@
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "16% sparen"
+      "ribbonTitle": "20% sparen"
     },
     {
       "title": "Jährlich",
       "subtitle": "Ernsthaftes Kapital, ernsthafte Struktur",
       "currency": "€",
-      "price": 899,
-      "period": "pro Jahr — 75 €/Monat",
+      "price": 394,
+      "period": "pro Jahr — 32,83 €/Monat",
       "items": [
         {
           "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
@@ -102,7 +102,7 @@
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "24% sparen"
+      "ribbonTitle": "33% sparen"
     }
   ],
   "trust.title": "Klare Abrechnung. Keine Überraschungen.",
