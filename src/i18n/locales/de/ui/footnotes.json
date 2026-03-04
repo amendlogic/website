@@ -2,11 +2,12 @@
   "risk": "<b>Risikohinweis:</b> Der Handel mit Kryptowährungen ist mit erheblichen Risiken verbunden und kann zum vollständigen Verlust des eingesetzten Kapitals führen. Vergangene Ergebnisse sind kein Indikator für zukünftige Resultate. Handle nur mit Kapital, dessen Verlust du dir leisten kannst.",
   "backtest": "<b>Simulierte Performance:</b> Alle auf dieser Website dargestellten Performance-Daten stammen aus historischem Backtesting, nicht aus Live-Trading. Simulierte Ergebnisse haben inhärente Einschränkungen und stellen keine Garantie für zukünftige Ergebnisse dar. Tatsächliche Ergebnisse können wesentlich abweichen.",
   "advice": "<b>Keine Anlageberatung:</b> Die auf dieser Website bereitgestellten Inhalte und Tools dienen ausschließlich Informations- und Bildungszwecken. Wir sind kein lizenzierter Anlageberater, Börsenmakler oder Finanzinstitut. Nichts auf dieser Website stellt eine personalisierte Anlageempfehlung dar.",
-  "testimonials": "<b>Erfahrungsberichte:</b> Individuelle Nutzererfahrungen sind möglicherweise nicht repräsentativ für typische Ergebnisse. Erfahrungsberichte sind keine Garantien für zukünftige Performance oder Erfolg.",
-  "payments": "<b>Zahlungen:</b> Die Abonnementabrechnung wird von Whop Inc. als Merchant of Record abgewickelt. Mit dem Abonnieren stimmst du auch den Nutzungsbedingungen und der Datenschutzerklärung von Whop zu.",
+  "testimonials": "<b>Erfahrungsberichte:</b> Individuelle Nutzererfahrungen sind möglicherweise nicht repräsentativ für typische Ergebnisse. Erfahrungsberichte wurden nicht vergütet und sind keine Garantien für zukünftige Performance oder Erfolg.",
+  "payments": "<b>Zahlungen:</b> Die Abonnementabrechnung wird von Whop Inc. als Merchant of Record abgewickelt. Mit dem Abonnieren stimmst du auch den <a class='underline' href='https://whop.com/terms' target='_blank' rel='noopener noreferrer'>Nutzungsbedingungen</a> und der <a class='underline' href='https://whop.com/privacy-policy/' target='_blank' rel='noopener noreferrer'>Datenschutzerklärung</a> von Whop zu.",
   "third-party": "<b>Drittanbieterdienste:</b> Charts und Marktdaten werden von <a class='underline' href='https://www.tradingview.com/' target='_blank' rel='noopener noreferrer'>TradingView</a> bereitgestellt. Diese Website steht in keiner Verbindung zu TradingView, Inc. und wird von TradingView weder gesponsert noch befürwortet.",
-  "closing.text": "Mit der Nutzung dieser Website bestätigst du, dass du unsere {terms}, {risk} und {privacy} gelesen und akzeptiert hast.",
+  "closing.text": "Mit der Nutzung dieser Website bestätigst du, dass du unsere {terms}, {risk}, {privacy} und {cookie} gelesen und akzeptiert hast.",
   "closing.terms": "Nutzungsbedingungen",
   "closing.risk": "Risikohinweise",
-  "closing.privacy": "Datenschutzerklärung"
- }
+  "closing.privacy": "Datenschutzerklärung",
+  "closing.cookie": "Cookie-Richtlinie"
+}
