@@ -12,7 +12,7 @@
     {
       "title": "Monthly",
       "subtitle": "Try it, test it, evaluate it",
-      "price": '$99',
+      "price": "$99",
       "period": "per month, cancel anytime",
       "items": [
         {
@@ -40,7 +40,7 @@
     {
       "title": "Quarterly",
       "subtitle": "Three months, one decision",
-      "price": '$249',
+      "price": "$249",
       "period": "every 3 months — €83/mo",
       "items": [
         {
@@ -70,7 +70,7 @@
     {
       "title": "Annual",
       "subtitle": "Serious capital, serious structure",
-      "price": '$899',
+      "price": "$899",
       "period": "per year — €75/mo",
       "items": [
         {
