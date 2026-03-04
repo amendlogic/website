@@ -11,7 +11,7 @@ import { SITE } from 'astrowind:config'
 ## 1. Einleitung und Verantwortlicher
 
 ### 1.1 Wer wir sind
-Diese Datenschutzerklärung beschreibt, wie **{SITE.owner.companyName} {SITE.owner.legalForm}** ("wir", "uns" oder "unser"), Betreiber der Website unter **{SITE.site}** ("Website"), Ihre personenbezogenen Daten erhebt, verarbeitet, speichert und verwendet, wenn Sie unsere Website besuchen, unsere Dienste nutzen oder auf andere Weise mit uns interagieren.
+Diese Datenschutzerklärung beschreibt, wie **{SITE.owner.companyName} {SITE.owner.legalForm}** ("wir", "uns" oder "unser"), Betreiber der Website unter **{SITE.site}** ("Website"), Ihre personenbezogenen Daten erhebt, verarbeitet, speichert und verwendet, wenn Sie unsere Website besuchen, unsere Dienste nutzen, uns per E-Mail kontaktieren oder auf andere Weise mit uns interagieren.
 
 Wir nehmen Ihren Datenschutz ernst. Diese Richtlinie ist so gestaltet, dass sie transparent, spezifisch und konform mit der **Datenschutz-Grundverordnung (DSGVO)** (EU) 2016/679, dem **Bundesdatenschutzgesetz (BDSG)** sowie weiteren anwendbaren Datenschutzgesetzen ist.
 
@@ -22,9 +22,12 @@ Wir nehmen Ihren Datenschutz ernst. Diese Richtlinie ist so gestaltet, dass sie 
   {SITE.owner.address.street}<br />
   {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
   {SITE.owner.address.country}
-</address> 
+</address>
 
-### 1.3 Geltungsbereich
+### 1.3 Datenschutzbeauftragter
+Wir sind gesetzlich nicht zur Bestellung eines Datenschutzbeauftragten verpflichtet. Bei datenschutzbezogenen Anfragen wenden Sie sich bitte direkt an uns unter der in § 14 angegebenen E-Mail-Adresse.
+
+### 1.4 Geltungsbereich
 Diese Erklärung gilt für:
 - Besucher unserer Website
 - Nutzer unseres TradingView-Strategie-Abonnementdienstes
@@ -67,7 +70,7 @@ Name (sofern angegeben), E-Mail-Adresse, Nachrichteninhalt.
 ### 3.2 Automatisch erhobene Daten
 
 **a) Serverlogs und technische Daten (über Cloudflare)**
-Bei einem Besuch unserer Website erfasst Cloudflare automatisch:
+Bei einem Besuch unserer Website erfasst Cloudflare als unser Hosting- und CDN-Anbieter automatisch:
 - IP-Adresse (anonymisiert oder vollständig, abhängig von der Konfiguration)
 - Browsertyp und -version
 - Betriebssystem
@@ -111,7 +114,6 @@ Wir erheben, speichern oder verarbeiten nicht:
 | Betrugsprävention und Missbrauchserkennung | IP-Adresse, Nutzungsmuster | Art. 6 Abs. 1 lit. f — Berechtigte Interessen |
 | Rechtliche Compliance und Aufzeichnungspflichten | Transaktionsdaten, Korrespondenz | Art. 6 Abs. 1 lit. c — Rechtliche Verpflichtung |
 | Transaktionale E-Mails | E-Mail-Adresse | Art. 6 Abs. 1 lit. b — Vertrag |
-| Marketing-Kommunikation | E-Mail-Adresse | Art. 6 Abs. 1 lit. a — Einwilligung |
 
 ---
 
@@ -140,7 +142,7 @@ Kurz zusammengefasst:
 **Zweck:** Whop fungiert als Merchant of Record für alle Abonnementtransaktionen. Whop erhebt und verarbeitet eigenständig Ihre Zahlungsdaten, Rechnungsadresse, Abonnementdetails und Kontoinformationen beim Checkout und für die laufende Abrechnungsverwaltung. Whop ist allein verantwortlich für Zahlungssicherheit, Steuererhebung, Rechnungsstellung und die Verwaltung Ihres Whop-Kontos. Wir erhalten von Whop ausschließlich: E-Mail-Adresse, Whop User ID, TradingView-Benutzername und Abonnementstatus.<br />
 **Von uns an Whop übermittelte Daten:** TradingView-Benutzername (von Ihnen beim Checkout angegeben)<br />
 **Von Whop an uns übermittelte Daten:** E-Mail-Adresse, Whop User ID, Abonnementstatus und Plan, TradingView-Benutzername<br />
-**Standort:** USA (Whop Inc., 169 Madison Ave Suite 2895, New York, NY 10016, USA)<br />
+**Standort:** USA (Whop Inc., 169 Madison Ave Suite 2895, New York, NY 10016, USA). Datenübertragungen in die USA werden durch Standardvertragsklauseln (SCC) gemäß Art. 46 DSGVO abgesichert.<br />
 **Datenschutz:** https://whop.com/privacy-policy/
 
 > Da Whop als Merchant of Record und eigenständiger Verantwortlicher handelt, unterliegt die Erhebung und Nutzung Ihrer Zahlungsdaten, Rechnungsinformationen und Kontodaten auf der Whop-Plattform vollständig der eigenen Datenschutzerklärung von Whop. Wir empfehlen dringend, die Datenschutzerklärung von Whop vor dem Kauf zu lesen.
@@ -160,7 +162,10 @@ Kurz zusammengefasst:
 **Standort:** USA<br />
 **Datenschutzerklärung:** https://www.tradingview.com/privacy-policy/
 
-### 6.5 E-Mail-Dienstleister
+### 6.5 Optionale Webhook-Integration mit Kryptowährungsbörsen
+Falls Sie die optionale Automatisierungsfunktion nutzen und die Strategie über TradingView-Webhooks mit einer Kryptowährungsbörse verbinden, erfolgt die Datenübertragung direkt zwischen TradingView und der jeweiligen Börse. Wir sind an dieser Datenübertragung nicht beteiligt, erhalten keine dabei anfallenden Daten und haben keinen Einfluss auf die Datenschutzpraktiken der jeweiligen Börse. Bitte lesen Sie die Datenschutzerklärung der von Ihnen verwendeten Börse.
+
+### 6.6 E-Mail-Dienstleister
 **Rolle:** Auftragsverarbeiter<br />
 **Zweck:** Zustellung transaktionaler E-Mails (Abonnementbestätigungen, Zugangsmitteilungen, Support-Antworten)<br />
 **Geteilte Daten:** E-Mail-Adresse, Name (sofern angegeben)<br />
@@ -171,9 +176,7 @@ Kurz zusammengefasst:
 
 ## 7. Internationale Datenübertragungen
 
-Einige unserer Dienstleister befinden sich außerhalb des Europäischen Wirtschaftsraums (EWR), insbesondere in den USA. Alle Datenübertragungen sind durch geeignete Garantien gemäß DSGVO Kapitel V abgesichert, insbesondere durch Standardvertragsklauseln (SCC) der Europäischen Kommission.
-
-Cloudflare, Whop und Google unterhalten jeweils Standardvertragsklauseln mit ihren EU-Kunden.
+Einige unserer Dienstleister befinden sich außerhalb des Europäischen Wirtschaftsraums (EWR), insbesondere in den USA. Alle Datenübertragungen sind durch geeignete Garantien gemäß DSGVO Kapitel V abgesichert, insbesondere durch Standardvertragsklauseln (SCC) der Europäischen Kommission. Dies gilt für Cloudflare, Whop und Google.
 
 ---
 
@@ -183,7 +186,8 @@ Cloudflare, Whop und Google unterhalten jeweils Standardvertragsklauseln mit ihr
 |----------------|--------------|
 | Abonnement- und Kontodaten | Dauer des aktiven Abonnements + 3 Jahre |
 | Zahlungs- und Transaktionsdaten | 10 Jahre (§ 257 HGB, § 147 AO) |
-| Support-E-Mail-Korrespondenz | 3 Jahre ab letztem Kontakt |
+| Geschäftsbriefe und E-Mail-Korrespondenz | 6 Jahre (§ 147 AO) |
+| Support-E-Mail-Korrespondenz (nicht geschäftlich) | 3 Jahre ab letztem Kontakt |
 | TradingView-Benutzername | Dauer des aktiven Abonnements; Löschung nach Kündigung |
 | Analysedaten (GA4) | 14 Monate (Standard-GA4-Einstellung) |
 | Server-/Zugriffsprotokoll-Daten (Cloudflare) | Bis zu 30 Tage |
@@ -220,7 +224,13 @@ Sie können eine erteilte Einwilligung jederzeit mit Wirkung für die Zukunft wi
 Wir betreiben keine automatisierte Entscheidungsfindung oder Profiling mit rechtlich erheblichen Auswirkungen.
 
 ### 9.9 Beschwerderecht (Art. 77 DSGVO)
-Sie haben das Recht, Beschwerde bei einer Datenschutz-Aufsichtsbehörde einzulegen. Die zuständige Bundesbehörde ist:
+Sie haben das Recht, Beschwerde bei einer Datenschutz-Aufsichtsbehörde einzulegen. Die für uns zuständige Landesbehörde ist:
+
+**Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen (LDI NRW)**
+Postfach 20 04 44, 40102 Düsseldorf
+https://www.ldi.nrw.de
+
+Daneben steht Ihnen auch die Möglichkeit offen, sich an die Bundesbeauftragte für den Datenschutz und die Informationsfreiheit (BfDI) zu wenden:
 
 **Bundesbeauftragte für den Datenschutz und die Informationsfreiheit (BfDI)**
 Graurheindorfer Str. 153, 53117 Bonn
