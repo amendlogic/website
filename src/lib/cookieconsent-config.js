@@ -137,7 +137,7 @@ export const config = {
             },
             {
               title: "Weitere Informationen",
-              description: "Für Fragen zu unserer Cookie-Richtlinie und Ihren Wahlmöglichkeiten kontaktieren Sie uns bitte per <a class=\"cc__link\" href=\"mailto:YOUR_EMAIL\">E-Mail</a>. Weitere Details finden Sie in unserer <a class=\"cc__link\" href=\"/de/datenschutz\">Datenschutzerklärung</a> und <a class=\"cc__link\" href=\"/de/cookies\">Cookie-Richtlinie</a>."
+              description: "Für Fragen zu unserer Cookie-Richtlinie und Ihren Wahlmöglichkeiten kontaktieren Sie uns bitte per <a class=\"cc__link\" href=\"mailto:contact@amendlogic.com\">E-Mail</a>. Weitere Details finden Sie in unserer <a class=\"cc__link\" href=\"/de/privacy-policy\">Datenschutzerklärung</a> und <a class=\"cc__link\" href=\"/de/cookie-policy\">Cookie-Richtlinie</a>."
             }
           ]
         }
@@ -238,7 +238,7 @@ export const config = {
             },
             {
               title: "More information",
-              description: "For any questions regarding our cookie policy and your choices, please <a class=\"cc__link\" href=\"mailto:YOUR_EMAIL\">contact us</a>. For more details, see our <a class=\"cc__link\" href=\"/en/privacy\">Privacy Policy</a> and <a class=\"cc__link\" href=\"/en/cookies\">Cookie Policy</a>."
+              description: "For any questions regarding our cookie policy and your choices, please <a class=\"cc__link\" href=\"mailto:contact@amendlogic.com\">contact us</a>. For more details, see our <a class=\"cc__link\" href=\"/en/privacy-policy\">Privacy Policy</a> and <a class=\"cc__link\" href=\"/en/cookie-policy\">Cookie Policy</a>."
             }
           ]
         }
