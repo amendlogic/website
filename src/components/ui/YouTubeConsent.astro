@@ -8,8 +8,7 @@ const { id, title } = Astro.props;
 ---
 
 <div class="relative aspect-video w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-slate-800">
-  
-  <!-- Platzhalter — sichtbar bis Einwilligung -->
+
   <div
     id={`yt-placeholder-${id}`}
     class="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center"
@@ -18,45 +17,52 @@ const { id, title } = Astro.props;
       Dieses Video wird erst nach Einwilligung in funktionale Cookies geladen.
     </p>
     <button
-      onclick="CookieConsent.showPreferences()"
+      id={`yt-btn-${id}`}
       class="text-sm underline text-primary cursor-pointer"
     >
       Cookie-Einstellungen öffnen
     </button>
   </div>
 
-  <!-- Video — wird erst nach Einwilligung injiziert -->
   <div id={`yt-embed-${id}`} class="absolute inset-0 hidden"></div>
 
 </div>
 
 <script define:vars={{ id, title }}>
   function loadVideo() {
-    if (window.CookieConsent?.acceptedCategory('functionality')) {
-      const placeholder = document.getElementById(`yt-placeholder-${id}`);
-      const embed = document.getElementById(`yt-embed-${id}`);
-      if (!embed || embed.dataset.loaded) return;
+    const placeholder = document.getElementById(`yt-placeholder-${id}`);
+    const embed = document.getElementById(`yt-embed-${id}`);
+    if (!embed || embed.dataset.loaded) return;
 
-      // Iframe direkt injizieren — kein astro-embed
-      embed.innerHTML = `
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/${id}"
-          title="${title}"
-          class="w-full h-full"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-      `;
+    // Prüfen ob CookieConsent existiert und Kategorie akzeptiert
+    if (typeof window.CookieConsent !== 'undefined' && window.CookieConsent.acceptedCategory('functionality')) {
+      embed.innerHTML = `<iframe
+        src="https://www.youtube-nocookie.com/embed/${id}"
+        title="${title}"
+        style="width:100%;height:100%;position:absolute;top:0;left:0;"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>`;
       embed.dataset.loaded = 'true';
       embed.classList.remove('hidden');
       placeholder?.classList.add('hidden');
     }
   }
 
-  // Beim Laden prüfen falls bereits eingewilligt
-  document.addEventListener('DOMContentLoaded', loadVideo);
+  // Button — direkt per getElementById statt onclick
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById(`yt-btn-${id}`)?.addEventListener('click', () => {
+      if (typeof window.CookieConsent !== 'undefined') {
+        window.CookieConsent.showPreferences();
+      }
+    });
 
-  // Nach Einwilligung im Banner
-  window.addEventListener('cc:onConsent', loadVideo);
+    // Bereits eingewilligt?
+    loadVideo();
+  });
+
+  // CookieConsent Events — v3 verwendet diese beiden
+  window.addEventListener('cc:onFirstConsent', loadVideo);
+  window.addEventListener('cc:onChange', loadVideo);
 </script>
