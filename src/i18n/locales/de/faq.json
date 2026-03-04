@@ -90,7 +90,7 @@
   "billing.items": [
     {
       "title": "Was kosten die Pläne?",
-      "description": "Monatlicher Zugang kostet 99 €/Monat. Vierteljährliche Abrechnung beträgt 249 € alle 3 Monate (83 €/Monat — 16% Ersparnis). Jährliche Abrechnung beträgt 899 €/Jahr (75 €/Monat — 24% Ersparnis). Alle Pläne enthalten identischen Strategie-Zugang. Der einzige Unterschied ist die Abrechnungsfrequenz und der monatliche Preis."
+      "description": "Eine vollständige Übersicht aller Pläne und Preise findest du auf unserer <a href='/de/pricing' class='underline font-semibold'>Preisseite</a>. Alle Pläne starten mit einer kostenlosen 7-Tage-Testphase."
     },
     {
       "title": "Was beinhaltet die kostenlose Testphase?",
