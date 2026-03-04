@@ -1,68 +1,135 @@
 ---
 title: 'Legal Notice'
-description: 'Legal information about AmendLogic as required under German law (§5 TMG). Service provider details, regulatory notice, and contact information.'
+description: 'Mandatory information pursuant to § 5 TMG and § 18 MStV. Service provider details, regulatory notice, and contact information for AmendLogic.'
 ---
 import { SITE } from 'astrowind:config'
 
-**Last Updated:** February 2026
+**Last updated:** February 2026
 
 ---
 
-## Service Provider
+## Information pursuant to § 5 TMG (German Telemedia Act)
 
-<strong>{SITE.owner.fullName} / {SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
-{SITE.owner.address}<br />
-Email: {SITE.owner.eMail}
+### Responsible Service Provider
 
----
-
-## Company Structure & Registration
-
-<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
-Owner: {SITE.owner.fullName}<br />
-Tax Number: {SITE.owner.taxNumber}
+<address class="not-italic">
+  <strong>{`${SITE.owner.fullName} / ${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
+  {SITE.owner.address.street}<br />
+  {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+  {SITE.owner.address.country}
+</address>
 
 ---
 
-## Person Responsible for Editorial Content (§ 18 Para. 2 MStV)
+### Contact
 
-<strong>{SITE.owner.fullName}</strong><br />
-{SITE.owner.address}
+<address class="not-italic">
+  Email: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a><br />
+  Website: <a href={SITE.site} target="_blank" rel="noopener noreferrer">{SITE.site}</a>
+</address>
+
+> **Note:** Please contact us by email only. No telephone support is available. Enquiries are generally answered within 48 hours.
+
+---
+
+### Business Type & Registration
+
+<address class="not-italic">
+  <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
+  {SITE.owner.fullName && <>Owner: {SITE.owner.fullName}<br /></>}
+  {SITE.owner.taxNumber && <>Tax No.: {SITE.owner.taxNumber}<br /></>}
+  {SITE.owner.taxOffice && <>Tax Office: {SITE.owner.taxOffice}<br /></>}
+  {SITE.owner.hrbNumber && <>HRB: {SITE.owner.hrbNumber}<br /></>}
+  {SITE.owner.commercialRegister && <>Local Court: {SITE.owner.commercialRegister}<br /></>}
+  {SITE.owner.vatId && <>VAT ID: {SITE.owner.vatId}<br /></>}
+  {SITE.owner.economicId && <>Economic ID: {SITE.owner.economicId}<br /></>}
+  {SITE.owner.managingDirector && <>Managing Director: {SITE.owner.managingDirector}</>}
+</address>
+
+---
+
+### Person responsible for content pursuant to § 18(2) MStV (German Media State Treaty)
+
+<address class="not-italic">
+  <strong>{SITE.owner.fullName}</strong><br />
+  {SITE.owner.address.street}<br />
+  {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+  {SITE.owner.address.country}
+</address>
 
 ---
 
 ## Regulatory Notice
 
-{SITE.owner.companyName} is **not** a regulated financial institution, licensed securities firm, investment advisor, asset manager, or credit institution under applicable financial services law including KWG, WpIG, or MiFID II. We are not supervised by BaFin, ESMA, or any comparable authority.
+{SITE.owner.companyName} is **not** a regulated financial institution, licensed investment firm, investment adviser, asset manager, or credit institution within the meaning of the German Banking Act (Kreditwesengesetz, KWG), the German Securities Institutions Act (Wertpapierinstitutsgesetz, WpIG), or Directive 2014/65/EU (MiFID II).
 
-Our offering is limited to providing technical software tools (TradingView strategy scripts) for educational and informational purposes only.
+We are not subject to supervision by the German Federal Financial Supervisory Authority (BaFin), the European Securities and Markets Authority (ESMA), or any comparable regulatory body.
+
+The services offered by {SITE.owner.companyName} are limited to the provision of technical software tools (TradingView strategy scripts) for educational and informational purposes. No investment advisory services within the meaning of § 1(1a) No. 1a KWG are provided. No client funds are managed and no orders are executed on behalf of users.
 
 ---
 
-## EU Online Dispute Resolution
+## EU Online Dispute Resolution Platform
 
-https://ec.europa.eu/consumers/odr — Email: {SITE.owner.eMail}
+In accordance with EU Regulation No. 524/2013 on online dispute resolution for consumer disputes, we draw your attention to the European Commission's online dispute resolution platform:
 
-We are neither obligated nor willing to participate in dispute resolution proceedings before a consumer arbitration board.
+[https://ec.europa.eu/consumers/odr](https://ec.europa.eu/consumers/odr)
+
+Our email address for the purposes of this platform: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a>
+
+We are **neither obliged nor willing** to participate in dispute resolution proceedings before a consumer arbitration board.
+
+---
+
+## Dispute Resolution under VSBG
+
+Pursuant to § 36 of the German Consumer Dispute Resolution Act (Verbraucherstreitbeilegungsgesetz, VSBG), we are not required to participate in dispute resolution proceedings before a consumer arbitration board, and we are not willing to do so.
+
+---
+
+## Liability for Content (§ 7(1) TMG)
+
+As a service provider, we are responsible for our own content on these pages in accordance with general law pursuant to § 7(1) TMG. However, pursuant to §§ 8 to 10 TMG, we are not obliged as a service provider to monitor transmitted or stored third-party information or to investigate circumstances that indicate unlawful activity.
+
+Obligations to remove or block the use of information in accordance with general law remain unaffected. However, liability in this regard is only possible from the point in time at which a specific infringement becomes known. Upon becoming aware of any such infringement, we will remove the relevant content without delay.
+
+---
+
+## Liability for Links (§ 8 TMG)
+
+Our website contains links to external third-party websites over whose content we have no influence. We therefore accept no liability for such external content. The respective provider or operator of the linked pages is always responsible for their content.
+
+The linked pages were checked for possible legal violations at the time of linking. No unlawful content was apparent at the time of linking. Ongoing monitoring of the content of linked pages is not reasonable without specific indications of a legal violation. Upon becoming aware of any infringement, we will remove such links without delay.
+
+---
+
+## Copyright (§ 2 UrhG)
+
+The content and works created by the site operator on these pages are subject to German copyright law. Reproduction, editing, distribution, and any form of exploitation beyond the limits of copyright law require the written consent of the respective author or creator.
+
+Downloads and copies of this site are only permitted for private, non-commercial use. Where content on this site was not created by the operator, the copyright of third parties is respected. Third-party content is identified as such. Should you nevertheless become aware of a copyright infringement, please notify us accordingly. Upon becoming aware of any infringement, we will remove such content without delay.
 
 ---
 
 ## Trademark Notices
 
-**TradingView®** is a registered trademark of TradingView, Inc. This offering is not affiliated with, sponsored by, or endorsed by TradingView.
+All brand names, logos, and registered trademarks used on this website are the property of their respective owners.
 
-**Whop®** is a registered trademark of Whop Inc. (169 Madison Ave Suite 2895, New York, NY 10016, USA). The name is referenced solely to inform users about the checkout and subscription platform used. This offering is not otherwise affiliated with Whop Inc. and is not sponsored or endorsed by Whop.
+**TradingView®** is a registered trademark of TradingView, Inc. This offering has no connection with TradingView and is neither sponsored nor endorsed by TradingView.
 
-**Google Analytics** is a service of Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland.
+**Whop®** is a registered trademark of Whop Inc. (169 Madison Ave Suite 2895, New York, NY 10016, USA). Use of the name is solely for the purpose of informing users about the checkout and subscription platform used. This offering has no further connection with Whop Inc. and is neither sponsored nor endorsed by Whop as an official partner.
+{/* **Stripe®** is a registered trademark of Stripe, Inc. Use of the name is solely for the purpose of informing users about the payment infrastructure used. */}
 
-**Cloudflare®** is a registered trademark of Cloudflare, Inc. This website is hosted via Cloudflare Pages.
+**Google Analytics** is a service of Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland. Use is in accordance with our Privacy Policy and Cookie Policy.
+
+**Cloudflare®** is a registered trademark of Cloudflare, Inc. This website's infrastructure is hosted and delivered via Cloudflare Pages.
 
 ---
 
-## Technical Implementation, Hosting & Payment Processing
+## Technical Implementation & Hosting
 
-This website is built on the **AstroWind** template and hosted via **Cloudflare Pages** (Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA).
+This website is based on the **AstroWind** template. Hosting is provided via **Cloudflare Pages** (Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA). Website analytics data is collected via **Google Analytics** (for details, please refer to our Privacy Policy).
 
-Subscriptions, checkout, and payment processing are provided and managed by **Whop Inc.** (169 Madison Ave Suite 2895, New York, NY 10016, USA) acting as Merchant of Record. Whop is responsible for payment processing, invoicing, tax collection, and subscription management.
+---
 
-Website analytics are collected via **Google Analytics 4** (see Privacy Policy for details).
+*Legal Notice last updated: February 2026*
