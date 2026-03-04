@@ -4,31 +4,11 @@ description: 'Vollständige Nutzungsbedingungen von AmendLogic. Abonnementzugang
 ---
 import { SITE } from 'astrowind:config'
 import pricingData from '~/i18n/locales/de/pricing.json'
-
 export const labelMap = [
   { title: "Monatlich",       period: "Alle 30 Tage"  },
   { title: "Vierteljährlich", period: "Alle 90 Tage"  },
   { title: "Jährlich",        period: "Alle 365 Tage" },
 ]
-
-<table>
-  <thead>
-    <tr>
-      <th>Plan</th>
-      <th>Preis</th>
-      <th>Abrechnungszeitraum</th>
-    </tr>
-  </thead>
-  <tbody>
-    {pricingData.prices.map((plan, i) => (
-      <tr key={i}>
-        <td>{labelMap[i].title}</td>
-        <td>{plan.price} €</td>
-        <td>{labelMap[i].period}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
 
 **Zuletzt aktualisiert:** Februar 2026
 
@@ -107,11 +87,24 @@ Um Zugang zum Invite-Only-Strategieskript zu erhalten, müssen Sie beim Checkout
 ### 4.2 Abonnementpläne
 Wir bieten derzeit folgende Abonnementoptionen an:
 
-| Plan | Preis | Abrechnungszeitraum |
-|------|-------|---------------------|
-| Monatlich | 99 € | Alle 30 Tage |
-| Vierteljährlich | 249 € | Alle 90 Tage |
-| Jährlich | 899 € | Alle 365 Tage |
+<table>
+  <thead>
+    <tr>
+      <th>Plan</th>
+      <th>Preis</th>
+      <th>Abrechnungszeitraum</th>
+    </tr>
+  </thead>
+  <tbody>
+    {pricingData.prices.map((plan, i) => (
+      <tr key={i}>
+        <td>{labelMap[i].title}</td>
+        <td>{plan.price}</td>
+        <td>{labelMap[i].period}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
 Preise können sich ändern. Preisänderungen werden mit einer Vorankündigungsfrist von mindestens 30 Tagen mitgeteilt und gelten nicht für bereits laufende Abrechnungszeiträume. Preisänderungen berechtigen nicht zur vorzeitigen Kündigung eines laufenden Abrechnungszeitraums.
 
