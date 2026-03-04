@@ -99,7 +99,7 @@ We currently offer the following subscription options:
     {pricingData.prices.map((plan, i) => (
       <tr key={i}>
         <td>{labelMap[i].title}</td>
-        <td>{plan.price}</td>
+        <td>{plan.currency === "€" ? `${plan.price} €` : `${plan.currency}${plan.price}`}</td>
         <td>{labelMap[i].period}</td>
       </tr>
     ))}
