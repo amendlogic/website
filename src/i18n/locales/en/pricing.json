@@ -8,6 +8,7 @@
   "hero.subtitle": "Full access to the complete framework on every plan. The only difference is how long you commit — and how much you pay per month as a result.",
   "title": "Pricing",
   "subtitle": "All plans include the same strategy, the same signal logic, and the same risk framework. Longer commitments cost less per month. That's the only distinction.",
+  "tax": "Prices exclude VAT. Applicable taxes are calculated at checkout based on your billing location.",
   "prices": [
     {
       "title": "Monthly",
@@ -15,7 +16,6 @@
       "currency": "$",
       "price": 99,
       "period": "per month, cancel anytime",
-      "tax": "Prices exclude VAT. Applicable taxes are calculated at checkout based on your billing location.",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
@@ -45,7 +45,6 @@
       "currency": "$",
       "price": 249,
       "period": "every 3 months — €83/mo",
-      "tax": "Prices exclude VAT. Applicable taxes are calculated at checkout based on your billing location.",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
@@ -77,7 +76,6 @@
       "currency": "$",
       "price": 899,
       "period": "per year — €75/mo",
-      "tax": "Prices exclude VAT. Applicable taxes are calculated at checkout based on your billing location.",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
