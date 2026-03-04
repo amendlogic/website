@@ -12,7 +12,7 @@
     {
       "title": "Monatlich",
       "subtitle": "Testen, evaluieren, entscheiden",
-      "price": 99,
+      "price": 99 €,
       "period": "pro Monat, jederzeit kündbar",
       "items": [
         {
@@ -40,7 +40,7 @@
     {
       "title": "Vierteljährlich",
       "subtitle": "Drei Monate, eine Entscheidung",
-      "price": 249,
+      "price": 249 €,
       "period": "alle 3 Monate — 83 €/Monat",
       "items": [
         {
@@ -70,7 +70,7 @@
     {
       "title": "Jährlich",
       "subtitle": "Ernsthaftes Kapital, ernsthafte Struktur",
-      "price": 899,
+      "price": 899 €,
       "period": "pro Jahr — 75 €/Monat",
       "items": [
         {
