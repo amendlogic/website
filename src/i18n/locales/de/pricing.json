@@ -8,6 +8,7 @@
   "hero.subtitle": "Voller Zugang zum kompletten Framework in jedem Plan. Der einzige Unterschied ist die Laufzeit — und der monatliche Preis, der sich daraus ergibt.",
   "title": "Preise",
   "subtitle": "Alle Pläne enthalten dieselbe Strategie, dieselbe Signallogik und dasselbe Risiko-Framework. Längere Laufzeiten kosten weniger pro Monat. Das ist der einzige Unterschied.",
+  "tax": "Zzgl. MwSt. Die MwSt. wird abhängig von deinem Rechnungsstandort beim Checkout berechnet und ausgewiesen.",
   "prices": [
     {
       "title": "Monatlich",
@@ -15,7 +16,6 @@
       "currency": "€",
       "price": 99,
       "period": "pro Monat, jederzeit kündbar",
-      "tax": "Zzgl. MwSt. Die MwSt. wird abhängig von deinem Rechnungsstandort beim Checkout berechnet und ausgewiesen.",
       "items": [
         {
           "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
@@ -45,7 +45,6 @@
       "currency": "€",
       "price": 249 ,
       "period": "alle 3 Monate — 83 €/Monat",
-      "tax": "Zzgl. MwSt. Die MwSt. wird abhängig von deinem Rechnungsstandort beim Checkout berechnet und ausgewiesen.",
       "items": [
         {
           "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
@@ -77,7 +76,6 @@
       "currency": "€",
       "price": 899,
       "period": "pro Jahr — 75 €/Monat",
-      "tax": "Zzgl. MwSt. Die MwSt. wird abhängig von deinem Rechnungsstandort beim Checkout berechnet und ausgewiesen.",
       "items": [
         {
           "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
