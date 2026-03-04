@@ -55,7 +55,6 @@ Bereitgestellt von Google Ireland Limited (Gordon House, Barrow Street, Dublin 4
 | `_ga` | Google Analytics | Unterscheidet Unique Users; speichert Client-ID | 2 Jahre |
 | `_ga_[ID]` | Google Analytics | Speichert und zählt Seitenaufrufe | 2 Jahre |
 | `_gid` | Google Analytics | Nutzerunterscheidung; täglich erneuert | 24 Stunden |
-| `_gat` | Google Analytics | Drosselung der Anfragerate | 1 Minute |
 
 **Rechtsgrundlage:** Art. 6 Abs. 1 lit. a DSGVO — Einwilligung.
 
@@ -98,7 +97,7 @@ Bei Ihrem ersten Besuch erscheint unser Banner:
 - **Ablehnen** — nur notwendige Cookies aktiv
 - **Einstellungen verwalten** — selektive Auswahl
 
-Ihre Entscheidung wird 12 Monate gespeichert.
+Ihre Entscheidung wird für **1 Jahr** gespeichert.
 
 ### 5.2 Widerruf
 - Klick auf **„Cookie-Einstellungen"** in der Fußzeile
@@ -131,6 +130,10 @@ Wir aktualisieren diese Richtlinie bei Änderungen. Das Datum „Zuletzt aktuali
 
 ## 8. Kontakt
 
-<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
-{SITE.owner.address}<br />
-E-Mail: {SITE.owner.eMail}
+<address class="not-italic">
+  <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
+  {SITE.owner.address.street}<br />
+  {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+  {SITE.owner.address.country}<br />
+  E-Mail: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a>
+</address>
