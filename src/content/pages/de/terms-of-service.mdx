@@ -99,7 +99,7 @@ Wir bieten derzeit folgende Abonnementoptionen an:
     {pricingData.prices.map((plan, i) => (
       <tr key={i}>
         <td>{labelMap[i].title}</td>
-        <td>{plan.price}</td>
+        <td>{plan.currency === "€" ? `${plan.price} €` : `${plan.currency}${plan.price}`}</td>
         <td>{labelMap[i].period}</td>
       </tr>
     ))}
