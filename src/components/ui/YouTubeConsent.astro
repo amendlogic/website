@@ -29,13 +29,17 @@ const { id, title } = Astro.props;
 </div>
 
 <script define:vars={{ id, title }}>
+  function hasConsent() {
+    if (!window.CookieConsent) return false;
+    return window.CookieConsent.acceptedCategory?.('marketing');
+  }
+
   function loadVideo() {
     const placeholder = document.getElementById(`yt-placeholder-${id}`);
     const embed = document.getElementById(`yt-embed-${id}`);
     if (!embed || embed.dataset.loaded) return;
 
-    // Prüfen ob CookieConsent existiert und Kategorie akzeptiert
-    if (typeof window.CookieConsent !== 'undefined' && window.CookieConsent.acceptedCategory('functionality')) {
+    if (hasConsent()) {
       embed.innerHTML = `<iframe
         src="https://www.youtube-nocookie.com/embed/${id}"
         title="${title}"
@@ -50,19 +54,13 @@ const { id, title } = Astro.props;
     }
   }
 
-  // Button — direkt per getElementById statt onclick
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById(`yt-btn-${id}`)?.addEventListener('click', () => {
-      if (typeof window.CookieConsent !== 'undefined') {
-        window.CookieConsent.showPreferences();
-      }
-    });
-
-    // Bereits eingewilligt?
-    loadVideo();
+  document.getElementById(`yt-btn-${id}`)?.addEventListener('click', () => {
+    window.CookieConsent?.showPreferences();
   });
 
-  // CookieConsent Events — v3 verwendet diese beiden
+  loadVideo();
+
   window.addEventListener('cc:onFirstConsent', loadVideo);
   window.addEventListener('cc:onChange', loadVideo);
+  window.addEventListener('cc:ready', loadVideo);
 </script>
