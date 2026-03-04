@@ -1,0 +1,14 @@
+---
+import { YouTube } from 'astro-embed';
+
+interface Props {
+  id: string;
+  title: string;
+}
+
+const { id, title } = Astro.props;
+---
+
+<div data-cc="block-iframe" data-category="functionality">
+  <YouTube {id} {title} />
+</div>
