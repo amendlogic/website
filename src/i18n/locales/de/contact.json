@@ -6,7 +6,7 @@
   "hero.title": "Let's Connect!",
   
   "title": "We are here to help!",
-  "items": {
+  "items": [
     "generalSupport": {
       "title": "General support",
       "description": "Chat with us for inquiries related to account management, website navigation, payment issues, accessing purchased templates or general questions about the website's functionality."
@@ -34,5 +34,5 @@
         "description": "1234 Lorem Ipsum St, 12345, Miami, EEUU",
         "icon": "tabler:map-pin"
       }
-    }
+  ]
 }
