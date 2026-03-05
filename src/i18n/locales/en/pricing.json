@@ -14,7 +14,7 @@
       "title": "Monthly",
       "subtitle": "Try it, test it, evaluate it",
       "currency": "$",
-      "price": 52,
+      "price": 109,
       "period": "per month, cancel anytime",
       "items": [
         {
@@ -43,8 +43,8 @@
       "title": "Quarterly",
       "subtitle": "Three months, one decision",
       "currency": "$",
-      "price": 127,
-      "period": "every 3 months — $42,33/mo",
+      "price": 279,
+      "period": "every 3 months — $93/mo",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
@@ -68,14 +68,14 @@
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "Save 20%"
+      "ribbonTitle": "Save 15%"
     },
     {
       "title": "Annual",
       "subtitle": "Serious capital, serious structure",
       "currency": "$",
-      "price": 425,
-      "period": "per year — $35,42/mo",
+      "price": 879,
+      "period": "per year — $73,25/mo",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
