@@ -8,13 +8,13 @@
   "hero.subtitle": "Voller Zugang zum kompletten Framework in jedem Plan. Der einzige Unterschied ist die Laufzeit — und der monatliche Preis, der sich daraus ergibt.",
   "title": "Preise",
   "subtitle": "Alle Pläne enthalten dieselbe Strategie, dieselbe Signallogik und dasselbe Risiko-Framework. Längere Laufzeiten kosten weniger pro Monat. Das ist der einzige Unterschied.",
-  "tax": "Inkl. MwSt., soweit gesetzlich anwendbar. Endpreis wird im Checkout berechnet.",
+  "tax": "Inkl. MwSt., soweit gesetzlich anwendbar.",
   "prices": [
     {
       "title": "Monatlich",
       "subtitle": "Testen, evaluieren, entscheiden",
       "currency": "€",
-      "price": 99,
+      "price": 79,
       "period": "pro Monat, jederzeit kündbar",
       "items": [
         {
@@ -43,8 +43,8 @@
       "title": "Vierteljährlich",
       "subtitle": "Drei Monate, eine Entscheidung",
       "currency": "€",
-      "price": 249 ,
-      "period": "alle 3 Monate — 83 €/Monat",
+      "price": 199 ,
+      "period": "alle 3 Monate — 66,33 €/Monat",
       "items": [
         {
           "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
@@ -74,8 +74,8 @@
       "title": "Jährlich",
       "subtitle": "Ernsthaftes Kapital, ernsthafte Struktur",
       "currency": "€",
-      "price": 799,
-      "period": "pro Jahr — 66,58 €/Monat",
+      "price": 599,
+      "period": "pro Jahr — 49,92 €/Monat",
       "items": [
         {
           "description": "Vollständiger Strategie-Zugang — jedes Signal, jede Funktion"
@@ -102,7 +102,7 @@
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "33% sparen"
+      "ribbonTitle": "37% sparen"
     }
   ],
   "trust.title": "Klare Abrechnung. Keine Überraschungen.",
