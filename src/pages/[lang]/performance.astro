@@ -92,6 +92,33 @@ const metadata = {
   />
 
 
+  <!-- EChart Widget *************** -->
+
+  <EChart
+    isAfterContent
+    height="400px"
+    csvPath="./src/data/strategy.csv" 
+    callToAction={{
+      target: '_self',
+      text: t('performance.hero.btnSecondary'),
+      href: getPermalink('#backtest', 'page', lang),
+      icon: 'tabler:chevron-right',
+    }}
+  >
+    <Fragment slot="content">
+      {t('index.features2.contentDesc')}
+    </Fragment>
+  </EChart>
+
+
+  <!-- Note Widget ************** -->
+
+  <Note 
+    title={t('performance.limitations.title')}
+    description={t('performance.limitations.desc')} 
+  />
+
+
   <!-- Steps Widget *************** -->
   <Steps
     id="system"
@@ -159,14 +186,6 @@ const metadata = {
       {t('index.features2.contentDesc')}
     </Fragment>
   </EChart>
-
-
-  <!-- Note Widget ************** -->
-
-  <Note 
-    title={t('performance.limitations.title')}
-    description={t('performance.limitations.desc')} 
-  />
 
 
   <!-- CTA Widget ************** -->
