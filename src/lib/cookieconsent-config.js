@@ -44,15 +44,8 @@ export const config = {
       readOnly: true
     },
     functionality: {
-      autoClear: {
-        cookies: [
-          { name: 'VISITOR_INFO1_LIVE' },
-          { name: 'YSC' },
-          { name: 'yt-remote-device-id' },
-          { name: 'yt-remote-connected-devices' },
-          { name: 'yt-player-headers-readable' },
-        ]
-      }
+      // autoClear für Cookies entfällt — YouTube nutzt hier nur localStorage
+      // Cleanup läuft stattdessen im onChange-Callback
     },
     analytics: {
       autoClear: {
@@ -74,13 +67,26 @@ export const config = {
   onChange({ cookie }) {
     updateGAConsent(cookie.categories.includes('analytics'));
 
-    // Analytics abgelehnt → GA-Cookies sofort löschen
+    // Analytics abgelehnt → alle GA-Cookies sofort löschen
     if (!cookie.categories.includes('analytics')) {
       const domain = location.hostname;
-      ['_ga', '_gid'].forEach(name => {
+      const gaCookies = document.cookie
+        .split(';')
+        .map(c => c.trim().split('=')[0])
+        .filter(name => /^_ga/.test(name) || name === '_gid');
+
+      gaCookies.forEach(name => {
         document.cookie = `${name}=; max-age=0; path=/; domain=${domain}`;
         document.cookie = `${name}=; max-age=0; path=/; domain=.${domain}`;
       });
+    }
+
+    // Functionality abgelehnt → YouTube localStorage-Einträge löschen
+    // (autoClear greift nur auf Cookies, nicht auf localStorage)
+    if (!cookie.categories.includes('functionality')) {
+      Object.keys(localStorage)
+        .filter(key => /^yt[.\-_]|^ytidb/.test(key))
+        .forEach(key => localStorage.removeItem(key));
     }
   },
 
