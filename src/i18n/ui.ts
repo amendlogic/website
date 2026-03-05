@@ -3,7 +3,7 @@ import navEn from './locales/en/ui/nav.json';
 import indexEn from './locales/en/index.json';
 import aboutEn from './locales/en/about.json';
 import pricingEn from './locales/en/pricing.json';
-import performanceEn from './locales/en/performance.json
+import performanceEn from './locales/en/performance.json';
 import contactEn from './locales/en/contact.json';
 import footnotesEn from './locales/en/ui/footnotes.json';
 import fallbacksEn from './locales/en/ui/fallbacks.json';
