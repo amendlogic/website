@@ -1,7 +1,8 @@
+
 export const SUPPORTED_LANGUAGES = ['de', 'en'];
 
 // Helper: Consent-Update an GA4 senden
-const updateGAConsent = (granted: boolean) => {
+const updateGAConsent = (granted) => {
   if (typeof window.gtag !== 'function') {
     console.warn('[CookieConsent] gtag nicht verfügbar');
     return;
