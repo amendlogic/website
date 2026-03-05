@@ -43,8 +43,25 @@ export const config = {
     necessary: {
       readOnly: true
     },
-    functionality: {},
-    analytics: {}
+    functionality: {
+      autoClear: {
+        cookies: [
+          { name: 'VISITOR_INFO1_LIVE' },
+          { name: 'YSC' },
+          { name: 'yt-remote-device-id' },
+          { name: 'yt-remote-connected-devices' },
+          { name: 'yt-player-headers-readable' },
+        ]
+      }
+    },
+    analytics: {
+      autoClear: {
+        cookies: [
+          { name: /^_ga/ },
+          { name: '_gid' },
+        ]
+      }
+    },
   },
 
   // ✅ NEU: Wird aufgerufen wenn Nutzer erstmals entscheidet
