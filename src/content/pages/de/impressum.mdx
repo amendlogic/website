@@ -13,7 +13,9 @@ import { SITE } from 'astrowind:config'
 ### Verantwortlicher Diensteanbieter
 
 <address class="not-italic">
-  <strong>{`${SITE.owner.fullName} / ${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
+  <strong>${SITE.owner.fullName}<br />
+  {`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
+	{SITE.owner.managingDirector && <>Geschäftsführer: {SITE.owner.managingDirector}</>}
   {SITE.owner.address.street}<br />
   {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
   {SITE.owner.address.country}
@@ -35,18 +37,29 @@ import { SITE } from 'astrowind:config'
 ### Unternehmensform & Registrierung
 
 <address class="not-italic">
-  <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
-  {SITE.owner.fullName && <>Inhaber: {SITE.owner.fullName}<br /></>}
-  {SITE.owner.taxNumber && <>St.-Nr.: {SITE.owner.taxNumber}<br /></>}
-  {SITE.owner.taxOffice && <>Finanzamt: {SITE.owner.taxOffice}<br /></>}
-  {SITE.owner.hrbNumber && <>HRB: {SITE.owner.hrbNumber}<br /></>}
-  {SITE.owner.commercialRegister && <>Amtsgericht: {SITE.owner.commercialRegister}<br /></>}
-  {SITE.owner.vatId && <>USt-IdNr.: {SITE.owner.vatId}<br /></>}
-  {SITE.owner.economicId && <>W-IdNr.: {SITE.owner.economicId}<br /></>}
-  {SITE.owner.managingDirector && <>Geschäftsführer: {SITE.owner.managingDirector}</>}
+  <strong>${SITE.owner.legalForm}`}</strong><br />
+  
+  {SITE.owner.commercialRegister && <>Registergericht:<br />Amtsgericht {SITE.owner.commercialRegister}<br /></>}
+  {SITE.owner.hrbNumber && <>Registernummer:<br />HRB {SITE.owner.hrbNumber}<br /></>}
 </address>
 
 ---
+
+{SITE.owner.vatId && (
+  <>
+    <h3>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG</h3>
+    <p>{SITE.owner.vatId}</p>
+    <hr />
+  </>
+)}
+
+{SITE.owner.economicId && (
+  <>
+    <h3>Wirtschafts-Identifikationsnummer gemäß §139c AO</h3>
+    <p>{SITE.owner.economicId}</p>
+    <hr />
+  </>
+)}
 
 ### Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV (Medienstaatsvertrag)
 
