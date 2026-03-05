@@ -13,7 +13,7 @@ import { SITE } from 'astrowind:config'
 ### Verantwortlicher Diensteanbieter
 
 <address class="not-italic">
-  <strong>${SITE.owner.fullName}</strong><br />
+  <strong>{SITE.owner.fullName}</strong><br />
   <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
 	{SITE.owner.managingDirector && <>Geschäftsführer: {SITE.owner.managingDirector}</>}
   {SITE.owner.address.street}<br />
@@ -34,16 +34,18 @@ import { SITE } from 'astrowind:config'
 
 ---
 
-### Unternehmensform & Registrierung
-
-<address class="not-italic">
-  <strong>${SITE.owner.legalForm}`}</strong><br />
-  
-  {SITE.owner.commercialRegister && <>Registergericht:<br />Amtsgericht {SITE.owner.commercialRegister}<br /></>}
-  {SITE.owner.hrbNumber && <>Registernummer:<br />HRB {SITE.owner.hrbNumber}<br /></>}
-</address>
-
----
+{SITE.owner.legalForm && (
+  <>
+    <h3>Unternehmensform & Registrierung</h3>
+    <address class="not-italic">
+      <strong>{`${SITE.owner.legalForm} (${SITE.owner.legalForm})`}</strong><br />
+      {SITE.owner.commercialRegister && <>Registereintrag:<br />Eingetragen im Handelsregister<br /></>}
+      {SITE.owner.commercialRegister && <>Registergericht:<br />Amtsgericht {SITE.owner.commercialRegister}<br /></>}
+      {SITE.owner.hrbNumber && <>Registernummer:<br />HRB {SITE.owner.hrbNumber}</>}
+    </address>
+    <hr />
+  </>
+)}
 
 {SITE.owner.vatId && (
   <>
