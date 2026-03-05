@@ -1,4 +1,3 @@
-
 export const SUPPORTED_LANGUAGES = ['de', 'en'];
 
 // Helper: Consent-Update an GA4 senden
