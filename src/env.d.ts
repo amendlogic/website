@@ -3,3 +3,9 @@
 /// <reference types="astro/client" />
 /// <reference types="vite/client" />
 /// <reference types="../vendor/integration/types.d.ts" />
+
+interface Window {
+  gtag: (...args: unknown[]) => void;
+  CookieConsent?: typeof import('vanilla-cookieconsent');
+  _ccListenerAttached?: boolean;
+}
