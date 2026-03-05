@@ -42,15 +42,6 @@ const metadata = {
 
   <Hero
     tagline={t('performance.hero.tagline')}
-    actions={[
-      {
-        variant: 'secondary',
-        text: t('performance.hero.btnSecondary'),
-        href: '#backtest',
-        target: '_self',
-        icon: 'tabler:chevron-down',
-      },
-    ]}
   >
 
     <Fragment slot="title" set:html={t('performance.hero.text', {
@@ -104,11 +95,7 @@ const metadata = {
       href: getPermalink('#backtest', 'page', lang),
       icon: 'tabler:chevron-right',
     }}
-  >
-    <Fragment slot="content">
-      {t('index.features2.contentDesc')}
-    </Fragment>
-  </EChart>
+  />
 
 
   <!-- Note Widget ************** -->
