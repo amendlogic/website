@@ -5,33 +5,35 @@ const GA_ID = ANALYTICS?.vendors?.googleAnalytics?.id;
 
 {GA_ID && (
   <>
+    <!-- ✅ 1. Läuft IMMER & sofort: gtag-Funktion + Consent Default -->
+    <script is:inline set:html={`
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied'
+      });
+    `} />
+
+    <!-- ✅ 2. Nur nach Consent: GA-Script laden -->
     <script
       type="text/plain"
       data-category="analytics"
       data-service="Google Analytics"
       src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-      is:inline
-    ></script>
+    />
 
+    <!-- ✅ 3. Nur nach Consent: GA konfigurieren (set:html statt is:inline!) -->
     <script
       type="text/plain"
       data-category="analytics"
       data-service="Google Analytics"
-      is:inline
-    >
-      {`
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-
-        gtag('consent', 'default', {
-          analytics_storage: 'denied'
-        });
-
+      set:html={`
         gtag('js', new Date());
-        gtag('config', '${GA_ID}', {
-          anonymize_ip: true
-        });
+        gtag('config', '${GA_ID}', { anonymize_ip: true });
       `}
-    </script>
+    />
   </>
 )}
