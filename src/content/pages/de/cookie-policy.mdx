@@ -72,8 +72,9 @@ Werden beim aktiven Abspielen eingebetteter YouTube-Videos gesetzt. **Nur mit au
 Bereitgestellt von Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irland).
 
 - Einbettung erfolgt im **erweiterten Datenschutzmodus** (`youtube-nocookie.com`)
-- Vor dem Abspielen werden **keine Cookies** gesetzt
+- Vor dem Abspielen werden **keine Cookies oder Local-Storage-Einträge** gesetzt
 - Beim aktiven Abspielen werden Daten inkl. IP-Adresse an YouTube übertragen
+- YouTube verwendet neben Cookies auch **Local Storage** zur Speicherung von Nutzerpräferenzen und technischen Daten für die Videowiedergabe
 - Datenübertragung in die USA über Standardvertragsklauseln (SCC)
 
 | Cookie-Name | Anbieter | Zweck | Laufzeit |
@@ -81,6 +82,9 @@ Bereitgestellt von Google Ireland Limited (Gordon House, Barrow Street, Dublin 4
 | `VISITOR_INFO1_LIVE` | YouTube | Schätzt die Bandbreite des Nutzers für Videowiedergabe | 6 Monate |
 | `YSC` | YouTube | Verhindert missbräuchliche Nutzung; eindeutige Video-Sitzungs-ID | Sitzung |
 | `yt-remote-device-id` | YouTube | Speichert Nutzer-Videopräferenzen | Dauerhaft |
+| `yt-remote-connected-devices` | YouTube | Speichert verbundene Geräte (Local Storage) | 1 Jahr |
+| `yt.innertube::nextId` | YouTube | Interne API-Anfragen-Zählung (Local Storage) | 1 Tag |
+| `yt.innertube::requests` | YouTube | Zwischenspeicherung von API-Anfragen (Local Storage) | 1 Tag |
 
 **Rechtsgrundlage:** Art. 6 Abs. 1 lit. a DSGVO — Einwilligung.
 
