@@ -30,12 +30,12 @@ export const config = {
     necessary: {
       readOnly: true
     },
-    analytics: {
-      // Wird nur aktiviert wenn Nutzer zustimmt
-    },
     functionality: {
       // YouTube-Einbettung — Cookies werden erst beim
       // aktiven Abspielen des Videos gesetzt (youtube-nocookie.com)
+    },
+    analytics: {
+      // Wird nur aktiviert wenn Nutzer zustimmt
     }
   },
 
@@ -105,39 +105,6 @@ export const config = {
               }
             },
             {
-              title: "Analyse-Cookies",
-              description: "Diese Cookies ermöglichen uns, die Nutzung der Website anonymisiert zu analysieren, um Inhalte und Benutzerführung zu verbessern. Alle Daten werden anonymisiert erhoben — IP-Adressen werden vor der Speicherung gekürzt. Die Daten werden nicht für Werbezwecke verwendet. Anbieter: Google Ireland Limited. Datenübertragung in die USA auf Basis von Standardvertragsklauseln (SCC).",
-              linkedCategory: "analytics",
-              cookieTable: {
-                headers: {
-                  name: "Cookie",
-                  domain: "Anbieter",
-                  desc: "Zweck",
-                  expiration: "Laufzeit"
-                },
-                body: [
-                  {
-                    name: "_ga",
-                    domain: "Google Analytics",
-                    desc: "Unterscheidet Unique Users; speichert Client-ID",
-                    expiration: "2 Jahre"
-                  },
-                  {
-                    name: "_ga_[ID]",
-                    domain: "Google Analytics",
-                    desc: "Speichert und zählt Seitenaufrufe",
-                    expiration: "2 Jahre"
-                  },
-                  {
-                    name: "_gid",
-                    domain: "Google Analytics",
-                    desc: "Nutzerunterscheidung; täglich erneuert",
-                    expiration: "24 Stunden"
-                  }
-                ]
-              }
-            },
-            {
               title: "Funktionale Cookies",
               description: "Diese Cookies werden beim aktiven Abspielen eingebetteter YouTube-Videos gesetzt. Wir verwenden den erweiterten Datenschutzmodus (<code>youtube-nocookie.com</code>) — vor dem Abspielen werden keine Cookies gesetzt. Beim aktiven Abspielen überträgt YouTube Daten (inkl. IP-Adresse) an Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland. Datenübertragung in die USA auf Basis von Standardvertragsklauseln (SCC).",
               linkedCategory: "functionality",
@@ -166,6 +133,39 @@ export const config = {
                     domain: "YouTube",
                     desc: "Speichert Nutzer-Videopräferenzen",
                     expiration: "Dauerhaft"
+                  }
+                ]
+              }
+            },
+            {
+              title: "Analyse-Cookies",
+              description: "Diese Cookies ermöglichen uns, die Nutzung der Website anonymisiert zu analysieren, um Inhalte und Benutzerführung zu verbessern. Alle Daten werden anonymisiert erhoben — IP-Adressen werden vor der Speicherung gekürzt. Die Daten werden nicht für Werbezwecke verwendet. Anbieter: Google Ireland Limited. Datenübertragung in die USA auf Basis von Standardvertragsklauseln (SCC).",
+              linkedCategory: "analytics",
+              cookieTable: {
+                headers: {
+                  name: "Cookie",
+                  domain: "Anbieter",
+                  desc: "Zweck",
+                  expiration: "Laufzeit"
+                },
+                body: [
+                  {
+                    name: "_ga",
+                    domain: "Google Analytics",
+                    desc: "Unterscheidet Unique Users; speichert Client-ID",
+                    expiration: "2 Jahre"
+                  },
+                  {
+                    name: "_ga_[ID]",
+                    domain: "Google Analytics",
+                    desc: "Speichert und zählt Seitenaufrufe",
+                    expiration: "2 Jahre"
+                  },
+                  {
+                    name: "_gid",
+                    domain: "Google Analytics",
+                    desc: "Nutzerunterscheidung; täglich erneuert",
+                    expiration: "24 Stunden"
                   }
                 ]
               }
@@ -239,39 +239,6 @@ export const config = {
               }
             },
             {
-              title: "Analytics Cookies",
-              description: "These cookies allow us to anonymously analyse website usage in order to improve content and navigation. All data is collected anonymously — IP addresses are truncated before storage. Data is not used for advertising purposes. Provider: Google Ireland Limited. Data transfer to the USA is based on Standard Contractual Clauses (SCCs).",
-              linkedCategory: "analytics",
-              cookieTable: {
-                headers: {
-                  name: "Cookie",
-                  domain: "Provider",
-                  desc: "Purpose",
-                  expiration: "Duration"
-                },
-                body: [
-                  {
-                    name: "_ga",
-                    domain: "Google Analytics",
-                    desc: "Distinguishes unique users; stores client ID",
-                    expiration: "2 years"
-                  },
-                  {
-                    name: "_ga_[ID]",
-                    domain: "Google Analytics",
-                    desc: "Stores and counts page views",
-                    expiration: "2 years"
-                  },
-                  {
-                    name: "_gid",
-                    domain: "Google Analytics",
-                    desc: "User distinction; renewed daily",
-                    expiration: "24 hours"
-                  }
-                ]
-              }
-            },
-            {
               title: "Functional Cookies",
               description: "These cookies are set when embedded YouTube videos are actively played. We use Privacy-Enhanced Mode (<code>youtube-nocookie.com</code>) — no cookies are set before playback. Upon active playback, YouTube transmits data (including IP address) to Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland. Data transfer to the USA is based on Standard Contractual Clauses (SCCs).",
               linkedCategory: "functionality",
@@ -300,6 +267,39 @@ export const config = {
                     domain: "YouTube",
                     desc: "Stores user video preferences",
                     expiration: "Persistent"
+                  }
+                ]
+              }
+            },
+            {
+              title: "Analytics Cookies",
+              description: "These cookies allow us to anonymously analyse website usage in order to improve content and navigation. All data is collected anonymously — IP addresses are truncated before storage. Data is not used for advertising purposes. Provider: Google Ireland Limited. Data transfer to the USA is based on Standard Contractual Clauses (SCCs).",
+              linkedCategory: "analytics",
+              cookieTable: {
+                headers: {
+                  name: "Cookie",
+                  domain: "Provider",
+                  desc: "Purpose",
+                  expiration: "Duration"
+                },
+                body: [
+                  {
+                    name: "_ga",
+                    domain: "Google Analytics",
+                    desc: "Distinguishes unique users; stores client ID",
+                    expiration: "2 years"
+                  },
+                  {
+                    name: "_ga_[ID]",
+                    domain: "Google Analytics",
+                    desc: "Stores and counts page views",
+                    expiration: "2 years"
+                  },
+                  {
+                    name: "_gid",
+                    domain: "Google Analytics",
+                    desc: "User distinction; renewed daily",
+                    expiration: "24 hours"
                   }
                 ]
               }
