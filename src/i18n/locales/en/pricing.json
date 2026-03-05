@@ -8,13 +8,13 @@
   "hero.subtitle": "Full access to the complete framework on every plan. The only difference is how long you commit — and how much you pay per month as a result.",
   "title": "Pricing",
   "subtitle": "All plans include the same strategy, the same signal logic, and the same risk framework. Longer commitments cost less per month. That's the only distinction.",
-  "tax": "VAT included where applicable. Final tax calculated at checkout.",
+  "tax": "VAT included where applicable.",
   "prices": [
     {
       "title": "Monthly",
       "subtitle": "Try it, test it, evaluate it",
       "currency": "$",
-      "price": 109,
+      "price": 89,
       "period": "per month, cancel anytime",
       "items": [
         {
@@ -43,8 +43,8 @@
       "title": "Quarterly",
       "subtitle": "Three months, one decision",
       "currency": "$",
-      "price": 279,
-      "period": "every 3 months — $93/mo",
+      "price": 219,
+      "period": "every 3 months — $73,00/mo",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
@@ -68,14 +68,14 @@
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "Save 15%"
+      "ribbonTitle": "Save 18%"
     },
     {
       "title": "Annual",
       "subtitle": "Serious capital, serious structure",
       "currency": "$",
-      "price": 879,
-      "period": "per year — $73,25/mo",
+      "price": 659,
+      "period": "per year — $54,92/mo",
       "items": [
         {
           "description": "Full strategy access — every signal, every feature"
@@ -102,7 +102,7 @@
         "href": "#"
       },
       "hasRibbon": true,
-      "ribbonTitle": "Save 33%"
+      "ribbonTitle": "Save 38%"
     }
   ],
   "trust.title": "Clean Billing. No Surprises.",
