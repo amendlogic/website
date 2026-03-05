@@ -16,13 +16,12 @@ const { id, title } = Astro.props;
     <p class="text-sm text-gray-600 dark:text-gray-400">
       Dieses Video wird erst nach Einwilligung in funktionale Cookies geladen.
     </p>
-<button
-  id={`yt-btn-${id}`}
-  data-cc="show-preferencesModal"
-  class="text-sm underline text-primary cursor-pointer"
->
-  Cookie-Einstellungen öffnen
-</button>
+    <button
+      data-cc="show-preferencesModal"
+      class="text-sm underline text-primary cursor-pointer"
+    >
+      Cookie-Einstellungen öffnen
+    </button>
   </div>
 
   <div id={`yt-embed-${id}`} class="absolute inset-0 hidden"></div>
@@ -49,14 +48,12 @@ const { id, title } = Astro.props;
   }
 
   window.addEventListener('cc:onConsent', (e) => {
-    console.log('event detail:', e.detail);
     if (e.detail?.cookie?.categories?.includes('functionality')) {
       loadVideo();
     }
   });
 
   window.addEventListener('cc:onChange', (e) => {
-    console.log('onChange detail:', e.detail);
     if (e.detail?.cookie?.categories?.includes('functionality')) {
       loadVideo();
     }
