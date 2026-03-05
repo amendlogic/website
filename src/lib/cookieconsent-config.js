@@ -1,10 +1,23 @@
 export const SUPPORTED_LANGUAGES = ['de', 'en'];
 
+// Helper: Consent-Update an GA4 senden
+const updateGAConsent = (granted: boolean) => {
+  if (typeof window.gtag !== 'function') {
+    console.warn('[CookieConsent] gtag nicht verfügbar');
+    return;
+  }
+  window.gtag('consent', 'update', {
+    analytics_storage:   granted ? 'granted' : 'denied',
+    ad_user_data:        granted ? 'granted' : 'denied',
+    ad_personalization:  granted ? 'granted' : 'denied',
+  });
+};
+
 export const config = {
   cookie: {
     name: 'cc_cookie',
-    expiresAfterDays: 365, // Konsistent mit Cookie-Richtlinie und Datenschutzerklärung
-    domain: '', // Leer lassen = automatisch aktuelle Domain
+    expiresAfterDays: 365,
+    domain: '',
     path: '/',
     sameSite: 'Lax',
   },
@@ -30,12 +43,27 @@ export const config = {
     necessary: {
       readOnly: true
     },
-    functionality: {
-      // YouTube-Einbettung — Cookies werden erst beim
-      // aktiven Abspielen des Videos gesetzt (youtube-nocookie.com)
-    },
-    analytics: {
-      // Wird nur aktiviert wenn Nutzer zustimmt
+    functionality: {},
+    analytics: {}
+  },
+
+  // ✅ NEU: Wird aufgerufen wenn Nutzer erstmals entscheidet
+  //         UND bei jedem Seitenload wenn Consent bereits gespeichert ist
+  onConsent({ cookie }) {
+    updateGAConsent(cookie.categories.includes('analytics'));
+  },
+
+  // ✅ NEU: Wird aufgerufen wenn Nutzer seine Einstellungen ändert
+  onChange({ cookie }) {
+    updateGAConsent(cookie.categories.includes('analytics'));
+
+    // Analytics abgelehnt → GA-Cookies sofort löschen
+    if (!cookie.categories.includes('analytics')) {
+      const domain = location.hostname;
+      ['_ga', '_gid'].forEach(name => {
+        document.cookie = `${name}=; max-age=0; path=/; domain=${domain}`;
+        document.cookie = `${name}=; max-age=0; path=/; domain=.${domain}`;
+      });
     }
   },
 
