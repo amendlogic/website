@@ -1,37 +1,36 @@
 {
   "meta.title": "Kontakt",
   "meta.description": "Fragen zur Strategie, zum kostenlosen Testzeitraum oder zu Ihrem Abonnement? Schreiben Sie uns — wir antworten schnell und unkompliziert.",
-
-  "hero.tagline": "Contact",
+  "hero.tagline": "Kontakt",
   "hero.title": "Let's Connect!",
-  "title": "We are here to help!",
+  "hero.subtitle": "Wir sind für Sie da!",
   "items": [
     {
-      "title": "General support",
-      "description": "Chat with us for inquiries related to account management, website navigation, payment issues, accessing purchased templates or general questions about the website's functionality."
+      "title": "Allgemeiner Support",
+      "description": "Bei Fragen zu Ihrem Abonnement, dem kostenlosen Testzeitraum, der Abrechnung oder dem Zugang zur AmendLogic-Strategie auf TradingView — einfach melden."
     },
     {
-      "title": "Contact sales",
-      "description": "Chat with us for questions about purchases, customization options, licensing for commercial use, inquiries about specific template, etc."
+      "title": "Produkt-Support",
+      "description": "Fragen zur Funktionsweise der Strategie, den Regelwerken, der Ein- und Ausstiegslogik oder den Risikomanagement-Einstellungen? Wir erklären es Ihnen gerne."
     },
     {
-      "title": "Technical support",
-      "description": "Chat with us when facing issues like template installation, problems editing difficulties, compatibility issues with software or download errors, or other technical challenges related to using the templates."
+      "title": "Technischer Support",
+      "description": "Probleme beim Hinzufügen der Strategie auf TradingView, beim Einrichten von Alerts oder beim Ausführen des Skripts? Wir helfen Ihnen bei der korrekten Einrichtung."
     },
     {
-      "title": "Phone",
-      "description": "+1 (234) 567-890",
-      "icon": "tabler:headset"
-    },
-    {
-      "title": "Email",
-      "description": "contact@support.com",
+      "title": "E-Mail",
+      "description": "your@email.com",
       "icon": "tabler:mail"
     },
     {
-      "title": "Location",
-      "description": "1234 Lorem Ipsum St, 12345, Miami, EEUU",
-      "icon": "tabler:map-pin"
+      "title": "Discord",
+      "description": "discord.gg/yourserver",
+      "icon": "tabler:brand-discord"
+    },
+    {
+      "title": "GitHub",
+      "description": "github.com/yourprofile",
+      "icon": "tabler:brand-github"
     }
   ]
 }
