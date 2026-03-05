@@ -1,37 +1,36 @@
 {
   "meta.title": "Contact",
   "meta.description": "Questions about the strategy, the free trial, or your subscription? Send us a message — we respond quickly and without hassle.",
-  
   "hero.tagline": "Contact",
   "hero.title": "Let's Connect!",
   "title": "We are here to help!",
   "items": [
     {
       "title": "General support",
-      "description": "Chat with us for inquiries related to account management, website navigation, payment issues, accessing purchased templates or general questions about the website's functionality."
+      "description": "Reach out for questions about your subscription, the free trial, billing, or anything related to accessing the AmendLogic strategy on TradingView."
     },
     {
-      "title": "Contact sales",
-      "description": "Chat with us for questions about purchases, customization options, licensing for commercial use, inquiries about specific template, etc."
+      "title": "Product support",
+      "description": "Have questions about how the strategy works, its rules, entry and exit logic, or risk management settings? We're happy to walk you through it."
     },
     {
       "title": "Technical support",
-      "description": "Chat with us when facing issues like template installation, problems editing difficulties, compatibility issues with software or download errors, or other technical challenges related to using the templates."
-    },
-    {
-      "title": "Phone",
-      "description": "+1 (234) 567-890",
-      "icon": "tabler:headset"
+      "description": "Facing issues adding the strategy to TradingView, configuring alerts, or running the script? Get in touch and we'll help you get set up correctly."
     },
     {
       "title": "Email",
-      "description": "contact@support.com",
+      "description": "your@email.com",
       "icon": "tabler:mail"
     },
     {
-      "title": "Location",
-      "description": "1234 Lorem Ipsum St, 12345, Miami, EEUU",
-      "icon": "tabler:map-pin"
+      "title": "Discord",
+      "description": "discord.gg/yourserver",
+      "icon": "tabler:brand-discord"
+    },
+    {
+      "title": "GitHub",
+      "description": "github.com/yourprofile",
+      "icon": "tabler:brand-github"
     }
   ]
 }
