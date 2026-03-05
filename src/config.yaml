@@ -85,7 +85,7 @@ apps:
 analytics:
   vendors:
     googleAnalytics:
-      id: 'XX G-0KL9Z6C40R'
+      id: 'G-0KL9Z6C40R'
 
 ui:
   theme: 'system'
