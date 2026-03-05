@@ -55,7 +55,7 @@ export function getFooterData(
           { text: t('nav.benefits'), href: getPermalink('/#benefits', 'page', lang) },
           { text: t('nav.system'), href: getPermalink('/#system', 'page', lang) },
           { text: t('nav.backtest'), href: getPermalink('/#backtest', 'page', lang) },
-          { text: t('nav.pricing'), href: getPermalink('/pricing#prices', 'page', lang) },
+          { text: t('nav.pricing'), href: getPermalink('/pricing', 'page', lang) },
           { text: t('nav.changelog'), href: '#' },
         ],
       },
@@ -76,7 +76,7 @@ export function getFooterData(
           { text: t('nav.team'), href: getPermalink('/about', 'page', lang) },
           { text: t('nav.blog'), href: getBlogPermalink(lang) },
           { text: t('nav.contact'), href: getPermalink('/contact', 'page', lang) },
-          { text: t('nav.portal'), href: '#', icon: 'tabler:external-link' },
+          { text: t('nav.portal'), href: 'https://whop.com/@me/settings/orders/', icon: 'tabler:external-link' },
         ],
       },
       {
