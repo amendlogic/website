@@ -35,38 +35,30 @@ const { id, title } = Astro.props;
     const embed = document.getElementById(`yt-embed-${id}`);
     if (!embed || embed.dataset.loaded) return;
 
-    // CookieConsent v3 API — alle möglichen Varianten prüfen
-    const cc = window.CookieConsent ?? window.CC ?? window.cookieconsent;
-    console.log('cc object:', cc);
-
-    const accepted = cc?.acceptedCategory('functionality') ?? false;
-    console.log('functionality accepted:', accepted);
-
-    if (accepted) {
-      embed.innerHTML = `<iframe
-        src="https://www.youtube-nocookie.com/embed/${id}"
-        title="${title}"
-        style="width:100%;height:100%;position:absolute;top:0;left:0;"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>`;
-      embed.dataset.loaded = 'true';
-      embed.classList.remove('hidden');
-      placeholder?.classList.add('hidden');
-    }
+    embed.innerHTML = `<iframe
+      src="https://www.youtube-nocookie.com/embed/${id}"
+      title="${title}"
+      style="width:100%;height:100%;position:absolute;top:0;left:0;"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>`;
+    embed.dataset.loaded = 'true';
+    embed.classList.remove('hidden');
+    placeholder?.classList.add('hidden');
   }
 
-  // cc:onConsent ist das korrekte Event laut deinem Log
-  window.addEventListener('cc:onConsent', () => {
-    console.log('cc:onConsent gefeuert');
-    loadVideo();
+  window.addEventListener('cc:onConsent', (e) => {
+    console.log('event detail:', e.detail);
+    if (e.detail?.cookie?.categories?.includes('functionality')) {
+      loadVideo();
+    }
   });
 
-  window.addEventListener('cc:onChange', loadVideo);
-
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById(`yt-btn-${id}`)?.setAttribute('data-cc', 'show-preferencesModal');
-    loadVideo();
+  window.addEventListener('cc:onChange', (e) => {
+    console.log('onChange detail:', e.detail);
+    if (e.detail?.cookie?.categories?.includes('functionality')) {
+      loadVideo();
+    }
   });
 </script>
