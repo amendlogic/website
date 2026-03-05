@@ -11,6 +11,7 @@ site:
     eMail: 'contact@amendlogic.com'
     companyName: 'AmendLogic'
     legalForm: 'GmbH'
+    legalFormFull: 'Gesellschaft mit beschränkter Haftung'
 
     address:
       street: 'Musterstraße 1'
