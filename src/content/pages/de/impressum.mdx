@@ -15,7 +15,7 @@ import { SITE } from 'astrowind:config'
 <address class="not-italic">
   <strong>{SITE.owner.fullName}</strong><br />
   <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
-	{SITE.owner.managingDirector && <>Geschäftsführer: {SITE.owner.managingDirector}</>}
+	{SITE.owner.managingDirector && <>Vertreten durch den Geschäftsführer:<br /> {SITE.owner.managingDirector}<br /></>}
   {SITE.owner.address.street}<br />
   {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
   {SITE.owner.address.country}
@@ -39,9 +39,12 @@ import { SITE } from 'astrowind:config'
     <h3>Unternehmensform & Registrierung</h3>
     <address class="not-italic">
       <strong>{`${SITE.owner.legalFormFull} (${SITE.owner.legalForm})`}</strong><br />
-      {SITE.owner.commercialRegister && <>Registereintrag: Eingetragen im Handelsregister<br /></>}
-      {SITE.owner.commercialRegister && <>Registergericht: Amtsgericht {SITE.owner.commercialRegister}<br /></>}
-      {SITE.owner.hrbNumber && <>Registernummer: HRB {SITE.owner.hrbNumber}</>}
+
+      {SITE.owner.commercialRegister && <>Registereintrag: <br />Eingetragen im Handelsregister<br /></>}
+
+      {SITE.owner.commercialRegister && <>Registergericht: <br />Amtsgericht {SITE.owner.commercialRegister}<br /></>}
+
+      {SITE.owner.hrbNumber && <>Registernummer: <br />HRB {SITE.owner.hrbNumber}</>}
     </address>
     <hr />
   </>
