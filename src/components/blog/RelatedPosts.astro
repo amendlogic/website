@@ -10,7 +10,6 @@ export interface Props {
 }
 
 const { post } = Astro.props;
-const lang = Astro.currentLocale ?? 'en';
 const relatedPosts = post.tags ? await getRelatedPosts(post, 4) : [];
 ---
 
@@ -23,7 +22,7 @@ const relatedPosts = post.tags ? await getRelatedPosts(post, 4) : [];
       }}
       title="Related Posts"
       linkText="View All Posts"
-      linkUrl={getBlogPermalink(lang)}
+      linkUrl={getBlogPermalink(post.lang)}
       postIds={relatedPosts.map((post) => post.id)}
     />
   ) : null
