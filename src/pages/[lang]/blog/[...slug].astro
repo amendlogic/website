@@ -39,7 +39,6 @@ export async function getStaticPaths() {
 
 const { post, isFallback } = Astro.props;
 const { lang } = Astro.params;
-const t = useTranslations(lang);
 
 const url = getCanonical(getPermalink(post.permalink, 'post', lang));
 
