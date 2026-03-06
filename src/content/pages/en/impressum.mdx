@@ -10,22 +10,32 @@ import { SITE } from 'astrowind:config'
 
 ## Information pursuant to § 5 TMG (German Telemedia Act)
 
-### Responsible Service Provider
+### Service Provider
 
-<address class="not-italic">
-  <strong>{`${SITE.owner.fullName} / ${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
-  {SITE.owner.address.street}<br />
-  {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
-  {SITE.owner.address.country}
+<address class="not-italic space-y-1 [&>p]:my-0">
+  <p>
+    {!SITE.owner.managingDirector && (
+      <><strong>{SITE.owner.fullName}</strong><br /></>
+    )}
+    <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong>
+  </p>
+  {SITE.owner.managingDirector && (
+    <p>Represented by the Managing Director:<br /> {SITE.owner.managingDirector}</p>
+  )}
+  <p>
+    {SITE.owner.address.street}<br />
+    {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+    {SITE.owner.address.country}
+  </p>
 </address>
 
 ---
 
 ### Contact
 
-<address class="not-italic">
-  Email: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a><br />
-  Website: <a href={SITE.site} target="_blank" rel="noopener noreferrer">{SITE.site}</a>
+<address class="not-italic space-y-1 [&>p]:my-0">
+  <p>Email: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a></p>
+  <p>Website: <a href={SITE.site} target="_blank" rel="noopener noreferrer">{SITE.site}</a></p>
 </address>
 
 > **Note:** Please contact us by email only. No telephone support is available. Enquiries are generally answered within 48 hours.
@@ -34,27 +44,62 @@ import { SITE } from 'astrowind:config'
 
 ### Business Type & Registration
 
-<address class="not-italic">
-  <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
-  {SITE.owner.fullName && <>Owner: {SITE.owner.fullName}<br /></>}
-  {SITE.owner.taxNumber && <>Tax No.: {SITE.owner.taxNumber}<br /></>}
-  {SITE.owner.taxOffice && <>Tax Office: {SITE.owner.taxOffice}<br /></>}
-  {SITE.owner.hrbNumber && <>HRB: {SITE.owner.hrbNumber}<br /></>}
-  {SITE.owner.commercialRegister && <>Local Court: {SITE.owner.commercialRegister}<br /></>}
-  {SITE.owner.vatId && <>VAT ID: {SITE.owner.vatId}<br /></>}
-  {SITE.owner.economicId && <>Economic ID: {SITE.owner.economicId}<br /></>}
-  {SITE.owner.managingDirector && <>Managing Director: {SITE.owner.managingDirector}</>}
-</address>
+{SITE.owner.legalForm && (
+  <>
+    <h3>Company Type & Registration</h3>
+    <dl class="space-y-2 [&>div>dt]:my-0 [&>div>dd]:my-0">
+      <div>
+        <dt><strong>Legal Form</strong></dt>
+        <dd>{`${SITE.owner.legalFormFull} (${SITE.owner.legalForm})`}</dd>
+      </div>
+      {SITE.owner.commercialRegister && (
+        <>
+          <div>
+            <dt><strong>Commercial Register Entry</strong></dt>
+            <dd>Registered in the Commercial Register</dd>
+          </div>
+          <div>
+            <dt><strong>Registration Court</strong></dt>
+            <dd>Local Court (Amtsgericht) {SITE.owner.commercialRegister}</dd>
+          </div>
+        </>
+      )}
+      {SITE.owner.hrbNumber && (
+        <div>
+          <dt><strong>Registration Number</strong></dt>
+          <dd>HRB {SITE.owner.hrbNumber}</dd>
+        </div>
+      )}
+    </dl>
+    <hr />
+  </>
+)}
 
----
+{SITE.owner.vatId && (
+  <>
+    <h3>VAT Identification Number pursuant to § 27a UStG (German VAT Act)</h3>
+    <p>{SITE.owner.vatId}</p>
+    <hr />
+  </>
+)}
+
+{SITE.owner.economicId && (
+  <>
+    <h3>Economic Identification Number pursuant to § 139c AO (German Fiscal Code)</h3>
+    <p>{SITE.owner.economicId}</p>
+    <hr />
+  </>
+)}
 
 ### Person responsible for content pursuant to § 18(2) MStV (German Media State Treaty)
 
-<address class="not-italic">
-  <strong>{SITE.owner.fullName}</strong><br />
-  {SITE.owner.address.street}<br />
-  {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
-  {SITE.owner.address.country}
+<address class="not-italic space-y-1 [&>p]:my-0">
+  <p><strong>{SITE.owner.fullName}</strong></p>
+  <p>
+    {SITE.owner.address.street}<br />
+    {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+    {SITE.owner.address.country}
+  </p>
 </address>
 
 ---
