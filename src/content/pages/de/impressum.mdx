@@ -12,9 +12,11 @@ import { SITE } from 'astrowind:config'
 
 ### Verantwortlicher Diensteanbieter
 
-<address class="not-italic space-y-1">
+<address class="not-italic space-y-1 [&>p]:my-0">
   <p>
-    <strong>{SITE.owner.fullName}</strong><br />
+    {!SITE.owner.managingDirector && (
+      <><strong>{SITE.owner.fullName}</strong><br /></>
+    )}
     <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong>
   </p>
   {SITE.owner.managingDirector && (
@@ -31,9 +33,9 @@ import { SITE } from 'astrowind:config'
 
 ### Kontakt
 
-<address class="not-italic space-y-1">
-  <p>E-Mail: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a></p>
-  <p>Website: <a href={SITE.site} target="_blank" rel="noopener noreferrer">{SITE.site}</a></p>
+<address class="not-italic space-y-1 [&>p]:my-0">
+  E-Mail: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a><br />
+  Website: <a href={SITE.site} target="_blank" rel="noopener noreferrer">{SITE.site}</a>
 </address>
 
 > **Hinweis:** Wir bitten um Kontaktaufnahme ausschließlich per E-Mail. Eine telefonische Erreichbarkeit wird nicht angeboten. Anfragen werden in der Regel innerhalb von 48 Stunden beantwortet.
@@ -89,7 +91,7 @@ import { SITE } from 'astrowind:config'
 
 ### Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV (Medienstaatsvertrag)
 
-<address class="not-italic space-y-1">
+<address class="not-italic space-y-1 [&>p]:my-0">
   <p><strong>{SITE.owner.fullName}</strong></p>
   <p>
     {SITE.owner.address.street}<br />
