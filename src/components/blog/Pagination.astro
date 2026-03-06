@@ -9,7 +9,10 @@ export interface Props {
   nextText?: string;
 }
 
-const { prevUrl, nextUrl, prevText = 'Newer posts', nextText = 'Older posts' } = Astro.props;
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const { prevUrl, nextUrl, prevText = t('blog.newerPosts'), nextText = t('blog.olderPosts') } = Astro.props;
 ---
 
 {
