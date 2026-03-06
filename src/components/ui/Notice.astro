@@ -16,6 +16,10 @@ const {
 
 const classes = twMerge(
   'container mx-auto max-w-4xl mt-8 sm:mt-16',
+  'intersect-once intersect-quarter',
+  'motion-safe:md:opacity-0 motion-safe:md:-translate-x-8',
+  'motion-safe:md:transition-all motion-safe:md:duration-700 motion-safe:md:ease-out',
+  'motion-safe:md:intersect:opacity-100 motion-safe:md:intersect:translate-x-0',
   className
 );
 ---
@@ -23,20 +27,21 @@ const classes = twMerge(
 <div class={classes}>
   <div
     class="flex items-start gap-4 p-5 rounded-xl
-           bg-white dark:bg-slate-800/80
-           border-t-2 border-blue-400 dark:border-blue-500
-           shadow-sm shadow-blue-100 dark:shadow-none"
+           bg-white/70 dark:bg-slate-900/60
+           backdrop-blur-md
+           border border-white/50 dark:border-white/10
+           shadow-[0_8px_32px_rgb(0,0,0,0.08),0_2px_8px_rgb(0,0,0,0.04),inset_0_1px_0_rgb(255,255,255,0.6)]
+           dark:shadow-[0_8px_32px_rgb(0,0,0,0.4),0_2px_8px_rgb(0,0,0,0.2),inset_0_1px_0_rgb(255,255,255,0.05)]"
     role="alert"
   >
-    <Icon name={icon} class="w-6 h-6 flex-shrink-0 mt-0.5 text-blue-500" />
-
+    <Icon name={icon} class="w-6 h-6 flex-shrink-0 mt-0.5 text-blue-500 dark:text-blue-400" />
     <div>
       {title && (
-        <h3 class="mb-1 text-sm font-medium uppercase tracking-wide text-blue-800 dark:text-blue-200">
+        <h3 class="mb-1 text-sm font-semibold uppercase tracking-wide text-blue-800 dark:text-blue-200">
           {title}
         </h3>
       )}
-      <div class="text-sm leading-relaxed text-blue-800 dark:text-blue-200">
+      <div class="text-sm leading-relaxed text-blue-800/90 dark:text-blue-200/80">
         <slot />
       </div>
     </div>
