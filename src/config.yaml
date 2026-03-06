@@ -15,7 +15,7 @@ site:
     managingDirector: ''
 
     address:
-      street: 'Musterstraße 1'
+      street: 'Musterstraße 12'
       postalCode: '12345'
       city: 'Berlin'
       country: 'DE'
