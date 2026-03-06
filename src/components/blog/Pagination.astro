@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Button from '~/components/ui/Button.astro';
+import { useTranslations } from '~/i18n/utils';
 
 export interface Props {
   prevUrl?: string;
@@ -9,7 +10,10 @@ export interface Props {
   nextText?: string;
 }
 
-const { prevUrl, nextUrl, prevText = 'test', nextText = 'Test' } = Astro.props;
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const { prevUrl, nextUrl, prevText = t('blog.newerPosts'), nextText = t('blog.olderPosts') } = Astro.props;
 ---
 
 {
