@@ -346,12 +346,14 @@ If any provision of these Terms is found to be invalid, unlawful, or unenforceab
 
 For questions, support, or legal notices regarding these Terms, please contact us at:
 
-<address class="not-italic">
-  <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
-  {SITE.owner.address.street}<br />
-  {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
-  {SITE.owner.address.country}<br />
-  Email: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a>
+<address class="not-italic space-y-1 [&>p]:my-0">
+  <p><strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong></p>
+  <p>
+    {SITE.owner.address.street}<br />
+    {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+    {SITE.owner.address.country}
+  </p>
+  <p>Email: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a></p>
 </address>
 
 ---
