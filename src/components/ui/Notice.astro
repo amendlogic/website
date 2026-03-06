@@ -27,8 +27,9 @@ const classes = twMerge(
 <div class={classes}>
   <div
     class="notice-glass flex items-start gap-3 px-5 py-4 rounded-xl
-           backdrop-blur-md
-           border border-white/50 dark:border-white/10"
+           bg-gradient-to-br from-white/90 to-gray-50/80
+           dark:from-slate-800/80 dark:to-slate-900/60
+           border border-white/60 dark:border-white/10"
     role="note"
   >
     <Icon name={icon} class="w-5 h-5 flex-shrink-0 mt-0.5 text-gray-400 dark:text-slate-500" />
@@ -47,11 +48,8 @@ const classes = twMerge(
 
 <style>
   .notice-glass {
-    background: linear-gradient(
-      135deg,
-      rgb(255 255 255 / 0.85) 0%,
-      rgb(249 250 251 / 0.75) 100%
-    );
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-top: 2px solid rgb(255 255 255 / 0.95);
     box-shadow:
       0 8px 32px rgb(0 0 0 / 0.08),
@@ -60,12 +58,6 @@ const classes = twMerge(
   }
 
   :global(.dark) .notice-glass {
-    background: linear-gradient(
-      135deg,
-      rgb(15 23 42 / 0.75) 0%,
-      rgb(30 41 59 / 0.60) 100%
-    );
-    border-color: rgb(255 255 255 / 0.1);
     border-top: 2px solid rgb(255 255 255 / 0.12);
     box-shadow:
       0 8px 32px rgb(0 0 0 / 0.4),
