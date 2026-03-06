@@ -3,15 +3,15 @@ import { getPermalink } from '~/utils/permalinks';
 import { APP_BLOG } from 'astrowind:config';
 import type { Post } from '~/types';
 
-const { post } = Astro.props;
-
 export interface Props {
   tags: Post['tags'];
   class?: string;
   title?: string | undefined;
   isCategory?: boolean;
+  post: Post;
 }
 
+const { post } = Astro.props;
 const { tags, class: className = 'text-sm', title = undefined, isCategory = false } = Astro.props;
 ---
 
