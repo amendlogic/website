@@ -8,6 +8,9 @@ import Headline from '~/components/blog/Headline.astro';
 import Pagination from '~/components/blog/Pagination.astro';
 import Notice from '~/components/ui/Notice.astro';
 
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
 export const prerender = true;
 
 export const getStaticPaths = (async ({ paginate }) => {
