@@ -3,13 +3,16 @@ import type { CollectionEntry } from 'astro:content';
 import type { Post } from '~/types';
 import { APP_BLOG } from 'astrowind:config';
 import { cleanSlug, getPermalink } from './permalinks';
-import { LANGUAGES, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
+import { LANGUAGES, DEFAULT_LANG } from '~/i18n/utils'; // <--- WICHTIG: Importiere die Config!
 
 // --------------------------------------------------------------------------
 // CONFIG & CACHING
 // --------------------------------------------------------------------------
 
-const LOCALES = Object.keys(LANGUAGES);
+// Wir holen die Sprachen dynamisch aus deiner Config, statt sie hier hardzucodieren
+const LOCALES = Object.keys(LANGUAGES); 
+
+// Regex: Erkennt "en/" oder "de/" am Anfang der ID
 const LOCALE_REGEX = new RegExp(`^(${LOCALES.join('|')})/`);
 
 let _postsCache: Post[] | null = null;
@@ -35,14 +38,18 @@ const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> 
     metadata = {},
   } = data;
 
+  // 1. Sprache ermitteln
   let lang = DEFAULT_LANG;
   const match = id.match(LOCALE_REGEX);
   if (match) {
     lang = match[1];
   }
 
-  const baseId = id.replace(LOCALE_REGEX, '').replace(/\.[^/.]+$/, '');
+  // 2. ID bereinigen (Sprach-Präfix entfernen)
+  const baseId = id.replace(LOCALE_REGEX, '').replace(/\.[^/.]+$/, "");
   const slug = cleanSlug(data.slug || baseId);
+
+  // 3. Permalink generieren
   const permalink = getPermalink(slug, 'post', lang);
 
   const publishDateObj = new Date(publishDate);
@@ -58,10 +65,11 @@ const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> 
   }));
 
   return {
-    id,
-    slug,
-    permalink,
-    lang,
+    id: id,
+    slug: slug,
+    permalink: permalink,
+    lang: lang,
+
     publishDate: publishDateObj,
     updateDate: updateDateObj,
     title,
@@ -72,6 +80,7 @@ const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> 
     author,
     draft,
     metadata,
+    
     Content,
     readingTime: remarkPluginFrontmatter?.readingTime,
   };
@@ -109,16 +118,27 @@ export const isBlogTagRouteEnabled = APP_BLOG.tag.isEnabled;
 
 export const blogPostsPerPage = APP_BLOG?.postsPerPage;
 
+// SEO Robots Exports (Wichtig für deine Pages!)
 export const blogListRobots = APP_BLOG.list.robots;
 export const blogPostRobots = APP_BLOG.post.robots;
-export const blogCategoryRobots = APP_BLOG.category.robots;
-export const blogTagRobots = APP_BLOG.tag.robots;
+export const blogCategoryRobots = APP_BLOG.category.robots; 
+export const blogTagRobots = APP_BLOG.tag.robots;           
 
+/**
+ * Holt Posts. 
+ * - Ohne 'lang': Gibt ALLE Posts zurück (Wichtig für getStaticPaths).
+ * - Mit 'lang': Filtert strikt nach Sprache.
+ */
 export const fetchPosts = async (lang?: string) => {
   const posts = await load();
   return lang ? posts.filter((p) => p.lang === lang) : posts;
 };
 
+/**
+ * Optional: Nützlich für Widgets (z.B. Latest Posts auf der Homepage).
+ * Wenn du auf der DE-Startseite bist, aber keine DE-Posts hast,
+ * zeigt diese Funktion englische Posts statt gar nichts an.
+ */
 export const fetchPostsWithFallback = async (lang: string) => {
   const posts = await load();
   const inLang = posts.filter((p) => p.lang === lang);
@@ -142,6 +162,7 @@ export const findPostsByIds = async (ids: string[]) => {
 };
 
 export const getRelatedPosts = async (original: Post, maxResults = 4) => {
+  // Wir suchen Related Posts nur in der GLEICHEN Sprache wie der Artikel selbst
   const posts = await fetchPosts(original.lang);
   const tagSet = new Set(original.tags.map((t) => t.slug));
 
@@ -162,7 +183,3 @@ export const getRelatedPosts = async (original: Post, maxResults = 4) => {
 
   return scored.slice(0, maxResults).map((s) => s.post);
 };
-
-// Re-export damit andere Dateien useTranslations über blog.ts beziehen können
-// und keine zirkuläre Abhängigkeit mit i18n/utils entsteht
-export { useTranslations } from '~/i18n/utils';
