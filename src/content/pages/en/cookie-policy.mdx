@@ -154,10 +154,12 @@ We update this policy when changes occur. The "Last updated" date will be adjust
 
 ## 8. Contact
 
-<address class="not-italic">
-  <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br />
-  {SITE.owner.address.street}<br />
-  {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
-  {SITE.owner.address.country}<br />
-  Email: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a>
+<address class="not-italic space-y-1 [&>p]:my-0">
+  <p><strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong></p>
+  <p>
+    {SITE.owner.address.street}<br />
+    {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+    {SITE.owner.address.country}
+  </p>
+  <p>Email: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a></p>
 </address>
