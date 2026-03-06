@@ -1,6 +1,6 @@
 export const SUPPORTED_LANGUAGES = ['de', 'en'];
-const cookieIcon = `<span style="display:flex;align-items:center;gap:0.5rem"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 13v.01"/><path d="M12 17v.01"/><path d="M12 12v.01"/><path d="M16 14v.01"/><path d="M11 8v.01"/><path d="M13.148 3.476l2.667 1.104a4 4 0 0 0 4.615 6.27l.579 2.537a3 3 0 0 1 -1.44 3.522l-5.69 3.2a3 3 0 0 1 -2.979 0l-5.69 -3.2a3 3 0 0 1 -1.508 -3.664l2.208 -6.139a3 3 0 0 1 2.272 -1.762l2.267 -.385a3 3 0 0 1 2.699 .517z"/></svg>`;
-const cookieIconClose = `</span>`;
+const cookieIcon = `<span style="display:flex;align-items:center;gap:0.5rem;flex-wrap:nowrap"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 13v.01"/><path d="M12 17v.01"/><path d="M12 12v.01"/><path d="M16 14v.01"/><path d="M11 8v.01"/><path d="M13.148 3.476l2.667 1.104a4 4 0 0 0 4.615 6.27l.579 2.537a3 3 0 0 1 -1.44 3.522l-5.69 3.2a3 3 0 0 1 -2.979 0l-5.69 -3.2a3 3 0 0 1 -1.508 -3.664l2.208 -6.139a3 3 0 0 1 2.272 -1.762l2.267 -.385a3 3 0 0 1 2.699 .517z"/></svg><span>`;
+const cookieIconClose = `</span></span>`;
 
 // Helper: Consent-Update an GA4 senden
 const updateGAConsent = (granted) => {
