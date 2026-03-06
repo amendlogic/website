@@ -13,7 +13,7 @@ export interface Props {
 const { lang } = Astro.params;
 const t = useTranslations(lang);
 
-const { prevUrl, nextUrl, prevText = t('blog.newerPosts'), nextText = t('blog.olderPosts') } = Astro.props;
+const { prevUrl, nextUrl, prevText = 'test', nextText = 'Test' } = Astro.props;
 ---
 
 {
