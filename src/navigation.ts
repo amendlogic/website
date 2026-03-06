@@ -27,6 +27,7 @@ export function getHeaderData(lang?: string) {
       {
         text: t('nav.insights'),
         links: [
+          { text: t('nav.performance'), href: getPermalink('/performance', 'page', lang) },
           { text: t('nav.getStarted'), href: getPermalink('get-started-website-with-astro-tailwind-css', 'post', lang) },
           { text: t('nav.docs'), href: getPermalink('tutorials', 'category', lang) },
           { text: t('nav.blog'), href: getBlogPermalink(lang) },
