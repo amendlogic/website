@@ -78,7 +78,7 @@
     rgb(249 250 251 / 0.75) 100%
   );
   border: 1px solid rgb(255 255 255 / 0.5);
-  border-top: 2px solid var(--aw-color-primary);
+  border-top: 2px solid rgb(255 255 255 / 0.95);
   box-shadow:
     0 8px 32px rgb(0 0 0 / 0.08),
     0 2px 8px rgb(0 0 0 / 0.04),
@@ -93,7 +93,7 @@
     rgb(30 41 59 / 0.60) 100%
   );
   border-color: rgb(255 255 255 / 0.1);
-  border-top-color: var(--aw-color-primary);
+  border-top: 2px solid rgb(255 255 255 / 0.12);
   box-shadow:
     0 8px 32px rgb(0 0 0 / 0.4),
     0 2px 8px rgb(0 0 0 / 0.2),
