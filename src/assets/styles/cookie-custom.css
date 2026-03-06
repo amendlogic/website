@@ -112,3 +112,16 @@
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
+
+#cc-main .cm__title,
+#cc-main .pm__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#cc-main .cc-title-icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
