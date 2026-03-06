@@ -1,6 +1,6 @@
 ---
 import { fetchPosts, blogPostsPerPage, blogListRobots } from '~/utils/blog';
-import { LANGUAGES, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
+import { LANGUAGES, useTranslations } from '~/i18n/utils';
 import Layout from '~/layouts/PageLayout.astro';
 import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
@@ -55,7 +55,7 @@ const metadata = {
   )}
 
   <section class="px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <Headline> {lang === 'de' ? 'Der Blog' : 'The Blog'} </Headline>
+    <Headline> {t('blog.title')} </Headline>
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
   </section>
