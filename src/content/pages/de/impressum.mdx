@@ -45,7 +45,7 @@ import { SITE } from 'astrowind:config'
 {SITE.owner.legalForm && (
   <>
     <h3>Unternehmensform & Registrierung</h3>
-    <dl class="space-y-2 [&>p]:my-0">
+    <dl class="not-prose space-y-2">
       <div>
         <dt class="font-semibold">Rechtsform</dt>
         <dd>{`${SITE.owner.legalFormFull} (${SITE.owner.legalForm})`}</dd>
