@@ -1,1 +1,8 @@
-
+{
+  "newerPosts": "Newer posts",
+  "olderPosts": "Older posts",
+  "relatedPosts": "Related Posts",
+  "allPosts": "View All Posts",
+  "minRead": "min read",
+  "backToBlog": "Back to Blog"
+}
