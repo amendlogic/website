@@ -48,7 +48,7 @@ export const ui = {
     footnotes: footnotesDe,
     fallbacks: fallbacksDe,
     faq: faqDe,
-    blog: blogDe
+    blog: blogDe,
     error404: error404De,
   },
 } as const;
