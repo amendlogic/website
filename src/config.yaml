@@ -12,6 +12,7 @@ site:
     companyName: 'AmendLogic'
     legalForm: 'GmbH'
     legalFormFull: 'Gesellschaft mit beschränkter Haftung'
+    managingDirector: 'Paul Panzer'
 
     address:
       street: 'Musterstraße 1'
@@ -21,7 +22,6 @@ site:
 
     hrbNumber: '1234'
     commercialRegister: 'duisburg'
-    managingDirector: ''
     vatId: 'DE123456789'
     economicId: '123456'
 
