@@ -16,7 +16,6 @@ export interface Props {
 }
 
 const { post } = Astro.props;
-const lang = Astro.currentLocale ?? 'en';
 const image = (await findImage(post.image)) as ImageMetadata | undefined;
 
 const link = APP_BLOG?.post?.isEnabled ? post.permalink : '';
@@ -83,7 +82,7 @@ const link = APP_BLOG?.post?.isEnabled ? post.permalink : '';
               <>
                 {' '}
                 ·{' '}
-                <a class="capitalize hover:underline" href={getPermalink(post.category.slug, 'category', lang)}>
+                <a class="capitalize hover:underline" href={getPermalink(post.category.slug, 'category', post.lang)}>
                   {post.category.title}
                 </a>
               </>
