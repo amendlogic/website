@@ -42,37 +42,6 @@
     }
   ],
 
-  "strategy.tagline": "Configuration",
-  "strategy.title": "What the Settings Actually Do",
-  "strategy.subtitle": "These are the parameters you can adjust in the TradingView strategy panel — and what changes when you move them.",
-  "strategy.items": [
-    {
-      "title": "Risk Per Trade (%)",
-      "description": "Defines the maximum percentage of account equity risked on a single trade. Lowering this reduces drawdown but also scales returns proportionally. The default configuration uses [X]%.",
-      "icon": "tabler:percentage"
-    },
-    {
-      "title": "Drawdown Reduction Threshold",
-      "description": "When cumulative drawdown exceeds this threshold, the strategy automatically reduces position sizing. Acts as a circuit breaker during losing streaks without requiring manual intervention.",
-      "icon": "tabler:chart-area-line"
-    },
-    {
-      "title": "Volatility Sensitivity",
-      "description": "Controls how aggressively the strategy adjusts position size in response to elevated market volatility. Higher sensitivity means smaller positions during uncertain conditions.",
-      "icon": "tabler:activity"
-    },
-    {
-      "title": "Signal Confirmation Window",
-      "description": "The number of bars the strategy waits for signal confirmation before entry. Longer windows filter more noise but may delay entries in fast-moving markets.",
-      "icon": "tabler:clock"
-    },
-    {
-      "title": "Regime Filter Strength",
-      "description": "Determines how strictly the strategy filters out low-quality market conditions. Higher values mean fewer trades but a higher proportion of those trades occurring in structurally favorable environments.",
-      "icon": "tabler:filter"
-    }
-  ],
-
   "methodology.tagline": "Methodology",
   "methodology.title": "How These Numbers Were Generated",
   "methodology.subtitle": "The assumptions behind a backtest matter as much as the results. These are ours — stated plainly so you can evaluate them yourself.",
@@ -114,6 +83,37 @@
     }
   ],
 
+  "strategy.tagline": "Configuration",
+  "strategy.title": "What the Settings Actually Do",
+  "strategy.subtitle": "These are the parameters you can adjust in the TradingView strategy panel — and what changes when you move them.",
+  "strategy.items": [
+    {
+      "title": "Risk Per Trade (%)",
+      "description": "Defines the maximum percentage of account equity risked on a single trade. Lowering this reduces drawdown but also scales returns proportionally. The default configuration uses [X]%.",
+      "icon": "tabler:percentage"
+    },
+    {
+      "title": "Drawdown Reduction Threshold",
+      "description": "When cumulative drawdown exceeds this threshold, the strategy automatically reduces position sizing. Acts as a circuit breaker during losing streaks without requiring manual intervention.",
+      "icon": "tabler:chart-area-line"
+    },
+    {
+      "title": "Volatility Sensitivity",
+      "description": "Controls how aggressively the strategy adjusts position size in response to elevated market volatility. Higher sensitivity means smaller positions during uncertain conditions.",
+      "icon": "tabler:activity"
+    },
+    {
+      "title": "Signal Confirmation Window",
+      "description": "The number of bars the strategy waits for signal confirmation before entry. Longer windows filter more noise but may delay entries in fast-moving markets.",
+      "icon": "tabler:clock"
+    },
+    {
+      "title": "Regime Filter Strength",
+      "description": "Determines how strictly the strategy filters out low-quality market conditions. Higher values mean fewer trades but a higher proportion of those trades occurring in structurally favorable environments.",
+      "icon": "tabler:filter"
+    }
+  ],
+  
   "chart.tagline": "Alternative Configurations",
   "chart.title": "How Results Change Across Risk Settings",
   "chart.subtitle": "The same core strategy logic applied at different risk configurations produces meaningfully different equity curves. Lower risk settings reduce both drawdown and absolute return. These charts show the trade-off explicitly.",
