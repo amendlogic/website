@@ -95,7 +95,7 @@ const link = APP_BLOG?.post?.isEnabled ? post.permalink : '';
         {
           link ? (
             
-              class="inline-block hover:text-primary dark:hover:text-blue-700 transition ease-in duration-200"
+              <a class="inline-block hover:text-primary dark:hover:text-blue-700 transition ease-in duration-200"
               href={link}
             >
               {post.title}
