@@ -10,9 +10,9 @@ site:
     fullName: 'Max Mustermann'
     eMail: 'contact@amendlogic.com'
     companyName: 'AmendLogic'
-    legalForm: 'GmbH'
+    legalForm: ''
     legalFormFull: 'Gesellschaft mit beschränkter Haftung'
-    managingDirector: 'Paul Panzer'
+    managingDirector: ''
 
     address:
       street: 'Musterstraße 1'
@@ -20,10 +20,10 @@ site:
       city: 'Berlin'
       country: 'DE'
 
-    hrbNumber: '1234'
-    commercialRegister: 'duisburg'
-    vatId: 'DE123456789'
-    economicId: '123456'
+    hrbNumber: ''
+    commercialRegister: ''
+    vatId: ''
+    economicId: ''
 
 metadata:
   title:
