@@ -53,18 +53,18 @@ import { SITE } from 'astrowind:config'
       {SITE.owner.commercialRegister && (
         <>
           <div>
-            <dt class="font-semibold">Registereintrag</dt>
+            <dt><strong>Registereintrag</strong></dt>
             <dd>Eingetragen im Handelsregister</dd>
           </div>
           <div>
-            <dt class="font-semibold">Registergericht</dt>
+            <dt><strong>Registergericht</strong></dt>
             <dd>Amtsgericht {SITE.owner.commercialRegister}</dd>
           </div>
         </>
       )}
       {SITE.owner.hrbNumber && (
         <div>
-          <dt class="font-semibold">Registernummer</dt>
+          <dt><strong>Registernummer</strong></dt>
           <dd>HRB {SITE.owner.hrbNumber}</dd>
         </div>
       )}
