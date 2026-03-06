@@ -39,11 +39,11 @@ import { SITE } from 'astrowind:config'
     <h3>Unternehmensform & Registrierung</h3>
     <address class="not-italic">
       <strong>{`${SITE.owner.legalFormFull} (${SITE.owner.legalForm})`}</strong><br />
-
+<br />
       {SITE.owner.commercialRegister && <>Registereintrag: <br />Eingetragen im Handelsregister<br /></>}
-
+<br />
       {SITE.owner.commercialRegister && <>Registergericht: <br />Amtsgericht {SITE.owner.commercialRegister}<br /></>}
-
+<br />
       {SITE.owner.hrbNumber && <>Registernummer: <br />HRB {SITE.owner.hrbNumber}</>}
     </address>
     <hr />
