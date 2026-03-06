@@ -16,9 +16,9 @@ export interface Props {
 }
 
 const { post } = Astro.props;
+const lang = Astro.currentLocale ?? 'en';
 const image = (await findImage(post.image)) as ImageMetadata | undefined;
 
-// WICHTIG: Der Link-Fix muss bleiben, sonst hast du wieder doppelte Pfade (/en/blog/en/blog/...)
 const link = APP_BLOG?.post?.isEnabled ? post.permalink : '';
 ---
 
@@ -83,8 +83,7 @@ const link = APP_BLOG?.post?.isEnabled ? post.permalink : '';
               <>
                 {' '}
                 ·{' '}
-                {/* WICHTIG: post.lang Fix bleibt, damit der Link stimmt */}
-                <a class="capitalize hover:underline" href={getPermalink(post.category.slug, 'category', post.lang)}>
+                <a class="capitalize hover:underline" href={getPermalink(post.category.slug, 'category', lang)}>
                   {post.category.title}
                 </a>
               </>
@@ -95,7 +94,7 @@ const link = APP_BLOG?.post?.isEnabled ? post.permalink : '';
       <h2 class="text-xl sm:text-2xl font-bold leading-tight mb-2 font-heading dark:text-slate-300">
         {
           link ? (
-            <a
+            
               class="inline-block hover:text-primary dark:hover:text-blue-700 transition ease-in duration-200"
               href={link}
             >
@@ -112,7 +111,7 @@ const link = APP_BLOG?.post?.isEnabled ? post.permalink : '';
     {
       post.tags && Array.isArray(post.tags) ? (
         <footer class="mt-5">
-          <PostTags tags={post.tags} />
+          <PostTags tags={post.tags} post={post} />
         </footer>
       ) : (
         <Fragment />
