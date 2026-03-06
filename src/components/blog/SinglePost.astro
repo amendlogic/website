@@ -1,16 +1,11 @@
 ---
 import { Icon } from 'astro-icon/components';
-
 import Image from '~/components/common/Image.astro';
 import PostTags from '~/components/blog/Tags.astro';
 import SocialShare from '~/components/common/SocialShare.astro';
-
 import { getPermalink } from '~/utils/permalinks';
 import { getFormattedDate } from '~/utils/utils';
-
 import type { Post } from '~/types';
-
-const lang = Astro.currentLocale ?? 'en';
 
 export interface Props {
   post: Post;
@@ -19,6 +14,7 @@ export interface Props {
 
 const { post, url } = Astro.props;
 ---
+
 <section class="py-8 sm:py-16 lg:py-20 mx-auto">
   <article>
     <header
@@ -44,7 +40,7 @@ const { post, url } = Astro.props;
               <>
                 {' '}
                 ·{' '}
-                <a class="hover:underline inline-block" href={getPermalink(post.category.slug, 'category', lang)}>
+                <a class="hover:underline inline-block" href={getPermalink(post.category.slug, 'category', post.lang)}>
                   {post.category.title}
                 </a>
               </>
@@ -59,7 +55,6 @@ const { post, url } = Astro.props;
           }
         </p>
       </div>
-
       <h1
         class="px-4 sm:px-6 max-w-3xl mx-auto text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading"
       >
@@ -70,7 +65,6 @@ const { post, url } = Astro.props;
       >
         {post.excerpt}
       </p>
-
       {
         post.image ? (
           <Image
@@ -97,7 +91,7 @@ const { post, url } = Astro.props;
       <slot />
     </div>
     <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-8 flex justify-between flex-col sm:flex-row">
-      <PostTags tags={post.tags} class="mr-5 rtl:mr-0 rtl:ml-5" />
+      <PostTags tags={post.tags} post={post} class="mr-5 rtl:mr-0 rtl:ml-5" />
       <SocialShare url={url} text={post.title} class="mt-5 sm:mt-1 align-middle text-gray-500 dark:text-slate-600" />
     </div>
   </article>
