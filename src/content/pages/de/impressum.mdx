@@ -12,24 +12,28 @@ import { SITE } from 'astrowind:config'
 
 ### Verantwortlicher Diensteanbieter
 
-<address class="not-italic">
-  <strong>{SITE.owner.fullName}</strong><br />
-  <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong><br /><br />
-
-	{SITE.owner.managingDirector && <>Vertreten durch den Geschäftsführer:<br /> {SITE.owner.managingDirector}<br /><br /></>}
-
-  {SITE.owner.address.street}<br />
-  {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
-  {SITE.owner.address.country}
+<address class="not-italic space-y-1">
+  <p>
+    <strong>{SITE.owner.fullName}</strong><br />
+    <strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong>
+  </p>
+  {SITE.owner.managingDirector && (
+    <p>Vertreten durch den Geschäftsführer:<br /> {SITE.owner.managingDirector}</p>
+  )}
+  <p>
+    {SITE.owner.address.street}<br />
+    {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+    {SITE.owner.address.country}
+  </p>
 </address>
 
 ---
 
 ### Kontakt
 
-<address class="not-italic">
-  E-Mail: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a><br />
-  Website: <a href={SITE.site} target="_blank" rel="noopener noreferrer">{SITE.site}</a>
+<address class="not-italic space-y-1">
+  <p>E-Mail: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a></p>
+  <p>Website: <a href={SITE.site} target="_blank" rel="noopener noreferrer">{SITE.site}</a></p>
 </address>
 
 > **Hinweis:** Wir bitten um Kontaktaufnahme ausschließlich per E-Mail. Eine telefonische Erreichbarkeit wird nicht angeboten. Anfragen werden in der Regel innerhalb von 48 Stunden beantwortet.
@@ -39,16 +43,30 @@ import { SITE } from 'astrowind:config'
 {SITE.owner.legalForm && (
   <>
     <h3>Unternehmensform & Registrierung</h3>
-    <address class="not-italic">
-      <strong>{`${SITE.owner.legalFormFull} (${SITE.owner.legalForm})`}</strong><br /><br />
-
-      {SITE.owner.commercialRegister && <>Registereintrag: <br />Eingetragen im Handelsregister<br /><br /></>}
-
-      {SITE.owner.commercialRegister && <>Registergericht: <br />Amtsgericht {SITE.owner.commercialRegister}<br /><br /></>}
-
-      {SITE.owner.hrbNumber && <>Registernummer: <br />HRB {SITE.owner.hrbNumber}</>}
-    </address>
-    <hr />
+    <dl class="space-y-2">
+      <div>
+        <dt class="font-semibold">Rechtsform</dt>
+        <dd>{`${SITE.owner.legalFormFull} (${SITE.owner.legalForm})`}</dd>
+      </div>
+      {SITE.owner.commercialRegister && (
+        <>
+          <div>
+            <dt class="font-semibold">Registereintrag</dt>
+            <dd>Eingetragen im Handelsregister</dd>
+          </div>
+          <div>
+            <dt class="font-semibold">Registergericht</dt>
+            <dd>Amtsgericht {SITE.owner.commercialRegister}</dd>
+          </div>
+        </>
+      )}
+      {SITE.owner.hrbNumber && (
+        <div>
+          <dt class="font-semibold">Registernummer</dt>
+          <dd>HRB {SITE.owner.hrbNumber}</dd>
+        </div>
+      )}
+    </dl>
   </>
 )}
 
@@ -56,25 +74,27 @@ import { SITE } from 'astrowind:config'
   <>
     <h3>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG</h3>
     <p>{SITE.owner.vatId}</p>
-    <hr />
   </>
 )}
 
 {SITE.owner.economicId && (
   <>
-    <h3>Wirtschafts-Identifikationsnummer gemäß §139c AO</h3>
+    <h3>Wirtschafts-Identifikationsnummer gemäß § 139c AO</h3>
     <p>{SITE.owner.economicId}</p>
-    <hr />
   </>
 )}
 
+---
+
 ### Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV (Medienstaatsvertrag)
 
-<address class="not-italic">
-  <strong>{SITE.owner.fullName}</strong><br />
-  {SITE.owner.address.street}<br />
-  {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
-  {SITE.owner.address.country}
+<address class="not-italic space-y-1">
+  <p><strong>{SITE.owner.fullName}</strong></p>
+  <p>
+    {SITE.owner.address.street}<br />
+    {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+    {SITE.owner.address.country}
+  </p>
 </address>
 
 ---
