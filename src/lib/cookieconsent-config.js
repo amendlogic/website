@@ -235,7 +235,7 @@ export const config = {
       // ─────────────────────────────────────────────
       en: {
         consentModal: {
-          title: "We use cookies",
+          title: `${cookieIcon}We use cookies`,
           description: "We use necessary cookies required for the operation of this website. With your consent, we additionally use analytics cookies (Google Analytics 4) and functional cookies for embedded YouTube videos. Declining does not affect the functionality of the website.",
           acceptAllBtn: "Accept all",
           acceptNecessaryBtn: "Necessary only",
