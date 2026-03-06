@@ -42,37 +42,6 @@
     }
   ],
 
-  "strategy.tagline": "Konfiguration",
-  "strategy.title": "Was die Einstellungen tatsächlich bewirken",
-  "strategy.subtitle": "Das sind die Parameter, die du im TradingView Strategy-Panel anpassen kannst — und was sich ändert, wenn du sie verstellst.",
-  "strategy.items": [
-    {
-      "title": "Risiko pro Trade (%)",
-      "description": "Definiert den maximalen Prozentsatz des Kontokapitals, der auf einen einzelnen Trade riskiert wird. Eine Senkung reduziert den Drawdown, skaliert aber die Renditen proportional. Die Standardkonfiguration verwendet [X]%.",
-      "icon": "tabler:percentage"
-    },
-    {
-      "title": "Drawdown-Reduktions-Schwelle",
-      "description": "Wenn der kumulative Drawdown diese Schwelle überschreitet, reduziert die Strategie automatisch die Positionsgrößen. Wirkt als Schutzschalter während Verlustphasen ohne manuellen Eingriff.",
-      "icon": "tabler:chart-area-line"
-    },
-    {
-      "title": "Volatilitätssensitivität",
-      "description": "Steuert, wie aggressiv die Strategie die Positionsgröße als Reaktion auf erhöhte Marktvolatilität anpasst. Höhere Sensitivität bedeutet kleinere Positionen bei unsicheren Bedingungen.",
-      "icon": "tabler:activity"
-    },
-    {
-      "title": "Signal-Bestätigungsfenster",
-      "description": "Die Anzahl der Kerzen, die die Strategie auf Signalbestätigung wartet, bevor sie einsteigt. Längere Fenster filtern mehr Rauschen, können aber Einstiege in schnell bewegenden Märkten verzögern.",
-      "icon": "tabler:clock"
-    },
-    {
-      "title": "Regime-Filter-Stärke",
-      "description": "Bestimmt, wie streng die Strategie schlechte Marktbedingungen herausfiltert. Höhere Werte bedeuten weniger Trades, aber ein höherer Anteil dieser Trades findet in strukturell günstigen Umgebungen statt.",
-      "icon": "tabler:filter"
-    }
-  ],
-
   "methodology.tagline": "Methodik",
   "methodology.title": "Wie diese Zahlen entstanden sind",
   "methodology.subtitle": "Die Annahmen hinter einem Backtest sind genauso wichtig wie die Ergebnisse. Diese sind unsere — klar formuliert, damit du sie selbst bewerten kannst.",
@@ -114,6 +83,37 @@
     }
   ],
 
+  "strategy.tagline": "Konfiguration",
+  "strategy.title": "Was die Einstellungen tatsächlich bewirken",
+  "strategy.subtitle": "Das sind die Parameter, die du im TradingView Strategy-Panel anpassen kannst — und was sich ändert, wenn du sie verstellst.",
+  "strategy.items": [
+    {
+      "title": "Risiko pro Trade (%)",
+      "description": "Definiert den maximalen Prozentsatz des Kontokapitals, der auf einen einzelnen Trade riskiert wird. Eine Senkung reduziert den Drawdown, skaliert aber die Renditen proportional. Die Standardkonfiguration verwendet [X]%.",
+      "icon": "tabler:percentage"
+    },
+    {
+      "title": "Drawdown-Reduktions-Schwelle",
+      "description": "Wenn der kumulative Drawdown diese Schwelle überschreitet, reduziert die Strategie automatisch die Positionsgrößen. Wirkt als Schutzschalter während Verlustphasen ohne manuellen Eingriff.",
+      "icon": "tabler:chart-area-line"
+    },
+    {
+      "title": "Volatilitätssensitivität",
+      "description": "Steuert, wie aggressiv die Strategie die Positionsgröße als Reaktion auf erhöhte Marktvolatilität anpasst. Höhere Sensitivität bedeutet kleinere Positionen bei unsicheren Bedingungen.",
+      "icon": "tabler:activity"
+    },
+    {
+      "title": "Signal-Bestätigungsfenster",
+      "description": "Die Anzahl der Kerzen, die die Strategie auf Signalbestätigung wartet, bevor sie einsteigt. Längere Fenster filtern mehr Rauschen, können aber Einstiege in schnell bewegenden Märkten verzögern.",
+      "icon": "tabler:clock"
+    },
+    {
+      "title": "Regime-Filter-Stärke",
+      "description": "Bestimmt, wie streng die Strategie schlechte Marktbedingungen herausfiltert. Höhere Werte bedeuten weniger Trades, aber ein höherer Anteil dieser Trades findet in strukturell günstigen Umgebungen statt.",
+      "icon": "tabler:filter"
+    }
+  ],
+  
   "chart.tagline": "Alternative Konfigurationen",
   "chart.title": "Wie Ergebnisse über Risikoeinstellungen variieren",
   "chart.subtitle": "Dieselbe Kern-Strategielogik, angewendet bei verschiedenen Risikokonfigurationen, erzeugt bedeutend unterschiedliche Equity-Kurven. Niedrigere Risikoeinstellungen reduzieren sowohl Drawdown als auch absolute Rendite. Diese Charts zeigen den Trade-off explizit.",
