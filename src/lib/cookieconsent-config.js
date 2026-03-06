@@ -1,4 +1,5 @@
 export const SUPPORTED_LANGUAGES = ['de', 'en'];
+const cookieIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.2em;margin-right:0.5rem"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 13v.01"/><path d="M12 17v.01"/><path d="M12 12v.01"/><path d="M16 14v.01"/><path d="M11 8v.01"/><path d="M13.148 3.476l2.667 1.104a4 4 0 0 0 4.615 6.27l.579 2.537a3 3 0 0 1 -1.44 3.522l-5.69 3.2a3 3 0 0 1 -2.979 0l-5.69 -3.2a3 3 0 0 1 -1.508 -3.664l2.208 -6.139a3 3 0 0 1 2.272 -1.762l2.267 -.385a3 3 0 0 1 2.699 .517z"/></svg>`;
 
 // Helper: Consent-Update an GA4 senden
 const updateGAConsent = (granted) => {
@@ -100,7 +101,7 @@ export const config = {
       // ─────────────────────────────────────────────
       de: {
         consentModal: {
-          title: "Wir verwenden Cookies",
+          title: `${cookieIcon}Wir verwenden Cookies`,
           description: "Wir setzen notwendige Cookies ein, die für den Betrieb der Website erforderlich sind. Mit Ihrer Einwilligung setzen wir zusätzlich Analyse-Cookies (Google Analytics 4) sowie funktionale Cookies für eingebettete YouTube-Videos ein. Eine Ablehnung hat keinen Einfluss auf die Funktionalität der Website.",
           acceptAllBtn: "Alle akzeptieren",
           acceptNecessaryBtn: "Nur notwendige",
