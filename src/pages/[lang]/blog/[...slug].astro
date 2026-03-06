@@ -8,27 +8,22 @@ import ToBlogLink from '~/components/blog/ToBlogLink.astro';
 import RelatedPosts from '~/components/blog/RelatedPosts.astro';
 import Notice from '~/components/ui/Notice.astro';
 import { getCanonical, getPermalink } from '~/utils/permalinks';
-import { Icon } from 'astro-icon/components';
 
 export const prerender = true;
 
 export async function getStaticPaths() {
   const posts = await fetchPosts();
-  const locales = Object.keys(LANGUAGES); // Dynamisch aus deiner Config
+  const locales = Object.keys(LANGUAGES);
   const allSlugs = [...new Set(posts.map(p => p.slug))];
-
   return locales.flatMap((lang) => {
     return allSlugs.map((slug) => {
       let post = posts.find((p) => p.slug === slug && p.lang === lang);
       let isFallback = false;
-
       if (!post) {
-        post = posts.find((p) => p.slug === slug); // Finde Post in irgendeiner Sprache
+        post = posts.find((p) => p.slug === slug);
         isFallback = true;
       }
-
       if (!post) return null;
-
       return {
         params: { lang, slug },
         props: { post, isFallback },
@@ -40,15 +35,13 @@ export async function getStaticPaths() {
 const { post, isFallback } = Astro.props;
 const { lang } = Astro.params;
 const t = useTranslations(lang);
-
 const url = getCanonical(getPermalink(post.permalink, 'post', lang));
-
 const metadata = merge(
   {
     title: post.title,
     description: post.excerpt,
     robots: {
-      index: !isFallback && blogPostRobots?.index, // SEO: Fallbacks nicht indexieren
+      index: !isFallback && blogPostRobots?.index,
       follow: blogPostRobots?.follow,
     },
     openGraph: { type: 'article', image: post.image },
@@ -58,19 +51,17 @@ const metadata = merge(
 ---
 
 <Layout metadata={metadata}>
-
   {isFallback && (
-    <Notice 
-      title={t('fallbacks.post.title')} 
-      class="max-w-3xl px-4 sm:px-6"  >
+    <Notice
+      title={t('fallbacks.post.title')}
+      class="max-w-3xl px-4 sm:px-6"
+    >
       {t('fallbacks.post.desc')}
     </Notice>
   )}
-
   <SinglePost post={post} url={url}>
     <post.Content />
   </SinglePost>
-
   <ToBlogLink />
   <RelatedPosts post={post} />
 </Layout>
