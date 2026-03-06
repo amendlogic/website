@@ -1,6 +1,6 @@
 ---
 import { fetchPosts, blogPostRobots } from '~/utils/blog';
-import { LANGUAGES, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
+import { LANGUAGES, useTranslations } from '~/i18n/utils';
 import merge from 'lodash.merge';
 import Layout from '~/layouts/PageLayout.astro';
 import SinglePost from '~/components/blog/SinglePost.astro';
@@ -39,6 +39,7 @@ export async function getStaticPaths() {
 
 const { post, isFallback } = Astro.props;
 const { lang } = Astro.params;
+const t = useTranslations(lang);
 
 const url = getCanonical(getPermalink(post.permalink, 'post', lang));
 
