@@ -26,16 +26,15 @@ const classes = twMerge(
 
 <div class={classes}>
   <div
-    class="flex items-start gap-4 px-5 py-4 rounded-lg
+    class="notice-box flex items-start gap-3 px-5 py-4 rounded-lg
            bg-gray-50 dark:bg-slate-800
-           border border-gray-200 dark:border-slate-700
-           border-l-4 border-l-primary"
+           border border-gray-200 dark:border-slate-700"
     role="note"
   >
-    <Icon name={icon} class="w-5 h-5 flex-shrink-0 mt-0.5 text-primary" />
+    <Icon name={icon} class="w-5 h-5 flex-shrink-0 mt-0.5 text-gray-400 dark:text-slate-500" />
     <div>
       {title && (
-        <p class="font-semibold text-sm text-gray-900 dark:text-slate-100 mb-0.5">
+        <p class="font-semibold text-sm text-gray-700 dark:text-slate-300 mb-0.5">
           {title}
         </p>
       )}
@@ -45,3 +44,16 @@ const classes = twMerge(
     </div>
   </div>
 </div>
+
+<style>
+  .notice-box {
+    border-top: 2px solid var(--aw-color-primary);
+    box-shadow:
+      0 1px 3px 0 rgb(0 0 0 / 0.07),
+      0 1px 2px -1px rgb(0 0 0 / 0.07);
+  }
+
+  :global(.dark) .notice-box {
+    box-shadow: none;
+  }
+</style>
