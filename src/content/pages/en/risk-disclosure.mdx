@@ -196,6 +196,12 @@ By subscribing to and using the Strategy provided by {SITE.owner.companyName}, y
 
 If you have questions about this Risk Disclosure, please contact us at:
 
-<strong>{SITE.owner.companyName} {SITE.owner.legalForm}</strong><br />
-{SITE.owner.address}<br />
-Email: {SITE.owner.eMail}
+<address class="not-italic space-y-1 [&>p]:my-0">
+  <p><strong>{`${SITE.owner.companyName} ${SITE.owner.legalForm}`}</strong></p>
+  <p>
+    {SITE.owner.address.street}<br />
+    {`${SITE.owner.address.postalCode} ${SITE.owner.address.city}`}<br />
+    {SITE.owner.address.country}
+  </p>
+  <p>Email: <a href={`mailto:${SITE.owner.eMail}`}>{SITE.owner.eMail}</a></p>
+</address>
