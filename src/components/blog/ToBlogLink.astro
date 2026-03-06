@@ -3,6 +3,7 @@ import { Icon } from 'astro-icon/components';
 import { getBlogPermalink } from '~/utils/permalinks';
 import { I18N } from 'astrowind:config';
 import Button from '~/components/ui/Button.astro';
+import { useTranslations } from '~/i18n/utils';
 
 const { textDirection } = I18N;
 const { lang } = Astro.params;
