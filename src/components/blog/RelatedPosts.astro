@@ -1,6 +1,5 @@
 ---
 import { APP_BLOG } from 'astrowind:config';
-
 import { getRelatedPosts } from '~/utils/blog';
 import BlogHighlightedPosts from '../widgets/BlogHighlightedPosts.astro';
 import type { Post } from '~/types';
@@ -11,7 +10,7 @@ export interface Props {
 }
 
 const { post } = Astro.props;
-
+const lang = Astro.currentLocale ?? 'en';
 const relatedPosts = post.tags ? await getRelatedPosts(post, 4) : [];
 ---
 
@@ -24,7 +23,7 @@ const relatedPosts = post.tags ? await getRelatedPosts(post, 4) : [];
       }}
       title="Related Posts"
       linkText="View All Posts"
-      linkUrl={getBlogPermalink()}
+      linkUrl={getBlogPermalink(lang)}
       postIds={relatedPosts.map((post) => post.id)}
     />
   ) : null
