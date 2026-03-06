@@ -1,8 +1,9 @@
 ---
 import { getPermalink } from '~/utils/permalinks';
-const { lang } = Astro.params;
 import { APP_BLOG } from 'astrowind:config';
 import type { Post } from '~/types';
+
+const lang = Astro.currentLocale ?? 'en';
 
 export interface Props {
   tags: Post['tags'];
