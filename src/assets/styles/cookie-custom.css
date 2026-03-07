@@ -6,7 +6,7 @@
   --cc-font-family: inherit;
 
   /* Hintergrund & Text */
-  --cc-bg: rgb(255 255 255);
+  --cc-bg: rgb(255 255 255 / 0.7);
   --cc-text: var(--aw-color-text-default);
   --cc-primary-color: var(--aw-color-text-default);
   --cc-secondary-color: var(--aw-color-text-muted);
