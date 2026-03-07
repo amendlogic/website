@@ -265,31 +265,6 @@
 }
 
 /* -----------------------------------------------------------------------------
-   9. Scrollbar
-   ----------------------------------------------------------------------------- */
-#cc-main .pm__body::-webkit-scrollbar {
-  width: 6px;
-}
-
-#cc-main .pm__body::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-#cc-main .pm__body::-webkit-scrollbar-thumb {
-  background: var(--cc-webkit-scrollbar-bg);
-  border-radius: 9999px;
-}
-
-#cc-main .pm__body::-webkit-scrollbar-thumb:hover {
-  background: var(--cc-webkit-scrollbar-bg-hover);
-}
-
-#cc-main .pm__body {
-  scrollbar-width: thin;
-  scrollbar-color: var(--cc-webkit-scrollbar-bg) transparent;
-}
-
-/* -----------------------------------------------------------------------------
    10. Footer
    ----------------------------------------------------------------------------- */
 #cc-main .pm__footer {
