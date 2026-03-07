@@ -2,11 +2,11 @@
   --cc-font-family: inherit;
 
   /* Farben */
-  --cc-bg: rgb(249 250 251); /* gray-50 */
+  --cc-bg: rgb(255 255 255 / 0.9);
   --cc-text: var(--aw-color-text-default);
   --cc-primary-color: var(--aw-color-text-default);
   --cc-secondary-color: var(--aw-color-text-muted);
-  --cc-separator-border-color: rgb(229 231 235); /* gray-200 */
+  --cc-separator-border-color: rgb(229 231 235);
 
   /* Primär-Button */
   --cc-btn-primary-bg: var(--aw-color-primary);
@@ -19,12 +19,12 @@
   --cc-btn-secondary-bg: transparent;
   --cc-btn-secondary-text: var(--aw-color-text-default);
   --cc-btn-secondary-hover-color: var(--aw-color-text-default);
-  --cc-btn-secondary-hover-bg: rgb(243 244 246); /* gray-100 */
-  --cc-btn-secondary-border-color: rgb(209 213 219); /* gray-300 */
-  --cc-btn-secondary-hover-border-color: rgb(107 114 128); /* gray-500 */
+  --cc-btn-secondary-hover-bg: rgb(243 244 246);
+  --cc-btn-secondary-border-color: rgb(209 213 219);
+  --cc-btn-secondary-hover-border-color: rgb(107 114 128);
 
   /* Toggles */
-  --cc-toggle-off-bg: rgb(229 231 235); /* gray-200 */
+  --cc-toggle-off-bg: rgb(229 231 235);
   --cc-toggle-on-bg: var(--aw-color-primary);
   --cc-toggle-readonly-bg: rgb(229 231 235);
   --cc-toggle-knob-bg: rgb(255 255 255);
@@ -38,7 +38,7 @@
   --cc-cookie-category-block-hover-border: rgb(156 163 175);
 
   /* Footer */
-  --cc-footer-bg: rgb(243 244 246);
+  --cc-footer-bg: rgb(243 244 246 / 0.9);
   --cc-footer-border-color: rgb(229 231 235);
 
   /* Rundungen */
@@ -47,8 +47,8 @@
 }
 
 .dark {
-  --cc-bg: rgb(30 41 59); /* slate-800 */
-  --cc-separator-border-color: rgb(51 65 85); /* slate-700 */
+  --cc-bg: rgb(3 7 18 / 0.9); /* dark equivalent von bg-white/90 */
+  --cc-separator-border-color: rgb(51 65 85);
 
   --cc-btn-secondary-hover-bg: rgb(15 23 42);
   --cc-btn-secondary-border-color: rgb(71 85 105);
@@ -63,13 +63,16 @@
   --cc-cookie-category-block-border: rgb(51 65 85);
   --cc-cookie-category-block-hover-border: rgb(100 116 139);
 
-  --cc-footer-bg: rgb(15 23 42);
+  --cc-footer-bg: rgb(15 23 42 / 0.9);
   --cc-footer-border-color: rgb(51 65 85);
 }
 
 /* Modal & Preferences Box */
 #cc-main .cm,
 #cc-main .pm--box {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: var(--cc-bg);
   border: 1px solid rgb(229 231 235);
   border-top: 2px solid var(--aw-color-primary);
   box-shadow:
