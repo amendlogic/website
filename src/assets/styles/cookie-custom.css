@@ -2,6 +2,7 @@
   --cc-font-family: inherit;
 
   /* Farben */
+  --cc-bg: rgb(255 255 255 / 0.75);
   --cc-text: var(--aw-color-text-default);
   --cc-primary-color: var(--aw-color-text-default);
   --cc-secondary-color: var(--aw-color-text-muted);
@@ -46,6 +47,7 @@
 }
 
 .dark {
+  --cc-bg: rgb(15 23 42 / 0.6);
   --cc-separator-border-color: rgb(255 255 255 / 0.08);
 
   --cc-btn-secondary-bg: rgb(255 255 255 / 0.05);
@@ -72,32 +74,21 @@
 #cc-main .pm--box {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  background: linear-gradient(
-    135deg,
-    rgb(255 255 255 / 0.85) 0%,
-    rgb(249 250 251 / 0.75) 100%
-  );
+  background: var(--cc-bg);
   border: 1px solid rgb(255 255 255 / 0.5);
-  border-top: 2px solid rgb(255 255 255 / 0.95);
   box-shadow:
     0 8px 32px rgb(0 0 0 / 0.08),
     0 2px 8px rgb(0 0 0 / 0.04),
-    inset 0 1px 0 rgb(255 255 255 / 0.9);
+    inset 0 1px 0 rgb(255 255 255 / 0.6);
 }
 
 .dark #cc-main .cm,
 .dark #cc-main .pm--box {
-  background: linear-gradient(
-    135deg,
-    rgb(15 23 42 / 0.75) 0%,
-    rgb(30 41 59 / 0.60) 100%
-  );
   border-color: rgb(255 255 255 / 0.1);
-  border-top: 2px solid rgb(255 255 255 / 0.12);
   box-shadow:
     0 8px 32px rgb(0 0 0 / 0.4),
     0 2px 8px rgb(0 0 0 / 0.2),
-    inset 0 1px 0 rgb(255 255 255 / 0.08);
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
 }
 
 /* Typografie */
