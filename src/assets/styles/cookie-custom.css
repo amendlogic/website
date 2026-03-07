@@ -1,107 +1,158 @@
+/* =============================================================================
+   Cookie Consent – AstroWind Integration
+   Compatible with: vanilla-cookieconsent v3
+   Theme: Glassmorphism, synced to AstroWind design tokens
+   ============================================================================= */
 
+/* -----------------------------------------------------------------------------
+   1. CSS Variables – Light Mode (default)
+   ----------------------------------------------------------------------------- */
 :root {
-  /* --- Grundeinstellungen & Light Mode --- */
-
-  /* Schriftart: Erbt von AstroWind (Inter/System) */
   --cc-font-family: inherit;
 
-  /* Hintergrund & Text */
-  --cc-bg: rgb(255 255 255 / 0.7);
-  --cc-text: var(--aw-color-text-default);
-  --cc-primary-color: var(--aw-color-text-default);
-  --cc-secondary-color: var(--aw-color-text-muted);
+  /* ── Farben ──────────────────────────────────────────────────── */
+  --cc-bg:                          transparent;
+  --cc-text:                        var(--aw-color-text-default);
+  --cc-primary-color:               var(--aw-color-text-default);
+  --cc-secondary-color:             var(--aw-color-text-muted);
+  --cc-link-color:                  var(--aw-color-primary);
 
-  --cc-separator-border-color: rgb(229 231 235);
+  /* ── Trennlinie & Overlay ────────────────────────────────────── */
+  --cc-separator-border-color:      rgb(0 0 0 / 0.08);
+  --cc-overlay-bg:                  rgb(0 0 0 / 0.35);
 
-  /* Primär-Button (Akzeptieren) - AstroWind Primary (Indigo) */
-  --cc-btn-primary-bg: var(--aw-color-primary);
-  --cc-btn-primary-text: rgb(255 255 255);
-  --cc-btn-primary-hover-bg: var(--aw-color-secondary);
-  --cc-btn-primary-border-color: var(--aw-color-primary);
-  --cc-btn-primary-hover-border-color: var(--aw-color-primary);
+  /* ── Primär-Button ───────────────────────────────────────────── */
+  --cc-btn-primary-bg:              var(--aw-color-primary);
+  --cc-btn-primary-text:            #ffffff;
+  --cc-btn-primary-hover-bg:        var(--aw-color-secondary);
+  --cc-btn-primary-hover-text:      #ffffff;
+  --cc-btn-primary-border-color:    var(--aw-color-primary);
+  --cc-btn-primary-hover-border-color: var(--aw-color-secondary);
 
-  /* Sekundär-Button (Einstellungen/Ablehnen) */
-  --cc-btn-secondary-bg: transparent;
-  --cc-btn-secondary-text: var(--aw-color-text-default);
-  --cc-btn-secondary-hover-color: var(--aw-color-text-default);
-  --cc-btn-secondary-hover-bg: rgb(243 244 246);
-  --cc-btn-secondary-border-color: rgb(156 163 175);
-  --cc-btn-secondary-hover-border-color: rgb(75 85 99);
+  /* ── Sekundär-Button ─────────────────────────────────────────── */
+  --cc-btn-secondary-bg:            rgb(255 255 255 / 0.45);
+  --cc-btn-secondary-text:          var(--aw-color-text-default);
+  --cc-btn-secondary-hover-bg:      rgb(255 255 255 / 0.7);
+  --cc-btn-secondary-hover-text:    var(--aw-color-text-default);
+  --cc-btn-secondary-border-color:  rgb(0 0 0 / 0.12);
+  --cc-btn-secondary-hover-border-color: rgb(0 0 0 / 0.25);
 
-  /* Toggles (Schalter) */
-  --cc-toggle-off-bg: rgb(229 231 235);
-  --cc-toggle-on-bg: var(--aw-color-primary);
-  --cc-toggle-readonly-bg: rgb(229 231 235);
-  --cc-toggle-knob-bg: rgb(255 255 255);
-  --cc-toggle-knob-icon-color: var(--aw-color-primary);
+  /* ── Toggles ─────────────────────────────────────────────────── */
+  --cc-toggle-off-bg:               rgb(209 213 219 / 0.7);
+  --cc-toggle-on-bg:                var(--aw-color-primary);
+  --cc-toggle-readonly-bg:          rgb(209 213 219 / 0.4);
+  --cc-toggle-knob-bg:              #ffffff;
+  --cc-toggle-knob-icon-color:      var(--aw-color-primary);
 
-  /* Links & Footer */
-  --cc-cookie-category-block-bg: transparent;
-  --cc-cookie-category-block-hover-bg: rgb(243 244 246);
-  --cc-cookie-category-expanded-block-hover-bg: rgb(156 163 175);
-  --cc-cookie-category-block-border: rgb(156 163 175);
-  --cc-cookie-category-block-hover-border: rgb(75 85 99);
+  /* ── Kategorien ──────────────────────────────────────────────── */
+  --cc-cookie-category-block-bg:              rgb(255 255 255 / 0.35);
+  --cc-cookie-category-block-hover-bg:        rgb(255 255 255 / 0.6);
+  --cc-cookie-category-expanded-block-hover-bg: rgb(255 255 255 / 0.45);
+  --cc-cookie-category-block-border:          rgb(0 0 0 / 0.07);
+  --cc-cookie-category-block-hover-border:    rgb(0 0 0 / 0.18);
 
-  --cc-footer-bg: rgb(239 246 255);
-  --cc-footer-border-color: rgb(229 231 235);
+  /* ── Abschnitte (Preferences Modal) ─────────────────────────── */
+  --cc-section-bg:                  rgb(255 255 255 / 0.25);
+  --cc-section-border:              rgb(0 0 0 / 0.07);
 
-  /* Form - Rundungen anpassen (AstroWind nutzt oft rounded-lg) */
-  --cc-modal-border-radius: 0.375rem;
-  --cc-btn-border-radius: 0.375rem;
+  /* ── Cookie-Tabelle ──────────────────────────────────────────── */
+  --cc-cookie-table-border:         rgb(0 0 0 / 0.07);
+
+  /* ── Scrollbar ───────────────────────────────────────────────── */
+  --cc-webkit-scrollbar-bg:         rgb(0 0 0 / 0.05);
+  --cc-webkit-scrollbar-bg-hover:   rgb(0 0 0 / 0.12);
+
+  /* ── Footer ──────────────────────────────────────────────────── */
+  --cc-footer-bg:                   rgb(255 255 255 / 0.4);
+  --cc-footer-border-color:         rgb(0 0 0 / 0.08);
+
+  /* ── Rundungen ───────────────────────────────────────────────── */
+  --cc-modal-border-radius:         0.75rem;
+  --cc-btn-border-radius:           0.375rem;
+  --cc-toggle-border-radius:        6.25rem;
 }
 
-/* --- Dark Mode --- */
-/* AstroWind nutzt die Klasse .dark auf dem html tag */
+/* -----------------------------------------------------------------------------
+   2. CSS Variables – Dark Mode
+   ----------------------------------------------------------------------------- */
 .dark {
-  /* Hintergrund & Text */
-  --cc-bg: rgb(15 23 42);
+  --cc-overlay-bg:                  rgb(0 0 0 / 0.6);
+  --cc-separator-border-color:      rgb(255 255 255 / 0.08);
 
-  --cc-separator-border-color: rgb(55 65 81);
+  --cc-btn-secondary-bg:            rgb(255 255 255 / 0.06);
+  --cc-btn-secondary-hover-bg:      rgb(255 255 255 / 0.13);
+  --cc-btn-secondary-border-color:  rgb(255 255 255 / 0.15);
+  --cc-btn-secondary-hover-border-color: rgb(255 255 255 / 0.3);
 
-  /* Sekundär-Button (Einstellungen/Ablehnen) */
+  --cc-toggle-off-bg:               rgb(255 255 255 / 0.16);
+  --cc-toggle-readonly-bg:          rgb(255 255 255 / 0.1);
+  --cc-toggle-knob-bg:              #ffffff;
 
-  --cc-btn-secondary-hover-bg: rgb(30 41 59);
-  --cc-btn-secondary-border-color: rgb(100 116 139);
-  --cc-btn-secondary-hover-border-color: rgb(229 231 235);
+  --cc-cookie-category-block-bg:              rgb(255 255 255 / 0.05);
+  --cc-cookie-category-block-hover-bg:        rgb(255 255 255 / 0.1);
+  --cc-cookie-category-expanded-block-hover-bg: rgb(255 255 255 / 0.07);
+  --cc-cookie-category-block-border:          rgb(255 255 255 / 0.1);
+  --cc-cookie-category-block-hover-border:    rgb(255 255 255 / 0.22);
 
-  /* Toggles (Schalter) */
-  --cc-toggle-off-bg: rgb(55 65 81);
-  --cc-toggle-readonly-bg: rgb(55 65 81);
-  --cc-toggle-knob-bg: rgb(255 255 255);
+  --cc-section-bg:                  rgb(255 255 255 / 0.04);
+  --cc-section-border:              rgb(255 255 255 / 0.08);
 
-  /* Links & Footer */
-  --cc-cookie-category-block-hover-bg: rgb(30 41 59);
-  --cc-cookie-category-expanded-block-hover-bg: rgb(100 116 139);
-  --cc-cookie-category-block-border: rgb(100 116 139);
-  --cc-cookie-category-block-hover-border: rgb(229 231 235);
+  --cc-cookie-table-border:         rgb(255 255 255 / 0.08);
 
-  --cc-footer-bg: rgb(30 41 59);
-  --cc-footer-border-color: rgb(55 65 81);
+  --cc-webkit-scrollbar-bg:         rgb(255 255 255 / 0.05);
+  --cc-webkit-scrollbar-bg-hover:   rgb(255 255 255 / 0.12);
+
+  --cc-footer-bg:                   rgb(255 255 255 / 0.05);
+  --cc-footer-border-color:         rgb(255 255 255 / 0.08);
 }
 
-/* Modal & Preferences Box */
+/* -----------------------------------------------------------------------------
+   3. Modal & Preferences Box – Glassmorphism
+   ----------------------------------------------------------------------------- */
 #cc-main .cm,
 #cc-main .pm--box {
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  background: var(--cc-bg);
-  border: 1px solid rgb(255 255 255 / 0.5);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: linear-gradient(
+    135deg,
+    rgb(255 255 255 / 0.88) 0%,
+    rgb(248 250 252 / 0.78) 100%
+  );
+  border: 1px solid rgb(255 255 255 / 0.65);
+  border-top: 2px solid rgb(255 255 255 / 0.95);
   box-shadow:
-    0 8px 32px rgb(0 0 0 / 0.08),
-    0 2px 8px rgb(0 0 0 / 0.04),
-    inset 0 1px 0 rgb(255 255 255 / 0.6);
+    0 8px 40px rgb(0 0 0 / 0.1),
+    0 2px 8px  rgb(0 0 0 / 0.05),
+    inset 0 1px 0 rgb(255 255 255 / 0.9);
 }
 
 .dark #cc-main .cm,
 .dark #cc-main .pm--box {
+  background: linear-gradient(
+    135deg,
+    rgb(30 41 59 / 0.82) 0%,
+    rgb(15 23 42 / 0.65) 100%
+  );
   border-color: rgb(255 255 255 / 0.1);
+  border-top: 2px solid rgb(255 255 255 / 0.13);
   box-shadow:
-    0 8px 32px rgb(0 0 0 / 0.4),
-    0 2px 8px rgb(0 0 0 / 0.2),
-    inset 0 1px 0 rgb(255 255 255 / 0.05);
+    0 8px 40px rgb(0 0 0 / 0.45),
+    0 2px 8px  rgb(0 0 0 / 0.25),
+    inset 0 1px 0 rgb(255 255 255 / 0.07);
 }
 
-/* Typografie */
+/* -----------------------------------------------------------------------------
+   4. Overlay Backdrop
+   ----------------------------------------------------------------------------- */
+#cc-main .pm-overlay {
+  background: var(--cc-overlay-bg);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* -----------------------------------------------------------------------------
+   5. Typografie
+   ----------------------------------------------------------------------------- */
 #cc-main .cm__title,
 #cc-main .pm__title {
   display: flex;
@@ -109,6 +160,7 @@
   gap: 0.5rem;
   font-weight: 700;
   letter-spacing: -0.025em;
+  font-size: 1.05rem;
 }
 
 #cc-main .cc-title-icon {
@@ -117,13 +169,173 @@
   height: 1.25rem;
 }
 
+#cc-main .cm__desc,
+#cc-main .pm__section--desc {
+  line-height: 1.6;
+  font-size: 0.875rem;
+}
+
+/* ── Links ────────────────────────────────────────────────────── */
+#cc-main a,
+#cc-main a:visited {
+  color: var(--cc-link-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  transition: opacity 0.15s ease;
+}
+
+#cc-main a:hover {
+  opacity: 0.75;
+}
+
+/* -----------------------------------------------------------------------------
+   6. Buttons
+   ----------------------------------------------------------------------------- */
 #cc-main .cm,
 #cc-main .cm__btn {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
-#cc-main .cm__btn {
+#cc-main .cm__btn,
+#cc-main .pm__btn {
   font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
   transition: all 0.2s ease;
+}
+
+#cc-main .cm__btn--primary:hover,
+#cc-main .pm__btn--primary:hover {
+  box-shadow: 0 4px 16px rgb(var(--aw-color-primary) / 0.35);
+}
+
+/* ── Focus Ring ───────────────────────────────────────────────── */
+#cc-main button:focus-visible,
+#cc-main a:focus-visible {
+  outline: 2px solid var(--aw-color-primary);
+  outline-offset: 3px;
+  border-radius: var(--cc-btn-border-radius);
+}
+
+/* -----------------------------------------------------------------------------
+   7. Cookie-Kategorien
+   ----------------------------------------------------------------------------- */
+#cc-main .cc-accordion .accordion__item {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+#cc-main .toggle-service--readonly .cc-badge {
+  background: rgb(var(--aw-color-primary) / 0.12);
+  color: var(--aw-color-primary);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+/* -----------------------------------------------------------------------------
+   8. Preferences Modal – Abschnitte & Tabelle
+   ----------------------------------------------------------------------------- */
+#cc-main .pm__section--toggle,
+#cc-main .pm__section--tabs {
+  border-radius: 0.5rem;
+  background: var(--cc-section-bg);
+  border: 1px solid var(--cc-section-border);
+}
+
+#cc-main .pm__table td,
+#cc-main .pm__table th {
+  border-color: var(--cc-cookie-table-border);
+  font-size: 0.8125rem;
+}
+
+#cc-main .pm__table th {
+  font-weight: 600;
+  color: var(--cc-primary-color);
+}
+
+/* -----------------------------------------------------------------------------
+   9. Scrollbar
+   ----------------------------------------------------------------------------- */
+#cc-main .pm__body::-webkit-scrollbar {
+  width: 6px;
+}
+
+#cc-main .pm__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#cc-main .pm__body::-webkit-scrollbar-thumb {
+  background: var(--cc-webkit-scrollbar-bg);
+  border-radius: 9999px;
+}
+
+#cc-main .pm__body::-webkit-scrollbar-thumb:hover {
+  background: var(--cc-webkit-scrollbar-bg-hover);
+}
+
+#cc-main .pm__body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--cc-webkit-scrollbar-bg) transparent;
+}
+
+/* -----------------------------------------------------------------------------
+   10. Footer
+   ----------------------------------------------------------------------------- */
+#cc-main .pm__footer {
+  border-top: 1px solid var(--cc-footer-border-color);
+  background: var(--cc-footer-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* -----------------------------------------------------------------------------
+   11. Animationen
+   ----------------------------------------------------------------------------- */
+#cc-main .cm {
+  animation: cc-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+#cc-main .pm--box {
+  animation: cc-scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cc-slide-up {
+  from { opacity: 0; transform: translateY(1rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cc-scale-in {
+  from { opacity: 0; transform: scale(0.97) translateY(0.5rem); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #cc-main .cm,
+  #cc-main .pm--box {
+    animation: none;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   12. Mobile
+   ----------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  #cc-main .cm {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  #cc-main .cm__title,
+  #cc-main .pm__title {
+    font-size: 1rem;
+  }
 }
