@@ -74,10 +74,10 @@
   -webkit-backdrop-filter: blur(16px);
   background: linear-gradient(
     135deg,
-    rgb(255 255 255 / 0.9) 0%,
-    rgb(249 250 251 / 0.8) 100%
+    rgb(255 255 255 / 0.85) 0%,
+    rgb(249 250 251 / 0.75) 100%
   );
-  border: 1px solid rgb(255 255 255 / 0.6);
+  border: 1px solid rgb(255 255 255 / 0.5);
   border-top: 2px solid rgb(255 255 255 / 0.95);
   box-shadow:
     0 8px 32px rgb(0 0 0 / 0.08),
@@ -89,8 +89,8 @@
 .dark #cc-main .pm--box {
   background: linear-gradient(
     135deg,
-    rgb(30 41 59 / 0.8) 0%,
-    rgb(15 23 42 / 0.6) 100%
+    rgb(15 23 42 / 0.75) 0%,
+    rgb(30 41 59 / 0.60) 100%
   );
   border-color: rgb(255 255 255 / 0.1);
   border-top: 2px solid rgb(255 255 255 / 0.12);
