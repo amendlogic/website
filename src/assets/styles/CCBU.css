@@ -94,9 +94,26 @@
   border-color: rgb(55 65 81);
 }
 
-#cc-main .cm__title {
+/* Typografie */
+#cc-main .cm__title,
+#cc-main .pm__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-weight: 700;
-  letter-spacing: -0.025em; /* Tight tracking wie in AstroWind Überschriften */
+  letter-spacing: -0.025em;
+}
+
+#cc-main .cc-title-icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+#cc-main .cm,
+#cc-main .cm__btn {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 #cc-main .cm__btn {
