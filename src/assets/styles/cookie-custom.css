@@ -2,11 +2,10 @@
   --cc-font-family: inherit;
 
   /* Farben */
-  --cc-bg: rgb(255 255 255 / 0.9);
   --cc-text: var(--aw-color-text-default);
   --cc-primary-color: var(--aw-color-text-default);
   --cc-secondary-color: var(--aw-color-text-muted);
-  --cc-separator-border-color: rgb(229 231 235);
+  --cc-separator-border-color: rgb(255 255 255 / 0.4);
 
   /* Primär-Button */
   --cc-btn-primary-bg: var(--aw-color-primary);
@@ -16,77 +15,89 @@
   --cc-btn-primary-hover-border-color: var(--aw-color-primary);
 
   /* Sekundär-Button */
-  --cc-btn-secondary-bg: transparent;
+  --cc-btn-secondary-bg: rgb(255 255 255 / 0.3);
   --cc-btn-secondary-text: var(--aw-color-text-default);
   --cc-btn-secondary-hover-color: var(--aw-color-text-default);
-  --cc-btn-secondary-hover-bg: rgb(243 244 246);
-  --cc-btn-secondary-border-color: rgb(209 213 219);
-  --cc-btn-secondary-hover-border-color: rgb(107 114 128);
+  --cc-btn-secondary-hover-bg: rgb(255 255 255 / 0.5);
+  --cc-btn-secondary-border-color: rgb(255 255 255 / 0.5);
+  --cc-btn-secondary-hover-border-color: rgb(255 255 255 / 0.8);
 
   /* Toggles */
-  --cc-toggle-off-bg: rgb(229 231 235);
+  --cc-toggle-off-bg: rgb(209 213 219 / 0.6);
   --cc-toggle-on-bg: var(--aw-color-primary);
-  --cc-toggle-readonly-bg: rgb(229 231 235);
+  --cc-toggle-readonly-bg: rgb(209 213 219 / 0.4);
   --cc-toggle-knob-bg: rgb(255 255 255);
   --cc-toggle-knob-icon-color: var(--aw-color-primary);
 
   /* Kategorien */
-  --cc-cookie-category-block-bg: transparent;
-  --cc-cookie-category-block-hover-bg: rgb(243 244 246);
-  --cc-cookie-category-expanded-block-hover-bg: rgb(229 231 235);
-  --cc-cookie-category-block-border: rgb(229 231 235);
-  --cc-cookie-category-block-hover-border: rgb(156 163 175);
+  --cc-cookie-category-block-bg: rgb(255 255 255 / 0.2);
+  --cc-cookie-category-block-hover-bg: rgb(255 255 255 / 0.4);
+  --cc-cookie-category-expanded-block-hover-bg: rgb(255 255 255 / 0.3);
+  --cc-cookie-category-block-border: rgb(255 255 255 / 0.4);
+  --cc-cookie-category-block-hover-border: rgb(255 255 255 / 0.7);
 
   /* Footer */
-  --cc-footer-bg: rgb(243 244 246 / 0.9);
-  --cc-footer-border-color: rgb(229 231 235);
+  --cc-footer-bg: rgb(255 255 255 / 0.3);
+  --cc-footer-border-color: rgb(255 255 255 / 0.4);
 
   /* Rundungen */
-  --cc-modal-border-radius: 0.5rem;
+  --cc-modal-border-radius: 0.75rem;
   --cc-btn-border-radius: 0.375rem;
 }
 
 .dark {
-  --cc-bg: rgb(3 7 18 / 0.9); /* dark equivalent von bg-white/90 */
-  --cc-separator-border-color: rgb(51 65 85);
+  --cc-separator-border-color: rgb(255 255 255 / 0.08);
 
-  --cc-btn-secondary-hover-bg: rgb(15 23 42);
-  --cc-btn-secondary-border-color: rgb(71 85 105);
-  --cc-btn-secondary-hover-border-color: rgb(148 163 184);
+  --cc-btn-secondary-bg: rgb(255 255 255 / 0.05);
+  --cc-btn-secondary-hover-bg: rgb(255 255 255 / 0.12);
+  --cc-btn-secondary-border-color: rgb(255 255 255 / 0.15);
+  --cc-btn-secondary-hover-border-color: rgb(255 255 255 / 0.3);
 
-  --cc-toggle-off-bg: rgb(51 65 85);
-  --cc-toggle-readonly-bg: rgb(51 65 85);
+  --cc-toggle-off-bg: rgb(255 255 255 / 0.15);
+  --cc-toggle-readonly-bg: rgb(255 255 255 / 0.1);
   --cc-toggle-knob-bg: rgb(255 255 255);
 
-  --cc-cookie-category-block-hover-bg: rgb(15 23 42);
-  --cc-cookie-category-expanded-block-hover-bg: rgb(51 65 85);
-  --cc-cookie-category-block-border: rgb(51 65 85);
-  --cc-cookie-category-block-hover-border: rgb(100 116 139);
+  --cc-cookie-category-block-bg: rgb(255 255 255 / 0.04);
+  --cc-cookie-category-block-hover-bg: rgb(255 255 255 / 0.08);
+  --cc-cookie-category-expanded-block-hover-bg: rgb(255 255 255 / 0.06);
+  --cc-cookie-category-block-border: rgb(255 255 255 / 0.1);
+  --cc-cookie-category-block-hover-border: rgb(255 255 255 / 0.2);
 
-  --cc-footer-bg: rgb(15 23 42 / 0.9);
-  --cc-footer-border-color: rgb(51 65 85);
+  --cc-footer-bg: rgb(255 255 255 / 0.04);
+  --cc-footer-border-color: rgb(255 255 255 / 0.08);
 }
 
 /* Modal & Preferences Box */
 #cc-main .cm,
 #cc-main .pm--box {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background: var(--cc-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: linear-gradient(
+    135deg,
+    rgb(255 255 255 / 0.9) 0%,
+    rgb(249 250 251 / 0.8) 100%
+  );
   border: 1px solid rgb(255 255 255 / 0.6);
   border-top: 2px solid rgb(255 255 255 / 0.95);
   box-shadow:
-    0 1px 3px 0 rgb(0 0 0 / 0.07),
-    0 1px 2px -1px rgb(0 0 0 / 0.07),
+    0 8px 32px rgb(0 0 0 / 0.08),
+    0 2px 8px rgb(0 0 0 / 0.04),
     inset 0 1px 0 rgb(255 255 255 / 0.9);
 }
 
 .dark #cc-main .cm,
 .dark #cc-main .pm--box {
+  background: linear-gradient(
+    135deg,
+    rgb(30 41 59 / 0.8) 0%,
+    rgb(15 23 42 / 0.6) 100%
+  );
   border-color: rgb(255 255 255 / 0.1);
   border-top: 2px solid rgb(255 255 255 / 0.12);
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.05);
+    0 8px 32px rgb(0 0 0 / 0.4),
+    0 2px 8px rgb(0 0 0 / 0.2),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
 }
 
 /* Typografie */
