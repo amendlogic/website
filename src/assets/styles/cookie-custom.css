@@ -1,122 +1,197 @@
-/* ============================================================
-   Cookie Consent – AstroWind Integration
-   Basiert auf vanilla-cookieconsent v3 CSS Custom Properties
-   ============================================================ */
+/* ================================================================
+   vanilla-cookieconsent v3 × AstroWind
+   Vollständige Überschreibung aller 46 offiziellen CSS-Variablen
+   ================================================================
 
+   WICHTIG: AstroWind nutzt `.dark` auf <html>.
+   CookieConsent nutzt `.cc--darkmode` auf <html>.
+   Beide Selektoren werden hier abgedeckt.
+
+   Synchronisierung in cookieconsent-config.js:
+     document.documentElement.classList
+       .toggle('cc--darkmode', document.documentElement.classList.contains('dark'));
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   1. GLOBALE LAYOUT- & TRANSITIONS-VARIABLEN
+   Diese müssen auf #cc-main gesetzt werden, nicht auf :root
+   ---------------------------------------------------------------- */
+#cc-main {
+  --cc-font-family:              inherit;            /* Erbt Inter/System von AstroWind */
+  --cc-modal-border-radius:      0.5rem;             /* Entspricht rounded-lg */
+  --cc-btn-border-radius:        0.375rem;           /* Entspricht rounded-md */
+  --cc-pm-toggle-border-radius:  3em;                /* Pill-Form beibehalten */
+  --cc-modal-transition-duration: 0.2s;              /* Etwas flotter als Standard */
+  --cc-modal-margin:             1rem;
+  --cc-z-index:                  9999;               /* Unter AstroWind-Headern falls nötig */
+}
+
+/* ----------------------------------------------------------------
+   2. LIGHT MODE – alle Variablen
+   ---------------------------------------------------------------- */
 :root {
-  /* ── Typografie ────────────────────────────────────────── */
-  --cc-font-family: inherit; /* Erbt Inter/System von AstroWind */
 
-  /* ── Farben: Hintergrund & Text ────────────────────────── */
-  --cc-bg:               rgb(255 255 255);
-  --cc-primary-color:    var(--aw-color-text-default);
-  --cc-secondary-color:  var(--aw-color-text-muted);
+  /* ── Hintergrund & Primärtext ──────────────────────────────── */
+  --cc-bg:             #ffffff;
+  --cc-primary-color:  var(--aw-color-text-default);
+  --cc-secondary-color: var(--aw-color-text-muted);
 
-  /* ── Trennlinien ───────────────────────────────────────── */
-  --cc-separator-border-color: rgb(229 231 235); /* gray-200 */
+  /* ── Link-Farbe ────────────────────────────────────────────── */
+  --cc-link-color:     var(--aw-color-primary);
 
-  /* ── Overlay (Backdrop) ────────────────────────────────── */
-  --cc-overlay-bg: rgb(0 0 0 / 0.45);
+  /* ── Trennlinie ────────────────────────────────────────────── */
+  --cc-separator-border-color: rgb(229 231 235);     /* gray-200 */
 
-  /* ── z-Index ───────────────────────────────────────────── */
-  --cc-z-index: 9999;
-
-  /* ── Primär-Button (Akzeptieren – Indigo-Akzent) ──────── */
-  --cc-btn-primary-bg:                 var(--aw-color-primary);
-  --cc-btn-primary-text:               rgb(255 255 255);
-  --cc-btn-primary-hover-bg:           var(--aw-color-secondary);
-  --cc-btn-primary-border-color:       var(--aw-color-primary);
+  /* ── Primär-Button (Akzeptieren) ───────────────────────────── */
+  --cc-btn-primary-bg:                var(--aw-color-primary);
+  --cc-btn-primary-color:             #ffffff;
+  --cc-btn-primary-border-color:      var(--aw-color-primary);
+  --cc-btn-primary-hover-bg:          var(--aw-color-secondary);
+  --cc-btn-primary-hover-color:       #ffffff;
   --cc-btn-primary-hover-border-color: var(--aw-color-secondary);
 
-  /* ── Sekundär-Button (Einstellungen / Ablehnen) ────────── */
+  /* ── Sekundär-Button (Ablehnen / Einstellungen) ────────────── */
   --cc-btn-secondary-bg:                  transparent;
-  --cc-btn-secondary-text:               var(--aw-color-text-default);
-  --cc-btn-secondary-hover-bg:            rgb(243 244 246); /* gray-100 */
-  --cc-btn-secondary-border-color:        rgb(209 213 219); /* gray-300 */
-  --cc-btn-secondary-hover-border-color:  rgb(107 114 128); /* gray-500 */
+  --cc-btn-secondary-color:              var(--aw-color-text-default);
+  --cc-btn-secondary-border-color:        rgb(209 213 219);   /* gray-300 */
+  --cc-btn-secondary-hover-bg:            rgb(243 244 246);   /* gray-100 */
+  --cc-btn-secondary-hover-color:        var(--aw-color-text-default);
+  --cc-btn-secondary-hover-border-color:  rgb(107 114 128);   /* gray-500 */
 
-  /* ── Toggles ───────────────────────────────────────────── */
-  --cc-toggle-off-bg:          rgb(209 213 219); /* gray-300 */
-  --cc-toggle-on-bg:           var(--aw-color-primary);
-  --cc-toggle-readonly-bg:     rgb(229 231 235); /* gray-200 */
-  --cc-toggle-knob-bg:         rgb(255 255 255);
-  --cc-toggle-knob-icon-color: var(--aw-color-primary);
+  /* ── Toggle – aktiv (an) ───────────────────────────────────── */
+  --cc-toggle-on-bg:              var(--aw-color-primary);
+  --cc-toggle-on-knob-bg:         #ffffff;
+  --cc-toggle-enabled-icon-color: #ffffff;
 
-  /* ── Cookie-Kategorie-Blöcke ───────────────────────────── */
-  --cc-cookie-category-block-bg:                 transparent;
-  --cc-cookie-category-block-hover-bg:           rgb(243 244 246); /* gray-100 */
-  --cc-cookie-category-expanded-block-hover-bg:  rgb(229 231 235); /* gray-200 */
-  --cc-cookie-category-block-border:             rgb(209 213 219); /* gray-300 */
-  --cc-cookie-category-block-hover-border:       rgb(107 114 128); /* gray-500 */
+  /* ── Toggle – inaktiv (aus) ────────────────────────────────── */
+  --cc-toggle-off-bg:              rgb(209 213 219);  /* gray-300 */
+  --cc-toggle-off-knob-bg:         #ffffff;
+  --cc-toggle-disabled-icon-color: rgb(209 213 219);  /* gray-300 */
 
-  /* ── Footer ────────────────────────────────────────────── */
-  --cc-footer-bg:           rgb(239 246 255); /* blue-50 */
-  --cc-footer-border-color: rgb(219 234 254); /* blue-100 */
+  /* ── Toggle – readonly (notwendig) ────────────────────────── */
+  --cc-toggle-readonly-bg:            rgb(229 231 235);  /* gray-200 */
+  --cc-toggle-readonly-knob-bg:       #ffffff;
+  --cc-toggle-readonly-knob-icon-color: rgb(156 163 175); /* gray-400 */
 
-  /* ── Radius (AstroWind: rounded-md) ───────────────────── */
-  --cc-modal-border-radius: 0.5rem;
-  --cc-btn-border-radius:   0.375rem;
+  /* ── Kategorie-Blöcke ──────────────────────────────────────── */
+  --cc-section-category-border:              rgb(229 231 235);  /* gray-200 */
+  --cc-cookie-category-block-bg:             rgb(248 250 252);  /* slate-50 */
+  --cc-cookie-category-block-border:         rgb(229 231 235);  /* gray-200 */
+  --cc-cookie-category-block-hover-bg:       rgb(241 245 249);  /* slate-100 */
+  --cc-cookie-category-block-hover-border:   rgb(148 163 184);  /* slate-400 */
+  --cc-cookie-category-expanded-block-bg:    transparent;
+  --cc-cookie-category-expanded-block-hover-bg: rgb(226 232 240); /* slate-200 */
+
+  /* ── Scrollbar ─────────────────────────────────────────────── */
+  --cc-webkit-scrollbar-bg:        rgb(229 231 235);   /* gray-200 */
+  --cc-webkit-scrollbar-hover-bg:  var(--aw-color-primary);
+
+  /* ── Footer ────────────────────────────────────────────────── */
+  --cc-footer-bg:           rgb(239 246 255);   /* blue-50 */
+  --cc-footer-color:        var(--aw-color-text-muted);
+  --cc-footer-border-color: rgb(219 234 254);   /* blue-100 */
+
+  /* ── Overlay ───────────────────────────────────────────────── */
+  --cc-overlay-bg: rgb(0 0 0 / 0.45);
 }
 
-/* ============================================================
-   Dark Mode  (.dark auf dem <html>-Tag, wie AstroWind es nutzt)
-   ============================================================ */
-.dark {
-  /* ── Hintergrund & Text ────────────────────────────────── */
+/* ----------------------------------------------------------------
+   3. DARK MODE – alle Variablen
+   Abdeckt: `.dark` (AstroWind) UND `.cc--darkmode` (CookieConsent)
+   ---------------------------------------------------------------- */
+.dark,
+.cc--darkmode {
+
+  /* ── Hintergrund & Primärtext ──────────────────────────────── */
   --cc-bg:              rgb(15 23 42);    /* slate-900 */
+  --cc-primary-color:   rgb(226 232 240); /* slate-200 */
   --cc-secondary-color: rgb(148 163 184); /* slate-400 */
 
-  /* ── Overlay ───────────────────────────────────────────── */
+  /* ── Link-Farbe ────────────────────────────────────────────── */
+  --cc-link-color: rgb(129 140 248);      /* indigo-400 */
+
+  /* ── Trennlinie ────────────────────────────────────────────── */
+  --cc-separator-border-color: rgb(51 65 85);   /* slate-700 */
+
+  /* ── Primär-Button ─────────────────────────────────────────── */
+  --cc-btn-primary-bg:                var(--aw-color-primary);
+  --cc-btn-primary-color:             #ffffff;
+  --cc-btn-primary-border-color:      var(--aw-color-primary);
+  --cc-btn-primary-hover-bg:          var(--aw-color-secondary);
+  --cc-btn-primary-hover-color:       #ffffff;
+  --cc-btn-primary-hover-border-color: var(--aw-color-secondary);
+
+  /* ── Sekundär-Button ───────────────────────────────────────── */
+  --cc-btn-secondary-bg:                  rgb(30 41 59);    /* slate-800 */
+  --cc-btn-secondary-color:              rgb(226 232 240);  /* slate-200 */
+  --cc-btn-secondary-border-color:        rgb(71 85 105);   /* slate-600 */
+  --cc-btn-secondary-hover-bg:            rgb(51 65 85);    /* slate-700 */
+  --cc-btn-secondary-hover-color:        rgb(241 245 249);  /* slate-100 */
+  --cc-btn-secondary-hover-border-color:  rgb(148 163 184); /* slate-400 */
+
+  /* ── Toggle – aktiv ────────────────────────────────────────── */
+  --cc-toggle-on-bg:              var(--aw-color-primary);
+  --cc-toggle-on-knob-bg:         #ffffff;
+  --cc-toggle-enabled-icon-color: #ffffff;
+
+  /* ── Toggle – inaktiv ──────────────────────────────────────── */
+  --cc-toggle-off-bg:              rgb(51 65 85);    /* slate-700 */
+  --cc-toggle-off-knob-bg:         rgb(226 232 240); /* slate-200 */
+  --cc-toggle-disabled-icon-color: rgb(51 65 85);    /* slate-700 */
+
+  /* ── Toggle – readonly ─────────────────────────────────────── */
+  --cc-toggle-readonly-bg:              rgb(30 41 59);   /* slate-800 */
+  --cc-toggle-readonly-knob-bg:         rgb(100 116 139); /* slate-500 */
+  --cc-toggle-readonly-knob-icon-color: rgb(30 41 59);   /* slate-800 */
+
+  /* ── Kategorie-Blöcke ──────────────────────────────────────── */
+  --cc-section-category-border:              rgb(30 41 59);    /* slate-800 */
+  --cc-cookie-category-block-bg:             rgb(30 41 59);    /* slate-800 */
+  --cc-cookie-category-block-border:         rgb(51 65 85);    /* slate-700 */
+  --cc-cookie-category-block-hover-bg:       rgb(51 65 85);    /* slate-700 */
+  --cc-cookie-category-block-hover-border:   rgb(100 116 139); /* slate-500 */
+  --cc-cookie-category-expanded-block-bg:    transparent;
+  --cc-cookie-category-expanded-block-hover-bg: rgb(71 85 105); /* slate-600 */
+
+  /* ── Scrollbar ─────────────────────────────────────────────── */
+  --cc-webkit-scrollbar-bg:        rgb(30 41 59);    /* slate-800 */
+  --cc-webkit-scrollbar-hover-bg:  var(--aw-color-primary);
+
+  /* ── Footer ────────────────────────────────────────────────── */
+  --cc-footer-bg:           rgb(30 41 59);    /* slate-800 */
+  --cc-footer-color:        rgb(148 163 184); /* slate-400 */
+  --cc-footer-border-color: rgb(51 65 85);    /* slate-700 */
+
+  /* ── Overlay ───────────────────────────────────────────────── */
   --cc-overlay-bg: rgb(0 0 0 / 0.6);
-
-  /* ── Trennlinien ───────────────────────────────────────── */
-  --cc-separator-border-color: rgb(51 65 85); /* slate-700 */
-
-  /* ── Sekundär-Button ───────────────────────────────────── */
-  --cc-btn-secondary-hover-bg:           rgb(30 41 59);   /* slate-800 */
-  --cc-btn-secondary-border-color:       rgb(71 85 105);  /* slate-600 */
-  --cc-btn-secondary-hover-border-color: rgb(203 213 225); /* slate-300 */
-
-  /* ── Toggles ───────────────────────────────────────────── */
-  --cc-toggle-off-bg:      rgb(51 65 85); /* slate-700 */
-  --cc-toggle-readonly-bg: rgb(51 65 85); /* slate-700 */
-
-  /* ── Cookie-Kategorie-Blöcke ───────────────────────────── */
-  --cc-cookie-category-block-bg:                rgb(30 41 59);   /* slate-800 */
-  --cc-cookie-category-block-hover-bg:          rgb(51 65 85);   /* slate-700 */
-  --cc-cookie-category-expanded-block-hover-bg: rgb(71 85 105);  /* slate-600 */
-  --cc-cookie-category-block-border:            rgb(71 85 105);  /* slate-600 */
-  --cc-cookie-category-block-hover-border:      rgb(203 213 225); /* slate-300 */
-
-  /* ── Footer ────────────────────────────────────────────── */
-  --cc-footer-bg:           rgb(30 41 59); /* slate-800 */
-  --cc-footer-border-color: rgb(51 65 85); /* slate-700 */
 }
 
-/* ============================================================
-   Modal & Preferences – Schatten & Border
-   ============================================================ */
+/* ----------------------------------------------------------------
+   4. MODAL BORDER & SCHATTEN
+   ---------------------------------------------------------------- */
 #cc-main .cm,
 #cc-main .pm--box {
-  border: 1px solid rgb(229 231 235); /* gray-200 */
+  border: 1px solid rgb(229 231 235);   /* gray-200 */
   box-shadow:
-    0 4px 6px -1px  rgb(0 0 0 / 0.07),
-    0 2px 4px -2px  rgb(0 0 0 / 0.07),
-    0 0 0 1px       rgb(0 0 0 / 0.03);
+    0 4px  6px -1px rgb(0 0 0 / 0.07),
+    0 2px  4px -2px rgb(0 0 0 / 0.05),
+    0 0   0  1px   rgb(0 0 0 / 0.03);
 }
 
 .dark #cc-main .cm,
-.dark #cc-main .pm--box {
-  border-color: rgb(51 65 85); /* slate-700 */
+.dark #cc-main .pm--box,
+.cc--darkmode #cc-main .cm,
+.cc--darkmode #cc-main .pm--box {
+  border-color: rgb(51 65 85);          /* slate-700 */
   box-shadow:
-    0 8px 24px -4px rgb(0 0 0 / 0.5),
-    0 4px 12px -4px rgb(0 0 0 / 0.4),
-    0 0 0 1px       rgb(255 255 255 / 0.04);
+    0  8px 24px -4px rgb(0 0 0 / 0.55),
+    0  4px 12px -4px rgb(0 0 0 / 0.4),
+    0  0   0  1px   rgb(255 255 255 / 0.04);
 }
 
-/* ============================================================
-   Typografie – Titel
-   ============================================================ */
+/* ----------------------------------------------------------------
+   5. TYPOGRAFIE
+   ---------------------------------------------------------------- */
 #cc-main .cm__title,
 #cc-main .pm__title {
   display: flex;
@@ -132,9 +207,9 @@
   height: 1.25rem;
 }
 
-/* ============================================================
-   Buttons – Gewicht & Übergang
-   ============================================================ */
+/* ----------------------------------------------------------------
+   6. BUTTONS
+   ---------------------------------------------------------------- */
 #cc-main .cm__btn,
 #cc-main .pm__btn {
   font-weight: 600;
@@ -145,18 +220,24 @@
     box-shadow       0.15s ease;
 }
 
-/* Primär-Button: dezenter Fokus-Ring (Accessibility) */
+/* Fokus-Ring (Accessibility) */
 #cc-main .cm__btn--primary:focus-visible,
 #cc-main .pm__btn--primary:focus-visible {
   outline: 2px solid var(--aw-color-primary);
   outline-offset: 2px;
 }
 
-/* ============================================================
-   Text-Größenanpassung (iOS-Fix)
-   ============================================================ */
-#cc-main .cm__btn,
-#cc-main .pm__btn {
+#cc-main .cm__btn--secondary:focus-visible,
+#cc-main .pm__btn--secondary:focus-visible {
+  outline: 2px solid var(--aw-color-text-muted);
+  outline-offset: 2px;
+}
+
+/* ----------------------------------------------------------------
+   7. iOS TEXT-GRÖßEN-FIX
+   ---------------------------------------------------------------- */
+#cc-main .cm,
+#cc-main .pm {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
