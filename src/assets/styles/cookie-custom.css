@@ -236,8 +236,8 @@
 /* ----------------------------------------------------------------
    7. iOS TEXT-GRÖßEN-FIX
    ---------------------------------------------------------------- */
-#cc-main .cm,
-#cc-main .pm {
+#cc-main .cm__btn,
+#cc-main .pm__btn {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
