@@ -17,13 +17,13 @@
    Diese müssen auf #cc-main gesetzt werden, nicht auf :root
    ---------------------------------------------------------------- */
 #cc-main {
-  --cc-font-family:               inherit;   /* Erbt Inter/System von AstroWind */
-  --cc-modal-border-radius:       0.375rem;  /* rounded-md – wie AstroWind */
-  --cc-btn-border-radius:         0.375rem;  /* rounded-md – wie AstroWind */
-  --cc-pm-toggle-border-radius:   4em;       /* Pill-Toggle beibehalten */
-  --cc-modal-transition-duration: 0.2s;
-  --cc-modal-margin:              1rem;
-  --cc-z-index:                   9999;
+  --cc-font-family:              inherit;            /* Erbt Inter/System von AstroWind */
+  --cc-modal-border-radius:      0.5rem;             /* Entspricht rounded-lg */
+  --cc-btn-border-radius:        0.375rem;           /* Entspricht rounded-md */
+  --cc-pm-toggle-border-radius:  3em;                /* Pill-Form beibehalten */
+  --cc-modal-transition-duration: 0.2s;              /* Etwas flotter als Standard */
+  --cc-modal-margin:             1rem;
+  --cc-z-index:                  9999;               /* Unter AstroWind-Headern falls nötig */
 }
 
 /* ----------------------------------------------------------------
@@ -31,164 +31,162 @@
    ---------------------------------------------------------------- */
 :root {
 
-  /* ── Hintergrund & Text ──────────────────────────────────────── */
-  --cc-bg:              rgb(255 255 255);
-  --cc-primary-color:   var(--aw-color-text-default);
+  /* ── Hintergrund & Primärtext ──────────────────────────────── */
+  --cc-bg:             #ffffff;
+  --cc-primary-color:  var(--aw-color-text-default);
   --cc-secondary-color: var(--aw-color-text-muted);
 
-  /* ── Links ───────────────────────────────────────────────────── */
-  --cc-link-color: var(--aw-color-primary);
+  /* ── Link-Farbe ────────────────────────────────────────────── */
+  --cc-link-color:     var(--aw-color-primary);
 
-  /* ── Trennlinien ─────────────────────────────────────────────── */
-  --cc-separator-border-color: rgb(229 231 235);        /* gray-200 */
+  /* ── Trennlinie ────────────────────────────────────────────── */
+  --cc-separator-border-color: rgb(229 231 235);     /* gray-200 */
 
-  /* ── Primär-Button (Akzeptieren) ─────────────────────────────── */
-  --cc-btn-primary-bg:                 var(--aw-color-primary);
-  --cc-btn-primary-color:              rgb(255 255 255);
-  --cc-btn-primary-border-color:       var(--aw-color-primary);
-  --cc-btn-primary-hover-bg:           var(--aw-color-secondary);
-  --cc-btn-primary-hover-color:        rgb(255 255 255);
-  --cc-btn-primary-hover-border-color: var(--aw-color-primary);
+  /* ── Primär-Button (Akzeptieren) ───────────────────────────── */
+  --cc-btn-primary-bg:                var(--aw-color-primary);
+  --cc-btn-primary-color:             #ffffff;
+  --cc-btn-primary-border-color:      var(--aw-color-primary);
+  --cc-btn-primary-hover-bg:          var(--aw-color-secondary);
+  --cc-btn-primary-hover-color:       #ffffff;
+  --cc-btn-primary-hover-border-color: var(--aw-color-secondary);
 
-  /* ── Sekundär-Button (Einstellungen / Ablehnen) ──────────────── */
+  /* ── Sekundär-Button (Ablehnen / Einstellungen) ────────────── */
   --cc-btn-secondary-bg:                  transparent;
   --cc-btn-secondary-color:              var(--aw-color-text-default);
-  --cc-btn-secondary-border-color:        rgb(156 163 175);  /* gray-400 */
-  --cc-btn-secondary-hover-bg:            rgb(243 244 246);  /* gray-100 */
+  --cc-btn-secondary-border-color:        rgb(209 213 219);   /* gray-300 */
+  --cc-btn-secondary-hover-bg:            rgb(243 244 246);   /* gray-100 */
   --cc-btn-secondary-hover-color:        var(--aw-color-text-default);
-  --cc-btn-secondary-hover-border-color:  rgb(75 85 99);     /* gray-600 */
+  --cc-btn-secondary-hover-border-color:  rgb(107 114 128);   /* gray-500 */
 
-  /* ── Toggle – EIN ────────────────────────────────────────────── */
+  /* ── Toggle – aktiv (an) ───────────────────────────────────── */
   --cc-toggle-on-bg:              var(--aw-color-primary);
-  --cc-toggle-on-knob-bg:         rgb(255 255 255);
-  --cc-toggle-enabled-icon-color: var(--aw-color-primary);
+  --cc-toggle-on-knob-bg:         #ffffff;
+  --cc-toggle-enabled-icon-color: #ffffff;
 
-  /* ── Toggle – AUS ────────────────────────────────────────────── */
-  --cc-toggle-off-bg:              rgb(229 231 235);           /* gray-200 */
-  --cc-toggle-off-knob-bg:         rgb(255 255 255);
-  --cc-toggle-disabled-icon-color: rgb(229 231 235);           /* unsichtbar auf off-bg */
+  /* ── Toggle – inaktiv (aus) ────────────────────────────────── */
+  --cc-toggle-off-bg:              rgb(209 213 219);  /* gray-300 */
+  --cc-toggle-off-knob-bg:         #ffffff;
+  --cc-toggle-disabled-icon-color: rgb(209 213 219);  /* gray-300 */
 
-  /* ── Toggle – READONLY (Notwendige Cookies) ──────────────────── */
-  --cc-toggle-readonly-bg:              rgb(229 231 235);      /* gray-200 */
-  --cc-toggle-readonly-knob-bg:         rgb(255 255 255);
-  --cc-toggle-readonly-knob-icon-color: var(--aw-color-primary);
+  /* ── Toggle – readonly (notwendig) ────────────────────────── */
+  --cc-toggle-readonly-bg:            rgb(229 231 235);  /* gray-200 */
+  --cc-toggle-readonly-knob-bg:       #ffffff;
+  --cc-toggle-readonly-knob-icon-color: rgb(156 163 175); /* gray-400 */
 
-  /* ── Kategorie-Blöcke ────────────────────────────────────────── */
-  --cc-section-category-border:              rgb(229 231 235); /* gray-200 */
-  --cc-cookie-category-block-bg:             transparent;
-  --cc-cookie-category-block-border:         rgb(156 163 175); /* gray-400 */
-  --cc-cookie-category-block-hover-bg:       rgb(243 244 246); /* gray-100 */
-  --cc-cookie-category-block-hover-border:   rgb(75 85 99);    /* gray-600 */
+  /* ── Kategorie-Blöcke ──────────────────────────────────────── */
+  --cc-section-category-border:              rgb(229 231 235);  /* gray-200 */
+  --cc-cookie-category-block-bg:             rgb(248 250 252);  /* slate-50 */
+  --cc-cookie-category-block-border:         rgb(229 231 235);  /* gray-200 */
+  --cc-cookie-category-block-hover-bg:       rgb(241 245 249);  /* slate-100 */
+  --cc-cookie-category-block-hover-border:   rgb(148 163 184);  /* slate-400 */
   --cc-cookie-category-expanded-block-bg:    transparent;
-  --cc-cookie-category-expanded-block-hover-bg: rgb(156 163 175); /* gray-400 */
+  --cc-cookie-category-expanded-block-hover-bg: rgb(226 232 240); /* slate-200 */
 
-  /* ── Scrollbar ───────────────────────────────────────────────── */
-  --cc-webkit-scrollbar-bg:       rgb(229 231 235);            /* gray-200 */
-  --cc-webkit-scrollbar-hover-bg: var(--aw-color-primary);
+  /* ── Scrollbar ─────────────────────────────────────────────── */
+  --cc-webkit-scrollbar-bg:        rgb(229 231 235);   /* gray-200 */
+  --cc-webkit-scrollbar-hover-bg:  var(--aw-color-primary);
 
-  /* ── Footer ──────────────────────────────────────────────────── */
-  --cc-footer-bg:           rgb(239 246 255);                  /* blue-50 */
+  /* ── Footer ────────────────────────────────────────────────── */
+  --cc-footer-bg:           rgb(239 246 255);   /* blue-50 */
   --cc-footer-color:        var(--aw-color-text-muted);
-  --cc-footer-border-color: rgb(229 231 235);                  /* gray-200 */
+  --cc-footer-border-color: rgb(219 234 254);   /* blue-100 */
 
-  /* ── Overlay ─────────────────────────────────────────────────── */
+  /* ── Overlay ───────────────────────────────────────────────── */
   --cc-overlay-bg: rgb(0 0 0 / 0.45);
 }
 
 /* ----------------------------------------------------------------
-   3. DARK MODE
-   Abdeckt: `.dark` (AstroWind) UND `.cc--darkmode` (CC nativ)
+   3. DARK MODE – alle Variablen
+   Abdeckt: `.dark` (AstroWind) UND `.cc--darkmode` (CookieConsent)
    ---------------------------------------------------------------- */
 .dark,
 .cc--darkmode {
 
-  /* ── Hintergrund & Text ──────────────────────────────────────── */
-  --cc-bg:              rgb(15 23 42);                         /* slate-900 */
-  --cc-primary-color:   rgb(226 232 240);                      /* slate-200 */
-  --cc-secondary-color: rgb(148 163 184);                      /* slate-400 */
+  /* ── Hintergrund & Primärtext ──────────────────────────────── */
+  --cc-bg:              rgb(15 23 42);    /* slate-900 */
+  --cc-primary-color:   rgb(226 232 240); /* slate-200 */
+  --cc-secondary-color: rgb(148 163 184); /* slate-400 */
 
-  /* ── Links ───────────────────────────────────────────────────── */
-  --cc-link-color: rgb(129 140 248);                           /* indigo-400 */
+  /* ── Link-Farbe ────────────────────────────────────────────── */
+  --cc-link-color: rgb(129 140 248);      /* indigo-400 */
 
-  /* ── Trennlinien ─────────────────────────────────────────────── */
-  --cc-separator-border-color: rgb(55 65 81);                  /* gray-700 */
+  /* ── Trennlinie ────────────────────────────────────────────── */
+  --cc-separator-border-color: rgb(51 65 85);   /* slate-700 */
 
-  /* ── Primär-Button (identisch zu Light – Indigo bleibt) ──────── */
-  --cc-btn-primary-bg:                 var(--aw-color-primary);
-  --cc-btn-primary-color:              rgb(255 255 255);
-  --cc-btn-primary-border-color:       var(--aw-color-primary);
-  --cc-btn-primary-hover-bg:           var(--aw-color-secondary);
-  --cc-btn-primary-hover-color:        rgb(255 255 255);
-  --cc-btn-primary-hover-border-color: var(--aw-color-primary);
+  /* ── Primär-Button ─────────────────────────────────────────── */
+  --cc-btn-primary-bg:                var(--aw-color-primary);
+  --cc-btn-primary-color:             #ffffff;
+  --cc-btn-primary-border-color:      var(--aw-color-primary);
+  --cc-btn-primary-hover-bg:          var(--aw-color-secondary);
+  --cc-btn-primary-hover-color:       #ffffff;
+  --cc-btn-primary-hover-border-color: var(--aw-color-secondary);
 
-  /* ── Sekundär-Button ─────────────────────────────────────────── */
-  --cc-btn-secondary-bg:                  rgb(15 23 42);       /* slate-900 = cc-bg, ghost */
-  --cc-btn-secondary-color:              rgb(226 232 240);     /* slate-200 */
-  --cc-btn-secondary-border-color:        rgb(100 116 139);    /* slate-500 */
-  --cc-btn-secondary-hover-bg:            rgb(30 41 59);       /* slate-800 */
-  --cc-btn-secondary-hover-color:        rgb(241 245 249);     /* slate-100 */
-  --cc-btn-secondary-hover-border-color:  rgb(229 231 235);    /* gray-200 */
+  /* ── Sekundär-Button ───────────────────────────────────────── */
+  --cc-btn-secondary-bg:                  rgb(30 41 59);    /* slate-800 */
+  --cc-btn-secondary-color:              rgb(226 232 240);  /* slate-200 */
+  --cc-btn-secondary-border-color:        rgb(71 85 105);   /* slate-600 */
+  --cc-btn-secondary-hover-bg:            rgb(51 65 85);    /* slate-700 */
+  --cc-btn-secondary-hover-color:        rgb(241 245 249);  /* slate-100 */
+  --cc-btn-secondary-hover-border-color:  rgb(148 163 184); /* slate-400 */
 
-  /* ── Toggle – EIN ────────────────────────────────────────────── */
+  /* ── Toggle – aktiv ────────────────────────────────────────── */
   --cc-toggle-on-bg:              var(--aw-color-primary);
-  --cc-toggle-on-knob-bg:         rgb(255 255 255);
-  --cc-toggle-enabled-icon-color: rgb(255 255 255);
+  --cc-toggle-on-knob-bg:         #ffffff;
+  --cc-toggle-enabled-icon-color: #ffffff;
 
-  /* ── Toggle – AUS ────────────────────────────────────────────── */
-  --cc-toggle-off-bg:              rgb(55 65 81);              /* gray-700 */
-  --cc-toggle-off-knob-bg:         rgb(255 255 255);
-  --cc-toggle-disabled-icon-color: rgb(55 65 81);              /* unsichtbar auf off-bg */
+  /* ── Toggle – inaktiv ──────────────────────────────────────── */
+  --cc-toggle-off-bg:              rgb(51 65 85);    /* slate-700 */
+  --cc-toggle-off-knob-bg:         rgb(226 232 240); /* slate-200 */
+  --cc-toggle-disabled-icon-color: rgb(51 65 85);    /* slate-700 */
 
-  /* ── Toggle – READONLY ───────────────────────────────────────── */
-  --cc-toggle-readonly-bg:              rgb(55 65 81);         /* gray-700 */
-  --cc-toggle-readonly-knob-bg:         rgb(255 255 255);
-  --cc-toggle-readonly-knob-icon-color: rgb(55 65 81);         /* unsichtbar – locked */
+  /* ── Toggle – readonly ─────────────────────────────────────── */
+  --cc-toggle-readonly-bg:              rgb(30 41 59);   /* slate-800 */
+  --cc-toggle-readonly-knob-bg:         rgb(100 116 139); /* slate-500 */
+  --cc-toggle-readonly-knob-icon-color: rgb(30 41 59);   /* slate-800 */
 
-  /* ── Kategorie-Blöcke ────────────────────────────────────────── */
-  --cc-section-category-border:              rgb(55 65 81);    /* gray-700 */
-  --cc-cookie-category-block-bg:             rgb(15 23 42);    /* slate-900 = cc-bg */
-  --cc-cookie-category-block-border:         rgb(100 116 139); /* slate-500 */
-  --cc-cookie-category-block-hover-bg:       rgb(30 41 59);    /* slate-800 */
-  --cc-cookie-category-block-hover-border:   rgb(229 231 235); /* gray-200 */
+  /* ── Kategorie-Blöcke ──────────────────────────────────────── */
+  --cc-section-category-border:              rgb(30 41 59);    /* slate-800 */
+  --cc-cookie-category-block-bg:             rgb(30 41 59);    /* slate-800 */
+  --cc-cookie-category-block-border:         rgb(51 65 85);    /* slate-700 */
+  --cc-cookie-category-block-hover-bg:       rgb(51 65 85);    /* slate-700 */
+  --cc-cookie-category-block-hover-border:   rgb(100 116 139); /* slate-500 */
   --cc-cookie-category-expanded-block-bg:    transparent;
-  --cc-cookie-category-expanded-block-hover-bg: rgb(100 116 139); /* slate-500 */
+  --cc-cookie-category-expanded-block-hover-bg: rgb(71 85 105); /* slate-600 */
 
-  /* ── Scrollbar ───────────────────────────────────────────────── */
-  --cc-webkit-scrollbar-bg:       rgb(30 41 59);               /* slate-800 */
-  --cc-webkit-scrollbar-hover-bg: var(--aw-color-primary);
+  /* ── Scrollbar ─────────────────────────────────────────────── */
+  --cc-webkit-scrollbar-bg:        rgb(30 41 59);    /* slate-800 */
+  --cc-webkit-scrollbar-hover-bg:  var(--aw-color-primary);
 
-  /* ── Footer ──────────────────────────────────────────────────── */
-  --cc-footer-bg:           rgb(30 41 59);                     /* slate-800 */
-  --cc-footer-color:        rgb(148 163 184);                  /* slate-400 */
-  --cc-footer-border-color: rgb(55 65 81);                     /* gray-700 */
+  /* ── Footer ────────────────────────────────────────────────── */
+  --cc-footer-bg:           rgb(30 41 59);    /* slate-800 */
+  --cc-footer-color:        rgb(148 163 184); /* slate-400 */
+  --cc-footer-border-color: rgb(51 65 85);    /* slate-700 */
 
-  /* ── Overlay ─────────────────────────────────────────────────── */
+  /* ── Overlay ───────────────────────────────────────────────── */
   --cc-overlay-bg: rgb(0 0 0 / 0.6);
 }
 
 /* ----------------------------------------------------------------
-   4. MODAL – Border & Shadow (Tailwind shadow-sm Stil)
+   4. MODAL BORDER & SCHATTEN
    ---------------------------------------------------------------- */
 #cc-main .cm,
 #cc-main .pm--box {
-  border: 1px solid rgb(229 231 235);
+  border: 1px solid rgb(229 231 235);   /* gray-200 */
   box-shadow:
-    0 0 #0000,
-    0 0 #0000,
-    0 1px 3px 0   rgb(0 0 0 / 0.1),
-    0 1px 2px -1px rgb(0 0 0 / 0.1);
+    0 4px  6px -1px rgb(0 0 0 / 0.07),
+    0 2px  4px -2px rgb(0 0 0 / 0.05),
+    0 0   0  1px   rgb(0 0 0 / 0.03);
 }
 
 .dark #cc-main .cm,
 .dark #cc-main .pm--box,
 .cc--darkmode #cc-main .cm,
 .cc--darkmode #cc-main .pm--box {
-  border-color: rgb(55 65 81);
+  border-color: rgb(51 65 85);          /* slate-700 */
   box-shadow:
-    0 0 #0000,
-    0 0 #0000,
-    0 4px 12px -2px rgb(0 0 0 / 0.4),
-    0 2px  6px -2px rgb(0 0 0 / 0.3);
+    0  8px 24px -4px rgb(0 0 0 / 0.55),
+    0  4px 12px -4px rgb(0 0 0 / 0.4),
+    0  0   0  1px   rgb(255 255 255 / 0.04);
 }
 
 /* ----------------------------------------------------------------
@@ -215,7 +213,11 @@
 #cc-main .cm__btn,
 #cc-main .pm__btn {
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color     0.15s ease,
+    color            0.15s ease,
+    box-shadow       0.15s ease;
 }
 
 /* Fokus-Ring (Accessibility) */
