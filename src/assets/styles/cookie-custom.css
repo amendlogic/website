@@ -1,21 +1,10 @@
 /* ================================================================
    vanilla-cookieconsent v3 × AstroWind
    Vollständige Überschreibung aller 46 offiziellen CSS-Variablen
-   ================================================================
 
-   WICHTIG: AstroWind nutzt `.dark` auf <html>.
-   CookieConsent nutzt `.cc--darkmode` auf <html>.
-   Beide Selektoren werden hier abgedeckt.
-
-   Synchronisierung in cookieconsent-config.js:
-     document.documentElement.classList
-       .toggle('cc--darkmode', document.documentElement.classList.contains('dark'));
+   Dark Mode: Greift automatisch über AstroWinds `.dark` auf <html>.
    ================================================================ */
 
-/* ----------------------------------------------------------------
-   1. GLOBALE LAYOUT- & TRANSITIONS-VARIABLEN
-   Diese müssen auf #cc-main gesetzt werden, nicht auf :root
-   ---------------------------------------------------------------- */
 #cc-main {
   --cc-font-family:              inherit;            /* Erbt Inter/System von AstroWind */
   --cc-modal-border-radius:      0.5rem;             /* Entspricht rounded-lg */
@@ -99,8 +88,7 @@
    3. DARK MODE – alle Variablen
    Abdeckt: `.dark` (AstroWind) UND `.cc--darkmode` (CookieConsent)
    ---------------------------------------------------------------- */
-.dark,
-.cc--darkmode {
+.dark {
 
   /* ── Hintergrund & Primärtext ──────────────────────────────── */
   --cc-bg:              rgb(15 23 42);    /* slate-900 */
