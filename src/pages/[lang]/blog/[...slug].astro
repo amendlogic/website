@@ -6,7 +6,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import SinglePost from '~/components/blog/SinglePost.astro';
 import ToBlogLink from '~/components/blog/ToBlogLink.astro';
 import RelatedPosts from '~/components/blog/RelatedPosts.astro';
-import Notice from '~/components/widgets/Note.astro';
+import Note from '~/components/widgets/Note.astro';
 import { getCanonical, getPermalink } from '~/utils/permalinks';
 
 export const prerender = true;
@@ -52,10 +52,9 @@ const metadata = merge(
 
 <Layout metadata={metadata}>
   {isFallback && (
-    <Notice
+    <Note
       title={t('fallbacks.post.title')}
       description={t('fallbacks.post.desc')} 
-      class="max-w-3xl px-4 sm:px-6"
     />
   )}
   <SinglePost post={post} url={url}>
