@@ -12,12 +12,13 @@ const {
   items = [],
   image = await Astro.slots.render('image'),
   isReversed = false,
-
   id,
   isDark = false,
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
+
+const defaultImageClass = "inset-0 object-cover object-top w-full rounded-md shadow-lg md:absolute md:h-full bg-gray-400 dark:bg-slate-700";
 ---
 
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-5xl ${classes?.container ?? ''}`} bg={bg}>
@@ -42,7 +43,7 @@ const {
             <Fragment set:html={image} />
           ) : (
             <Image
-              class="inset-0 object-cover object-top w-full rounded-md shadow-lg md:absolute md:h-full bg-gray-400 dark:bg-slate-700"
+              class={image?.class ?? defaultImageClass}
               widths={[400, 768]}
               sizes="(max-width: 768px) 100vw, 432px"
               width={432}
