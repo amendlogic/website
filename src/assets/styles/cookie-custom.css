@@ -50,7 +50,7 @@
   /* ── Toggles (AstroWind-Style) ─────────────────────────────── */
   --cc-toggle-off-bg:           rgb(203 213 225);   /* slate-300  */
   --cc-toggle-readonly-bg:      rgb(226 232 240);   /* slate-200  */
-  --cc-toggle-on-bg:            rgb(37  99  235);   /* blue-600   */
+  --cc-toggle-on-bg:            var(--aw-color-primary);
   --cc-toggle-on-knob-bg:       rgb(255 255 255);
   --cc-toggle-off-knob-bg:      rgb(255 255 255);
   --cc-toggle-readonly-knob-bg: rgb(255 255 255);
@@ -59,7 +59,7 @@
   --cc-cookie-category-block-bg:                    transparent;
   --cc-cookie-category-block-hover-bg:              rgb(243 244 246);
   --cc-cookie-category-expanded-block-bg:           rgb(248 250 252);   /* slate-50   */
-  --cc-cookie-category-expanded-block-hover-bg:     rgb(226 232 240);   /* slate-200  */
+  --cc-cookie-category-expanded-block-hover-bg:     rgb(156 163 175);
   --cc-cookie-category-block-border:                rgb(156 163 175);
   --cc-cookie-category-block-hover-border:          rgb(75 85 99);
 
