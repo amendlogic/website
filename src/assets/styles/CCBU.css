@@ -26,7 +26,7 @@
   --cc-font-family:             inherit;
 
   /* Hintergrund & Text */
-  --cc-bg:                      #ffffffe6;
+  --cc-bg:                      rgb(255 255 255);
   --cc-primary-color:           var(--aw-color-text-default);
   --cc-secondary-color:         var(--aw-color-text-muted);
 
@@ -48,10 +48,11 @@
   --cc-btn-secondary-hover-border-color: rgb(75 85 99);
 
   /* Toggles */
-  --cc-toggle-off-bg:           rgb(229 231 235);
+  --cc-toggle-off-bg:           rgb(209 213 219);
   --cc-toggle-on-bg:            var(--aw-color-primary);
   --cc-toggle-readonly-bg:      rgb(229 231 235);
-  --cc-toggle-knob-bg:          rgb(255 255 255);
+  --cc-toggle-on-knob-bg:       rgb(255 255 255);
+  --cc-toggle-off-knob-bg:      rgb(243 244 246);
   --cc-toggle-knob-icon-color:  var(--aw-color-primary);
 
   /* Cookie-Kategorien */
@@ -85,7 +86,8 @@
   /* Toggles */
   --cc-toggle-off-bg:           rgb(55 65 81);
   --cc-toggle-readonly-bg:      rgb(55 65 81);
-  --cc-toggle-knob-bg:          rgb(255 255 255);
+  --cc-toggle-on-knob-bg:       rgb(255 255 255);
+  --cc-toggle-off-knob-bg:      rgb(255 255 255);
 
   /* Cookie-Kategorien */
   --cc-cookie-category-block-hover-bg:            rgb(30 41 59);
@@ -109,8 +111,6 @@
   border-width: 1px;
   border-style: solid;
   border-color: rgb(229 231 235);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
 }
 
 .dark #cc-main .cm,
