@@ -6,7 +6,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
 import Pagination from '~/components/blog/Pagination.astro';
-import Notice from '~/components/ui/Notice.astro';
+import Note from '~/components/widgets/Note.astro';
 
 export const prerender = true;
 
@@ -60,11 +60,10 @@ const metadata = {
 <Layout metadata={metadata}>
 
   {isFallback && (
-    <Notice 
-      title={t('fallbacks.category.title')} 
-      class="max-w-4xl px-4 md:px-6" >
-      {t('fallbacks.category.desc')}
-    </Notice>
+    <Note 
+      title={t('fallbacks.category.title')}
+      description={t('fallbacks.category.desc')}
+    />
   )}
 
   <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
