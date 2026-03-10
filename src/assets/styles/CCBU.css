@@ -110,6 +110,8 @@
   border-width: 1px;
   border-style: solid;
   border-color: rgb(229 231 235);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .dark #cc-main .cm,
