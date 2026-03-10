@@ -163,10 +163,8 @@
 }
 
 .dark #cc-main .cm,
-.dark #cc-main .pm--box,
-.cc--darkmode #cc-main .cm,
-.cc--darkmode #cc-main .pm--box {
-  border-color: rgb(51 65 85);          /* slate-700 */
+.dark #cc-main .pm--box {
+  border-color: rgb(55 65 81);
   box-shadow:
     0  8px 24px -4px rgb(0 0 0 / 0.55),
     0  4px 12px -4px rgb(0 0 0 / 0.4),
