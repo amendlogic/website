@@ -21,7 +21,7 @@
 :root {
 
   /* ── Hintergrund & Primärtext ──────────────────────────────── */
-  --cc-bg:             #ffffff;
+  --cc-bg:             rgb(255 255 255);
   --cc-primary-color:  var(--aw-color-text-default);
   --cc-secondary-color: var(--aw-color-text-muted);
 
@@ -29,28 +29,28 @@
   --cc-link-color:     var(--aw-color-primary);
 
   /* ── Trennlinie ────────────────────────────────────────────── */
-  --cc-separator-border-color: rgb(229 231 235);     /* gray-200 */
+  --cc-separator-border-color: rgb(229 231 235)
 
   /* ── Primär-Button (Akzeptieren) ───────────────────────────── */
   --cc-btn-primary-bg:                var(--aw-color-primary);
-  --cc-btn-primary-color:             #ffffff;
+  --cc-btn-primary-color:             rgb(255 255 255);
   --cc-btn-primary-border-color:      var(--aw-color-primary);
   --cc-btn-primary-hover-bg:          var(--aw-color-secondary);
-  --cc-btn-primary-hover-color:       #ffffff;
-  --cc-btn-primary-hover-border-color: var(--aw-color-secondary);
+  --cc-btn-primary-hover-color:       rgb(255 255 255);
+  --cc-btn-primary-hover-border-color: var(--aw-color-primary)
 
   /* ── Sekundär-Button (Ablehnen / Einstellungen) ────────────── */
   --cc-btn-secondary-bg:                  transparent;
   --cc-btn-secondary-color:              var(--aw-color-text-default);
-  --cc-btn-secondary-border-color:        rgb(209 213 219);   /* gray-300 */
+  --cc-btn-secondary-border-color:        rgb(156 163 175);
   --cc-btn-secondary-hover-bg:            rgb(243 244 246);   /* gray-100 */
   --cc-btn-secondary-hover-color:        var(--aw-color-text-default);
-  --cc-btn-secondary-hover-border-color:  rgb(107 114 128);   /* gray-500 */
+  --cc-btn-secondary-hover-border-color:  rgb(75 85 99);
 
   /* ── Toggle – aktiv (an) ───────────────────────────────────── */
   --cc-toggle-on-bg:              var(--aw-color-primary);
   --cc-toggle-on-knob-bg:         #ffffff;
-  --cc-toggle-enabled-icon-color: #ffffff;
+  --cc-toggle-enabled-icon-color: var(--aw-color-primary);
 
   /* ── Toggle – inaktiv (aus) ────────────────────────────────── */
   --cc-toggle-off-bg:              rgb(209 213 219);  /* gray-300 */
@@ -58,9 +58,17 @@
   --cc-toggle-disabled-icon-color: rgb(209 213 219);  /* gray-300 */
 
   /* ── Toggle – readonly (notwendig) ────────────────────────── */
-  --cc-toggle-readonly-bg:            rgb(229 231 235);  /* gray-200 */
-  --cc-toggle-readonly-knob-bg:       #ffffff;
-  --cc-toggle-readonly-knob-icon-color: rgb(156 163 175); /* gray-400 */
+  --cc-toggle-readonly-bg:              rgb(229 231 235);  /* gray-200 */
+  --cc-toggle-readonly-knob-bg:         rgb(255 255 255);
+  --cc-toggle-readonly-knob-icon-color: rgb(239 246 255);
+
+
+--cc-toggle-on-bg          /* Hintergrund wenn AN */
+--cc-toggle-off-bg         /* Hintergrund wenn AUS */
+--cc-toggle-readonly-bg    /* Hintergrund bei gesperrtem Toggle (z.B. "necessary") */
+--cc-toggle-knob-bg        /* Farbe des Knobs/Kreises */
+--cc-toggle-knob-icon-color /* Farbe des ✓/✗ Icons auf dem Knob */
+
 
   /* ── Kategorie-Blöcke ──────────────────────────────────────── */
   --cc-section-category-border:              rgb(229 231 235);  /* gray-200 */
@@ -71,12 +79,8 @@
   --cc-cookie-category-expanded-block-bg:    transparent;
   --cc-cookie-category-expanded-block-hover-bg: rgb(226 232 240); /* slate-200 */
 
-  /* ── Scrollbar ─────────────────────────────────────────────── */
-  --cc-webkit-scrollbar-bg:        rgb(229 231 235);   /* gray-200 */
-  --cc-webkit-scrollbar-hover-bg:  var(--aw-color-primary);
-
   /* ── Footer ────────────────────────────────────────────────── */
-  --cc-footer-bg:           rgb(239 246 255);   /* blue-50 */
+  --cc-footer-bg:           rgb(239 246 255);   /* blue-50 */     X
   --cc-footer-color:        var(--aw-color-text-muted);
   --cc-footer-border-color: rgb(219 234 254);   /* blue-100 */
 
@@ -86,7 +90,7 @@
 
 /* ----------------------------------------------------------------
    3. DARK MODE – alle Variablen
-   Abdeckt: `.dark` (AstroWind) UND `.cc--darkmode` (CookieConsent)
+   Abdeckt: `.dark` (AstroWind)
    ---------------------------------------------------------------- */
 .dark {
 
