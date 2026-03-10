@@ -98,7 +98,7 @@
       "icon": "tabler:settings-2"
     },
     {
-      "title": "Bit Settings",
+      "title": "Bot Settings",
       "description": "Feinjustierung der Strategie für spezifische Timeframes und Kryptowährungen. Diese Parameter ermöglichen es, das Verhalten der Strategie an die jeweilige Marktstruktur und Volatilität eines Assets präzise anzupassen — ohne die Kernlogik zu verändern.",
       "icon": "tabler:adjustments-horizontal"
     },
