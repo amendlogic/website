@@ -29,7 +29,7 @@
   --cc-link-color:     var(--aw-color-primary);
 
   /* ── Trennlinie ────────────────────────────────────────────── */
-  --cc-separator-border-color: rgb(229 231 235)
+  --cc-separator-border-color: rgb(229 231 235);
 
   /* ── Primär-Button (Akzeptieren) ───────────────────────────── */
   --cc-btn-primary-bg:                var(--aw-color-primary);
@@ -37,7 +37,7 @@
   --cc-btn-primary-border-color:      var(--aw-color-primary);
   --cc-btn-primary-hover-bg:          var(--aw-color-secondary);
   --cc-btn-primary-hover-color:       rgb(255 255 255);
-  --cc-btn-primary-hover-border-color: var(--aw-color-primary)
+  --cc-btn-primary-hover-border-color: var(--aw-color-primary);
 
   /* ── Sekundär-Button (Ablehnen / Einstellungen) ────────────── */
   --cc-btn-secondary-bg:                  transparent;
