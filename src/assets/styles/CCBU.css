@@ -1,3 +1,23 @@
+/* ================================================================
+   vanilla-cookieconsent v3 × AstroWind
+   Vollständige Überschreibung aller 46 offiziellen CSS-Variablen
+
+   Dark Mode: Greift automatisch über AstroWinds `.dark` auf <html>.
+   ================================================================ */
+
+#cc-main {
+  --cc-font-family:              inherit;            /* Erbt Inter/System von AstroWind */
+  --cc-modal-border-radius:      0.5rem;             /* Entspricht rounded-lg */
+  --cc-btn-border-radius:        0.375rem;           /* Entspricht rounded-md */
+  --cc-pm-toggle-border-radius:  3em;                /* Pill-Form beibehalten */
+  --cc-modal-transition-duration: 0.2s;              /* Etwas flotter als Standard */
+  --cc-modal-margin:             1rem;
+  --cc-z-index:                  9999;               /* Unter AstroWind-Headern falls nötig */
+}
+
+/* ----------------------------------------------------------------
+   2. LIGHT MODE – alle Variablen
+   ---------------------------------------------------------------- */
 
 :root {
   /* --- Grundeinstellungen & Light Mode --- */
@@ -44,11 +64,6 @@
 
   --cc-footer-bg: rgb(239 246 255);
   --cc-footer-border-color: rgb(229 231 235);
-
-  /* Form - Rundungen anpassen (AstroWind nutzt oft rounded-lg) */
-  --cc-modal-border-radius: 0.375rem;
-  --cc-btn-border-radius: 0.375rem;
-}
 
 /* --- Dark Mode --- */
 /* AstroWind nutzt die Klasse .dark auf dem html tag */
