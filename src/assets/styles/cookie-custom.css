@@ -50,7 +50,7 @@
   /* ── Toggles (AstroWind-Style) ─────────────────────────────── */
   --cc-toggle-off-bg:           rgb(203 213 225);   /* slate-300  */
   --cc-toggle-readonly-bg:      rgb(226 232 240);   /* slate-200  */
-  --cc-toggle-on-bg:            var(--aw-color-primary);
+  --cc-toggle-on-bg:            rgb(59  130 246);   /* blue-500   */
   --cc-toggle-on-knob-bg:       rgb(255 255 255);
   --cc-toggle-off-knob-bg:      rgb(255 255 255);
   --cc-toggle-readonly-knob-bg: rgb(255 255 255);
@@ -58,7 +58,7 @@
   /* ── Cookie-Kategorien (Borders beibehalten) ───────────────── */
   --cc-cookie-category-block-bg:                    transparent;
   --cc-cookie-category-block-hover-bg:              rgb(243 244 246);
-  --cc-cookie-category-expanded-block-bg:           rgb(243 244 246);
+  --cc-cookie-category-expanded-block-bg:           transparent;
   --cc-cookie-category-expanded-block-hover-bg:     rgb(156 163 175);
   --cc-cookie-category-block-border:                rgb(156 163 175);
   --cc-cookie-category-block-hover-border:          rgb(75 85 99);
@@ -95,7 +95,7 @@
   /* Cookie-Kategorien */
   --cc-cookie-category-block-bg:                    transparent;
   --cc-cookie-category-block-hover-bg:              rgb(30 41 59);    /* slate-800  ← dein Original */
-  --cc-cookie-category-expanded-block-bg:           rgb(30 41 59);
+  --cc-cookie-category-expanded-block-bg:           transparent;
   --cc-cookie-category-expanded-block-hover-bg:     rgb(100 116 139);
   --cc-cookie-category-block-border:                rgb(100 116 139); 
   --cc-cookie-category-block-hover-border:          rgb(229 231 235);
