@@ -4,7 +4,7 @@ import Timeline from '~/components/ui/Timeline.astro';
 import Headline from '~/components/ui/Headline.astro';
 import Image from '~/components/common/Image.astro';
 import type { Steps as Props } from '~/types';
-
+import { twMerge } from 'tailwind-merge';
 const {
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
@@ -43,7 +43,7 @@ const defaultImageClass = "inset-0 object-cover object-top w-full rounded-md sha
             <Fragment set:html={image} />
           ) : (
             <Image
-              class={image?.class ?? defaultImageClass}
+              class={twMerge(defaultImageClass, image?.class)}
               widths={[400, 768]}
               sizes="(max-width: 768px) 100vw, 432px"
               width={432}
