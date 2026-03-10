@@ -61,7 +61,7 @@
   --cc-cookie-category-expanded-block-bg:           rgb(248 250 252);   /* slate-50   */
   --cc-cookie-category-expanded-block-hover-bg:     rgb(226 232 240);   /* slate-200  */
   --cc-cookie-category-block-border:                rgb(100 116 139);   /* slate-500  ← beibehalten */
-  --cc-cookie-category-block-hover-border:          rgb(229 231 235);   /* gray-200 
+  --cc-cookie-category-block-hover-border:          rgb(75 85 99);
 
   /* Footer */
   --cc-footer-bg:               rgb(239 246 255);
@@ -85,16 +85,20 @@
   --cc-btn-secondary-hover-border-color:    rgb(229 231 235);
 
   /* Toggles */
-  --cc-toggle-off-bg:           rgb(55 65 81);
-  --cc-toggle-readonly-bg:      rgb(55 65 81);
+  --cc-toggle-off-bg:           rgb(55  65  81);    /* gray-700   */
+  --cc-toggle-readonly-bg:      rgb(71  85  105);   /* slate-600  */
+  --cc-toggle-on-bg:            rgb(59  130 246);   /* blue-500   */
   --cc-toggle-on-knob-bg:       rgb(255 255 255);
   --cc-toggle-off-knob-bg:      rgb(255 255 255);
+  --cc-toggle-readonly-knob-bg: rgb(203 213 225);   /* slate-300 — wirkt "inaktiv" */
 
   /* Cookie-Kategorien */
-  --cc-cookie-category-block-hover-bg:            rgb(30 41 59);
-  --cc-cookie-category-expanded-block-hover-bg:   rgb(100 116 139);
-  --cc-cookie-category-block-border:              rgb(100 116 139);
-  --cc-cookie-category-block-hover-border:        rgb(229 231 235);
+  --cc-cookie-category-block-bg:                    rgb(30  41  59);    /* slate-800  */
+  --cc-cookie-category-block-hover-bg:              rgb(30  41  59);    /* slate-800  ← dein Original */
+  --cc-cookie-category-expanded-block-bg:           rgb(15  23  42);    /* slate-900  */
+  --cc-cookie-category-expanded-block-hover-bg:     rgb(100 116 139);   /* slate-500  ← dein Original */
+  --cc-cookie-category-block-border:                rgb(100 116 139);   /* slate-500  ← beibehalten */
+  --cc-cookie-category-block-hover-border:          rgb(229 231 235);   /* gray-200   ← beibehalten */
 
   /* Footer */
   --cc-footer-bg:               rgb(30 41 59);
