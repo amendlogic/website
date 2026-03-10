@@ -57,7 +57,7 @@
 
   /* ── Cookie-Kategorien (Borders beibehalten) ───────────────── */
   --cc-cookie-category-block-bg:                    rgb(255 255 255);   /* white      */
-  --cc-cookie-category-block-hover-bg:              rgb(241 245 249);   /* slate-100  */
+  --cc-cookie-category-block-hover-bg:              rgb(243 244 246);
   --cc-cookie-category-expanded-block-bg:           rgb(248 250 252);   /* slate-50   */
   --cc-cookie-category-expanded-block-hover-bg:     rgb(226 232 240);   /* slate-200  */
   --cc-cookie-category-block-border:                rgb(100 116 139);   /* slate-500  ← beibehalten */
