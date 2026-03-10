@@ -88,29 +88,34 @@
   "strategy.subtitle": "Das sind die Parameter, die du im TradingView Strategy-Panel anpassen kannst — und was sich ändert, wenn du sie verstellst.",
   "strategy.items": [
     {
-      "title": "Risiko pro Trade (%)",
-      "description": "Definiert den maximalen Prozentsatz des Kontokapitals, der auf einen einzelnen Trade riskiert wird. Eine Senkung reduziert den Drawdown, skaliert aber die Renditen proportional. Die Standardkonfiguration verwendet [X]%.",
-      "icon": "tabler:percentage"
+      "title": "Time Period",
+      "description": "Definiert das aktive Zeitfenster, innerhalb dessen die Strategie Signale analysiert und Trades ausführt. Durch das Einschränken auf bestimmte Handelsstunden lassen sich ungünstige Marktphasen — etwa geringe Liquidität oder Nachrichtenereignisse — gezielt ausschließen.",
+      "icon": "tabler:calendar-time"
     },
     {
-      "title": "Drawdown-Reduktions-Schwelle",
-      "description": "Wenn der kumulative Drawdown diese Schwelle überschreitet, reduziert die Strategie automatisch die Positionsgrößen. Wirkt als Schutzschalter während Verlustphasen ohne manuellen Eingriff.",
-      "icon": "tabler:chart-area-line"
+      "title": "Strategy Settings",
+      "description": "Steuert die Handelsrichtung (Long, Short oder beides) sowie die automatische Positionsgrößenbestimmung auf Basis eines konfigurierbaren Risikofaktors. Der Risikofaktor skaliert direkt die eingesetzte Kapitalmenge pro Trade — höhere Werte steigern Renditen und Drawdown gleichermaßen.",
+      "icon": "tabler:settings-2"
     },
     {
-      "title": "Volatilitätssensitivität",
-      "description": "Steuert, wie aggressiv die Strategie die Positionsgröße als Reaktion auf erhöhte Marktvolatilität anpasst. Höhere Sensitivität bedeutet kleinere Positionen bei unsicheren Bedingungen.",
-      "icon": "tabler:activity"
+      "title": "Bit Settings",
+      "description": "Feinjustierung der Strategie für spezifische Timeframes und Kryptowährungen. Diese Parameter ermöglichen es, das Verhalten der Strategie an die jeweilige Marktstruktur und Volatilität eines Assets präzise anzupassen — ohne die Kernlogik zu verändern.",
+      "icon": "tabler:adjustments-horizontal"
     },
     {
-      "title": "Signal-Bestätigungsfenster",
-      "description": "Die Anzahl der Kerzen, die die Strategie auf Signalbestätigung wartet, bevor sie einsteigt. Längere Fenster filtern mehr Rauschen, können aber Einstiege in schnell bewegenden Märkten verzögern.",
-      "icon": "tabler:clock"
+      "title": "EMA Filter Settings",
+      "description": "Eingehende Signale werden gegen einen gleitende Durchschnitt (EMA) geprüft. Trades, die gegen den übergeordneten Trend laufen, werden herausgefiltert — das reduziert Marktrauschen und erhöht die Qualität der ausgeführten Einstiege.",
+      "icon": "tabler:wave-sine"
     },
     {
-      "title": "Regime-Filter-Stärke",
-      "description": "Bestimmt, wie streng die Strategie schlechte Marktbedingungen herausfiltert. Höhere Werte bedeuten weniger Trades, aber ein höherer Anteil dieser Trades findet in strukturell günstigen Umgebungen statt.",
-      "icon": "tabler:filter"
+      "title": "RSI Trendfilter",
+      "description": "Der RSI wird als sekundärer Filter eingesetzt, um überkaufte und überverkaufte Zonen zu erkennen und Signale in ungünstigen Marktphasen zu unterdrücken. Das Ergebnis sind selektivere Einstiege mit weniger Fehlsignalen in trendlosen oder erschöpften Märkten.",
+      "icon": "tabler:chart-line"
+    },
+    {
+      "title": "Performance Table",
+      "description": "Zeigt das monatliche PnL der Strategie direkt im Chart an. Die Tabelle gibt einen schnellen Überblick über Gewinn- und Verlustmonate, saisonale Muster und die Konsistenz der Strategie über verschiedene Marktphasen hinweg.",
+      "icon": "tabler:table"
     }
   ],
   
