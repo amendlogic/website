@@ -72,7 +72,7 @@
   --cc-cookie-category-expanded-block-hover-bg: rgb(226 232 240); /* slate-200 */
 
   /* ── Footer ────────────────────────────────────────────────── */
-  --cc-footer-bg:           rgb(239 246 255);   /* blue-50 */     X
+  --cc-footer-bg:           rgb(239 246 255);   /* blue-50 */
   --cc-footer-color:        var(--aw-color-text-muted);
   --cc-footer-border-color: rgb(219 234 254);   /* blue-100 */
 
