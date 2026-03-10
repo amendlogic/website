@@ -56,7 +56,7 @@
   --cc-toggle-readonly-knob-bg: rgb(255 255 255);
 
   /* ── Cookie-Kategorien (Borders beibehalten) ───────────────── */
-  --cc-cookie-category-block-bg:                    rgb(255 255 255);   /* white      */
+  --cc-cookie-category-block-bg:                    transparent;
   --cc-cookie-category-block-hover-bg:              rgb(243 244 246);
   --cc-cookie-category-expanded-block-bg:           rgb(248 250 252);   /* slate-50   */
   --cc-cookie-category-expanded-block-hover-bg:     rgb(226 232 240);   /* slate-200  */
@@ -93,7 +93,7 @@
   --cc-toggle-readonly-knob-bg: rgb(203 213 225);   /* slate-300 — wirkt "inaktiv" */
 
   /* Cookie-Kategorien */
-  --cc-cookie-category-block-bg:                    rgb(30  41  59);    /* slate-800  */
+  --cc-cookie-category-block-bg:                    transparent;
   --cc-cookie-category-block-hover-bg:              rgb(30  41  59);    /* slate-800  ← dein Original */
   --cc-cookie-category-expanded-block-bg:           rgb(15  23  42);    /* slate-900  */
   --cc-cookie-category-expanded-block-hover-bg:     rgb(100 116 139);
