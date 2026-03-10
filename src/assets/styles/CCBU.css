@@ -48,11 +48,11 @@
   --cc-btn-secondary-hover-border-color: rgb(75 85 99);
 
   /* Toggles */
-  --cc-toggle-off-bg:           rgb(209 213 219);
+  --cc-toggle-off-bg:           rgb(229 231 235);
   --cc-toggle-on-bg:            var(--aw-color-primary);
   --cc-toggle-readonly-bg:      rgb(229 231 235);
   --cc-toggle-on-knob-bg:       rgb(255 255 255);
-  --cc-toggle-off-knob-bg:      rgb(243 244 246);
+  --cc-toggle-off-knob-bg:      rgb(255 255 255);
   --cc-toggle-knob-icon-color:  var(--aw-color-primary);
 
   /* Cookie-Kategorien */
