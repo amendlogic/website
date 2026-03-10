@@ -88,29 +88,34 @@
   "strategy.subtitle": "These are the parameters you can adjust in the TradingView strategy panel — and what changes when you move them.",
   "strategy.items": [
     {
-      "title": "Risk Per Trade (%)",
-      "description": "Defines the maximum percentage of account equity risked on a single trade. Lowering this reduces drawdown but also scales returns proportionally. The default configuration uses [X]%.",
-      "icon": "tabler:percentage"
+      "title": "Time Period",
+      "description": "Defines the active time window during which the strategy analyzes signals and executes trades. Restricting trading to specific hours allows you to deliberately exclude unfavorable market conditions — such as low liquidity periods or scheduled news events.",
+      "icon": "tabler:calendar-time"
     },
     {
-      "title": "Drawdown Reduction Threshold",
-      "description": "When cumulative drawdown exceeds this threshold, the strategy automatically reduces position sizing. Acts as a circuit breaker during losing streaks without requiring manual intervention.",
-      "icon": "tabler:chart-area-line"
+      "title": "Strategy Settings",
+      "description": "Controls the trading direction (Long, Short, or both) as well as automatic position sizing based on a configurable risk factor. The risk factor directly scales the capital allocated per trade — higher values increase both returns and drawdown proportionally.",
+      "icon": "tabler:settings-2"
     },
     {
-      "title": "Volatility Sensitivity",
-      "description": "Controls how aggressively the strategy adjusts position size in response to elevated market volatility. Higher sensitivity means smaller positions during uncertain conditions.",
-      "icon": "tabler:activity"
+      "title": "Bot Settings",
+      "description": "Fine-tuning of the strategy for specific timeframes and cryptocurrencies. These parameters allow you to precisely adapt the strategy's behavior to the market structure and volatility of a given asset — without altering the core logic.",
+      "icon": "tabler:adjustments-horizontal"
     },
     {
-      "title": "Signal Confirmation Window",
-      "description": "The number of bars the strategy waits for signal confirmation before entry. Longer windows filter more noise but may delay entries in fast-moving markets.",
-      "icon": "tabler:clock"
+      "title": "EMA Filter Settings",
+      "description": "Incoming signals are filtered through a single exponential moving average (EMA). Trades that run counter to the prevailing trend are suppressed — reducing market noise and improving the quality of executed entries.",
+      "icon": "tabler:wave-sine"
     },
     {
-      "title": "Regime Filter Strength",
-      "description": "Determines how strictly the strategy filters out low-quality market conditions. Higher values mean fewer trades but a higher proportion of those trades occurring in structurally favorable environments.",
-      "icon": "tabler:filter"
+      "title": "RSI Trend Filter",
+      "description": "The RSI is used as a secondary filter to identify overbought and oversold conditions, suppressing signals during unfavorable market phases. The result is more selective entries with fewer false signals in choppy or exhausted markets.",
+      "icon": "tabler:chart-line"
+    },
+    {
+      "title": "Performance Table",
+      "description": "Displays the strategy's monthly PnL directly on the chart. The table provides a quick overview of winning and losing months, seasonal patterns, and the consistency of the strategy across different market conditions.",
+      "icon": "tabler:table"
     }
   ],
   
