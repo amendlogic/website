@@ -5,7 +5,7 @@
 import { getCollection } from 'astro:content';
 import { LANGUAGES, DEFAULT_LANG, useTranslations } from '~/i18n/utils';
 import Layout from '~/layouts/PageLayout.astro';
-import Notice from '~/components/ui/Notice.astro';
+import Note from '~/components/widgets/Note.astro';
 
 // ==========================================
 // 2. CONFIG
@@ -83,11 +83,10 @@ const metadata = {
 <Layout metadata={metadata}>
 
   {isFallback && (
-    <Notice 
-      title={t('fallbacks.page.title')} 
-      class="max-w-4xl px-4 sm:px-6 lg:px-8" >
-      {t('fallbacks.page.desc')}
-    </Notice>
+    <Note 
+      title={t('fallbacks.page.title')}
+      description={t('fallbacks.page.desc')}
+    />
   )}
 
   <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
