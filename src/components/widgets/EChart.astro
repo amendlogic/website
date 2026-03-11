@@ -120,12 +120,7 @@ const fmtNum = (n) => (Number.isFinite(n) ? n.toFixed(2) : '∞');
           'relative flex flex-col gap-2 rounded-lg px-4 py-3.5',
           'bg-white dark:bg-slate-900',
           'shadow dark:border dark:border-slate-700',
-          // Farbiger Left-Border-Akzent
-          'border-l-[3px]',
-          color === 'green'   && 'border-l-emerald-500',
-          color === 'red'     && 'border-l-red-500',
-          color === 'amber'   && 'border-l-amber-400',
-          color === 'neutral' && 'border-l-slate-300 dark:border-l-slate-600',
+
         ]}>
           <!-- Icon + Label -->
           <div class="flex items-center gap-2">
