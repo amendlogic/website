@@ -59,10 +59,6 @@ const uid = crypto.randomUUID().slice(0, 7);
 const wrapperId = id ?? `widget-${uid}`;
 const chartId = `chart-${uid}`;
 const dataId = `data-${uid}`;
-
-// Server Side Parsing
-const parsedData = await parseCsvData(csvPath, initialCapital);
-const baseOptions = getBaseChartOptions(parsedData);
 ---
 
 <WidgetWrapper
