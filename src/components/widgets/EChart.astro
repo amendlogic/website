@@ -4,7 +4,17 @@ import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Headline from '~/components/ui/Headline.astro';
 import Button from '~/components/ui/Button.astro';
 import { Icon } from 'astro-icon/components';
-import { parseCsvData, getBaseChartOptions } from '~/lib/chart-data';
+import { parseCsvData, getBaseChartOptions, calculateTradeStats } from '~/lib/chart-data';
+// ...alles andere bleibt gleich...
+
+const parsedData  = await parseCsvData(csvPath, initialCapital);
+const baseOptions = getBaseChartOptions(parsedData);
+const stats       = calculateTradeStats(parsedData?.trades ?? null); // ← neu
+
+const fmtCurrency = (n) =>
+  new Intl.NumberFormat(locale, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+const fmtPct = (n) => `${(n * 100).toFixed(1)} %`;
+const fmtNum = (n) => (Number.isFinite(n) ? n.toFixed(2) : '∞');
 
 export interface Props {
   title?: string;
