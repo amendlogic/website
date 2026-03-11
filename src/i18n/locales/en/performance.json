@@ -17,28 +17,53 @@
   "metrics.items": [
     {
       "title": "Net Return: [X]%",
-      "description": "Total percentage return across the full backtest period after all commissions and slippage deductions. Buy-and-hold Bitcoin over the same period returned approximately [X]% for comparison.",
+      "description": "Total percentage return over the full backtest period after all commissions and slippage. Bitcoin Buy-and-Hold over the same period returned approximately [X]% for comparison.",
       "icon": "tabler:chart-line"
     },
     {
-      "title": "Max Drawdown: [X]%",
-      "description": "The largest peak-to-trough decline observed during the simulation. This occurred during [describe period, e.g. the Q3 2022 capitulation phase] and lasted approximately [X] weeks before recovery.",
-      "icon": "tabler:chart-area-line"
+      "title": "Win Rate: [X]%",
+      "description": "Percentage of trades that closed in profit. Out of [X] total trades, [X] were winners and [X] were losers. Note: win rate alone is meaningless without the corresponding average win/loss ratio — both figures are shown in the chart below.",
+      "icon": "tabler:target"
     },
     {
       "title": "Profit Factor: [X.X]",
-      "description": "Gross profit divided by gross loss across all trades. A value above 1.0 means the strategy made more than it lost in aggregate. Values above 1.5 are generally considered meaningful.",
-      "icon": "tabler:scale"
+      "description": "Gross profit divided by gross loss across all trades. A value above 1.0 means the strategy made more than it lost in aggregate. Values above 1.5 are generally considered robust; below 1.0 would indicate a permanently losing system.",
+      "icon": "tabler:trending-up"
     },
     {
-      "title": "Win Rate: [X]%",
-      "description": "Percentage of closed trades that ended in profit. Note: win rate alone is not a useful metric without the corresponding average win/loss ratio — both are shown in the full report.",
-      "icon": "tabler:percentage"
+      "title": "Expectancy: $[X]",
+      "description": "Average profit or loss per trade, derived from win rate, average win, and average loss. A positive expectancy means every single trade contributes to long-term capital growth — regardless of the outcome of the next individual trade.",
+      "icon": "tabler:calculator"
+    },
+    {
+      "title": "Max Drawdown: $[X]",
+      "description": "The largest peak-to-trough decline in equity during the simulation. This occurred during [period, e.g. the capitulation phase in Q3 2022] and took approximately [X] weeks to fully recover.",
+      "icon": "tabler:arrow-down-right"
+    },
+    {
+      "title": "Net Profit: $[X]",
+      "description": "Total realized profit across all closed trades after commissions and slippage — based on a starting capital of [X] USDT at [X]x leverage.",
+      "icon": "tabler:cash"
+    },
+    {
+      "title": "Avg Win / Avg Loss: $[X] / $[X]",
+      "description": "Average profit per winning trade and average loss per losing trade. The ratio between both values (risk/reward) shows how efficiently the strategy lets winners run while keeping losses contained.",
+      "icon": "tabler:arrows-exchange"
+    },
+    {
+      "title": "Best / Worst Trade: $[X] / $[X]",
+      "description": "The best single trade returned $[X], while the worst cost $[X]. Both outliers occurred under [brief description of market conditions] and are not representative of the typical trade.",
+      "icon": "tabler:star"
+    },
+    {
+      "title": "Max Consecutive Losses: [X] Trades",
+      "description": "The longest consecutive losing streak across the entire backtest period. This figure is critical for position sizing: an account must be able to absorb [X] back-to-back losses without violating risk management rules.",
+      "icon": "tabler:alert-triangle"
     },
     {
       "title": "Total Trades: [X]",
-      "description": "Number of completed round-trip trades over the full backtest period. Averaged across [X] months, this represents approximately [X] trades per month — reflecting the strategy's selective approach.",
-      "icon": "tabler:repeat"
+      "description": "Number of completed round-trip trades over the full backtest period. Averaging approximately [X] trades per month — reflecting the selective, rules-based nature of the strategy.",
+      "icon": "tabler:list-numbers"
     }
   ],
 
