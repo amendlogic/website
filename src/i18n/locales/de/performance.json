@@ -16,29 +16,54 @@
   "metrics.subtitle": "Alle Zahlen basieren auf der Standardkonfiguration. Kommission: 0,6% pro Trade. Slippage: 2 Ticks. Startkapital: [X] USDT. Hebel: [X]x.",
   "metrics.items": [
     {
-      "title": "Netto-Rendite: [X]%",
-      "description": "Gesamte prozentuale Rendite über den vollständigen Backtest-Zeitraum nach Abzug aller Kommissionen und Slippage. Bitcoin Buy-and-Hold über denselben Zeitraum erzielte zum Vergleich ca. [X]%.",
+      "title": "Netto-Rendite: [X] %",
+      "description": "Gesamte prozentuale Rendite über den vollständigen Backtest-Zeitraum nach Abzug aller Kommissionen und Slippage. Bitcoin Buy-and-Hold über denselben Zeitraum erzielte zum Vergleich ca. [X] %.",
       "icon": "tabler:chart-line"
     },
     {
-      "title": "Maximaler Drawdown: [X]%",
-      "description": "Der größte Peak-to-Trough-Rückgang während der Simulation. Dieser trat während [Zeitraum beschreiben, z.B. der Kapitulationsphase Q3 2022] auf und dauerte ca. [X] Wochen bis zur Erholung.",
-      "icon": "tabler:chart-area-line"
+      "title": "Trefferquote: [X] %",
+      "description": "Prozentsatz der Trades, die im Plus endeten. Von [X] Trades gesamt waren [X] Gewinner und [X] Verlierer. Hinweis: Die Trefferquote allein ist ohne das Gewinn/Verlust-Verhältnis keine aussagekräftige Kennzahl — beide Werte werden im Chart angezeigt.",
+      "icon": "tabler:target"
     },
     {
       "title": "Profit Factor: [X.X]",
-      "description": "Bruttogewinn geteilt durch Bruttoverlust über alle Trades. Ein Wert über 1,0 bedeutet, dass die Strategie in Summe mehr gewonnen als verloren hat. Werte über 1,5 gelten allgemein als aussagekräftig.",
-      "icon": "tabler:scale"
+      "description": "Bruttogewinn geteilt durch Bruttoverlust über alle Trades. Ein Wert über 1,0 bedeutet, dass die Strategie in Summe mehr gewonnen als verloren hat. Werte über 1,5 gelten als robust; unter 1,0 wäre das System dauerhaft unrentabel.",
+      "icon": "tabler:trending-up"
     },
     {
-      "title": "Trefferquote: [X]%",
-      "description": "Prozentsatz der geschlossenen Trades, die im Plus endeten. Hinweis: Die Trefferquote allein ist ohne das entsprechende durchschnittliche Gewinn/Verlust-Verhältnis keine nützliche Kennzahl — beides wird im vollständigen Report gezeigt.",
-      "icon": "tabler:percentage"
+      "title": "Erwartungswert: [X] $",
+      "description": "Durchschnittlicher Gewinn oder Verlust pro Trade, berechnet aus Trefferquote, durchschnittlichem Gewinn und durchschnittlichem Verlust. Ein positiver Erwartungswert bedeutet: Jeder einzelne Trade trägt langfristig zum Kapitalwachstum bei — unabhängig vom Ausgang des nächsten Trades.",
+      "icon": "tabler:calculator"
+    },
+    {
+      "title": "Maximaler Drawdown: [X] $",
+      "description": "Der größte Peak-to-Trough-Kapitalrückgang während der Simulation. Dieser trat während [Zeitraum, z.B. der Kapitulationsphase Q3 2022] auf und dauerte ca. [X] Wochen bis zur vollständigen Erholung.",
+      "icon": "tabler:arrow-down-right"
+    },
+    {
+      "title": "Nettogewinn: [X] $",
+      "description": "Gesamter realisierter Gewinn über alle abgeschlossenen Trades nach Kommissionen und Slippage — bezogen auf ein Startkapital von [X] USDT bei [X]x Hebel.",
+      "icon": "tabler:cash"
+    },
+    {
+      "title": "Ø Gewinn / Ø Verlust: [X] $ / [X] $",
+      "description": "Durchschnittlicher Gewinn pro Gewinner-Trade und durchschnittlicher Verlust pro Verlierer-Trade. Das Verhältnis beider Werte (Risk/Reward) zeigt, wie effizient die Strategie Gewinne laufen lässt und Verluste begrenzt.",
+      "icon": "tabler:arrows-exchange"
+    },
+    {
+      "title": "Bester / Schlechtester Trade: [X] $ / [X] $",
+      "description": "Der beste Einzeltrade erzielte [X] $, der schlechteste kostete [X] $. Beide Ausreißer entstanden unter [kurze Beschreibung der Marktbedingungen] und sind nicht repräsentativ für den Durchschnitt.",
+      "icon": "tabler:star"
+    },
+    {
+      "title": "Max. Verlustserie: [X] Trades",
+      "description": "Längste aufeinanderfolgende Verlustserie während des gesamten Backtest-Zeitraums. Dieser Wert ist entscheidend für die Positionsgrößenplanung: Ein Konto muss [X] aufeinanderfolgende Verluste aushalten können, ohne das Risikomanagement zu verletzen.",
+      "icon": "tabler:alert-triangle"
     },
     {
       "title": "Gesamte Trades: [X]",
-      "description": "Anzahl der abgeschlossenen Round-Trip-Trades über den vollständigen Backtest-Zeitraum. Durchschnittlich über [X] Monate entspricht das ca. [X] Trades pro Monat — was den selektiven Ansatz der Strategie widerspiegelt.",
-      "icon": "tabler:repeat"
+      "description": "Anzahl abgeschlossener Round-Trip-Trades über den vollständigen Backtest-Zeitraum. Durchschnittlich ca. [X] Trades pro Monat — was den selektiven, regelbasierten Ansatz der Strategie widerspiegelt.",
+      "icon": "tabler:list-numbers"
     }
   ],
 
