@@ -76,86 +76,93 @@ const fmtNum = (n) => (Number.isFinite(n) ? n.toFixed(2) : '∞');
     </div>
   )}
 
-  <div class="p-4 md:p-6 rounded-md shadow-xl dark:border dark:border-slate-600 bg-white dark:bg-slate-900">
-    {baseOptions ? (
-      <div
-        id={chartId}
-        data-json-id={dataId}
-        class="w-full overflow-hidden"
-        style={`height:${height};`}
-      ></div>
-    ) : (
-      <div class="flex items-center justify-center h-64 text-slate-400 bg-slate-50 dark:bg-slate-800/50 rounded border border-dashed border-slate-300 dark:border-slate-700">
-        <span class="text-sm">Keine Daten verfügbar.</span>
-      </div>
-    )}
-  </div>
+  <!-- Unified container: Chart + Stats als eine Einheit -->
+  <div class="rounded-md shadow-xl dark:border dark:border-slate-600 bg-white dark:bg-slate-900 overflow-hidden">
 
-{stats && (
-  <div class="mt-6">
-    <!-- Section Header -->
-    <div class="flex items-center gap-3 mb-3 px-1">
-      <h3 class="text-xs font-medium tracking-widest uppercase text-slate-400 dark:text-slate-500">
-        {locale === 'de' ? 'Performance-Statistiken' : 'Performance Statistics'}
-      </h3>
-      <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700" />
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-px bg-slate-200 dark:bg-slate-700">
-      {[
-        { label: locale === 'de' ? 'Trades gesamt'  : 'Total Trades',  value: String(stats.totalTrades),              icon: 'tabler:list-numbers',    color: 'neutral' },
-        { label: locale === 'de' ? 'Trefferquote'   : 'Win Rate',       value: fmtPct(stats.winRate),                  icon: 'tabler:target',          color: stats.winRate >= 0.5 ? 'green' : 'red' },
-        { label: 'Profit Factor',                                        value: fmtNum(stats.profitFactor),             icon: 'tabler:trending-up',     color: stats.profitFactor >= 1.5 ? 'green' : stats.profitFactor >= 1 ? 'amber' : 'red' },
-        { label: locale === 'de' ? 'Nettogewinn'    : 'Net Profit',     value: fmtCurrency(stats.netProfit, locale),   icon: 'tabler:cash',            color: stats.netProfit > 0 ? 'green' : 'red' },
-        { label: locale === 'de' ? 'Max. Drawdown'  : 'Max Drawdown',   value: fmtCurrency(stats.maxDrawdown, locale), icon: 'tabler:arrow-down-right',color: 'red' },
-        { label: locale === 'de' ? 'Ø Gewinn'       : 'Avg Win',        value: fmtCurrency(stats.avgWin, locale),      icon: 'tabler:plus',            color: 'green' },
-        { label: locale === 'de' ? 'Ø Verlust'      : 'Avg Loss',       value: fmtCurrency(stats.avgLoss, locale),     icon: 'tabler:minus',           color: 'red' },
-        { label: locale === 'de' ? 'Bester Trade'   : 'Best Trade',     value: fmtCurrency(stats.bestTrade, locale),   icon: 'tabler:star',            color: 'green' },
-        { label: locale === 'de' ? 'Schlechtester'  : 'Worst Trade',    value: fmtCurrency(stats.worstTrade, locale),  icon: 'tabler:flame-off',       color: 'red' },
-        { label: locale === 'de' ? 'Erwartungswert' : 'Expectancy',     value: fmtCurrency(stats.expectancy, locale),  icon: 'tabler:calculator',      color: stats.expectancy > 0 ? 'green' : 'red' },
-      ].map(({ label, value, icon: i, color }) => (
-        <div class="relative flex flex-col justify-between gap-3 px-4 py-3 overflow-hidden bg-white dark:bg-slate-900">
-
-          <!-- Farbige Akzentlinie links -->
-          <div class:list={[
-            'absolute left-0 top-3 bottom-3 w-[2px] rounded-full',
-            color === 'green'   && 'bg-emerald-500 dark:bg-emerald-400',
-            color === 'red'     && 'bg-red-500     dark:bg-red-400',
-            color === 'amber'   && 'bg-amber-400   dark:bg-amber-300',
-            color === 'neutral' && 'bg-slate-300   dark:bg-slate-600',
-          ]} />
-
-          <!-- Label + Icon -->
-          <div class="flex items-center justify-between pl-3">
-            <span class="text-[11px] font-medium leading-none tracking-wide text-slate-400 dark:text-slate-500">
-              {label}
-            </span>
-            <Icon name={i} class:list={[
-              'w-3.5 h-3.5 shrink-0 opacity-50',
-              color === 'green'   && 'text-emerald-500 dark:text-emerald-400',
-              color === 'red'     && 'text-red-500     dark:text-red-400',
-              color === 'amber'   && 'text-amber-400   dark:text-amber-300',
-              color === 'neutral' && 'text-slate-400   dark:text-slate-500',
-            ]} />
-          </div>
-
-          <!-- Wert -->
-          <span class:list={[
-            'text-lg font-bold tabular-nums leading-none pl-3',
-            color === 'green'   && 'text-emerald-600 dark:text-emerald-400',
-            color === 'red'     && 'text-red-500     dark:text-red-400',
-            color === 'amber'   && 'text-amber-500   dark:text-amber-300',
-            color === 'neutral' && 'text-slate-900   dark:text-slate-100',
-          ]}>
-            {value}
-          </span>
-
+    <!-- Chart -->
+    <div class="p-4 md:p-6">
+      {baseOptions ? (
+        <div
+          id={chartId}
+          data-json-id={dataId}
+          class="w-full overflow-hidden"
+          style={`height:${height};`}
+        ></div>
+      ) : (
+        <div class="flex items-center justify-center h-64 text-slate-400 bg-slate-50 dark:bg-slate-800/50 rounded border border-dashed border-slate-300 dark:border-slate-700">
+          <span class="text-sm">Keine Daten verfügbar.</span>
         </div>
-      ))}
+      )}
     </div>
+
+    {stats && (
+      <>
+        <!-- Trennlinie mit Label -->
+        <div class="flex items-center gap-3 px-4 md:px-6">
+          <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
+          <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-300 dark:text-slate-600 shrink-0">
+            {locale === 'de' ? 'Performance-Statistiken' : 'Performance Statistics'}
+          </span>
+          <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-px bg-slate-100 dark:bg-slate-800">
+          {[
+            { label: locale === 'de' ? 'Trades gesamt'  : 'Total Trades',  value: String(stats.totalTrades),              icon: 'tabler:list-numbers',    color: 'neutral' },
+            { label: locale === 'de' ? 'Trefferquote'   : 'Win Rate',       value: fmtPct(stats.winRate),                  icon: 'tabler:target',          color: stats.winRate >= 0.5 ? 'green' : 'red' },
+            { label: 'Profit Factor',                                        value: fmtNum(stats.profitFactor),             icon: 'tabler:trending-up',     color: stats.profitFactor >= 1.5 ? 'green' : stats.profitFactor >= 1 ? 'amber' : 'red' },
+            { label: locale === 'de' ? 'Nettogewinn'    : 'Net Profit',     value: fmtCurrency(stats.netProfit, locale),   icon: 'tabler:cash',            color: stats.netProfit > 0 ? 'green' : 'red' },
+            { label: locale === 'de' ? 'Max. Drawdown'  : 'Max Drawdown',   value: fmtCurrency(stats.maxDrawdown, locale), icon: 'tabler:arrow-down-right',color: 'red' },
+            { label: locale === 'de' ? 'Ø Gewinn'       : 'Avg Win',        value: fmtCurrency(stats.avgWin, locale),      icon: 'tabler:plus',            color: 'green' },
+            { label: locale === 'de' ? 'Ø Verlust'      : 'Avg Loss',       value: fmtCurrency(stats.avgLoss, locale),     icon: 'tabler:minus',           color: 'red' },
+            { label: locale === 'de' ? 'Bester Trade'   : 'Best Trade',     value: fmtCurrency(stats.bestTrade, locale),   icon: 'tabler:star',            color: 'green' },
+            { label: locale === 'de' ? 'Schlechtester'  : 'Worst Trade',    value: fmtCurrency(stats.worstTrade, locale),  icon: 'tabler:flame-off',       color: 'red' },
+            { label: locale === 'de' ? 'Erwartungswert' : 'Expectancy',     value: fmtCurrency(stats.expectancy, locale),  icon: 'tabler:calculator',      color: stats.expectancy > 0 ? 'green' : 'red' },
+          ].map(({ label, value, icon: i, color }) => (
+            <div class="relative flex flex-col justify-between gap-3 px-4 py-3 overflow-hidden bg-white dark:bg-slate-900">
+
+              <!-- Farbige Akzentlinie links -->
+              <div class:list={[
+                'absolute left-0 top-3 bottom-3 w-[2px] rounded-full',
+                color === 'green'   && 'bg-emerald-500 dark:bg-emerald-400',
+                color === 'red'     && 'bg-red-500     dark:bg-red-400',
+                color === 'amber'   && 'bg-amber-400   dark:bg-amber-300',
+                color === 'neutral' && 'bg-slate-300   dark:bg-slate-600',
+              ]} />
+
+              <!-- Label + Icon -->
+              <div class="flex items-center justify-between pl-3">
+                <span class="text-[11px] font-medium leading-none tracking-wide text-slate-400 dark:text-slate-500">
+                  {label}
+                </span>
+                <Icon name={i} class:list={[
+                  'w-3.5 h-3.5 shrink-0 opacity-40',
+                  color === 'green'   && 'text-emerald-500 dark:text-emerald-400',
+                  color === 'red'     && 'text-red-500     dark:text-red-400',
+                  color === 'amber'   && 'text-amber-400   dark:text-amber-300',
+                  color === 'neutral' && 'text-slate-400   dark:text-slate-500',
+                ]} />
+              </div>
+
+              <!-- Wert -->
+              <span class:list={[
+                'text-lg font-bold tabular-nums leading-none pl-3',
+                color === 'green'   && 'text-emerald-600 dark:text-emerald-400',
+                color === 'red'     && 'text-red-500     dark:text-red-400',
+                color === 'amber'   && 'text-amber-500   dark:text-amber-300',
+                color === 'neutral' && 'text-slate-900   dark:text-slate-100',
+              ]}>
+                {value}
+              </span>
+
+            </div>
+          ))}
+        </div>
+      </>
+    )}
+
   </div>
-)}
 
   {callToAction && (
     <div class="flex justify-center mx-auto w-fit mt-8 md:mt-12 font-medium">
