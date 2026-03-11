@@ -95,6 +95,39 @@ const baseOptions = getBaseChartOptions(parsedData);
     )}
   </div>
 
+{stats && (
+  <div class="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+    {[
+      { label: locale === 'de' ? 'Trades gesamt'   : 'Total Trades',   value: String(stats.totalTrades),          icon: 'tabler:list-numbers',  color: 'neutral' },
+      { label: locale === 'de' ? 'Trefferquote'    : 'Win Rate',        value: fmtPct(stats.winRate),              icon: 'tabler:target',         color: stats.winRate >= 0.5 ? 'green' : 'red' },
+      { label: 'Profit Factor',                                          value: fmtNum(stats.profitFactor),         icon: 'tabler:trending-up',    color: stats.profitFactor >= 1.5 ? 'green' : stats.profitFactor >= 1 ? 'amber' : 'red' },
+      { label: locale === 'de' ? 'Nettogewinn'     : 'Net Profit',      value: fmtCurrency(stats.netProfit),       icon: 'tabler:cash',           color: stats.netProfit > 0 ? 'green' : 'red' },
+      { label: locale === 'de' ? 'Max. Drawdown'   : 'Max Drawdown',    value: fmtCurrency(stats.maxDrawdown),     icon: 'tabler:arrow-down-right',color: 'red' },
+      { label: locale === 'de' ? 'Ø Gewinn'        : 'Avg Win',         value: fmtCurrency(stats.avgWin),          icon: 'tabler:plus',           color: 'green' },
+      { label: locale === 'de' ? 'Ø Verlust'       : 'Avg Loss',        value: fmtCurrency(stats.avgLoss),         icon: 'tabler:minus',          color: 'red' },
+      { label: locale === 'de' ? 'Bester Trade'    : 'Best Trade',      value: fmtCurrency(stats.bestTrade),       icon: 'tabler:star',           color: 'green' },
+      { label: locale === 'de' ? 'Schlechtester'   : 'Worst Trade',     value: fmtCurrency(stats.worstTrade),      icon: 'tabler:flame-off',      color: 'red' },
+      { label: locale === 'de' ? 'Erwartungswert'  : 'Expectancy',      value: fmtCurrency(stats.expectancy),      icon: 'tabler:calculator',     color: stats.expectancy > 0 ? 'green' : 'red' },
+    ].map(({ label, value, icon: i, color }) => (
+      <div class="flex flex-col gap-1 rounded-lg px-4 py-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+        <div class="flex items-center gap-1.5 text-slate-400 dark:text-slate-500">
+          <Icon name={i} class="w-3.5 h-3.5 shrink-0" />
+          <span class="text-[11px] font-medium uppercase tracking-wide leading-none">{label}</span>
+        </div>
+        <span class:list={[
+          'text-lg font-bold tabular-nums leading-tight',
+          color === 'green'   && 'text-emerald-500 dark:text-emerald-400',
+          color === 'red'     && 'text-red-500 dark:text-red-400',
+          color === 'amber'   && 'text-amber-500 dark:text-amber-400',
+          color === 'neutral' && 'text-slate-800 dark:text-slate-100',
+        ]}>
+          {value}
+        </span>
+      </div>
+    ))}
+  </div>
+)}
+
   {callToAction && (
     <div class="flex justify-center mx-auto w-fit mt-8 md:mt-12 font-medium">
       <Button {...callToAction} />
