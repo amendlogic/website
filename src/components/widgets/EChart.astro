@@ -17,6 +17,7 @@ export interface Props {
   content?: string;
   symbol?: string;          // z.B. "BTCUSDT.P"
   riskPerTrade?: string;
+  showStats?: boolean;
   options?: Record<string, any>;
   id?: string;
   height?: string | number;
@@ -36,6 +37,7 @@ const {
   content = await Astro.slots.render('content'),
   symbol,
   riskPerTrade,
+  showStats = true,
   options: userOptions = {},
   initialCapital = 300,
   csvPath,
@@ -140,7 +142,7 @@ const fmtNum = (n) => (Number.isFinite(n) ? n.toFixed(2) : '∞');
     )}
   </div>
 
-  {stats && (
+  {showStats && stats && (
     <>
       <div class="flex items-center gap-3 px-4 md:px-6">
         <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
