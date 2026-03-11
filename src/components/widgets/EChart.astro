@@ -44,6 +44,13 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
+// Eindeutige IDs für Wrapper + Chart + JSON
+const uid = crypto.randomUUID().slice(0, 7);
+const wrapperId = id ?? `widget-${uid}`;
+const chartId = `chart-${uid}`;
+const dataId = `data-${uid}`;
+
+// Server Side Parsing
 const parsedData  = await parseCsvData(csvPath, initialCapital);
 const baseOptions = getBaseChartOptions(parsedData);
 const stats       = calculateTradeStats(parsedData?.trades ?? null); // ← neu
@@ -52,12 +59,6 @@ const fmtCurrency = (n) =>
   new Intl.NumberFormat(locale, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const fmtPct = (n) => `${(n * 100).toFixed(1)} %`;
 const fmtNum = (n) => (Number.isFinite(n) ? n.toFixed(2) : '∞');
-
-// Eindeutige IDs für Wrapper + Chart + JSON
-const uid = crypto.randomUUID().slice(0, 7);
-const wrapperId = id ?? `widget-${uid}`;
-const chartId = `chart-${uid}`;
-const dataId = `data-${uid}`;
 ---
 
 <WidgetWrapper
