@@ -83,7 +83,7 @@ const fmtNum = (n) => (Number.isFinite(n) ? n.toFixed(2) : '∞');
   <!-- Symbol / Config Header -->
   {(symbol || riskPerTrade) && (
     <>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-slate-100 dark:bg-slate-800">
+      <div class="flex flex-wrap gap-px bg-slate-100 dark:bg-slate-800">
 
         {symbol && (
           <div class="relative flex flex-col justify-between gap-3 px-4 py-3 bg-white dark:bg-slate-900">
@@ -154,7 +154,7 @@ const fmtNum = (n) => (Number.isFinite(n) ? n.toFixed(2) : '∞');
         <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-px bg-slate-100 dark:bg-slate-800">
+      <div class="flex flex-wrap gap-px bg-slate-100 dark:bg-slate-800">
         {[
           { label: t('echart.totalTrades'),   value: String(stats.totalTrades),              icon: 'tabler:list-numbers',     color: 'neutral' },
           { label: t('echart.winRate'),       value: fmtPct(stats.winRate),                  icon: 'tabler:target',           color: stats.winRate >= 0.5 ? 'green' : 'red' },
