@@ -9,6 +9,7 @@ import footnotesEn from './locales/en/ui/footnotes.json';
 import fallbacksEn from './locales/en/ui/fallbacks.json';
 import faqEn from './locales/en/faq.json';
 import blogEn from './locales/en/ui/blog.json';
+import echartEn from './locales/en/ui/echart.json';
 import error404En from './locales/en/ui/error404.json';
 
 // Deutsch Imports
@@ -22,6 +23,7 @@ import footnotesDe from './locales/de/ui/footnotes.json';
 import fallbacksDe from './locales/de/ui/fallbacks.json';
 import faqDe from './locales/de/faq.json';
 import blogDe from './locales/de/ui/blog.json';
+import echartDe from './locales/de/ui/echart.json';
 import error404De from './locales/de/ui/error404.json';
 
 export const ui = {
@@ -36,6 +38,7 @@ export const ui = {
     fallbacks: fallbacksEn,
     faq: faqEn,
     blog: blogEn,
+    echart: echartEn,
     error404: error404En,
   },
   de: {
@@ -49,6 +52,7 @@ export const ui = {
     fallbacks: fallbacksDe,
     faq: faqDe,
     blog: blogDe,
+    echart: echartDe,
     error404: error404De,
   },
 } as const;
