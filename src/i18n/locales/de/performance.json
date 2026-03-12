@@ -13,7 +13,7 @@
 
   "metrics.tagline": "Kennzahlen",
   "metrics.title": "Vollzyklus-Ergebnisse — [Zeitraum, z.B. Jan 2020 – Dez 2024]",
-  "metrics.subtitle": "Alle Zahlen basieren auf der Standardkonfiguration. Kommission: 0,6% pro Trade. Slippage: 2 Ticks. Startkapital: [X] USDT. Hebel: [X]x.",
+  "metrics.subtitle": "Alle Zahlen basieren auf der Standardkonfiguration. Kommission: 0,06% pro Trade. Slippage: 2 Ticks. Startkapital: [X] USDT. Hebel: [X]x.",
   "metrics.items": [
     {
       "title": "Gesamte Trades",
@@ -73,7 +73,7 @@
     },
     {
       "title": "Kommission",
-      "description": "0,6% pro Trade in beide Richtungen angewendet — entspricht Bitgets öffentlich dokumentierter Taker-Gebührenstruktur zum Zeitpunkt des Tests. Falls du auf einer anderen Exchange oder in einer anderen Gebührenstufe handelst, weichen deine tatsächlichen Kosten ab.",
+      "description": "0,06% pro Trade in beide Richtungen angewendet — entspricht Bitgets öffentlich dokumentierter Taker-Gebührenstruktur zum Zeitpunkt des Tests. Falls du auf einer anderen Exchange oder in einer anderen Gebührenstufe handelst, weichen deine tatsächlichen Kosten ab.",
       "icon": "tabler:receipt"
     },
     {
