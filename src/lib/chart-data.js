@@ -142,10 +142,8 @@ export function getBaseChartOptions(parsedData) {
     hoverLayerThreshold: 3000,
     grid: { left: 0, right: 0, bottom: 0, containLabel: true },
     legend: { 
-      data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], 
+      data: [' $', 'Buy & Hold $', 'Drawdown %'], 
       top: 0,
-      padding: [0, 0, 4, 0],
-      itemHeight: 8,
       textStyle: { fontSize: 11 },
     },
     tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
@@ -155,8 +153,8 @@ export function getBaseChartOptions(parsedData) {
       { type: 'value', max: 0, splitLine: { show: false } },
     ],
     series: [
-      { name: 'Portfolio Value', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: parsedData.equity },
-      { name: 'Buy & Hold',      type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, lineStyle: { type: 'dashed' }, itemStyle: { color: '#94a3b8' }, data: parsedData.bnh },
+      { name: ' $', type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, areaStyle: { opacity: 0.1 }, itemStyle: { color: '#10B981' }, data: parsedData.equity },
+      { name: 'Buy & Hold $',      type: 'line', sampling: 'lttb', smooth: true, showSymbol: false, lineStyle: { type: 'dashed' }, itemStyle: { color: '#94a3b8' }, data: parsedData.bnh },
       { name: 'Drawdown %',      type: 'bar',  yAxisIndex: 1, itemStyle: { color: '#EF4444', opacity: 0.6 }, data: parsedData.drawdown },
     ],
   };
