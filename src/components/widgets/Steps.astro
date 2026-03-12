@@ -22,7 +22,7 @@ const defaultImageClass = "inset-0 object-cover object-top w-full rounded-md sha
 ---
 
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-5xl ${classes?.container ?? ''}`} bg={bg}>
-  <div class:list={['flex flex-col gap-8 md:gap-12 md:items-stretch', { 'md:flex-row-reverse': isReversed }, { 'md:flex-row': image }]}>
+  <div class:list={['flex flex-col gap-8 md:gap-12', { 'md:flex-row-reverse': isReversed }, { 'md:flex-row': image }]}>
     <div class:list={['md:py-4', { 'md:basis-1/2': image }, { 'w-full': !image }]}>
       <Headline
         title={title}
@@ -38,7 +38,7 @@ const defaultImageClass = "inset-0 object-cover object-top w-full rounded-md sha
     </div>
     {
       image && (
-        <div class="relative md:basis-1/2 md:h-full md:overflow-y-auto rounded-xl overflow-hidden">
+        <div class="relative md:basis-1/2 md:self-stretch md:overflow-y-auto rounded-xl overflow-hidden">
           {typeof image === 'string' ? (
             <Fragment set:html={image} />
           ) : (
