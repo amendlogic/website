@@ -38,7 +38,7 @@ const defaultImageClass = "inset-0 object-cover object-top w-full rounded-md sha
     </div>
     {
       image && (
-        <div class="relative md:basis-1/2 md:sticky md:top-8 md:self-start md:max-h-[calc(100vh-4rem)] md:overflow-y-auto">
+        <div class="relative md:basis-1/2 md:self-start md:max-h-[calc(100vh-4rem)] md:overflow-y-auto rounded-xl overflow-hidden">
           {typeof image === 'string' ? (
             <Fragment set:html={image} />
           ) : (
