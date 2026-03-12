@@ -65,7 +65,7 @@ export function getFooterData(
         links: [
           { text: t('nav.performance'), href: getPermalink('/performance', 'page', lang) },
           { text: t('nav.docs'), href: '#' },
-          { text: t('nav.community'), href: 'https://discord.gg/GjGUHRzYvG', icon: 'tabler:external-link' },
+          { text: t('nav.community'), href: 'https://discord.gg/GjGUHRzYvG', target: '_blank', icon: 'tabler:external-link' },
           { text: t('nav.github'), href: '#', icon: 'tabler:external-link' },
           { text: t('nav.help'), href: getPermalink('/help-center', 'page', lang) },
         ],
@@ -77,7 +77,7 @@ export function getFooterData(
           { text: t('nav.team'), href: getPermalink('/about', 'page', lang) },
           { text: t('nav.blog'), href: getBlogPermalink(lang) },
           { text: t('nav.contact'), href: getPermalink('/contact', 'page', lang) },
-          { text: t('nav.portal'), href: 'https://whop.com/@me/settings/orders/', icon: 'tabler:external-link' },
+          { text: t('nav.portal'), href: 'https://whop.com/@me/settings/orders/', target: '_blank', icon: 'tabler:external-link' },
         ],
       },
       {
