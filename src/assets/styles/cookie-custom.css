@@ -112,15 +112,18 @@
 
 #cc-main .cm,
 #cc-main .pm--box {
-  box-shadow:   0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgb(229 231 235);
+  background-color: rgb(255 255 255 / 0.9);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border-radius: 0.25rem;
+  border: none;
 }
 
 .dark #cc-main .cm,
 .dark #cc-main .pm--box {
-  border-color: rgb(55 65 81);
+  background-color: rgb(3 6 13 / 0.9);
 }
 
 
