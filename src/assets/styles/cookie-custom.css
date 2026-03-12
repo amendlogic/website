@@ -111,7 +111,7 @@
    ---------------------------------------------------------------- */
 
 #cc-main .cm-overlay {
-  background: linear-gradient(to bottom right, rgb(30 41 59 / 75%), rgb(2 6 23 / 75%));
+  background: linear-gradient(to bottom right, rgb(30 41 59 / 0.75), rgb(2 6 23 / 0.75));
 }
 
 /* ----------------------------------------------------------------
