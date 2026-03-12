@@ -65,7 +65,7 @@ export function getFooterData(
         links: [
           { text: t('nav.performance'), href: getPermalink('/performance', 'page', lang) },
           { text: t('nav.docs'), href: '#' },
-          { text: t('nav.community'), href: 'https://discord.gg/GjGUHRzYvG', target: '_blank', icon: 'tabler:external-link' },
+          { text: t('nav.community'), href: 'https://discord.gg/GjGUHRzYvG', attrs: { target: '_blank' }, icon: 'tabler:external-link' },
           { text: t('nav.github'), href: '#', icon: 'tabler:external-link' },
           { text: t('nav.help'), href: getPermalink('/help-center', 'page', lang) },
         ],
@@ -77,7 +77,7 @@ export function getFooterData(
           { text: t('nav.team'), href: getPermalink('/about', 'page', lang) },
           { text: t('nav.blog'), href: getBlogPermalink(lang) },
           { text: t('nav.contact'), href: getPermalink('/contact', 'page', lang) },
-          { text: t('nav.portal'), href: 'https://whop.com/@me/settings/orders/', target: '_blank', icon: 'tabler:external-link' },
+          { text: t('nav.portal'), href: 'https://whop.com/@me/settings/orders/', attrs: { target: '_blank' }, icon: 'tabler:external-link' },
         ],
       },
       {
@@ -101,7 +101,7 @@ export function getFooterData(
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
       { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
       { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
-      { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
+      { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind', attrs: { target: '_blank' } },
     ],
     footNote: `
       © ${new Date().getFullYear()} <a class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out" href="https://github.com/arthelokyo">${SITE?.name}</a> · ${t('nav.rights')} · 
