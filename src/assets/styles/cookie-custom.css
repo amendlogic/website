@@ -117,13 +117,12 @@
   box-shadow:
     0 20px 25px -5px rgb(0 0 0 / 0.1),
     0 8px 10px -6px rgb(0 0 0 / 0.1);
-  border-radius: 0.25rem;
   border: none;
 }
 
 .dark #cc-main .cm,
 .dark #cc-main .pm--box {
-  background-color: rgb(3 6 13 / 0.9);
+  background-color: rgb(3 6 32 / 0.9);
 }
 
 
