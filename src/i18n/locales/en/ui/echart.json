@@ -1,5 +1,7 @@
 {
   "symbol": "Instrument",
+  "initialCapital": "Initial Capital",
+  "period": "Period",
   "risktrade": "Risk / Trade",
   "equity": "Equity Curve",
   "noData": "No data available.",
