@@ -140,8 +140,14 @@ export function getBaseChartOptions(parsedData) {
     progressive: 5000,
     progressiveThreshold: 10000,
     hoverLayerThreshold: 3000,
-    grid: { left: 0, right: 0, bottom: 0, top: '1.5rem', containLabel: true },
-    legend: { data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], top: 0 },
+    grid: { left: 0, right: 0, bottom: 0, containLabel: true },
+    legend: { 
+      data: ['Portfolio Value', 'Buy & Hold', 'Drawdown %'], 
+      top: 0,
+      padding: [0, 0, 4, 0],
+      itemHeight: 8,
+      textStyle: { fontSize: 11 },
+    },
     tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
     xAxis: { type: 'time', boundaryGap: false },
     yAxis: [
