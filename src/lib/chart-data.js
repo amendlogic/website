@@ -144,7 +144,6 @@ export function getBaseChartOptions(parsedData) {
     legend: { 
       data: ['Portfolio Value $', 'Buy & Hold $', 'Drawdown %'], 
       top: 0,
-      bottom: '1rem',
       textStyle: { fontSize: 11 },
     },
     tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
