@@ -13,57 +13,47 @@
 
   "metrics.tagline": "Key Metrics",
   "metrics.title": "Full-Cycle Results — [Timeframe, e.g. Jan 2020 – Dec 2024]",
-  "metrics.subtitle": "All figures use the default configuration. Commission: 0.6% per trade. Slippage: 2 ticks. Starting capital: [X] USDT. Leverage: [X]x.",
+  "metrics.subtitle": "All figures use the default configuration. Commission: 0.06% per trade. Slippage: 2 ticks. Starting capital: [X] USDT. Leverage: [X]x.",
   "metrics.items": [
     {
-      "title": "Net Return",
-      "description": "Total percentage return over the full backtest period after all commissions and slippage.",
-      "icon": "tabler:chart-line"
+      "title": "Total Trades",
+      "description": "Number of all completed round-trip trades. Reflects the trading frequency and the selective nature of the strategy.",
+      "icon": "tabler:list-numbers"
     },
     {
       "title": "Win Rate",
-      "description": "Percentage of closed trades that ended in profit. Without the corresponding average win/loss ratio, this figure alone is not meaningful.",
+      "description": "Percentage of completed trades that closed in profit. Without the corresponding profit/loss ratio, this value alone is not meaningful.",
       "icon": "tabler:target"
     },
     {
       "title": "Profit Factor",
-      "description": "Gross profit divided by gross loss. Above 1.0 means more was won than lost. Values above 1.5 are generally considered robust.",
+      "description": "Gross profit divided by gross loss. Above 1.0 means more won than lost. Values above 1.5 are considered robust.",
       "icon": "tabler:trending-up"
     },
     {
-      "title": "Expectancy",
-      "description": "Average profit or loss per trade. A positive value means every trade contributes to long-term capital growth.",
-      "icon": "tabler:calculator"
-    },
-    {
-      "title": "Max Drawdown",
-      "description": "Largest peak-to-trough decline in equity during the full simulation — a measure of the maximum risk the capital was exposed to.",
-      "icon": "tabler:arrow-down-right"
-    },
-    {
       "title": "Net Profit",
-      "description": "Total realized profit across all closed trades after commissions and slippage.",
+      "description": "Total realized profit across all completed trades after deducting commissions and slippage.",
       "icon": "tabler:cash"
     },
     {
-      "title": "Avg Win / Avg Loss",
-      "description": "Average profit per winning trade and average loss per losing trade. The ratio reflects the efficiency of the risk/reward management.",
+      "title": "Max. Drawdown",
+      "description": "Largest peak-to-trough decline in equity during the entire simulation — a measure of the maximum risk the capital was exposed to.",
+      "icon": "tabler:arrow-down-right"
+    },
+    {
+      "title": "Avg. Win / Avg. Loss",
+      "description": "Average gain per winning trade and average loss per losing trade. The ratio reflects the efficiency of the strategy's risk/reward management.",
       "icon": "tabler:arrows-exchange"
     },
     {
       "title": "Best / Worst Trade",
-      "description": "The extreme values across all closed trades. Shows the range of possible individual outcomes and helps assess outliers.",
+      "description": "The extreme values across all completed trades. Shows the range of possible individual outcomes and helps assess outliers.",
       "icon": "tabler:star"
     },
     {
-      "title": "Max Consecutive Losses",
-      "description": "Longest consecutive losing streak. Critical for position sizing — the account must be able to absorb this streak without violating risk management rules.",
-      "icon": "tabler:alert-triangle"
-    },
-    {
-      "title": "Total Trades",
-      "description": "Total number of completed round-trip trades. Reflects the trading frequency and the selective nature of the strategy.",
-      "icon": "tabler:list-numbers"
+      "title": "Expectancy",
+      "description": "Average profit or loss per trade. A positive value means every trade contributes to capital growth over the long run.",
+      "icon": "tabler:calculator"
     }
   ],
   
@@ -83,7 +73,7 @@
     },
     {
       "title": "Commission",
-      "description": "0.6% per trade applied in both directions — matching Bitget's publicly documented taker fee structure at the time of testing. If you trade on a different exchange or tier, your actual costs will differ.",
+      "description": "0.06% per trade applied in both directions — matching Bitget's publicly documented taker fee structure at the time of testing. If you trade on a different exchange or tier, your actual costs will differ.",
       "icon": "tabler:receipt"
     },
     {
