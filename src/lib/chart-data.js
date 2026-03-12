@@ -145,7 +145,6 @@ export function getBaseChartOptions(parsedData) {
       data: ['Portfolio Value $', 'Buy & Hold $', 'Drawdown %'], 
       top: 0,
       textStyle: { fontSize: 11 },
-      zlevel: 2,
     },
     tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, confine: true },
     xAxis: { type: 'time', boundaryGap: false },
