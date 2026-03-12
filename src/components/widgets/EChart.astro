@@ -40,7 +40,7 @@ const {
   options: userOptions = {},
   initialCapital = 300,
   csvPath,
-  height = '400px',
+  height = '350px',
   isAfterContent = false,
   id,
   locale = Astro.currentLocale || 'de',
@@ -67,6 +67,10 @@ const fmtCurrency = (n) =>
   new Intl.NumberFormat(locale, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const fmtPct = (n) => `${(n * 100).toFixed(1)} %`;
 const fmtNum = (n) => (Number.isFinite(n) ? n.toFixed(2) : '∞');
+
+const dateFrom = parsedData?.trades?.at(0)?.date  ?? null;
+const dateTo   = parsedData?.trades?.at(-1)?.date ?? null;
+const fmtDate  = (d) => d ? new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(new Date(d)) : '—';
 ---
 
 <WidgetWrapper
@@ -116,6 +120,38 @@ const fmtNum = (n) => (Number.isFinite(n) ? n.toFixed(2) : '∞');
             </span>
           </div>
         )}
+
+{initialCapital && (
+  <div class="relative flex flex-col justify-between gap-3 px-4 py-3 bg-white dark:bg-slate-900
+        flex-grow basis-[calc(50%-1px)] sm:basis-[calc(25%-1px)]">
+    <div class="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-sky-400 dark:bg-sky-300" />
+    <div class="flex items-center justify-between pl-3">
+      <span class="text-[11px] font-medium leading-none tracking-wide text-slate-400 dark:text-slate-500">
+        {t('echart.initialCapital')}
+      </span>
+      <Icon name="tabler:wallet" class="w-3.5 h-3.5 shrink-0 opacity-40 text-sky-400 dark:text-sky-300" />
+    </div>
+    <span class="text-lg font-bold tabular-nums leading-none pl-3 text-sky-500 dark:text-sky-300">
+      {fmtCurrency(initialCapital)}
+    </span>
+  </div>
+)}
+
+{(dateFrom && dateTo) && (
+  <div class="relative flex flex-col justify-between gap-3 px-4 py-3 bg-white dark:bg-slate-900
+        flex-grow basis-[calc(50%-1px)] sm:basis-[calc(25%-1px)]">
+    <div class="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-violet-400 dark:bg-violet-300" />
+    <div class="flex items-center justify-between pl-3">
+      <span class="text-[11px] font-medium leading-none tracking-wide text-slate-400 dark:text-slate-500">
+        {t('echart.period')}
+      </span>
+      <Icon name="tabler:calendar-stats" class="w-3.5 h-3.5 shrink-0 opacity-40 text-violet-400 dark:text-violet-300" />
+    </div>
+    <span class="text-lg font-bold tabular-nums leading-none pl-3 text-violet-500 dark:text-violet-300">
+      {fmtDate(dateFrom)} – {fmtDate(dateTo)}
+    </span>
+  </div>
+)}
 
       </div>
 
