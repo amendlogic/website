@@ -1,0 +1,16 @@
+{
+  "symbol": "Instrument",
+  "risktrade": "Risiko / Trade",
+  "equity": "Equity-Kurve",
+  "statistics": "Performance-Statistiken",
+  "totalTrades": "Trades gesamt",
+  "winRate": "Trefferquote",
+  "profitFactor": "Profit Factor",
+  "netProfit": "Nettogewinn",
+  "maxDrawdown": "Max. Drawdown",
+  "avgWin": "Ø Gewinn",
+  "avgLoss": "Ø Verlust",
+  "bestTrade": "Bester Trade",
+  "worstTrade": "Schlechtester",
+  "expectancy": "Erwartungswert",
+}
