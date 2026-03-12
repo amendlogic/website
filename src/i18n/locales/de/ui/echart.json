@@ -2,6 +2,7 @@
   "symbol": "Instrument",
   "risktrade": "Risiko / Trade",
   "equity": "Equity-Kurve",
+  "noData": "Keine Daten verfügbar.",
   "statistics": "Performance-Statistiken",
   "totalTrades": "Trades gesamt",
   "winRate": "Trefferquote",
@@ -12,5 +13,5 @@
   "avgLoss": "Ø Verlust",
   "bestTrade": "Bester Trade",
   "worstTrade": "Schlechtester",
-  "expectancy": "Erwartungswert",
+  "expectancy": "Erwartungswert"
 }
