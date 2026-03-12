@@ -110,8 +110,16 @@
    4. OVERLAY BACKDROP (YouTube-Style)
    ---------------------------------------------------------------- */
 
+/* Light Mode */
 #cc-main .pm-overlay {
-  background: linear-gradient(to bottom right, rgb(30 41 59 / 0.0), rgb(2 6 23 / 0.75));
+  background-color: rgb(15 23 42 / 0.5);
+  backdrop-filter:  blur(4px);
+}
+
+/* Dark Mode — etwas stärker, da Hintergrund ohnehin dunkel */
+.dark #cc-main .pm-overlay {
+  background-color: rgb(2 6 23 / 0.65);
+  backdrop-filter:  blur(4px);
 }
 
 /* ----------------------------------------------------------------
