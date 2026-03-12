@@ -16,9 +16,9 @@
   "metrics.subtitle": "Alle Zahlen basieren auf der Standardkonfiguration. Kommission: 0,6% pro Trade. Slippage: 2 Ticks. Startkapital: [X] USDT. Hebel: [X]x.",
   "metrics.items": [
     {
-      "title": "Netto-Rendite",
-      "description": "Gesamte prozentuale Rendite über den vollständigen Backtest-Zeitraum nach Abzug aller Kommissionen und Slippage.",
-      "icon": "tabler:chart-line"
+      "title": "Gesamte Trades",
+      "description": "Anzahl aller abgeschlossenen Round-Trip-Trades. Gibt Aufschluss über die Handelsfrequenz und den selektiven Charakter der Strategie.",
+      "icon": "tabler:list-numbers"
     },
     {
       "title": "Trefferquote",
@@ -31,19 +31,14 @@
       "icon": "tabler:trending-up"
     },
     {
-      "title": "Erwartungswert",
-      "description": "Durchschnittlicher Gewinn oder Verlust pro Trade. Ein positiver Wert bedeutet, dass jeder Trade langfristig zum Kapitalwachstum beiträgt.",
-      "icon": "tabler:calculator"
+      "title": "Nettogewinn",
+      "description": "Gesamter realisierter Gewinn über alle abgeschlossenen Trades nach Abzug von Kommissionen und Slippage.",
+      "icon": "tabler:cash"
     },
     {
       "title": "Max. Drawdown",
       "description": "Größter Peak-to-Trough-Kapitalrückgang während der gesamten Simulation — ein Maß für das maximale Risiko, dem das Kapital ausgesetzt war.",
       "icon": "tabler:arrow-down-right"
-    },
-    {
-      "title": "Nettogewinn",
-      "description": "Gesamter realisierter Gewinn über alle abgeschlossenen Trades nach Abzug von Kommissionen und Slippage.",
-      "icon": "tabler:cash"
     },
     {
       "title": "Ø Gewinn / Ø Verlust",
@@ -56,14 +51,9 @@
       "icon": "tabler:star"
     },
     {
-      "title": "Max. Verlustserie",
-      "description": "Längste aufeinanderfolgende Verlustserie. Entscheidend für die Positionsgrößenplanung — das Konto muss diese Serie ohne Regelverstoß aushalten können.",
-      "icon": "tabler:alert-triangle"
-    },
-    {
-      "title": "Gesamte Trades",
-      "description": "Anzahl aller abgeschlossenen Round-Trip-Trades. Gibt Aufschluss über die Handelsfrequenz und den selektiven Charakter der Strategie.",
-      "icon": "tabler:list-numbers"
+      "title": "Erwartungswert",
+      "description": "Durchschnittlicher Gewinn oder Verlust pro Trade. Ein positiver Wert bedeutet, dass jeder Trade langfristig zum Kapitalwachstum beiträgt.",
+      "icon": "tabler:calculator"
     }
   ],
 
