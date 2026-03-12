@@ -110,7 +110,7 @@
    4. OVERLAY BACKDROP (YouTube-Style)
    ---------------------------------------------------------------- */
 
-#cc-main .cm-overlay {
+#cc-main .pm-overlay {
   background: linear-gradient(to bottom right, rgb(30 41 59 / 0.75), rgb(2 6 23 / 0.75));
 }
 
