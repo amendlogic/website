@@ -16,24 +16,36 @@ export const GET = async ({ params }: { params: { lang: string } }) => {
     return new Response(null, { status: 404, statusText: 'Not found' });
   }
 
+  // Sicherstellen, dass nur Posts der aktuellen Sprache geladen werden
   const posts = await fetchPosts(lang);
 
   const rss = await getRssString({
-    title: `${SITE.name}'s Blog`,
+    // Optional: Titel sprachspezifisch machen
+    title: `${SITE.name} Blog (${lang.toUpperCase()})`,
     description: METADATA?.description || '',
-    site: `${import.meta.env.SITE}${lang}/`,
+    
+    // Die Basis-URL des Feeds
+    site: import.meta.env.SITE,
 
     items: posts.map((post) => ({
-      link: new URL(post.permalink, SITE.site).toString(),
+      // Nutze post.permalink direkt, wenn er bereits die Sprache enthält
+      link: post.permalink, 
       title: post.title,
       description: post.excerpt,
       pubDate: post.publishDate,
+      // Optional: Kategorie hinzufügen
+      categories: post.category ? [post.category] : [],
     })),
 
     trailingSlash: SITE.trailingSlash,
+    // Das language-Tag hilft RSS-Readern bei der Einordnung
+    customData: `<language>${lang}</language>`,
   });
 
   return new Response(rss, {
-    headers: { 'Content-Type': 'application/xml' },
+    headers: { 
+      'Content-Type': 'application/xml; charset=utf-8',
+      'X-Content-Type-Options': 'nosniff'
+    },
   });
 };
