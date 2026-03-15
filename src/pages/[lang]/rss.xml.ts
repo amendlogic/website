@@ -16,48 +16,35 @@ export const GET = async ({ params }: { params: { lang: string } }) => {
     return new Response(null, { status: 404, statusText: 'Not found' });
   }
 
-  // Sicherstellen, dass nur Posts der aktuellen Sprache geladen werden
-  const posts = await fetchPosts(lang);
+  // Hier wird "posts" zum ERSTEN und EINZIGEN Mal deklariert
+  const allPosts = await fetchPosts(lang);
 
-  const rss = await getRssString({
-    // Optional: Titel sprachspezifisch machen
-    title: `${SITE.name} Blog (${lang.toUpperCase()})`,
-    description: METADATA?.description || '',
-    
-    // Die Basis-URL des Feeds
-    site: import.meta.env.SITE,
-
-    items: posts.map((post) => ({
-      // Nutze post.permalink direkt, wenn er bereits die Sprache enthält
-      link: post.permalink, 
-      title: post.title,
-      description: post.excerpt,
-      pubDate: post.publishDate,
-      // Optional: Kategorie hinzufügen
-      categories: post.category ? [post.category] : [],
-    })),
-
-    trailingSlash: SITE.trailingSlash,
-    // Das language-Tag hilft RSS-Readern bei der Einordnung
-    customData: `<language>${lang}</language>`,
-  });
-  const posts = await fetchPosts(lang);
-  console.log(`Anzahl Posts für ${lang}:`, posts.length); // Das siehst du dann im Vercel Log
-
-  if (posts.length === 0) {
-    // Erstellt einen leeren Feed oder einen Platzhalter-Eintrag, damit der Build nicht abbricht
+  // Falls keine Posts gefunden wurden, geben wir einen leeren Feed zurück, 
+  // um den Build-Fehler von vorhin zu vermeiden.
+  if (!allPosts || allPosts.length === 0) {
     return rss({
-        title: `${SITE.name}`,
-        description: 'No posts found',
-        site: import.meta.env.SITE,
-        items: [],
+      title: `${SITE.name}`,
+      description: 'No posts found',
+      site: import.meta.env.SITE,
+      items: [],
     });
   }
 
-  return new Response(rss, {
-    headers: { 
-      'Content-Type': 'application/xml; charset=utf-8',
-      'X-Content-Type-Options': 'nosniff'
-    },
+  const rssString = await getRssString({
+    title: `${SITE.name} Blog (${lang.toUpperCase()})`,
+    description: METADATA?.description || '',
+    site: import.meta.env.SITE,
+    items: allPosts.map((post) => ({
+      link: post.permalink,
+      title: post.title || 'No Title',
+      description: post.excerpt || '',
+      pubDate: post.publishDate ? new Date(post.publishDate) : new Date(),
+    })),
+    trailingSlash: SITE.trailingSlash,
+    customData: `<language>${lang}</language>`,
+  });
+
+  return new Response(rssString, {
+    headers: { 'Content-Type': 'application/xml; charset=utf-8' },
   });
 };
