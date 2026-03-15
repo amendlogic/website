@@ -88,7 +88,7 @@
     },
     {
       "title": "Intrabar-Simulation",
-      "description": "TradingViews Engine modelliert die Intrabar-Ausführung auf Basis von OHLC-Daten, nicht Tick-Daten. Das bedeutet, dass Stop-Losses, die mitten in einer Kerze ausgelöst werden, leicht bessere Fills zeigen können als in der Realität — eine bekannte Einschränkung des Plattform-Backtestings.",
+      "description": "TradingViews Engine modelliert die Intrabar-Ausführung auf Basis von OHLC-Daten, nicht Tick-Daten. Das bedeutet, dass Take-Profits, die mitten in einer Kerze ausgelöst werden, leicht bessere Fills zeigen können als in der Realität — eine bekannte Einschränkung des Plattform-Backtestings.",
       "icon": "tabler:timeline"
     },
     {
