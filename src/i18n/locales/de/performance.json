@@ -113,6 +113,11 @@
       "icon": "tabler:settings-2"
     },
     {
+      "title": "Take Profit",
+      "description": "Konfiguriert bis zu fünf gestaffelte Take-Profit-Ziele, die jeweils einen definierten Anteil der Position bei Erreichen eines bestimmten Kursziels schließen. Das schrittweise Realisieren von Gewinnen reduziert das Rückschlagrisiko bei laufenden Trades und verbessert das Risiko-Ertrags-Verhältnis über eine größere Anzahl von Trades hinweg.",
+      "icon": "tabler:target-arrow"
+    },
+    {
       "title": "Bot Settings",
       "description": "Feinjustierung der Strategie für spezifische Timeframes und Kryptowährungen. Diese Parameter ermöglichen es, das Verhalten der Strategie an die jeweilige Marktstruktur und Volatilität eines Assets präzise anzupassen — ohne die Kernlogik zu verändern.",
       "icon": "tabler:adjustments-horizontal"
