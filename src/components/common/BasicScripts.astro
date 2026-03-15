@@ -137,6 +137,32 @@ window.basic_script_init = true;
         return;
       }
 
+      // Social Share Logic
+      const shareBtn = e.target.closest('[data-aw-social-share]');
+      if (shareBtn) {
+        const network = shareBtn.dataset.awSocialShare;
+        const shareUrl = encodeURIComponent(shareBtn.dataset.awUrl || location.href);
+        const shareText = encodeURIComponent(shareBtn.dataset.awText || document.title);
+
+        const urls = {
+          twitter:  `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`,
+          facebook: `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
+          linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`,
+          whatsapp: `https://wa.me/?text=${shareText}%20${shareUrl}`,
+          mail:     `mailto:?subject=${shareText}&body=${shareUrl}`,
+        };
+
+        const target = urls[network];
+        if (!target) return;
+
+        if (network === 'mail') {
+          location.href = target;
+        } else {
+          window.open(target, '_blank', 'noopener,noreferrer,width=600,height=400');
+        }
+        return;
+      }
+
       // Smooth Scroll & Menü schließen Logic
       const link = e.target.closest('a');
       if (link && link.hash && link.origin === location.origin && link.pathname === location.pathname) {
