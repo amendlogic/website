@@ -113,6 +113,11 @@
       "icon": "tabler:settings-2"
     },
     {
+      "title": "Take Profit",
+      "description": "Configures up to five staggered take-profit targets, each closing a defined portion of the position when a specific price level is reached. Scaling out of trades incrementally reduces the risk of giving back unrealized gains and improves the overall risk-reward profile across a larger sample of trades.",
+      "icon": "tabler:target-arrow"
+    },
+    {
       "title": "Bot Settings",
       "description": "Fine-tuning of the strategy for specific timeframes and cryptocurrencies. These parameters allow you to precisely adapt the strategy's behavior to the market structure and volatility of a given asset — without altering the core logic.",
       "icon": "tabler:adjustments-horizontal"
