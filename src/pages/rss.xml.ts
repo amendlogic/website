@@ -1,26 +1,30 @@
 import { getRssString } from '@astrojs/rss';
-
 import { SITE, METADATA, APP_BLOG } from 'astrowind:config';
 import { fetchPosts } from '~/utils/blog';
-import { getPermalink } from '~/utils/permalinks';
+import { LANGUAGES } from '~/i18n/utils';
 
-export const GET = async () => {
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return Object.keys(LANGUAGES).map((lang) => ({ params: { lang } }));
+}
+
+export const GET = async ({ params }: { params: { lang: string } }) => {
+  const { lang } = params;
+
   if (!APP_BLOG.isEnabled) {
-    return new Response(null, {
-      status: 404,
-      statusText: 'Not found',
-    });
+    return new Response(null, { status: 404, statusText: 'Not found' });
   }
 
-  const posts = await fetchPosts();
+  const posts = await fetchPosts(lang);
 
   const rss = await getRssString({
-    title: `${SITE.name}’s Blog`,
+    title: `${SITE.name}'s Blog`,
     description: METADATA?.description || '',
-    site: import.meta.env.SITE,
+    site: `${import.meta.env.SITE}${lang}/`,
 
     items: posts.map((post) => ({
-      link: getPermalink(post.permalink, 'post'),
+      link: new URL(post.permalink, SITE.site).toString(),
       title: post.title,
       description: post.excerpt,
       pubDate: post.publishDate,
@@ -30,8 +34,6 @@ export const GET = async () => {
   });
 
   return new Response(rss, {
-    headers: {
-      'Content-Type': 'application/xml',
-    },
+    headers: { 'Content-Type': 'application/xml' },
   });
 };
