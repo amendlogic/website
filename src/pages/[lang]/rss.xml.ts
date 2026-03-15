@@ -41,6 +41,18 @@ export const GET = async ({ params }: { params: { lang: string } }) => {
     // Das language-Tag hilft RSS-Readern bei der Einordnung
     customData: `<language>${lang}</language>`,
   });
+  const posts = await fetchPosts(lang);
+  console.log(`Anzahl Posts für ${lang}:`, posts.length); // Das siehst du dann im Vercel Log
+
+  if (posts.length === 0) {
+    // Erstellt einen leeren Feed oder einen Platzhalter-Eintrag, damit der Build nicht abbricht
+    return rss({
+        title: `${SITE.name}`,
+        description: 'No posts found',
+        site: import.meta.env.SITE,
+        items: [],
+    });
+  }
 
   return new Response(rss, {
     headers: { 
