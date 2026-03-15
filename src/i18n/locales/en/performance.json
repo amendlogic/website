@@ -88,7 +88,7 @@
     },
     {
       "title": "Intrabar Simulation",
-      "description": "TradingView's engine models intrabar execution based on OHLC data, not tick data. This means stop-losses triggered mid-bar may show slightly better fills than real execution — a known limitation of platform backtesting.",
+      "description": "TradingView's engine models intrabar execution based on OHLC data, not tick data. This means take-profits triggered mid-bar may show slightly better fills than real execution — a known limitation of platform backtesting.",
       "icon": "tabler:timeline"
     },
     {
