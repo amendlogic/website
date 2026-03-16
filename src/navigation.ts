@@ -29,7 +29,7 @@ export function getHeaderData(lang?: string) {
         links: [
           { text: t('nav.performance'), href: getPermalink('/performance', 'page', lang) },
           { text: t('nav.getStarted'), href: getPermalink('get-started-website-with-astro-tailwind-css', 'post', lang) },
-          { text: t('nav.docs'), href: getPermalink('tutorials', 'category', lang) },
+          { text: t('nav.docs'), href: getPermalink('documentation', 'category', lang) },
           { text: t('nav.blog'), href: getBlogPermalink(lang) },
         ],
       },
@@ -57,14 +57,14 @@ export function getFooterData(
           { text: t('nav.system'), href: getPermalink('/#system', 'page', lang) },
           { text: t('nav.backtest'), href: getPermalink('/#backtest', 'page', lang) },
           { text: t('nav.pricing'), href: getPermalink('/pricing', 'page', lang) },
-          { text: t('nav.changelog'), href: '#' },
+          { text: t('nav.changelog'), href: getPermalink('changelog', 'category', lang) },
         ],
       },
       {
         title: t('nav.resources'),
         links: [
           { text: t('nav.performance'), href: getPermalink('/performance', 'page', lang) },
-          { text: t('nav.docs'), href: '#' },
+          { text: t('nav.docs'), href: getPermalink('documentation', 'category', lang) },
           { text: t('nav.community'), href: 'https://discord.gg/GjGUHRzYvG', attrs: { target: '_blank' }, icon: 'tabler:external-link' },
           { text: t('nav.github'), href: '#', icon: 'tabler:external-link' },
           { text: t('nav.help'), href: getPermalink('/help-center', 'page', lang) },
