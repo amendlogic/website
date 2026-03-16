@@ -4,12 +4,8 @@ import { getAsset } from '~/utils/permalinks';
 // Holt die Sprache aus der URL (z.B. "de" oder "en")
 const { lang } = Astro.params;
 
-// Falls 'lang' undefiniert ist (z.B. auf der Startseite ohne Sprachkürzel), 
-// kannst du einen Standard setzen.
-const currentLang = lang || 'de'; 
-
 // Erstellt den Pfad zum Feed: /de/rss.xml oder /en/rss.xml
-const rssPath = `/${currentLang}/rss.xml`;
+const rssPath = `/${lang}/rss.xml`;
 ---
 
 <meta charset="UTF-8" />
@@ -20,6 +16,6 @@ const rssPath = `/${currentLang}/rss.xml`;
 <link 
   rel="alternate" 
   type="application/rss+xml" 
-  title={`RSS Feed (${currentLang.toUpperCase()})`} 
+  title={`RSS Feed (${lang.toUpperCase()})`} 
   href={getAsset(rssPath)} 
 />
