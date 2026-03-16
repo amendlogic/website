@@ -13,9 +13,11 @@ const rssPath = `/${lang}/rss.xml`;
 
 <link rel="sitemap" href={getAsset('/sitemap-index.xml')} />
 
-<link 
-  rel="alternate" 
-  type="application/rss+xml" 
-  title={`RSS Feed (${lang.toUpperCase()})`} 
-  href={getAsset(rssPath)} 
-/>
+{lang && (
+  <link 
+    rel="alternate" 
+    type="application/rss+xml" 
+    title={`RSS Feed (${lang.toUpperCase()})`}
+    href={getAsset(`/${lang}/rss.xml`)} 
+  />
+)}
