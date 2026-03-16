@@ -8,58 +8,34 @@ export interface Props {
 }
 
 const { text, url, class: className = 'inline-block' } = Astro.props;
+
+const encodedUrl = encodeURIComponent(url.toString());
+const encodedText = encodeURIComponent(text.toString());
+
+const links = {
+  twitter:  `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`,
+  facebook: `https://www.facebook.com/sharer.php?u=${encodedUrl}`,
+  linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`,
+  whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+  mail:     `mailto:?subject=%22${encodedText}%22&body=${encodedText}%20${encodedUrl}`,
+};
 ---
 
 <div class={className}>
   <span class="align-super font-bold text-slate-500 dark:text-slate-400">Share:</span>
-  <button
-    class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Twitter Share"
-    data-aw-social-share="twitter"
-    data-aw-url={url}
-    data-aw-text={text}
-    ><Icon
-      name="tabler:brand-x"
-      class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
-    />
-  </button>
-  <button class="ml-2 rtl:ml-0 rtl:mr-2" title="Facebook Share" data-aw-social-share="facebook" data-aw-url={url}
-    ><Icon
-      name="tabler:brand-facebook"
-      class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
-    />
-  </button>
-  <button
-    class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Linkedin Share"
-    data-aw-social-share="linkedin"
-    data-aw-url={url}
-    data-aw-text={text}
-    ><Icon
-      name="tabler:brand-linkedin"
-      class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
-    />
-  </button>
-  <button
-    class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Whatsapp Share"
-    data-aw-social-share="whatsapp"
-    data-aw-url={url}
-    data-aw-text={text}
-    ><Icon
-      name="tabler:brand-whatsapp"
-      class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
-    />
-  </button>
-  <button
-    class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Email Share"
-    data-aw-social-share="mail"
-    data-aw-url={url}
-    data-aw-text={text}
-    ><Icon
-      name="tabler:mail"
-      class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
-    />
-  </button>
+  <a href={links.twitter} target="_blank" rel="noopener noreferrer" title="Twitter Share" class="ml-2 rtl:ml-0 rtl:mr-2">
+    <Icon name="tabler:brand-x" class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300" />
+  </a>
+  <a href={links.facebook} target="_blank" rel="noopener noreferrer" title="Facebook Share" class="ml-2 rtl:ml-0 rtl:mr-2">
+    <Icon name="tabler:brand-facebook" class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300" />
+  </a>
+  <a href={links.linkedin} target="_blank" rel="noopener noreferrer" title="Linkedin Share" class="ml-2 rtl:ml-0 rtl:mr-2">
+    <Icon name="tabler:brand-linkedin" class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300" />
+  </a>
+  <a href={links.whatsapp} target="_blank" rel="noopener noreferrer" title="Whatsapp Share" class="ml-2 rtl:ml-0 rtl:mr-2">
+    <Icon name="tabler:brand-whatsapp" class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300" />
+  </a>
+  <a href={links.mail} title="Email Share" class="ml-2 rtl:ml-0 rtl:mr-2">
+    <Icon name="tabler:mail" class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300" />
+  </a>
 </div>
