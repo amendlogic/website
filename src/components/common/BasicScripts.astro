@@ -137,27 +137,6 @@ window.basic_script_init = true;
         return;
       }
 
-      // Social Share Logic
-      const shareBtn = e.target.closest('[data-aw-social-share]');
-      if (shareBtn) {
-        const network = shareBtn.getAttribute('data-aw-social-share');
-        const url = encodeURIComponent(shareBtn.getAttribute('data-aw-url'));
-        const text = encodeURIComponent(shareBtn.getAttribute('data-aw-text'));
-
-        let href;
-        switch (network) {
-          case 'facebook':  href = `https://www.facebook.com/sharer.php?u=${url}`; break;
-          case 'twitter':   href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`; break;
-          case 'linkedin':  href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`; break;
-          case 'whatsapp':  href = `https://wa.me/?text=${text}%20${url}`; break;
-          case 'mail':      href = `mailto:?subject=%22${text}%22&body=${text}%20${url}`; break;
-          default: return;
-        }
-
-        window.open(href, network === 'mail' ? '_self' : '_blank', 'noopener,noreferrer');
-        return;
-      }
-
       // Smooth Scroll & Menü schließen Logic
       const link = e.target.closest('a');
       if (link && link.hash && link.origin === location.origin && link.pathname === location.pathname) {
