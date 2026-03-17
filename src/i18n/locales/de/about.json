@@ -32,7 +32,6 @@
     }
   ],
 
-  "netPnL.imageSrc": "~/assets/images/tv_netpnl.png",
   "netPnL.imageAlt": "Netto P&L Chart der AmendLogic Bitcoin-Strategie",
 
   "context.tagline": "Die Landschaft",
