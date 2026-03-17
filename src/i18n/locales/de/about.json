@@ -32,6 +32,8 @@
     }
   ],
 
+  "netPnL.imageAlt": "Netto P&L Chart der AmendLogic Bitcoin-Strategie",
+
   "context.tagline": "Die Landschaft",
   "context.title": "Was das hier nicht ist.",
   "context.subtitle": "Der Krypto-Strategie-Markt basiert fast ausschließlich auf zwei Dingen: selektiv gewählten Performance-Fenstern und undurchsichtiger Signallogik. Eine Strategie, die den Bullenmarkt 2020–2021 mitgenommen hat, sieht im Isolation betrachtet außergewöhnlich aus. Dieselbe Strategie angewendet durch 2022 erzählt oft eine vollständig andere Geschichte. Dieses Framework wurde durch Drawdown-Phasen, Seitwärtsmärkte und Volatilitätsspitzen gestresst — nicht optimiert, um in der einen Periode gut auszusehen, in der alles funktioniert hat. Das Ziel war ein System, das überlebt, nicht eines, das beeindruckt.",
