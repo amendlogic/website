@@ -98,8 +98,8 @@ export function getFooterData(
     footnotes,
     socialLinks: [
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
-      { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
-      { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
+      // { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
+      // { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
       { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset(`/${lang}/rss.xml`) },
       { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/amendlogic', attrs: { target: '_blank' } },
     ],
