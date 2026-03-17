@@ -32,6 +32,8 @@
     }
   ],
 
+  "netPnL.imageAlt": "Net P&L chart of the AmendLogic Bitcoin strategy",
+  
   "context.tagline": "The Landscape",
   "context.title": "What This Is Not.",
   "context.subtitle": "The crypto strategy space is built almost entirely on two things: cherry-picked performance windows and opaque signal logic. A strategy that caught the 2020–2021 bull run looks exceptional in isolation. The same strategy applied through 2022 often tells a completely different story. This framework was stress-tested through drawdown phases, ranging markets, and volatility spikes — not optimized to look good in the one period where everything worked. The goal was a system that survives, not one that dazzles.",
@@ -115,6 +117,8 @@
   "transparency.description2": "The strategy runs on the same framework that's being sold. Performance is evaluated continuously across live and simulated conditions — not just during the periods that look good in a marketing screenshot.",
   "transparency.description3": "Selling a rule-based system means standing behind its rules publicly and explicitly. That accountability is not incidental — it's the point.",
 
+  "myImage.imageAlt": "Kevin Amend, Founder of AmendLogic",
+  
   "cta.title": "Understand the System Before You Buy It.",
   "cta.subtitle": "The performance data, methodology, and configuration details are available before you commit to anything. Start with the numbers — then decide.",
   "cta.btnText": "Review the Performance Data"
