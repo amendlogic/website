@@ -97,7 +97,7 @@ export function getFooterData(
     ],
     footnotes,
     socialLinks: [
-      { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
+      { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#', target: '_blank', rel: 'noopener' },
       { ariaLabel: 'TikTok', icon: 'tabler:brand-tiktok', href: '#', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
       { ariaLabel: 'YouTube', icon: 'tabler:brand-youtube', href: '#', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
       // { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
