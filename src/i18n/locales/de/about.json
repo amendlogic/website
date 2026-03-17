@@ -40,15 +40,18 @@
   "context.items": [
     {
       "title": "Offices",
-      "amount": "4"
+      "amount": "4",
+      "icon": "tabler:user-star"
     },
     {
       "title": "Offices2",
-      "amount": "4"
+      "amount": "4",
+      "icon": "tabler:user-star"
     },
     {
       "title": "Offices3",
-      "amount": "4"
+      "amount": "4",
+      "icon": "tabler:user-star"
     }
   ],
   "framework.tagline": "Das Framework",
