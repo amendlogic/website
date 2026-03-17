@@ -13,6 +13,7 @@ import Content from '~/components/widgets/Content.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import Layout from '~/layouts/PageLayout.astro';
 
+import netPnL from '~/assets/images/tv_netpnl.png';
 import myImage from '~/assets/images/me.jpg';
 
 // 2. Pfade generieren (SSOT für [lang])
@@ -70,9 +71,8 @@ const metadata = {
     columns={3}
     isAfterContent={true}
     image={{
-      src: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80',
+      src: netPnL,
       alt: 'Colorful Image',
-      height: 'auto',
     }}
   />
 
