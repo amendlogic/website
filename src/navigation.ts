@@ -28,7 +28,7 @@ export function getHeaderData(lang?: string) {
         text: t('nav.insights'),
         links: [
           { text: t('nav.performance'), href: getPermalink('/performance', 'page', lang) },
-          { text: t('nav.getStarted'), href: getPermalink('get-started-website-with-astro-tailwind-css', 'post', lang) },
+          { text: t('nav.getStarted'), href: getPermalink('get-started', 'post', lang) },
           { text: t('nav.docs'), href: getPermalink('documentation', 'category', lang) },
           { text: t('nav.blog'), href: getBlogPermalink(lang) },
         ],
@@ -66,7 +66,7 @@ export function getFooterData(
           { text: t('nav.performance'), href: getPermalink('/performance', 'page', lang) },
           { text: t('nav.docs'), href: getPermalink('documentation', 'category', lang) },
           { text: t('nav.community'), href: 'https://discord.gg/GjGUHRzYvG', attrs: { target: '_blank' }, icon: 'tabler:external-link' },
-          { text: t('nav.github'), href: '#', icon: 'tabler:external-link' },
+          { text: t('nav.github'), href: 'https://github.com/amendlogic', attrs: { target: '_blank' }, icon: 'tabler:external-link' },
           { text: t('nav.help'), href: getPermalink('/help-center', 'page', lang) },
         ],
       },
@@ -101,7 +101,7 @@ export function getFooterData(
       { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
       { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
       { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset(`/${lang}/rss.xml`) },
-      { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind', attrs: { target: '_blank' } },
+      { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/amendlogic', attrs: { target: '_blank' } },
     ],
     footNote: `
       © ${new Date().getFullYear()} <a class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out" href="https://github.com/arthelokyo">${SITE?.name}</a> · ${t('nav.rights')} · 
