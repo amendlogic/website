@@ -4,7 +4,6 @@ import ItemGrid from '~/components/ui/ItemGrid.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Image from '~/components/common/Image.astro';
 import type { Features as Props } from '~/types';
-import { twMerge } from 'tailwind-merge';
 
 const {
   title = await Astro.slots.render('title'),
@@ -42,7 +41,7 @@ const {
             <Fragment set:html={image} />
           ) : (
             <Image
-              class={twMerge("w-full h-80 object-cover rounded-xl mx-auto bg-gray-500 shadow-lg", image.class)}
+              class="w-full h-80 object-cover rounded-xl mx-auto bg-gray-500 shadow-lg"
               width="auto"
               height={320}
               widths={[400, 768]}
