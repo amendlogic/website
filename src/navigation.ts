@@ -65,8 +65,8 @@ export function getFooterData(
         links: [
           { text: t('nav.performance'), href: getPermalink('/performance', 'page', lang) },
           { text: t('nav.docs'), href: getPermalink('documentation', 'category', lang) },
-          { text: t('nav.community'), href: 'https://discord.gg/GjGUHRzYvG', attrs: { target: '_blank', rel: 'noopener noreferrer' }, icon: 'tabler:external-link' },
-          { text: t('nav.github'), href: 'https://github.com/amendlogic', attrs: { target: '_blank', rel: 'noopener noreferrer' }, icon: 'tabler:external-link' },
+          { text: t('nav.community'), href: 'https://discord.gg/GjGUHRzYvG', target: '_blank', rel: 'noopener noreferrer', icon: 'tabler:external-link' },
+          { text: t('nav.github'), href: 'https://github.com/amendlogic', target: '_blank', rel: 'noopener noreferrer', icon: 'tabler:external-link' },
           { text: t('nav.help'), href: getPermalink('/help-center', 'page', lang) },
         ],
       },
@@ -77,7 +77,7 @@ export function getFooterData(
           { text: t('nav.team'), href: getPermalink('/about', 'page', lang) },
           { text: t('nav.blog'), href: getBlogPermalink(lang) },
           { text: t('nav.contact'), href: getPermalink('/contact', 'page', lang) },
-          { text: t('nav.portal'), href: 'https://whop.com/@me/settings/orders/', attrs: { target: '_blank', rel: 'noopener noreferrer' }, icon: 'tabler:external-link' },
+          { text: t('nav.portal'), href: 'https://whop.com/@me/settings/orders/', target: '_blank', rel: 'noopener noreferrer', icon: 'tabler:external-link' },
         ],
       },
       {
