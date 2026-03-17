@@ -97,13 +97,13 @@ export function getFooterData(
     ],
     footnotes,
     socialLinks: [
-      { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#', target: '_blank', rel: 'noopener' },
-      { ariaLabel: 'TikTok', icon: 'tabler:brand-tiktok', href: '#', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
-      { ariaLabel: 'YouTube', icon: 'tabler:brand-youtube', href: '#', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
-      // { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
-      // { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
+      { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#', target: '_blank', rel: 'noopener noreferrer' },
+      // { ariaLabel: 'TikTok', icon: 'tabler:brand-tiktok', href: '#', target: '_blank', rel: 'noopener noreferrer' },
+      // { ariaLabel: 'YouTube', icon: 'tabler:brand-youtube', href: '#', target: '_blank', rel: 'noopener noreferrer' },
+      // { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#', target: '_blank', rel: 'noopener noreferrer' },
+      // { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#', target: '_blank', rel: 'noopener noreferrer' },
       { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset(`/${lang}/rss.xml`) },
-      { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/amendlogic', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
+      { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/amendlogic', target: '_blank', rel: 'noopener noreferrer' },
     ],
     footNote: `
       © ${new Date().getFullYear()} <a class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out" href="https://github.com/arthelokyo">${SITE?.name}</a> · ${t('nav.rights')} · 
