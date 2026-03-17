@@ -65,8 +65,8 @@ export function getFooterData(
         links: [
           { text: t('nav.performance'), href: getPermalink('/performance', 'page', lang) },
           { text: t('nav.docs'), href: getPermalink('documentation', 'category', lang) },
-          { text: t('nav.community'), href: 'https://discord.gg/GjGUHRzYvG', attrs: { target: '_blank' }, icon: 'tabler:external-link' },
-          { text: t('nav.github'), href: 'https://github.com/amendlogic', attrs: { target: '_blank' }, icon: 'tabler:external-link' },
+          { text: t('nav.community'), href: 'https://discord.gg/GjGUHRzYvG', attrs: { target: '_blank', rel: 'noopener noreferrer' }, icon: 'tabler:external-link' },
+          { text: t('nav.github'), href: 'https://github.com/amendlogic', attrs: { target: '_blank', rel: 'noopener noreferrer' }, icon: 'tabler:external-link' },
           { text: t('nav.help'), href: getPermalink('/help-center', 'page', lang) },
         ],
       },
@@ -77,7 +77,7 @@ export function getFooterData(
           { text: t('nav.team'), href: getPermalink('/about', 'page', lang) },
           { text: t('nav.blog'), href: getBlogPermalink(lang) },
           { text: t('nav.contact'), href: getPermalink('/contact', 'page', lang) },
-          { text: t('nav.portal'), href: 'https://whop.com/@me/settings/orders/', attrs: { target: '_blank' }, icon: 'tabler:external-link' },
+          { text: t('nav.portal'), href: 'https://whop.com/@me/settings/orders/', attrs: { target: '_blank', rel: 'noopener noreferrer' }, icon: 'tabler:external-link' },
         ],
       },
       {
@@ -98,10 +98,12 @@ export function getFooterData(
     footnotes,
     socialLinks: [
       { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
-      // { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
-      // { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
+      { ariaLabel: 'TikTok', icon: 'tabler:brand-tiktok', href: '#', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
+      { ariaLabel: 'YouTube', icon: 'tabler:brand-youtube', href: '#', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
+      // { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
+      // { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
       { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset(`/${lang}/rss.xml`) },
-      { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/amendlogic', attrs: { target: '_blank' } },
+      { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/amendlogic', attrs: { target: '_blank', rel: 'noopener noreferrer' } },
     ],
     footNote: `
       © ${new Date().getFullYear()} <a class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out" href="https://github.com/arthelokyo">${SITE?.name}</a> · ${t('nav.rights')} · 
