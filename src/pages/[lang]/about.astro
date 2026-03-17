@@ -13,9 +13,6 @@ import Content from '~/components/widgets/Content.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import Layout from '~/layouts/PageLayout.astro';
 
-import netPnL from '~/assets/images/tv_netpnl.png';
-import myImage from '~/assets/images/me.jpg';
-
 // 2. Pfade generieren (SSOT für [lang])
 export async function getStaticPaths() {
   return getI18nPaths();
@@ -71,9 +68,10 @@ const metadata = {
     columns={3}
     isAfterContent={true}
     image={{
-      src: netPnL,
+      src: '~/assets/images/tv_netpnl.png',
       alt: t('about.netPnL.imageAlt'),
       widths: [768, 1540, 2310],
+      sizes: '100vw',
       object-position: 'right',
     }}
   />
@@ -163,7 +161,7 @@ const metadata = {
       },
     ]}
     image={{
-      src: myImage,
+      src: '~/assets/images/me.jpg',
       alt: t('about.myImage.imageAlt'),
       loading: 'eager',
     }}
