@@ -81,167 +81,180 @@ const fmtDate  = (d) => d ? new Intl.DateTimeFormat(locale, { month: 'short', ye
 >
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
 
-<!-- Unified container: Chart + Stats als eine Einheit -->
-<div class="rounded-md shadow-xl dark:border dark:border-slate-600 bg-white dark:bg-slate-900 overflow-hidden">
+<!-- Unified container: jetzt mit YouTube-Stil -->
+<div class="relative rounded-xl overflow-hidden shadow-xl border border-white/10">
 
-  <!-- Symbol / Config Header -->
-  {(symbol || riskPerTrade) && (
-    <>
-      <div class="flex flex-wrap gap-px bg-slate-100 dark:bg-slate-800">
+  <!-- Dark gradient background (always-on, wie YouTube) -->
+  <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950" />
 
-        {symbol && (
-          <div class="relative flex flex-col justify-between gap-3 px-4 py-3 bg-white dark:bg-slate-900
-                flex-grow basis-[calc(50%-1px)] sm:basis-[calc(33.333%-1px)] lg:basis-[calc(20%-1px)]">
-            <div class="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-slate-300 dark:bg-slate-600" />
-            <div class="flex items-center justify-between pl-3">
-              <span class="text-[11px] font-medium leading-none tracking-wide text-slate-400 dark:text-slate-500">
-                {t('echart.symbol')}
+  <!-- Dot pattern overlay -->
+  <div
+    class="absolute inset-0 opacity-[0.06] pointer-events-none"
+    style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 24px 24px;"
+  />
+
+  <!-- Gesamter Inhalt muss relative sein, um über den absoluten Layern zu liegen -->
+  <div class="relative">
+
+    <!-- Symbol / Config Header -->
+    {(symbol || riskPerTrade) && (
+      <>
+        <div class="flex flex-wrap gap-px bg-white/5">
+
+          {symbol && (
+            <div class="relative flex flex-col justify-between gap-3 px-4 py-3 bg-slate-900/60 backdrop-blur-sm
+                  flex-grow basis-[calc(50%-1px)] sm:basis-[calc(33.333%-1px)] lg:basis-[calc(20%-1px)]">
+              <div class="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-white/20" />
+              <div class="flex items-center justify-between pl-3">
+                <span class="text-[11px] font-medium leading-none tracking-wide text-white/40">
+                  {t('echart.symbol')}
+                </span>
+                <Icon name="tabler:currency-bitcoin" class="w-3.5 h-3.5 shrink-0 opacity-30 text-white" />
+              </div>
+              <span class="text-lg font-bold tabular-nums leading-none pl-3 text-white/90">
+                {symbol}
               </span>
-              <Icon name="tabler:currency-bitcoin" class="w-3.5 h-3.5 shrink-0 opacity-40 text-slate-400 dark:text-slate-500" />
             </div>
-            <span class="text-lg font-bold tabular-nums leading-none pl-3 text-slate-900 dark:text-slate-100">
-              {symbol}
-            </span>
-          </div>
-        )}
+          )}
 
-        {(dateFrom && dateTo) && (
-          <div class="relative flex flex-col justify-between gap-3 px-4 py-3 bg-white dark:bg-slate-900
-                flex-grow basis-[calc(50%-1px)] sm:basis-[calc(33.333%-1px)] lg:basis-[calc(40%-1px)]">
-            <div class="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-slate-300 dark:bg-slate-600" />
-            <div class="flex items-center justify-between pl-3">
-              <span class="text-[11px] font-medium leading-none tracking-wide text-slate-400 dark:text-slate-500">
-                {t('echart.period')}
+          {(dateFrom && dateTo) && (
+            <div class="relative flex flex-col justify-between gap-3 px-4 py-3 bg-slate-900/60 backdrop-blur-sm
+                  flex-grow basis-[calc(50%-1px)] sm:basis-[calc(33.333%-1px)] lg:basis-[calc(40%-1px)]">
+              <div class="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-white/20" />
+              <div class="flex items-center justify-between pl-3">
+                <span class="text-[11px] font-medium leading-none tracking-wide text-white/40">
+                  {t('echart.period')}
+                </span>
+                <Icon name="tabler:calendar-stats" class="w-3.5 h-3.5 shrink-0 opacity-30 text-white" />
+              </div>
+              <span class="text-lg font-bold tabular-nums leading-none pl-3 text-white/90">
+                {fmtDate(dateFrom)} – {fmtDate(dateTo)}
               </span>
-              <Icon name="tabler:calendar-stats" class="w-3.5 h-3.5 shrink-0 opacity-40 text-slate-400 dark:text-slate-500" />
             </div>
-            <span class="text-lg font-bold tabular-nums leading-none pl-3 text-slate-900 dark:text-slate-100">
-              {fmtDate(dateFrom)} – {fmtDate(dateTo)}
-            </span>
-          </div>
-        )}
-        
-        {initialCapital && (
-          <div class="relative flex flex-col justify-between gap-3 px-4 py-3 bg-white dark:bg-slate-900
-                flex-grow basis-[calc(50%-1px)] sm:basis-[calc(33.333%-1px)] lg:basis-[calc(20%-1px)]">
-            <div class="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-slate-300 dark:bg-slate-600" />
-            <div class="flex items-center justify-between pl-3">
-              <span class="text-[11px] font-medium leading-none tracking-wide text-slate-400 dark:text-slate-500">
-                {t('echart.initialCapital')}
+          )}
+
+          {initialCapital && (
+            <div class="relative flex flex-col justify-between gap-3 px-4 py-3 bg-slate-900/60 backdrop-blur-sm
+                  flex-grow basis-[calc(50%-1px)] sm:basis-[calc(33.333%-1px)] lg:basis-[calc(20%-1px)]">
+              <div class="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-white/20" />
+              <div class="flex items-center justify-between pl-3">
+                <span class="text-[11px] font-medium leading-none tracking-wide text-white/40">
+                  {t('echart.initialCapital')}
+                </span>
+                <Icon name="tabler:wallet" class="w-3.5 h-3.5 shrink-0 opacity-30 text-white" />
+              </div>
+              <span class="text-lg font-bold tabular-nums leading-none pl-3 text-white/90">
+                {fmtCurrency(initialCapital)}
               </span>
-              <Icon name="tabler:wallet" class="w-3.5 h-3.5 shrink-0 opacity-40 text-slate-400 dark:text-slate-500" />
             </div>
-            <span class="text-lg font-bold tabular-nums leading-none pl-3 text-slate-900 dark:text-slate-100">
-              {fmtCurrency(initialCapital)}
-            </span>
-          </div>
-        )}
+          )}
 
-        {riskPerTrade && (
-          <div class="relative flex flex-col justify-between gap-3 px-4 py-3 bg-white dark:bg-slate-900
-                flex-grow basis-[calc(50%-1px)] sm:basis-[calc(33.333%-1px)] lg:basis-[calc(20%-1px)]">
-            <div class="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-amber-400 dark:bg-amber-300" />
-            <div class="flex items-center justify-between pl-3">
-              <span class="text-[11px] font-medium leading-none tracking-wide text-slate-400 dark:text-slate-500">
-                {t('echart.risktrade')}
+          {riskPerTrade && (
+            <div class="relative flex flex-col justify-between gap-3 px-4 py-3 bg-slate-900/60 backdrop-blur-sm
+                  flex-grow basis-[calc(50%-1px)] sm:basis-[calc(33.333%-1px)] lg:basis-[calc(20%-1px)]">
+              <div class="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-amber-400" />
+              <div class="flex items-center justify-between pl-3">
+                <span class="text-[11px] font-medium leading-none tracking-wide text-white/40">
+                  {t('echart.risktrade')}
+                </span>
+                <Icon name="tabler:shield-half" class="w-3.5 h-3.5 shrink-0 opacity-40 text-amber-300" />
+              </div>
+              <span class="text-lg font-bold tabular-nums leading-none pl-3 text-amber-300">
+                {riskPerTrade}
               </span>
-              <Icon name="tabler:shield-half" class="w-3.5 h-3.5 shrink-0 opacity-40 text-amber-400 dark:text-amber-300" />
             </div>
-            <span class="text-lg font-bold tabular-nums leading-none pl-3 text-amber-500 dark:text-amber-300">
-              {riskPerTrade}
-            </span>
-          </div>
-        )}
+          )}
 
-      </div>
+        </div>
 
-      <!-- Trennlinie Chart -->
-      <div class="flex items-center gap-3 px-4 md:px-6">
-        <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
-        <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-300 dark:text-slate-600 shrink-0">
-          {t('echart.equity')}
-        </span>
-        <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
-      </div>
-    </>
-  )}
-
-  <!-- Chart -->
-  <div class="p-4 md:p-6">
-    {baseOptions ? (
-      <div
-        id={chartId}
-        data-json-id={dataId}
-        class="w-full overflow-hidden"
-        style={`height:${height};`}
-      ></div>
-    ) : (
-      <div class="flex items-center justify-center h-64 text-slate-400 bg-slate-50 dark:bg-slate-800/50 rounded border border-dashed border-slate-300 dark:border-slate-700">
-        <span class="text-sm">{t('echart.noData')}</span>
-      </div>
+        <!-- Trennlinie Chart -->
+        <div class="flex items-center gap-3 px-4 md:px-6">
+          <div class="flex-1 h-px bg-white/10" />
+          <span class="text-[10px] font-semibold uppercase tracking-widest text-white/20 shrink-0">
+            {t('echart.equity')}
+          </span>
+          <div class="flex-1 h-px bg-white/10" />
+        </div>
+      </>
     )}
-  </div>
 
-  {showStats && stats && (
-    <>
-      <div class="flex items-center gap-3 px-4 md:px-6">
-        <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
-        <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-300 dark:text-slate-600 shrink-0">
-          {t('echart.statistics')}
-        </span>
-        <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
-      </div>
+    <!-- Chart -->
+    <div class="p-4 md:p-6">
+      {baseOptions ? (
+        <div
+          id={chartId}
+          data-json-id={dataId}
+          class="w-full overflow-hidden"
+          style={`height:${height};`}
+        ></div>
+      ) : (
+        <div class="flex items-center justify-center h-64 text-white/30 bg-white/5 rounded border border-dashed border-white/10">
+          <span class="text-sm">{t('echart.noData')}</span>
+        </div>
+      )}
+    </div>
 
-      <div class="flex flex-wrap gap-px bg-slate-100 dark:bg-slate-800">
-        {[
-          { label: t('echart.totalTrades'),   value: String(stats.totalTrades),              icon: 'tabler:list-numbers',     color: 'neutral' },
-          { label: t('echart.winRate'),       value: fmtPct(stats.winRate),                  icon: 'tabler:target',           color: stats.winRate >= 0.5 ? 'green' : 'red' },
-          { label: t('echart.profitFactor'),  value: fmtNum(stats.profitFactor),             icon: 'tabler:trending-up',      color: stats.profitFactor >= 1.5 ? 'green' : stats.profitFactor >= 1 ? 'amber' : 'red' },
-          { label: t('echart.netProfit'),     value: fmtCurrency(stats.netProfit, locale),   icon: 'tabler:cash',             color: stats.netProfit > 0 ? 'green' : 'red' },
-          { label: t('echart.maxDrawdown'),   value: fmtCurrency(stats.maxDrawdown, locale), icon: 'tabler:arrow-down-right', color: 'red' },
-          { label: t('echart.avgWin'),        value: fmtCurrency(stats.avgWin, locale),      icon: 'tabler:plus',             color: 'green' },
-          { label: t('echart.avgLoss'),       value: fmtCurrency(stats.avgLoss, locale),     icon: 'tabler:minus',            color: 'red' },
-          { label: t('echart.bestTrade'),     value: fmtCurrency(stats.bestTrade, locale),   icon: 'tabler:star',             color: 'green' },
-          { label: t('echart.worstTrade'),    value: fmtCurrency(stats.worstTrade, locale),  icon: 'tabler:flame-off',        color: 'red' },
-          { label: t('echart.expectancy'),    value: fmtCurrency(stats.expectancy, locale),  icon: 'tabler:calculator',       color: stats.expectancy > 0 ? 'green' : 'red' },
-        ].map(({ label, value, icon: i, color }) => (
-          <div class="relative flex flex-col justify-between gap-3 px-4 py-3 overflow-hidden bg-white dark:bg-slate-900
-                flex-grow basis-[calc(50%-1px)] sm:basis-[calc(33.333%-1px)] lg:basis-[calc(20%-1px)]">
-            <div class:list={[
-              'absolute left-0 top-3 bottom-3 w-[2px] rounded-full',
-              color === 'green'   && 'bg-emerald-500 dark:bg-emerald-400',
-              color === 'red'     && 'bg-red-500     dark:bg-red-400',
-              color === 'amber'   && 'bg-amber-400   dark:bg-amber-300',
-              color === 'neutral' && 'bg-slate-300   dark:bg-slate-600',
-            ]} />
-            <div class="flex items-center justify-between pl-3">
-              <span class="text-[11px] font-medium leading-none tracking-wide text-slate-400 dark:text-slate-500">
-                {label}
-              </span>
-              <Icon name={i} class:list={[
-                'w-3.5 h-3.5 shrink-0 opacity-40',
-                color === 'green'   && 'text-emerald-500 dark:text-emerald-400',
-                color === 'red'     && 'text-red-500     dark:text-red-400',
-                color === 'amber'   && 'text-amber-400   dark:text-amber-300',
-                color === 'neutral' && 'text-slate-400   dark:text-slate-500',
+    {showStats && stats && (
+      <>
+        <div class="flex items-center gap-3 px-4 md:px-6">
+          <div class="flex-1 h-px bg-white/10" />
+          <span class="text-[10px] font-semibold uppercase tracking-widest text-white/20 shrink-0">
+            {t('echart.statistics')}
+          </span>
+          <div class="flex-1 h-px bg-white/10" />
+        </div>
+
+        <div class="flex flex-wrap gap-px bg-white/5">
+          {[
+            { label: t('echart.totalTrades'),  value: String(stats.totalTrades),              icon: 'tabler:list-numbers',     color: 'neutral' },
+            { label: t('echart.winRate'),      value: fmtPct(stats.winRate),                  icon: 'tabler:target',           color: stats.winRate >= 0.5 ? 'green' : 'red' },
+            { label: t('echart.profitFactor'), value: fmtNum(stats.profitFactor),             icon: 'tabler:trending-up',      color: stats.profitFactor >= 1.5 ? 'green' : stats.profitFactor >= 1 ? 'amber' : 'red' },
+            { label: t('echart.netProfit'),    value: fmtCurrency(stats.netProfit, locale),   icon: 'tabler:cash',             color: stats.netProfit > 0 ? 'green' : 'red' },
+            { label: t('echart.maxDrawdown'),  value: fmtCurrency(stats.maxDrawdown, locale), icon: 'tabler:arrow-down-right', color: 'red' },
+            { label: t('echart.avgWin'),       value: fmtCurrency(stats.avgWin, locale),      icon: 'tabler:plus',             color: 'green' },
+            { label: t('echart.avgLoss'),      value: fmtCurrency(stats.avgLoss, locale),     icon: 'tabler:minus',            color: 'red' },
+            { label: t('echart.bestTrade'),    value: fmtCurrency(stats.bestTrade, locale),   icon: 'tabler:star',             color: 'green' },
+            { label: t('echart.worstTrade'),   value: fmtCurrency(stats.worstTrade, locale),  icon: 'tabler:flame-off',        color: 'red' },
+            { label: t('echart.expectancy'),   value: fmtCurrency(stats.expectancy, locale),  icon: 'tabler:calculator',       color: stats.expectancy > 0 ? 'green' : 'red' },
+          ].map(({ label, value, icon: i, color }) => (
+            <div class="relative flex flex-col justify-between gap-3 px-4 py-3 overflow-hidden bg-slate-900/60 backdrop-blur-sm
+                  flex-grow basis-[calc(50%-1px)] sm:basis-[calc(33.333%-1px)] lg:basis-[calc(20%-1px)]">
+              <div class:list={[
+                'absolute left-0 top-3 bottom-3 w-[2px] rounded-full',
+                color === 'green'   && 'bg-emerald-400',
+                color === 'red'     && 'bg-red-400',
+                color === 'amber'   && 'bg-amber-300',
+                color === 'neutral' && 'bg-white/20',
               ]} />
+              <div class="flex items-center justify-between pl-3">
+                <span class="text-[11px] font-medium leading-none tracking-wide text-white/40">
+                  {label}
+                </span>
+                <Icon name={i} class:list={[
+                  'w-3.5 h-3.5 shrink-0 opacity-40',
+                  color === 'green'   && 'text-emerald-400',
+                  color === 'red'     && 'text-red-400',
+                  color === 'amber'   && 'text-amber-300',
+                  color === 'neutral' && 'text-white',
+                ]} />
+              </div>
+              <span class:list={[
+                'text-lg font-bold tabular-nums leading-none pl-3',
+                color === 'green'   && 'text-emerald-400',
+                color === 'red'     && 'text-red-400',
+                color === 'amber'   && 'text-amber-300',
+                color === 'neutral' && 'text-white/90',
+              ]}>
+                {value}
+              </span>
             </div>
-            <span class:list={[
-              'text-lg font-bold tabular-nums leading-none pl-3',
-              color === 'green'   && 'text-emerald-600 dark:text-emerald-400',
-              color === 'red'     && 'text-red-500     dark:text-red-400',
-              color === 'amber'   && 'text-amber-500   dark:text-amber-300',
-              color === 'neutral' && 'text-slate-900   dark:text-slate-100',
-            ]}>
-              {value}
-            </span>
-          </div>
-        ))}
-      </div>
-    </>
-  )}
+          ))}
+        </div>
+      </>
+    )}
 
-</div>
+  </div>{/* /relative content wrapper */}
+</div>{/* /main container */}
 
 
   {callToAction && (
